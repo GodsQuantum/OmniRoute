@@ -13,6 +13,7 @@ type Job = {
   needs?: string | string[];
   if?: string;
   "runs-on"?: string;
+  "timeout-minutes"?: number;
   outputs?: Record<string, string>;
   strategy?: { matrix?: { include?: { name: string; script: string; shard: string }[] } };
   steps?: {
@@ -32,6 +33,7 @@ test("the hosted suite matrix has exactly ci.yml's unit and integration shards p
   const units = shardCountFromCi(ci, "test-unit");
   const integrations = shardCountFromCi(ci, "test-integration");
   const vitest = shardCountFromCi(ci, "test-vitest");
+  assert.equal(integrations, 4, "integration files must be split across four hosted runners");
   assert.equal(vitest, 4, "UI files must be split across four hosted runners");
   const expected = [
     ...Array.from({ length: units }, (_, i) => ({
@@ -60,6 +62,17 @@ test("the hosted suite matrix has exactly ci.yml's unit and integration shards p
   ]) {
     assert.ok(pkg.scripts[script], `package.json has ${script}`);
   }
+});
+
+test("integration sharding preserves the complete inventory and 15-minute CI deadline", () => {
+  const jobs = (parseYaml(ci) as { jobs: Record<string, Job> }).jobs;
+  assert.equal(jobs["test-integration"]["timeout-minutes"], 15);
+  const pkg = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
+  assert.equal(
+    pkg.scripts["test:integration:ci"].replace(" --test-shard=$TEST_SHARD", ""),
+    pkg.scripts["test:integration"],
+    "the CI command must keep every input and runner option of the complete integration suite"
+  );
 });
 
 test("suites run hosted on the resolved commit and only outside push", () => {

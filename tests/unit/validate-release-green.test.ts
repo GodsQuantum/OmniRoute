@@ -725,10 +725,7 @@ test("hosted suites: the REAL ci.yml yields the integration shard count too", as
   const fs = await import("node:fs");
   const ci = fs.readFileSync(new URL("../../.github/workflows/ci.yml", import.meta.url), "utf8");
   const integration = shardCountFromCi(ci, "test-integration");
-  assert.ok(
-    Number.isInteger(integration) && integration >= 2,
-    `integration shards: ${integration}`
-  );
+  assert.equal(integration, 4, "the current integration policy requires four shards");
   assert.equal(shardCountFromCi(ci, "no-such-job"), null);
 });
 
