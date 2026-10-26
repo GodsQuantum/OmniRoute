@@ -182,9 +182,10 @@ Runs after `test-coverage`. Blocks merge on failure.
 
 The job blocks applicable candidates. Bundle size, secret findings, vulnerability
 findings, workflow findings and OpenAPI changes are checked with required ratchets.
-Circular-dependency diagnostics and scanner installation are advisory steps; a failed
-installation does not waive the subsequent required measurement. Missing tools,
-invalid reports or missing baselines leave the required scanner gate INCOMPLETE.
+Circular-dependency diagnostics remain advisory. Scanner installation is required:
+`scripts/ci/install-quality-scanners.sh` provisions pinned versions and propagates
+installation failures. Missing tools, invalid reports or missing baselines leave
+the required scanner gate INCOMPLETE.
 
 | Script                   | Validates                                                                                                                                                                                       | Blocking                                          |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -197,12 +198,13 @@ invalid reports or missing baselines leave the required scanner gate INCOMPLETE.
 
 ### Job: `docs-sync-strict`
 
-Runs on every PR to `main`. Blocks merge on failure.
+Applies to code or documentation candidates for `main` and `release/**`. Blocks admission on failure.
 
 | Script                         | Validates                                                                                                                                         | Blocking                   |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `check:docs-all`               | Meta-gate that runs the 6 sub-gates below sequentially                                                                                            | Yes                        |
+| `check:docs-all`               | Meta-gate that runs the 7 sub-gates below sequentially                                                                                            | Yes                        |
 | ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt version consistency                                                                                                 | Yes                        |
+| ↳ `check:docs-frontmatter`     | Compiled documentation pages carry valid frontmatter titles                                                                                       | Yes                        |
 | ↳ `check:docs-counts`          | Counts in prose (provider count, migration count, etc.) are within the ratchet window of the real counts                                          | Yes                        |
 | ↳ `check:env-doc-sync`         | Every env var in `.env.example` is documented in a docs table, and vice versa                                                                     | Yes                        |
 | ↳ `check:deprecated-versions`  | No deprecated version strings in docs                                                                                                             | Yes                        |
