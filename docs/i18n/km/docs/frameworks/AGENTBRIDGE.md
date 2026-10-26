@@ -20,7 +20,7 @@ AgentBridge គឺជាប្រូកស៊ី MITM (Man-in-the-Middle) រប
 
 នេះមានន័យថាអ្នកអាច៖
 
-- **ប្តូរផ្លូវ agent ណាមួយទៅកាន់អ្នកផ្តល់សេវាណាមួយ**៖ Copilot កំពុងនិយាយជាមួយ OpenAI? បញ្ជូនវាទៅកាន់ Anthropic Claude, Gemini ឬអ្នកផ្តល់សេវាណាមួយក្នុងចំណោមអ្នកផ្តល់សេវា 375 របស់ OmniRoute។
+- **ប្តូរផ្លូវ agent ណាមួយទៅកាន់អ្នកផ្តល់សេវាណាមួយ**៖ Copilot កំពុងនិយាយជាមួយ OpenAI? បញ្ជូនវាទៅកាន់ Anthropic Claude, Gemini ឬអ្នកផ្តល់សេវាណាមួយក្នុងចំណោមអ្នកផ្តល់សេវា 376 របស់ OmniRoute។
 - **អនុវត្តការផែនទីម៉ូដែល**៖ `gemini-3-flash` → `claude-sonnet-4.7` ដោយតម្លាភាពនៅកម្រិត handler។
 - **សង្កេតចរាចរណ៍ agent ទាំងអស់**៖ រាល់សំណើដែលបានស្ទាក់ចាប់នីមួយៗត្រូវបានផ្សព្វផ្សាយទៅកាន់ [Traffic Inspector](./TRAFFIC_INSPECTOR.md)។
 - **អនុវត្តភាពធន់របស់ OmniRoute**៖ combo routing, circuit breakers, fallbacks និងការតាមដានថ្លៃដើមក៏ដំណើរការសម្រាប់ចរាចរណ៍ IDE agent ផងដែរ។
@@ -547,22 +547,22 @@ OpenAPI schema ពេញលេញ៖ `docs/openapi.yaml` → tag `AgentBridge`�
 
 ### ការស៊ើបអង្កេត Trae
 
-Trae គឺជាជំនួយការសរសេរកូដ AI ថ្មីមួយ។ មុនពេលអនុវត្ត handler៖
+Trae គឺជាជំនួយការសរសេរកូដដោយ AI ដែលថ្មីគួរសម។ មុនពេលអនុវត្ត handler៖
 
-1. កំណត់អត្តសញ្ញាណ binary/extension នៅក្នុង marketplace របស់ VS Code / JetBrains ឬជាកម្មវិធីឯករាជ្យ
-2. ចាប់យក traffic ដោយប្រើ mitmproxy ដើម្បីស្វែងរក API host និងទម្រង់ endpoint
-3. កំណត់យន្តការផ្ទៀងផ្ទាត់អត្តសញ្ញាណ
-4. វាយតម្លៃថាតើត្រូវបន្ត ឬមិនបន្ត ដោយផ្អែកលើ TOS និងលទ្ធភាពស្វែងរក API
+1. កំណត់អត្តសញ្ញាណ binary/extension នៅក្នុង marketplace របស់ VS Code / JetBrains ឬជាកម្មវិធី standalone
+2. ចាប់យក traffic ដោយប្រើ mitmproxy ដើម្បីស្វែងរក API hosts និងទម្រង់ endpoint
+3. កំណត់យន្តការ authentication
+4. វាយតម្លៃ go/no-go ដោយផ្អែកលើ TOS និងលទ្ធភាពស្វែងយល់ API
 
-រហូតដល់ការស៊ើបអង្កេតត្រូវបានបញ្ចប់ កាត Trae នៅក្នុង dashboard នឹងបង្ហាញស្លាក "កំពុងស៊ើបអង្កេត" ជាមួយតំណ "រាយការណ៍ពីលទ្ធភាពអនុវត្តបាន"។ handler stub នៅ `src/mitm/handlers/trae.ts` បញ្ចេញកំហុសដែលមានរចនាសម្ព័ន្ធ `មិនទាន់ត្រូវបានអនុវត្ត`។
+រហូតដល់ការស៊ើបអង្កេតបានបញ្ចប់ កាត Trae នៅក្នុង dashboard នឹងបង្ហាញ badge "Investigating" ជាមួយតំណ "Report viability"។ handler stub នៅ `src/mitm/handlers/trae.ts` នឹងបោះ error ដែលមានរចនាសម្ព័ន្ធ `Not yet implemented`។
 
-### ភ្នាក់ងារក្នុងបញ្ជីការងាររង់ចាំ (តម្រូវឱ្យមាន MITM — មិនគាំទ្រ base URL ផ្ទាល់ខ្លួន)
+### ភ្នាក់ងារក្នុង backlog (តម្រូវឱ្យមាន MITM — មិនគាំទ្រ custom base URL)
 
-ឧបករណ៍ខាងក្រោមមិនគាំទ្រ base URL ផ្ទាល់ខ្លួននៅក្នុងកំណែបច្ចុប្បន្នរបស់ពួកវាទេ ដែលធ្វើឱ្យ MITM ជាមធ្យោបាយតែមួយគត់សម្រាប់ការស្ទាក់ចាប់។ ការវាយតម្លៃលទ្ធភាពអនុវត្តបានកំពុងរង់ចាំ៖
+ឧបករណ៍ខាងក្រោមមិនគាំទ្រ custom base URL នៅក្នុងកំណែបច្ចុប្បន្នរបស់ពួកវាទេ ដែលធ្វើឱ្យ MITM ជាមធ្យោបាយតែមួយគត់សម្រាប់ interception។ ការវាយតម្លៃលទ្ធភាពនៅមិនទាន់បានបញ្ចប់៖
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — ដាច់ដោយឡែកពី Kiro IDE)
-- **Cowork** (កម្មវិធី desktop របស់ Anthropic)
+- **Cowork** (Anthropic desktop)
 
-ចំណាំ៖ GitHub Copilot CLI ≥v1.0.19 គាំទ្រ `COPILOT_PROVIDER_BASE_URL` — ប្រើការកំណត់រចនាសម្ព័ន្ធដោយផ្ទាល់ជំនួសឱ្យ MITM សម្រាប់ឧបករណ៍នោះ។
+ចំណាំ៖ GitHub Copilot CLI ≥v1.0.19 គាំទ្រ `COPILOT_PROVIDER_BASE_URL` — សូមប្រើ direct config ជំនួស MITM សម្រាប់ឧបករណ៍នោះ។

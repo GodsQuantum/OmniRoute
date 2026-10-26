@@ -20,7 +20,7 @@ AgentBridge 是 OmniRoute 的 MITM（中間人）代理，可攔截來自 IDE AI
 
 這代表您可以:
 
-- **將任何代理重新導向至任何提供者**:Copilot 正在與 OpenAI 通訊?將它重新導向至 Anthropic Claude、Gemini,或 OmniRoute 的 375 家提供者中的任何一家。
+- **將任何代理重新導向至任何提供者**:Copilot 正在與 OpenAI 通訊?將它重新導向至 Anthropic Claude、Gemini,或 OmniRoute 的 376 家提供者中的任何一家。
 - **套用模型對應**:`gemini-3-flash` → `claude-sonnet-4.7`,在處理器層級透明地進行。
 - **觀察所有代理流量**:每個被攔截的請求都會發布到[流量檢查器](./TRAFFIC_INSPECTOR.md)。
 - **套用 OmniRoute 的韌性功能**:組合路由、斷路器、備援與成本追蹤同樣適用於 IDE 代理流量。
@@ -536,22 +536,22 @@ ipconfig /flushdns
 
 ### Trae 調查
 
-Trae 是一款相對較新的 AI 程式設計助理。在實作處理器之前：
+Trae 是一款相對較新的 AI 程式設計助理。在實作處理常式之前：
 
 1. 在 VS Code / JetBrains 市集或獨立應用程式中識別其二進位檔／擴充功能
-2. 使用 mitmproxy 擷取流量，以找出 API 主機與端點格式
-3. 確定驗證機制
-4. 根據服務條款與 API 的可探索性評估是否繼續
+2. 使用 mitmproxy 擷取流量，以找出 API 主機與端點結構
+3. 確認驗證機制
+4. 根據服務條款與 API 的可探索性評估是否繼續進行
 
-在調查完成之前，儀表板中的 Trae 卡片會顯示「調查中」徽章及「回報可行性」連結。位於 `src/mitm/handlers/trae.ts` 的處理器存根會擲回結構化的 `尚未實作` 錯誤。
+在調查完成之前，儀表板中的 Trae 卡片會顯示「調查中」徽章及「回報可行性」連結。位於 `src/mitm/handlers/trae.ts` 的處理常式存根會擲回結構化的 `Not yet implemented` 錯誤。
 
-### 待辦代理工具（需要 MITM — 不支援自訂基礎 URL）
+### 待辦代理程式（需要 MITM — 不支援自訂基底 URL）
 
-以下工具的目前版本不支援自訂基礎 URL，因此 MITM 是唯一的攔截途徑。可行性評估仍在進行中：
+下列工具目前的版本不支援自訂基底 URL，因此 MITM 是唯一的攔截途徑。可行性評估仍在進行中：
 
 - **Windsurf**（Codeium/Cognition）
 - **Amp**（Sourcegraph）
 - **Amazon Q / Kiro CLI**（AWS Bedrock — 與 Kiro IDE 不同）
 - **Cowork**（Anthropic 桌面版）
 
-注意：GitHub Copilot CLI ≥v1.0.19 支援 `COPILOT_PROVIDER_BASE_URL` — 對該工具請使用直接設定，而非 MITM。
+注意：GitHub Copilot CLI ≥v1.0.19 支援 `COPILOT_PROVIDER_BASE_URL` — 該工具應使用直接設定，而非 MITM。

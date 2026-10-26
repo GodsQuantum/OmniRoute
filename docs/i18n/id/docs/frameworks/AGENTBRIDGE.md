@@ -20,7 +20,7 @@ Ketika agen IDE (misalnya, GitHub Copilot, Cursor, Claude Code) melakukan panggi
 
 Ini berarti Anda dapat:
 
-- **Mengalihkan agen apa pun ke penyedia mana pun**: Copilot berkomunikasi dengan OpenAI? Alihkan ke Anthropic Claude, Gemini, atau salah satu dari 375 penyedia OmniRoute.
+- **Mengalihkan agen apa pun ke penyedia mana pun**: Copilot berkomunikasi dengan OpenAI? Alihkan ke Anthropic Claude, Gemini, atau salah satu dari 376 penyedia OmniRoute.
 - **Menerapkan pemetaan model**: `gemini-3-flash` → `claude-sonnet-4.7` secara transparan di tingkat handler.
 - **Mengamati seluruh lalu lintas agen**: setiap permintaan yang dicegat dipublikasikan ke [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
 - **Menerapkan ketahanan OmniRoute**: combo routing, circuit breaker, fallback, dan pelacakan biaya juga berfungsi untuk lalu lintas agen IDE.
@@ -552,19 +552,19 @@ Skema OpenAPI lengkap: `docs/openapi.yaml` → tag `AgentBridge`.
 Trae adalah asisten pengodean AI yang relatif baru. Sebelum mengimplementasikan handler:
 
 1. Identifikasi biner/ekstensi di marketplace VS Code / JetBrains atau sebagai aplikasi mandiri
-2. Tangkap lalu lintas dengan mitmproxy untuk menemukan host API dan bentuk endpoint
+2. Tangkap lalu lintas dengan mitmproxy untuk menemukan host API dan struktur endpoint
 3. Tentukan mekanisme autentikasi
-4. Nilai lanjut/tidak lanjut berdasarkan TOS dan kemudahan penemuan API
+4. Nilai kelayakan lanjut/tidak lanjut berdasarkan TOS dan kemudahan penemuan API
 
-Hingga investigasi selesai, kartu Trae di dasbor menampilkan lencana "Sedang Diinvestigasi" dengan tautan "Laporkan kelayakan". Stub handler di `src/mitm/handlers/trae.ts` memunculkan error terstruktur `Belum diimplementasikan`.
+Hingga investigasi selesai, kartu Trae di dasbor menampilkan lencana "Sedang Diinvestigasi" dengan tautan "Laporkan kelayakan". Stub handler di `src/mitm/handlers/trae.ts` melempar error terstruktur `Not yet implemented`.
 
-### Agen backlog (MITM diperlukan — tidak mendukung URL dasar kustom)
+### Agen dalam backlog (memerlukan MITM — tidak mendukung URL dasar kustom)
 
-Alat berikut tidak mendukung URL dasar kustom pada versi saat ini, sehingga MITM menjadi satu-satunya jalur intersepsi. Penilaian kelayakan masih tertunda:
+Alat berikut tidak mendukung URL dasar kustom dalam versi saat ini, sehingga MITM menjadi satu-satunya jalur intersepsi. Penilaian kelayakan masih tertunda:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — terpisah dari Kiro IDE)
 - **Cowork** (desktop Anthropic)
 
-Catatan: GitHub Copilot CLI ≥v1.0.19 mendukung `COPILOT_PROVIDER_BASE_URL` — gunakan konfigurasi langsung alih-alih MITM untuk alat tersebut.
+Catatan: GitHub Copilot CLI ≥v1.0.19 mendukung `COPILOT_PROVIDER_BASE_URL` — gunakan konfigurasi langsung, bukan MITM, untuk alat tersebut.

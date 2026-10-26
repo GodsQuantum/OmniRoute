@@ -20,7 +20,7 @@ Kad IDE aģents (piem., GitHub Copilot, Cursor, Claude Code) veic API izsaukumu,
 
 Tas nozīmē, ka jūs varat:
 
-- **Pāradresēt jebkuru aģentu uz jebkuru pakalpojumu sniedzēju**: Copilot sazinās ar OpenAI? Pāradresējiet to uz Anthropic Claude, Gemini vai jebkuru no OmniRoute 375 pakalpojumu sniedzējiem.
+- **Pāradresēt jebkuru aģentu uz jebkuru pakalpojumu sniedzēju**: Copilot sazinās ar OpenAI? Pāradresējiet to uz Anthropic Claude, Gemini vai jebkuru no OmniRoute 376 pakalpojumu sniedzējiem.
 - **Lietot modeļu kartējumus**: `gemini-3-flash` → `claude-sonnet-4.7` caurspīdīgi apstrādātāja līmenī.
 - **Vērot visu aģentu trafiku**: katrs pārķertais pieprasījums tiek publicēts [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
 - **Lietot OmniRoute noturību**: kombinētā maršrutēšana, ķēdes pārtraucēji, rezerves maršruti un izmaksu izsekošana darbojas arī IDE aģentu trafikā.
@@ -553,20 +553,20 @@ Pilnas OpenAPI shēmas: `docs/openapi.yaml` → tags `AgentBridge`.
 
 Trae ir salīdzinoši jauns MI programmēšanas asistents. Pirms apdarinātāja ieviešanas:
 
-1. Identificējiet bināro failu/paplašinājumu VS Code / JetBrains veikalos vai kā savrupu lietotni
-2. Pārtveriet datplūsmu ar mitmproxy, lai atklātu API resursdatorus un galapunktu struktūras
+1. Identificējiet bināro failu/paplašinājumu VS Code / JetBrains platformu veikalos vai kā atsevišķu lietotni
+2. Pārtveriet datplūsmu ar mitmproxy, lai noskaidrotu API resursdatorus un galapunktu struktūru
 3. Nosakiet autentifikācijas mehānismu
-4. Izvērtējiet ieviešanas lietderību, pamatojoties uz pakalpojuma noteikumiem un API atklājamību
+4. Novērtējiet, vai turpināt vai neturpināt, pamatojoties uz pakalpojuma lietošanas noteikumiem un API atklājamību
 
-Līdz izpētes pabeigšanai Trae kartītē informācijas panelī tiek rādīta emblēma „Notiek izpēte” ar saiti „Ziņot par īstenojamību”. Apdarinātāja aizmetnis failā `src/mitm/handlers/trae.ts` izmet strukturētu kļūdu `Vēl nav ieviests`.
+Līdz izpētes pabeigšanai Trae kartītē informācijas panelī tiek rādīta emblēma "Notiek izpēte" ar saiti "Ziņot par dzīvotspēju". Apdarinātāja sagatave failā `src/mitm/handlers/trae.ts` izmet strukturētu kļūdu `Not yet implemented`.
 
-### Neizpildīto darbu aģenti (nepieciešams MITM — pielāgota bāzes URL atbalsta nav)
+### Neizpildīto darbu sarakstā esošie aģenti (nepieciešams MITM — pielāgota bāzes URL atbalsta nav)
 
-Tālāk norādītie rīki to pašreizējās versijās neatbalsta pielāgotus bāzes URL, tādēļ MITM ir vienīgais pārtveršanas veids. Īstenojamības izvērtēšana vēl nav pabeigta:
+Tālāk norādītie rīki savās pašreizējās versijās neatbalsta pielāgotus bāzes URL, tāpēc MITM ir vienīgais pārtveršanas veids. Dzīvotspējas novērtējums vēl nav veikts:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — atsevišķi no Kiro IDE)
 - **Cowork** (Anthropic darbvirsmas lietotne)
 
-Piezīme. GitHub Copilot CLI ≥v1.0.19 atbalsta `COPILOT_PROVIDER_BASE_URL` — šim rīkam MITM vietā izmantojiet tiešo konfigurāciju.
+Piezīme. GitHub Copilot CLI ≥v1.0.19 atbalsta `COPILOT_PROVIDER_BASE_URL` — šim rīkam MITM vietā izmantojiet tiešu konfigurāciju.

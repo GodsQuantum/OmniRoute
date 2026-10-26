@@ -20,7 +20,7 @@ Keď IDE agent (napr. GitHub Copilot, Cursor, Claude Code) vykoná volanie API, 
 
 To znamená, že môžete:
 
-- **Presmerovať akéhokoľvek agenta na akéhokoľvek poskytovateľa**: Copilot komunikuje s OpenAI? Presmerujte ho na Anthropic Claude, Gemini alebo na ktoréhokoľvek z 375 poskytovateľov OmniRoute.
+- **Presmerovať akéhokoľvek agenta na akéhokoľvek poskytovateľa**: Copilot komunikuje s OpenAI? Presmerujte ho na Anthropic Claude, Gemini alebo na ktoréhokoľvek z 376 poskytovateľov OmniRoute.
 - **Použiť mapovania modelov**: `gemini-3-flash` → `claude-sonnet-4.7` transparentne na úrovni handlera.
 - **Sledovať všetku komunikáciu agentov**: každá zachytená požiadavka je publikovaná do [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
 - **Využiť odolnosť OmniRoute**: kombinované smerovanie, circuit breakery, fallbacky a sledovanie nákladov fungujú aj pre komunikáciu IDE agentov.
@@ -548,22 +548,22 @@ Základná cesta: `/api/tools/agent-bridge/`
 
 ### Preskúmanie Trae
 
-Trae je relatívne nový asistent programovania s umelou inteligenciou. Pred implementáciou obslužného modulu:
+Trae je relatívne nový asistent na programovanie s umelou inteligenciou. Pred implementáciou obslužného modulu:
 
-1. Identifikujte binárny súbor/rozšírenie v marketplace VS Code / JetBrains alebo samostatnú aplikáciu
-2. Zachyťte prenos pomocou mitmproxy a zistite hostiteľov API a štruktúru koncových bodov
+1. Identifikujte binárny súbor/rozšírenie v obchodoch VS Code / JetBrains alebo samostatnú aplikáciu
+2. Zachyťte komunikáciu pomocou mitmproxy, aby ste zistili hostiteľov API a štruktúru koncových bodov
 3. Určte mechanizmus autentifikácie
-4. Na základe zmluvných podmienok a možnosti preskúmania API posúďte, či pokračovať
+4. Na základe podmienok používania a zistiteľnosti API posúďte, či pokračovať
 
-Kým sa preskúmanie nedokončí, karta Trae na ovládacom paneli zobrazuje odznak „Prebieha preskúmanie“ s odkazom „Nahlásiť realizovateľnosť“. Zástupný obslužný modul v `src/mitm/handlers/trae.ts` vyvolá štruktúrovanú chybu `Zatiaľ neimplementované`.
+Kým sa preskúmanie nedokončí, karta Trae na ovládacom paneli zobrazuje odznak „Preskúmava sa“ s odkazom „Nahlásiť životaschopnosť“. Kostra obslužného modulu v `src/mitm/handlers/trae.ts` vyvolá štruktúrovanú chybu `Not yet implemented`.
 
-### Agenti v zozname úloh (vyžaduje sa MITM — bez podpory vlastnej základnej adresy URL)
+### Agenti v zozname nevybavených úloh (vyžaduje sa MITM — bez podpory vlastnej základnej adresy URL)
 
-Nasledujúce nástroje vo svojich aktuálnych verziách nepodporujú vlastné základné adresy URL, takže MITM je jediným spôsobom zachytávania. Posúdenie realizovateľnosti zatiaľ nebolo dokončené:
+Nasledujúce nástroje vo svojich aktuálnych verziách nepodporujú vlastné základné adresy URL, takže MITM je jediným spôsobom zachytávania komunikácie. Posúdenie životaschopnosti ešte nebolo dokončené:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
-- **Amazon Q / Kiro CLI** (AWS Bedrock — oddelene od Kiro IDE)
+- **Amazon Q / Kiro CLI** (AWS Bedrock — odlišné od Kiro IDE)
 - **Cowork** (desktopová aplikácia Anthropic)
 
-Poznámka: GitHub Copilot CLI ≥v1.0.19 podporuje `COPILOT_PROVIDER_BASE_URL` — pre tento nástroj použite namiesto MITM priamu konfiguráciu.
+Poznámka: GitHub Copilot CLI ≥v1.0.19 podporuje `COPILOT_PROVIDER_BASE_URL` — pre tento nástroj namiesto MITM použite priamu konfiguráciu.

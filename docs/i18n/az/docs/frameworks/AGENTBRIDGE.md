@@ -20,7 +20,7 @@ IDE agenti (məsələn, GitHub Copilot, Cursor, Claude Code) API çağırışı 
 
 Bu o deməkdir ki, siz:
 
-- **İstənilən agenti istənilən provayderə yönləndirə bilərsiniz**: Copilot OpenAI ilə danışır? Onu Anthropic Claude, Gemini və ya OmniRoute-un 375 provayderindən istənilən birinə yönləndirin.
+- **İstənilən agenti istənilən provayderə yönləndirə bilərsiniz**: Copilot OpenAI ilə danışır? Onu Anthropic Claude, Gemini və ya OmniRoute-un 376 provayderindən istənilən birinə yönləndirin.
 - **Model uyğunlaşdırmaları tətbiq edin**: `gemini-3-flash` → `claude-sonnet-4.7` handler səviyyəsində şəffaf şəkildə.
 - **Bütün agent trafikini izləyin**: hər bir ələ keçirilmiş sorğu [Trafik İnspektoruna](./TRAFFIC_INSPECTOR.md) dərc olunur.
 - **OmniRoute dayanıqlılığını tətbiq edin**: kombo marşrutlaşdırma, circuit breaker-lər, fallback-lər və xərc izləmə IDE agent trafiki üçün də işləyir.
@@ -541,18 +541,18 @@ Tam OpenAPI sxemləri: `docs/openapi.yaml` → `AgentBridge` teqi.
 
 ### Trae araşdırması
 
-Trae nisbətən yeni süni intellekt əsaslı kodlaşdırma köməkçisidir. Emal modulunu tətbiq etməzdən əvvəl:
+Trae nisbətən yeni süni intellekt əsaslı kodlaşdırma köməkçisidir. Handler tətbiq etməzdən əvvəl:
 
-1. VS Code / JetBrains marketlərində və ya ayrıca tətbiq kimi binar faylı/genişləndirməni müəyyənləşdirin
-2. API hostlarını və endpoint strukturlarını aşkar etmək üçün trafiki mitmproxy ilə qeydə alın
+1. VS Code / JetBrains marketlərində və ya müstəqil tətbiq kimi binar faylı/genişlənməni müəyyənləşdirin
+2. API hostlarını və endpoint strukturlarını aşkar etmək üçün mitmproxy ilə trafiki qeydə alın
 3. Autentifikasiya mexanizmini müəyyənləşdirin
-4. İstifadə şərtləri və API-nin aşkarlana bilməsi əsasında davam edib-etməmək barədə qərar verin
+4. TOS və API-nin aşkarlana bilməsi əsasında davam edib-etməmək barədə qərar verin
 
-Araşdırma tamamlanana qədər idarəetmə panelindəki Trae kartında "Həyata keçirilə bilməsi barədə hesabat verin" keçidi ilə birlikdə "Araşdırılır" nişanı göstərilir. `src/mitm/handlers/trae.ts` ünvanındakı emal modulu şablonu strukturlaşdırılmış `Hələ tətbiq edilməyib` xətası yaradır.
+Araşdırma tamamlananadək idarəetmə panelindəki Trae kartında "Araşdırılır" nişanı və "Uyğunluq barədə hesabat verin" keçidi göstərilir. `src/mitm/handlers/trae.ts` ünvanındakı handler qaralaması strukturlaşdırılmış `Not yet implemented` xətası yaradır.
 
-### Gözləyən agentlər (MITM tələb olunur — fərdi baza URL-i dəstəklənmir)
+### Gözləmə siyahısındakı agentlər (MITM tələb olunur — fərdi baza URL-i dəstəklənmir)
 
-Aşağıdakı alətlər cari versiyalarında fərdi baza URL-lərini dəstəkləmir, buna görə də MITM yeganə ələkeçirmə yoludur. Həyata keçirilmə imkanının qiymətləndirilməsi gözlənilir:
+Aşağıdakı alətlər cari versiyalarında fərdi baza URL-lərini dəstəkləmir, buna görə də MITM yeganə müdaxilə yoludur. Uyğunluğun qiymətləndirilməsi gözlənilir:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)

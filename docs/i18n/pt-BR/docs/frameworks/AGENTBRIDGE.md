@@ -20,7 +20,7 @@ Quando um agente de IDE (por exemplo, GitHub Copilot, Cursor, Claude Code) faz u
 
 Isso significa que você pode:
 
-- **Redirecionar qualquer agente para qualquer provedor**: o Copilot está conversando com a OpenAI? Redirecione-o para o Anthropic Claude, o Gemini ou qualquer um dos 375 provedores do OmniRoute.
+- **Redirecionar qualquer agente para qualquer provedor**: o Copilot está conversando com a OpenAI? Redirecione-o para o Anthropic Claude, o Gemini ou qualquer um dos 376 provedores do OmniRoute.
 - **Aplicar mapeamentos de modelo**: `gemini-3-flash` → `claude-sonnet-4.7` de forma transparente no nível do handler.
 - **Observar todo o tráfego dos agentes**: cada requisição interceptada é publicada no [Inspetor de Tráfego](./TRAFFIC_INSPECTOR.md).
 - **Aplicar a resiliência do OmniRoute**: roteamento combinado, circuit breakers, fallbacks e rastreamento de custos também funcionam para o tráfego de agentes de IDE.
@@ -549,16 +549,16 @@ Esquemas OpenAPI completos: `docs/openapi.yaml` → tag `AgentBridge`.
 
 O Trae é um assistente de programação com IA relativamente novo. Antes de implementar um handler:
 
-1. Identificar o binário/extensão nos marketplaces do VS Code / JetBrains ou como um aplicativo independente
-2. Capturar o tráfego com mitmproxy para descobrir hosts de API e formatos de endpoints
-3. Determinar o mecanismo de autenticação
-4. Avaliar a viabilidade com base nos termos de serviço e na facilidade de descoberta da API
+1. Identifique o binário/extensão nos marketplaces do VS Code / JetBrains ou como um aplicativo independente
+2. Capture o tráfego com mitmproxy para descobrir os hosts da API e os formatos dos endpoints
+3. Determine o mecanismo de autenticação
+4. Avalie a viabilidade com base nos Termos de Serviço e na possibilidade de descoberta da API
 
-Até que a investigação seja concluída, o cartão do Trae no painel exibe um selo "Em investigação" com um link "Relatar viabilidade". O stub do handler em `src/mitm/handlers/trae.ts` lança um erro estruturado `Ainda não implementado`.
+Até que a investigação seja concluída, o cartão do Trae no painel exibe um selo "Em investigação" com um link "Relatar viabilidade". O stub do handler em `src/mitm/handlers/trae.ts` lança um erro estruturado `Not yet implemented`.
 
 ### Agentes no backlog (MITM obrigatório — sem suporte a URL base personalizada)
 
-As ferramentas a seguir não oferecem suporte a URLs base personalizadas em suas versões atuais, tornando o MITM o único caminho de interceptação. A avaliação de viabilidade está pendente:
+As ferramentas a seguir não oferecem suporte a URLs base personalizadas em suas versões atuais, fazendo do MITM o único caminho de interceptação. A avaliação de viabilidade está pendente:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
