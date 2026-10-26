@@ -13,7 +13,7 @@
 
 ## คืออะไร
 
-OmniRoute ลงทะเบียน provider ไว้ 375 ราย รวมถึงรายการแคตตาล็อก 155 รายการที่ทำเครื่องหมายเป็น **free/no-auth**
+OmniRoute ลงทะเบียน provider ไว้ 376 ราย รวมถึงรายการแคตตาล็อก 155 รายการที่ทำเครื่องหมายเป็น **free/no-auth**
 (no-auth,
 OAuth แบบ free-tier หรือ API key แบบ free-tier — ดู
 [คู่มือ Free Tiers](../getting-started/FREE-TIERS-GUIDE.md) และ

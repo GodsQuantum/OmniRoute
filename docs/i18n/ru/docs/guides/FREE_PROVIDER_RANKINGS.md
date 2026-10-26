@@ -13,7 +13,7 @@
 
 ## Что это такое
 
-OmniRoute регистрирует 375 провайдеров, включая 155 записей каталога, помеченных как **free/no-auth**
+OmniRoute регистрирует 376 провайдеров, включая 155 записей каталога, помеченных как **free/no-auth**
 (no-auth,
 free-tier OAuth или free-tier API key — см.
 [руководство по бесплатным тарифам](../getting-started/FREE-TIERS-GUIDE.md) и полный

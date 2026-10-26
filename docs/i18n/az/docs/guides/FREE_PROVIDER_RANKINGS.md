@@ -14,7 +14,7 @@
 
 ## Bu Nədir
 
-OmniRoute 375 provayderi qeydiyyata alır, o cümlədən **free/no-auth** kimi
+OmniRoute 376 provayderi qeydiyyata alır, o cümlədən **free/no-auth** kimi
 işarələnmiş 155 kataloq qeydi
 (no-auth,
 pulsuz səviyyəli OAuth və ya pulsuz səviyyəli API açarı — bax:

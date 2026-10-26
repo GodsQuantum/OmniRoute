@@ -12,7 +12,7 @@
 
 ## Mikä tämä on
 
-OmniRoute rekisteröi 375 palveluntarjoajaa, mukaan lukien 155 luettelomerkintää, jotka on merkitty **ilmainen/ei todennusta** (ei todennusta, ilmaisen tason OAuth tai ilmaisen tason API-avain — katso [Ilmaistasojen opas](../getting-started/FREE-TIERS-GUIDE.md) ja koko [Ilmaistasot-hakemisto](../reference/FREE_TIERS.md)). Siinä on kuitenkin muttansa: ilmaisten palveluntarjoajien mallien laatu vaihtelee suuresti. Huipputason mallia tarjoava todennukseton palveluntarjoaja on paljon hyödyllisempi kuin sellainen, joka tarjoaa pientä vanhentunutta mallia.
+OmniRoute rekisteröi 376 palveluntarjoajaa, mukaan lukien 155 luettelomerkintää, jotka on merkitty **ilmainen/ei todennusta** (ei todennusta, ilmaisen tason OAuth tai ilmaisen tason API-avain — katso [Ilmaistasojen opas](../getting-started/FREE-TIERS-GUIDE.md) ja koko [Ilmaistasot-hakemisto](../reference/FREE_TIERS.md)). Siinä on kuitenkin muttansa: ilmaisten palveluntarjoajien mallien laatu vaihtelee suuresti. Huipputason mallia tarjoava todennukseton palveluntarjoaja on paljon hyödyllisempi kuin sellainen, joka tarjoaa pientä vanhentunutta mallia.
 
 **Ilmaisten palveluntarjoajien sijoitukset** vastaa kysymykseen "**mikä ilmainen palveluntarjoaja antaa minulle parhaan mallin?**" yhdistämällä kunkin ilmaisen palveluntarjoajan luettelon **joukkoutettuihin laatupisteisiin** **Arena AI -tulostaulusta** (ihmisten mieltymyksiin perustuva ELO, sama idea kuin LMArena-chatbot-areenan taustalla). Palveluntarjoajat sijoitetaan sitten niiden **parhaan ilmaisen mallin** vahvuuden mukaan.
 

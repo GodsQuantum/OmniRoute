@@ -13,7 +13,7 @@
 
 ## Ce que c'est
 
-OmniRoute répertorie 375 fournisseurs, dont 155 entrées de catalogue marquées **free/no-auth**
+OmniRoute répertorie 376 fournisseurs, dont 155 entrées de catalogue marquées **free/no-auth**
 (sans authentification, OAuth avec niveau gratuit ou clé API avec niveau gratuit — voir le
 [Guide des niveaux gratuits](../getting-started/FREE-TIERS-GUIDE.md) et le
 [répertoire complet des niveaux gratuits](../reference/FREE_TIERS.md)). Le hic : la qualité

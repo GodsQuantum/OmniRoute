@@ -13,7 +13,7 @@
 
 ## ଏହା କ'ଣ
 
-OmniRoute 375 ଜଣ ପ୍ରୋଭାଇଡର ପଞ୍ଜୀକୃତ କରେ, ଯେଉଁଥିରେ 155 ଟି କାଟାଲଗ ଏଣ୍ଟ୍ରି **free/no-auth** ଭାବରେ ଚିହ୍ନଟ ଅଛି
+OmniRoute 376 ଜଣ ପ୍ରୋଭାଇଡର ପଞ୍ଜୀକୃତ କରେ, ଯେଉଁଥିରେ 155 ଟି କାଟାଲଗ ଏଣ୍ଟ୍ରି **free/no-auth** ଭାବରେ ଚିହ୍ନଟ ଅଛି
 (no-auth,
 free-tier OAuth, କିମ୍ବା free-tier API key —
 [Free Tiers Guide](../getting-started/FREE-TIERS-GUIDE.md) ଏବଂ ସମ୍ପୂର୍ଣ୍ଣ

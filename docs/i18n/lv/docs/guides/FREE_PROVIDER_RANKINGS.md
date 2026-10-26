@@ -12,7 +12,7 @@
 
 ## Kas tas ir
 
-OmniRoute reģistrē 375 pakalpojumu sniedzējus, tostarp 155 kataloga ierakstus, kas atzīmēti kā **free/no-auth**
+OmniRoute reģistrē 376 pakalpojumu sniedzējus, tostarp 155 kataloga ierakstus, kas atzīmēti kā **free/no-auth**
 (bez autentifikācijas,
 bezmaksas līmeņa OAuth vai bezmaksas līmeņa API atslēga — skatiet
 [Bezmaksas līmeņu ceļvedi](../getting-started/FREE-TIERS-GUIDE.md) un pilno

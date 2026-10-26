@@ -12,7 +12,7 @@
 
 ## Šta je ovo
 
-OmniRoute registruje 375 provajdera, uključujući 155 unosa u katalogu označenih kao **free/no-auth**
+OmniRoute registruje 376 provajdera, uključujući 155 unosa u katalogu označenih kao **free/no-auth**
 (no-auth, free-tier OAuth ili free-tier API ključ — pogledajte
 [Vodič kroz besplatne pakete](../getting-started/FREE-TIERS-GUIDE.md) i potpuni
 [direktorij besplatnih paketa](../reference/FREE_TIERS.md)). Tu je kvaka: besplatni provajderi

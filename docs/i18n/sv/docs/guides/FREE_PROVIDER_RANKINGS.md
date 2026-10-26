@@ -13,7 +13,7 @@
 
 ## Vad det är
 
-OmniRoute registrerar 375 leverantörer, varav 155 katalogposter markerade som **kostnadsfria/no-auth**
+OmniRoute registrerar 376 leverantörer, varav 155 katalogposter markerade som **kostnadsfria/no-auth**
 (no-auth, OAuth med kostnadsfri nivå eller API-nyckel med kostnadsfri nivå — se
 [guiden till kostnadsfria nivåer](../getting-started/FREE-TIERS-GUIDE.md) och den fullständiga
 [katalogen över kostnadsfria nivåer](../reference/FREE_TIERS.md)). Haken: kostnadsfria leverantörer

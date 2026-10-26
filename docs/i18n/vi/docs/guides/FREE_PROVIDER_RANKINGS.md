@@ -13,7 +13,7 @@
 
 ## Giới thiệu
 
-OmniRoute đăng ký 375 nhà cung cấp, trong đó có 155 mục danh mục được đánh dấu **free/no-auth**
+OmniRoute đăng ký 376 nhà cung cấp, trong đó có 155 mục danh mục được đánh dấu **free/no-auth**
 (no-auth,
 OAuth có tầng miễn phí, hoặc API key có tầng miễn phí — xem
 [Hướng dẫn về các tầng miễn phí](../getting-started/FREE-TIERS-GUIDE.md) và toàn bộ

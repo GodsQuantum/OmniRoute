@@ -13,7 +13,7 @@
 
 ## Kas tai yra
 
-„OmniRoute“ registruoja 375 tiekėjus, įskaitant 155 katalogo įrašus, pažymėtus kaip **nemokami / be autentifikacijos**
+„OmniRoute“ registruoja 376 tiekėjus, įskaitant 155 katalogo įrašus, pažymėtus kaip **nemokami / be autentifikacijos**
 (be autentifikacijos,
 nemokamo lygmens OAuth arba nemokamo lygmens API raktas — žr.
 [Nemokamų lygmenų vadovą](../getting-started/FREE-TIERS-GUIDE.md) ir visą

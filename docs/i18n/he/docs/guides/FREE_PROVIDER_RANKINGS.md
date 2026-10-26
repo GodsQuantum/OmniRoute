@@ -13,7 +13,7 @@
 
 ## מה זה
 
-OmniRoute רושם 375 ספקים, כולל 155 ערכי קטלוג המסומנים כ-**free/no-auth**
+OmniRoute רושם 376 ספקים, כולל 155 ערכי קטלוג המסומנים כ-**free/no-auth**
 (no-auth,
 OAuth ברמה חינמית, או מפתח API ברמה חינמית — ראו את
 [מדריך הרמות החינמיות](../getting-started/FREE-TIERS-GUIDE.md) ואת

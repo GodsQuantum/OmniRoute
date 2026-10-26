@@ -12,7 +12,7 @@
 
 ## Was es ist
 
-OmniRoute registriert 375 Anbieter, darunter 155 Katalogeinträge mit der Markierung **kostenlos/ohne Auth**
+OmniRoute registriert 376 Anbieter, darunter 155 Katalogeinträge mit der Markierung **kostenlos/ohne Auth**
 (ohne Auth,
 kostenloser OAuth-Tier oder kostenloser API-Key-Tier — siehe den
 [Free-Tiers-Leitfaden](../getting-started/FREE-TIERS-GUIDE.md) und das vollständige

@@ -13,7 +13,7 @@
 
 ## အကျဉ်းချုပ်
 
-OmniRoute သည် provider 375 ခုကို မှတ်ပုံတင်ထားပြီး၊ ၎င်းတို့အနက် catalog entry 155 ခုကို **free/no-auth** ဟု မှတ်သားထားသည်
+OmniRoute သည် provider 376 ခုကို မှတ်ပုံတင်ထားပြီး၊ ၎င်းတို့အနက် catalog entry 155 ခုကို **free/no-auth** ဟု မှတ်သားထားသည်
 (no-auth၊
 free-tier OAuth၊ သို့မဟုတ် free-tier API key —
 [Free Tiers Guide](../getting-started/FREE-TIERS-GUIDE.md) နှင့် အပြည့်အစုံ

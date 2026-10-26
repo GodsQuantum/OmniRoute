@@ -13,7 +13,7 @@
 
 ## Ce este
 
-OmniRoute înregistrează 375 de furnizori, inclusiv 155 de intrări de catalog marcate **gratuit/fără autentificare**
+OmniRoute înregistrează 376 de furnizori, inclusiv 155 de intrări de catalog marcate **gratuit/fără autentificare**
 (fără autentificare,
 OAuth cu nivel gratuit sau cheie API cu nivel gratuit — consultați
 [Ghidul nivelurilor gratuite](../getting-started/FREE-TIERS-GUIDE.md) și

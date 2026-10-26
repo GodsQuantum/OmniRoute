@@ -12,7 +12,7 @@
 
 ## ਇਹ ਕੀ ਹੈ
 
-OmniRoute 375 ਪ੍ਰੋਵਾਇਡਰ ਰਜਿਸਟਰ ਕਰਦਾ ਹੈ, ਜਿਸ ਵਿੱਚ 155 ਕੈਟਾਲਾਗ ਐਂਟਰੀਆਂ **ਮੁਫ਼ਤ/no-auth**
+OmniRoute 376 ਪ੍ਰੋਵਾਇਡਰ ਰਜਿਸਟਰ ਕਰਦਾ ਹੈ, ਜਿਸ ਵਿੱਚ 155 ਕੈਟਾਲਾਗ ਐਂਟਰੀਆਂ **ਮੁਫ਼ਤ/no-auth**
 (no-auth, free-tier OAuth, ਜਾਂ free-tier API key —
 [ਮੁਫ਼ਤ ਟੀਅਰ ਗਾਈਡ](../getting-started/FREE-TIERS-GUIDE.md) ਅਤੇ ਪੂਰੀ
 [ਮੁਫ਼ਤ ਟੀਅਰ ਡਾਇਰੈਕਟਰੀ](../reference/FREE_TIERS.md) ਵੇਖੋ) ਦੇ ਤੌਰ 'ਤੇ ਚਿੰਨ੍ਹਿਤ ਹਨ।

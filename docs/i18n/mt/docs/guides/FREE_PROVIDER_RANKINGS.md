@@ -13,7 +13,7 @@
 
 ## X'inhu
 
-OmniRoute tirreġistra 375 fornitur, inklużi 155 entratura fil-katalgu mmarkata **b'xejn/no-auth**
+OmniRoute tirreġistra 376 fornitur, inklużi 155 entratura fil-katalgu mmarkata **b'xejn/no-auth**
 (no-auth, OAuth b'livell b'xejn, jew ċavetta API b'livell b'xejn — ara l-
 [Gwida dwar is-Saffi B'xejn](../getting-started/FREE-TIERS-GUIDE.md) u d-
 [direttorju sħiħ tas-Saffi B'xejn](../reference/FREE_TIERS.md)). Il-problema: il-fornituri b'xejn jvarjaw

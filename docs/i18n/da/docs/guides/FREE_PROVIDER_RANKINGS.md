@@ -13,7 +13,7 @@
 
 ## Hvad det er
 
-OmniRoute registrerer 375 udbydere, herunder 155 katalogposter markeret som **gratis/uden-godkendelse**
+OmniRoute registrerer 376 udbydere, herunder 155 katalogposter markeret som **gratis/uden-godkendelse**
 (uden-godkendelse,
 OAuth på gratisniveau eller API-nøgle på gratisniveau — se
 [guiden til gratisniveauer](../getting-started/FREE-TIERS-GUIDE.md) og den fulde

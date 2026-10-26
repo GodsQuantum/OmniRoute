@@ -13,7 +13,7 @@
 
 ## O Que É
 
-O OmniRoute registra 375 provedores, incluindo 155 entradas de catálogo marcadas como **free/no-auth**
+O OmniRoute registra 376 provedores, incluindo 155 entradas de catálogo marcadas como **free/no-auth**
 (no-auth,
 OAuth com nível gratuito ou chave de API com nível gratuito — veja o
 [Guia de Níveis Gratuitos](../getting-started/FREE-TIERS-GUIDE.md) e o diretório completo de

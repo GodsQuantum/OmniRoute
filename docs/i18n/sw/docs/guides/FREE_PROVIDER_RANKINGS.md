@@ -13,7 +13,7 @@
 
 ## Ni Nini
 
-OmniRoute husajili watoa huduma 375, ikijumuisha viingilio 155 vya katalogi vilivyowekewa alama **bure/bila-uthibitishaji**
+OmniRoute husajili watoa huduma 376, ikijumuisha viingilio 155 vya katalogi vilivyowekewa alama **bure/bila-uthibitishaji**
 (bila-uthibitishaji,
 OAuth ya kiwango cha bure, au ufunguo wa API wa kiwango cha bure — angalia
 [Mwongozo wa Viwango vya Bure](../getting-started/FREE-TIERS-GUIDE.md) na

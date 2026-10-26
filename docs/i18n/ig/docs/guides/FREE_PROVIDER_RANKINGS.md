@@ -13,7 +13,7 @@
 
 ## Ihe Ọ Bụ
 
-OmniRoute debanyere ndị na-enye ọrụ 375, gụnyere ndenye ndepụta 155 e gosipụtara **efu/enweghị njirimara**
+OmniRoute debanyere ndị na-enye ọrụ 376, gụnyere ndenye ndepụta 155 e gosipụtara **efu/enweghị njirimara**
 (enweghị njirimara,
 OAuth ogo efu, ma ọ bụ igodo API ogo efu — lee
 [Ntuziaka Ogo Efu](../getting-started/FREE-TIERS-GUIDE.md) na ndekọ

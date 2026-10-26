@@ -14,7 +14,7 @@
 
 ## Nedir
 
-OmniRoute 375 sağlayıcı kaydeder; bunların 155'i **ücretsiz/kimlik-doğrulamasız**
+OmniRoute 376 sağlayıcı kaydeder; bunların 155'i **ücretsiz/kimlik-doğrulamasız**
 olarak işaretlenmiş katalog girdisidir
 (kimlik-doğrulamasız, ücretsiz katman OAuth veya ücretsiz katman API anahtarı — bkz.
 [Ücretsiz Katmanlar Kılavuzu](../getting-started/FREE-TIERS-GUIDE.md) ve tam

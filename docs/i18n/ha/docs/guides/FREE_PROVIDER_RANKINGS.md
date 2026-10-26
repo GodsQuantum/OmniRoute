@@ -13,7 +13,7 @@
 
 ## Abin Da Yake
 
-OmniRoute tana rajistar masu samarwa 375, ciki har da shigarwar catalog 155 da aka yi musu alamar **free/no-auth**
+OmniRoute tana rajistar masu samarwa 376, ciki har da shigarwar catalog 155 da aka yi musu alamar **free/no-auth**
 (no-auth,
 OAuth na free-tier, ko API key na free-tier — duba
 [Jagoran Free Tiers](../getting-started/FREE-TIERS-GUIDE.md) da kuma cikakken

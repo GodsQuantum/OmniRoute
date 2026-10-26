@@ -13,7 +13,7 @@
 
 ## Što je to
 
-OmniRoute registrira 375 pružatelja, uključujući 155 zapisa u katalogu označenih kao **besplatno/bez autentifikacije**
+OmniRoute registrira 376 pružatelja, uključujući 155 zapisa u katalogu označenih kao **besplatno/bez autentifikacije**
 (bez autentifikacije, OAuth s besplatnim slojem ili API ključ s besplatnim slojem — pogledajte
 [Vodič za besplatne slojeve](../getting-started/FREE-TIERS-GUIDE.md) i cjeloviti
 [direktorij besplatnih slojeva](../reference/FREE_TIERS.md)). Kvaka: besplatni se pružatelji

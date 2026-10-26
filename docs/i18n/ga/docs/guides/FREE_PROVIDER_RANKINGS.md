@@ -13,7 +13,7 @@
 
 ## Cad atá i gceist
 
-Cláraíonn OmniRoute 375 soláthraí, lena n-áirítear 155 iontráil chatalóige atá marcáilte **saor in aisce/gan údarú**
+Cláraíonn OmniRoute 376 soláthraí, lena n-áirítear 155 iontráil chatalóige atá marcáilte **saor in aisce/gan údarú**
 (gan údarú,
 OAuth le sraith saor in aisce, nó eochair API le sraith saor in aisce — féach an
 [Treoir faoi Shraitheanna Saor in Aisce](../getting-started/FREE-TIERS-GUIDE.md) agus an t-eolaire iomlán

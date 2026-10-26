@@ -13,7 +13,7 @@
 
 ## Hva det er
 
-OmniRoute registrerer 375 leverandører, inkludert 155 katalogoppføringer merket **gratis/uten autentisering**
+OmniRoute registrerer 376 leverandører, inkludert 155 katalogoppføringer merket **gratis/uten autentisering**
 (uten autentisering, OAuth med gratisnivå, eller API-nøkkel med gratisnivå — se
 [guiden for gratisnivåer](../getting-started/FREE-TIERS-GUIDE.md) og hele
 [katalogen over gratisnivåer](../reference/FREE_TIERS.md)). Haken er at gratisleverandører varierer
