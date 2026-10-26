@@ -15,7 +15,7 @@ Ele fornece um único endpoint compatível com OpenAI (`/v1/*`) e roteia o tráf
 
 Principais recursos:
 
-- Superfície de API compatível com OpenAI para CLIs/ferramentas (375 provedores, 156 módulos executores)
+- Superfície de API compatível com OpenAI para CLIs/ferramentas (376 provedores, 156 módulos executores)
 - Tradução de solicitações/respostas entre formatos de provedores
 - Fallback de combinações de modelos (sequência de vários modelos)
 - Etapas estruturadas de combinação (`provider + model + connection`) com ordenação em tempo de execução por `compositeTiers`
@@ -1102,11 +1102,11 @@ compatibilidade legada. O contrato de runtime atual utiliza:
 - migrações de esquema do SQLite e hooks de atualização automática na inicialização
 - caminho de compatibilidade para migração de JSON legado → SQLite
 
-## 6) Proteção contra SSRF / URLs de Saída
+## 6) Proteção contra SSRF / URLs de saída
 
-- `src/shared/network/outboundUrlGuard.ts` bloqueia todos os URLs de destino privados, de loopback ou link-local antes que cheguem aos executores dos provedores
-- As rotas de descoberta e validação de modelos de provedores usam `src/shared/network/safeOutboundFetch.ts`, que aplica a proteção antes de cada solicitação de saída
-- Erros da proteção são expostos como `URL_GUARD_BLOCKED` com HTTP 422 e registrados na trilha de auditoria de conformidade por meio de `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) aplica `src/shared/network/outboundUrlGuard.ts` às solicitações de chat enviadas por meio de `BaseExecutor.execute()`. No modo somente público (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` com a opção de endereços privados desativada), ela bloqueia hosts privados e de loopback, além de 169.254.0.0/16; em todos os outros modos, ela bloqueia hosts de metadados de nuvem. Ela verifica o nome do host ou o literal de IP conforme fornecido, antes de qualquer consulta DNS. Provedores locais integrados não passam por essa verificação.
+- As rotas de descoberta e validação de modelos dos provedores usam `src/shared/network/safeOutboundFetch.ts`, que aplica a proteção antes de cada solicitação de saída
+- Os erros da proteção são apresentados como `URL_GUARD_BLOCKED` com HTTP 503 (`getSafeOutboundFetchErrorStatus`; a rota de descoberta de modelos retorna 400), e bloqueios reais de SSRF durante a validação são registrados na trilha de auditoria como eventos `provider.validation.ssrf_blocked`
 
 ## Observabilidade e Sinais Operacionais
 

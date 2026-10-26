@@ -17,7 +17,7 @@ See pakub ühtset OpenAI-ga ühilduvat lõpp-punkti (`/v1/*`) ning marsruudib li
 
 Põhivõimekused:
 
-- OpenAI-ga ühilduv API-liides CLI-dele ja tööriistadele (375 teenusepakkujat, 156 käivitusmoodulit)
+- OpenAI-ga ühilduv API-liides CLI-dele ja tööriistadele (376 teenusepakkujat, 156 käivitusmoodulit)
 - Päringute ja vastuste teisendamine teenusepakkujate vormingute vahel
 - Mudelikombinatsioonide tõrkesiire (mitme mudeli järjestus)
 - Struktureeritud kombinatsioonisammud (`provider + model + connection`) käitusaegse järjestamisega `compositeTiers` alusel
@@ -1002,37 +1002,37 @@ Kõik muud pakkujad (kaasa arvatud kohandatud ühilduvad sõlmed) kasutavad `Def
 | OpenCode (Go/Zen)   | openai           | OAuth                     | ✅               | ✅         | ✅                | ❌                            |
 | CLIProxyAPI         | openai           | Kohandatud                | ✅               | ✅         | ❌                | ❌                            |
 
-## Vormingu teisendamise kaetus
+## Vormingute tõlkimise katvus
 
-Tuvastatud lähtevormingud sisaldavad:
+Tuvastatavad lähtevormingud on järgmised:
 
 - `openai`
 - `openai-responses`
 - `claude`
 - `gemini`
 
-Sihtvormingud sisaldavad:
+Sihtvormingud on järgmised:
 
-- OpenAI chat/Responses
+- OpenAI vestlus/Responses
 - Claude
-- Gemini/Antigravity envelope
+- Gemini/Antigravity ümbris
 - Kiro
 - Cursor
 
-Teisendused kasutavad **OpenAI-t keskse vormingina (hub format)** — kõik teisendused toimuvad läbi OpenAI vahepealse vorminguna:
+Tõlkimisel kasutatakse **OpenAI-d keskse vorminguna** — kõik teisendused läbivad vahevorminguna OpenAI-d:
 
 ```
-Lähtevorming → OpenAI (hub) → Sihtvorming
+Lähtevorming → OpenAI (keskne) → Sihtvorming
 ```
 
-Teisendused valitakse dünaamiliselt lähtekasuliku andmemahu kuju ja teenusepakkuja sihtvormingu alusel.
+Tõlked valitakse dünaamiliselt lähtekoormuse struktuuri ja teenusepakkuja sihtvormingu põhjal.
 
-Teisenduspipeline'i täiendavad töötlusetapid:
+Täiendavad töötluskihid tõlkekonveieris:
 
-- **Vastuse puhastamine (sanitization)** — Eemaldab OpenAI-vormingus vastustest (nii voogesituse kui mitte-voogesituse korral) mittestandardsed väljad, tagamaks range SDK-le vastavuse
-- **Rolli normaliseerimine** — Teisendab `developer` → `system` mitte-OpenAI sihtvormingute jaoks; ühendab `system` → `user` mudelite jaoks, mis lükkavad system-rolli tagasi (GLM, ERNIE)
-- **Think-tag'ide eraldamine** — Analüüsib `` blokid sisust ja eraldab need `reasoning_content` väljale
-- **Struktureeritud väljund** — Teisendab OpenAI `response_format.json_schema` Gemini `responseMimeType` + `responseSchema` vormingusse
+- **Vastuse puhastamine** — eemaldab OpenAI-vormingus vastustest ebastandardsed väljad (nii voogedastusega kui ka voogedastuseta), et tagada range vastavus SDK nõuetele
+- **Rollide normaliseerimine** — teisendab `developer` → `system` mitte-OpenAI sihtvormingute jaoks; ühendab `system` → `user` mudelite puhul, mis süsteemirolli ei aktsepteeri (GLM, ERNIE)
+- **Mõtlemismärgendite eraldamine** — sõelub sisust plokid `<think>...</think>` väljale `reasoning_content`
+- **Struktureeritud väljund** — teisendab OpenAI `response_format.json_schema` Gemini väljadeks `responseMimeType` + `responseSchema`
 
 ## Toetatud API lõpp-punktid
 
@@ -1098,11 +1098,11 @@ Vanem failipõhine päringulogija (`open-sse/utils/requestLogger.ts`) on säilit
 - SQLite skeemi migratsioonid ja automaatse uuendamise hoogud käivitamisel
 - vana JSON → SQLite migratsiooni ühilduvustee
 
-## 6) SSRF / väljuva URL-i kaitse
+## 6) SSRF / väljaminevate URL-ide kaitse
 
-- `src/shared/network/outboundUrlGuard.ts` blokeerib kõik privaatsed/loopback/link-local sihtmärk-URL-id enne, kui need jõuavad pakkuja täitjatesse
-- Pakkuja mudeli avastamise ja valideerimise rajad kasutavad `src/shared/network/safeOutboundFetch.ts`, mis rakendab kaitset enne igat väljuvat päringut
-- Kaitse vead ilmuvad kui `URL_GUARD_BLOCKED` koos HTTP 422 staatusega ning logitakse vastavuse auditi rajale `providerAudit.ts` kaudu
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) rakendab `src/shared/network/outboundUrlGuard.ts`-i vestluspäringutele, mis saadetakse `BaseExecutor.execute()` kaudu. Ainult avaliku võrgu režiimis (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, kui privaatvõrgu lipp on välja lülitatud) blokeerib see privaat- ja tagasisideaadressidega hostid ning vahemiku 169.254.0.0/16; kõigis teistes režiimides blokeerib see pilveteenuste metaandmete hostid. See kontrollib hostinime või IP-literaali täpselt kirjapandud kujul enne mis tahes DNS-päringut. Sisseehitatud kohalikud teenusepakkujad jätavad selle kontrolli vahele.
+- Teenusepakkuja mudelite tuvastamise ja valideerimise marsruudid kasutavad faili `src/shared/network/safeOutboundFetch.ts`, mis rakendab kaitset enne iga väljaminevat päringut.
+- Kaitsevead kuvatakse väärtusena `URL_GUARD_BLOCKED` koos HTTP olekukoodiga 503 (`getSafeOutboundFetchErrorStatus`; mudelite tuvastamise marsruut tagastab olekukoodi 400) ning valideerimise käigus tuvastatud tegelikud SSRF-i blokeerimised logitakse auditijälge sündmustena `provider.validation.ssrf_blocked`.
 
 ## Vaadeldavus ja operatiivsed signaalid
 

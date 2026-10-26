@@ -15,7 +15,7 @@ Pruža jedinstvenu krajnju tačku kompatibilnu s OpenAI-jem (`/v1/*`) i usmjerav
 
 Ključne mogućnosti:
 
-- API interfejs kompatibilan s OpenAI-jem za CLI/alate (375 pružalaca, 156 izvršnih modula)
+- API interfejs kompatibilan s OpenAI-jem za CLI/alate (376 pružalaca, 156 izvršnih modula)
 - Prevođenje zahtjeva/odgovora između formata pružalaca
 - Prebacivanje na rezervne modele unutar kombinacije (slijed više modela)
 - Strukturirani koraci kombinacije (`provider + model + connection`) s redoslijedom u vrijeme izvršavanja prema `compositeTiers`
@@ -1029,13 +1029,13 @@ Prevođenja koriste **OpenAI kao centralni format** — sve konverzije prolaze k
 Izvorni format → OpenAI (centralni format) → Ciljni format
 ```
 
-Prevođenja se biraju dinamički na osnovu strukture izvornog sadržaja zahtjeva i ciljnog formata pružaoca usluge.
+Prevođenja se dinamički odabiru na osnovu strukture izvornog korisnog sadržaja i ciljnog formata pružatelja usluge.
 
 Dodatni slojevi obrade u procesu prevođenja:
 
-- **Sanitizacija odgovora** — Uklanja nestandardna polja iz odgovora u OpenAI formatu (i kod streaminga i bez streaminga) kako bi se osigurala stroga usklađenost sa SDK-om
-- **Normalizacija uloga** — Pretvara `developer` → `system` za ciljeve koji nisu OpenAI; spaja `system` → `user` za modele koji odbijaju sistemsku ulogu (GLM, ERNIE)
-- **Izdvajanje oznaka za razmišljanje** — Parsira blokove `` iz sadržaja u polje `reasoning_content`
+- **Sanitizacija odgovora** — Uklanja nestandardna polja iz odgovora u OpenAI formatu (i strimovanih i nestrimovanih) kako bi se osigurala stroga usklađenost sa SDK-om
+- **Normalizacija uloga** — Pretvara `developer` → `system` za ciljne sisteme koji nisu OpenAI; spaja `system` → `user` za modele koji odbijaju sistemsku ulogu (GLM, ERNIE)
+- **Izdvajanje oznake za razmišljanje** — Parsira blokove `<think>...</think>` iz sadržaja u polje `reasoning_content`
 - **Strukturirani izlaz** — Pretvara OpenAI `response_format.json_schema` u Gemini `responseMimeType` + `responseSchema`
 
 ## Podržane API krajnje tačke
@@ -1104,9 +1104,9 @@ kompatibilnosti sa starijim verzijama. Trenutni ugovor izvršnog okruženja kori
 
 ## 6) SSRF / zaštita odlaznih URL-ova
 
-- `src/shared/network/outboundUrlGuard.ts` blokira sve privatne, povratne i lokalne ciljne URL-ove prije nego što stignu do izvršilaca pružaoca usluge
-- Rute za otkrivanje i provjeru modela pružaoca usluge koriste `src/shared/network/safeOutboundFetch.ts`, koji primjenjuje zaštitu prije svakog odlaznog zahtjeva
-- Greške zaštite prikazuju se kao `URL_GUARD_BLOCKED` sa statusom HTTP 422 i evidentiraju se u revizijskom tragu usklađenosti putem `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) primjenjuje `src/shared/network/outboundUrlGuard.ts` na zahtjeve za razgovor poslane putem `BaseExecutor.execute()`. U načinu rada samo za javne adrese (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` uz isključenu privatnu zastavicu) blokira privatne i povratne hostove te 169.254.0.0/16; u svakom drugom načinu rada blokira hostove za metapodatke u oblaku. Provjerava naziv hosta ili doslovnu IP adresu u navedenom obliku prije bilo kakvog DNS upita. Ugrađeni lokalni pružaoci usluga ga zaobilaze.
+- Rute za otkrivanje i validaciju modela pružaoca usluga koriste `src/shared/network/safeOutboundFetch.ts`, koji primjenjuje zaštitu prije svakog odlaznog zahtjeva
+- Greške zaštite prikazuju se kao `URL_GUARD_BLOCKED` uz HTTP 503 (`getSafeOutboundFetchErrorStatus`; ruta za otkrivanje modela vraća 400), a stvarne SSRF blokade tokom validacije bilježe se u revizijski trag kao događaji `provider.validation.ssrf_blocked`
 
 ## Uočljivost i operativni signali
 

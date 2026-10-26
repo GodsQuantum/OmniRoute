@@ -15,7 +15,7 @@ Zagotavlja enotno končno točko, združljivo z OpenAI (`/v1/*`), ter usmerja pr
 
 Ključne zmogljivosti:
 
-- Površina API-ja, združljiva z OpenAI, za CLI/orodja (375 ponudnikov, 156 izvajalnih modulov)
+- Površina API-ja, združljiva z OpenAI, za CLI/orodja (376 ponudnikov, 156 izvajalnih modulov)
 - Prevajanje zahtev in odgovorov med oblikami ponudnikov
 - Nadomestne možnosti kombinacij modelov (zaporedje več modelov)
 - Strukturirani koraki kombinacij (`provider + model + connection`) z izvajanjem po vrstnem redu, ki ga določa `compositeTiers`
@@ -1102,11 +1102,11 @@ združljivosti s starejšimi različicami. Trenutna izvajalna pogodba uporablja:
 - migracije sheme SQLite in kavlji za samodejno nadgradnjo ob zagonu
 - združljivostna pot za migracijo iz starejšega formata JSON → SQLite
 
-## 6) Zaščita pred SSRF/odhodnimi URL-ji
+## 6) SSRF / Zaščita odhodnih URL-jev
 
-- `src/shared/network/outboundUrlGuard.ts` blokira vse zasebne, povratne in lokalne ciljne URL-je, preden dosežejo izvajalnike ponudnikov
-- poti za odkrivanje in preverjanje modelov ponudnikov uporabljajo `src/shared/network/safeOutboundFetch.ts`, ki pred vsako odhodno zahtevo uporabi zaščito
-- napake zaščite se prikažejo kot `URL_GUARD_BLOCKED` s HTTP 422 in se prek `providerAudit.ts` zabeležijo v revizijsko sled skladnosti
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) za zahteve klepeta, poslane prek `BaseExecutor.execute()`, uporabi `src/shared/network/outboundUrlGuard.ts`. V načinu samo za javne naslove (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, pri čemer je zastavica za zasebne naslove izklopljena) blokira zasebne gostitelje, gostitelje povratne zanke in obseg 169.254.0.0/16; v vseh drugih načinih blokira gostitelje metapodatkov v oblaku. Ime gostitelja ali dobesedni naslov IP preveri tako, kot je zapisan, še pred kakršnim koli iskanjem DNS. Vgrajeni lokalni ponudniki to preverjanje preskočijo.
+- Poti za odkrivanje in preverjanje modelov ponudnikov uporabljajo `src/shared/network/safeOutboundFetch.ts`, ki zaščito uporabi pred vsako odhodno zahtevo.
+- Napake zaščite so prikazane kot `URL_GUARD_BLOCKED` s stanjem HTTP 503 (`getSafeOutboundFetchErrorStatus`; pot za odkrivanje modelov vrne 400), dejanske blokade SSRF med preverjanjem pa se v revizijsko sled zabeležijo kot dogodki `provider.validation.ssrf_blocked`.
 
 ## Opazljivost in operativni signali
 

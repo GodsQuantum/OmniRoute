@@ -15,7 +15,7 @@ Den leverer ét enkelt OpenAI-kompatibelt slutpunkt (`/v1/*`) og router trafik p
 
 Primære funktioner:
 
-- OpenAI-kompatibel API-grænseflade til CLI/værktøjer (375 udbydere, 156 eksekveringsmoduler)
+- OpenAI-kompatibel API-grænseflade til CLI/værktøjer (376 udbydere, 156 eksekveringsmoduler)
 - Oversættelse af forespørgsler og svar på tværs af udbyderformater
 - Fallback for modelkombinationer (sekvens med flere modeller)
 - Strukturerede kombinationstrin (`provider + model + connection`) med rækkefølge under kørsel baseret på `compositeTiers`
@@ -1101,11 +1101,11 @@ Den ældre filbaserede forespørgselslogger (`open-sse/utils/requestLogger.ts`) 
 - SQLite-skemamigreringer og hooks til automatisk opgradering ved opstart
 - kompatibilitetssti til migrering fra ældre JSON-format til SQLite
 
-## 6) SSRF-/beskyttelse af udgående URL'er
+## 6) SSRF-/udgående URL-beskyttelse
 
-- `src/shared/network/outboundUrlGuard.ts` blokerer alle private, loopback- og link-local-mål-URL'er, før de når udbydernes eksekveringskomponenter
-- Ruter til registrering og validering af udbydermodeller anvender `src/shared/network/safeOutboundFetch.ts`, som aktiverer beskyttelsen før hver udgående forespørgsel
-- Beskyttelsesfejl vises som `URL_GUARD_BLOCKED` med HTTP 422 og logges i revisionssporet for overholdelse via `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) anvender `src/shared/network/outboundUrlGuard.ts` på chatanmodninger, der sendes via `BaseExecutor.execute()`. I tilstanden kun offentlig (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` med det private flag slået fra) blokerer den private værter, loopback-værter og 169.254.0.0/16; i alle andre tilstande blokerer den cloud-metadata-værter. Den kontrollerer værtsnavnet eller den bogstavelige IP-adresse, som den er skrevet, før et eventuelt DNS-opslag. Indbyggede lokale udbydere springer kontrollen over.
+- Ruter til registrering og validering af udbydermodeller bruger `src/shared/network/safeOutboundFetch.ts`, som anvender beskyttelsen før hver udgående anmodning
+- Beskyttelsesfejl vises som `URL_GUARD_BLOCKED` med HTTP 503 (`getSafeOutboundFetchErrorStatus`; ruten til modelregistrering returnerer 400), og reelle SSRF-blokeringer under validering logges i revisionssporet som `provider.validation.ssrf_blocked`-hændelser
 
 ## Observerbarhed og operationelle signaler
 

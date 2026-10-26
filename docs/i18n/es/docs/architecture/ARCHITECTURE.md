@@ -15,7 +15,7 @@ Proporciona un único endpoint compatible con OpenAI (`/v1/*`) y enruta el tráf
 
 Capacidades principales:
 
-- Superficie de API compatible con OpenAI para CLI/herramientas (375 proveedores, 156 módulos ejecutores)
+- Superficie de API compatible con OpenAI para CLI/herramientas (376 proveedores, 156 módulos ejecutores)
 - Traducción de solicitudes/respuestas entre formatos de proveedores
 - Conmutación por error mediante combinaciones de modelos (secuencia de múltiples modelos)
 - Pasos de combinación estructurados (`provider + model + connection`) con ordenamiento en tiempo de ejecución mediante `compositeTiers`
@@ -1102,11 +1102,11 @@ compatibilidad con sistemas heredados. El contrato de ejecución actual utiliza:
 - migraciones del esquema de SQLite y mecanismos de actualización automática durante el inicio
 - ruta de compatibilidad para la migración de JSON heredado → SQLite
 
-## 6) Protección contra SSRF / URLs salientes
+## 6) SSRF / Protección de URL saliente
 
-- `src/shared/network/outboundUrlGuard.ts` bloquea todas las URLs de destino privadas, de bucle invertido o de enlace local antes de que lleguen a los ejecutores de los proveedores
-- Las rutas de descubrimiento y validación de modelos de proveedores utilizan `src/shared/network/safeOutboundFetch.ts`, que aplica la protección antes de cada solicitud saliente
-- Los errores de protección se notifican como `URL_GUARD_BLOCKED` con HTTP 422 y se registran en la traza de auditoría de cumplimiento mediante `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) aplica `src/shared/network/outboundUrlGuard.ts` a las solicitudes de chat enviadas mediante `BaseExecutor.execute()`. En el modo solo público (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` con la opción privada desactivada), bloquea los hosts privados y de bucle invertido, así como 169.254.0.0/16; en cualquier otro modo, bloquea los hosts de metadatos en la nube. Comprueba el nombre de host o el literal de IP tal como está escrito, antes de cualquier consulta DNS. Los proveedores locales integrados omiten esta comprobación.
+- Las rutas de detección y validación de modelos del proveedor utilizan `src/shared/network/safeOutboundFetch.ts`, que aplica la protección antes de cada solicitud saliente.
+- Los errores de protección se presentan como `URL_GUARD_BLOCKED` con HTTP 503 (`getSafeOutboundFetchErrorStatus`; la ruta de detección de modelos devuelve 400), y los bloqueos SSRF reales durante la validación se registran en el registro de auditoría como eventos `provider.validation.ssrf_blocked`.
 
 ## Observabilidad y señales operativas
 

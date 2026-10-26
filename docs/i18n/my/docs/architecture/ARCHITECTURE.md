@@ -15,7 +15,7 @@ OmniRoute သည် Next.js ပေါ်တွင် တည်ဆောက်ထ
 
 အဓိက စွမ်းဆောင်ရည်များ-
 
-- CLI/tools များအတွက် OpenAI နှင့် ကိုက်ညီသော API မျက်နှာပြင် (provider 375 ခု၊ executor module 156 ခု)
+- CLI/tools များအတွက် OpenAI နှင့် ကိုက်ညီသော API မျက်နှာပြင် (provider 376 ခု၊ executor module 156 ခု)
 - Provider format များအကြား request/response ဘာသာပြန်ပြောင်းလဲခြင်း
 - Model combo fallback (model အများအပြားပါဝင်သော အစီအစဉ်)
 - `compositeTiers` ဖြင့် runtime အစီအစဉ်သတ်မှတ်ထားသော ဖွဲ့စည်းပုံကျ combo အဆင့်များ (`provider + model + connection`)
@@ -1089,11 +1089,11 @@ Bypass handler (`open-sse/utils/bypassHandler.ts`) သည် Claude CLI မှ�
 - startup တွင် SQLite schema migration များနှင့် အလိုအလျောက် upgrade hook များ
 - legacy JSON → SQLite migration နှင့် ကိုက်ညီမှုရှိသော လမ်းကြောင်း
 
-## 6) SSRF / Outbound URL ကာကွယ်မှု
+## 6) SSRF / အပြင်ဘက် URL ကာကွယ်မှု
 
-- `src/shared/network/outboundUrlGuard.ts` သည် provider executor များထံ မရောက်ရှိမီ private/loopback/link-local target URL အားလုံးကို ပိတ်ဆို့သည်
-- Provider model ရှာဖွေမှုနှင့် validation route များသည် outbound request တစ်ခုစီမတိုင်မီ guard ကို အသုံးပြုသည့် `src/shared/network/safeOutboundFetch.ts` ကို အသုံးပြုသည်
-- Guard error များကို HTTP 422 နှင့်အတူ `URL_GUARD_BLOCKED` အဖြစ် ဖော်ပြပေးပြီး `providerAudit.ts` မှတစ်ဆင့် compliance audit trail တွင် မှတ်တမ်းတင်သည်
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) သည် `BaseExecutor.execute()` မှတစ်ဆင့် ပေးပို့သည့် ချတ်တောင်းဆိုမှုများတွင် `src/shared/network/outboundUrlGuard.ts` ကို အသုံးပြုသည်။ အများသုံးသီးသန့်မုဒ် (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` ဖြစ်ပြီး private flag ကို ပိတ်ထားသည့်အခါ) တွင် private နှင့် loopback host များအပြင် 169.254.0.0/16 ကိုပါ ပိတ်ဆို့သည်။ အခြားမုဒ်အားလုံးတွင် cloud-metadata host များကို ပိတ်ဆို့သည်။ DNS ရှာဖွေမှုမပြုလုပ်မီ ရေးသားထားသည့်အတိုင်း hostname သို့မဟုတ် IP literal ကို စစ်ဆေးသည်။ ပါဝင်ပြီးသား local provider များအတွက် ဤစစ်ဆေးမှုကို ကျော်သွားသည်။
+- Provider model ရှာဖွေခြင်းနှင့် အတည်ပြုခြင်း route များသည် အပြင်ဘက်တောင်းဆိုမှုတိုင်းမပြုလုပ်မီ ကာကွယ်မှုကို အသုံးပြုသည့် `src/shared/network/safeOutboundFetch.ts` ကို အသုံးပြုသည်
+- ကာကွယ်မှုဆိုင်ရာ error များကို HTTP 503 နှင့်အတူ `URL_GUARD_BLOCKED` အဖြစ် ဖော်ပြသည် (`getSafeOutboundFetchErrorStatus`; model ရှာဖွေရေး route သည် 400 ကို ပြန်ပေးသည်)။ အတည်ပြုခြင်းအတွင်း အမှန်တကယ်ဖြစ်ပေါ်သော SSRF ပိတ်ဆို့မှုများကို audit trail တွင် `provider.validation.ssrf_blocked` event များအဖြစ် မှတ်တမ်းတင်သည်
 
 ## စောင့်ကြည့်နိုင်မှုနှင့် လုပ်ငန်းလည်ပတ်ရေး Signal များ
 

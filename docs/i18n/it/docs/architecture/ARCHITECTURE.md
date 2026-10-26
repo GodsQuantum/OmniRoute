@@ -15,7 +15,7 @@ Fornisce un unico endpoint compatibile con OpenAI (`/v1/*`) e instrada il traffi
 
 Funzionalità principali:
 
-- Superficie API compatibile con OpenAI per CLI/strumenti (375 provider, 156 moduli executor)
+- Superficie API compatibile con OpenAI per CLI/strumenti (376 provider, 156 moduli executor)
 - Traduzione di richieste/risposte tra i formati dei provider
 - Fallback con combinazioni di modelli (sequenza multi-modello)
 - Passaggi di combinazione strutturati (`provider + model + connection`) con ordinamento a runtime tramite `compositeTiers`
@@ -1104,9 +1104,9 @@ compatibilità con i sistemi legacy. L'attuale contratto di runtime utilizza:
 
 ## 6) Protezione SSRF / URL in uscita
 
-- `src/shared/network/outboundUrlGuard.ts` blocca tutti gli URL di destinazione privati/loopback/link-local prima che raggiungano gli esecutori dei provider
-- le route di rilevamento e convalida dei modelli dei provider utilizzano `src/shared/network/safeOutboundFetch.ts`, che applica la protezione prima di ogni richiesta in uscita
-- gli errori della protezione vengono esposti come `URL_GUARD_BLOCKED` con HTTP 422 e registrati nel percorso di audit della conformità tramite `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) applica `src/shared/network/outboundUrlGuard.ts` alle richieste di chat inoltrate tramite `BaseExecutor.execute()`. In modalità solo pubblica (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` con il flag privato disattivato), blocca gli host privati e di loopback e 169.254.0.0/16; in tutte le altre modalità blocca gli host dei metadati cloud. Controlla il nome host o il valore letterale dell'indirizzo IP così come è scritto, prima di qualsiasi ricerca DNS. I provider locali integrati non sono soggetti a questo controllo.
+- Le route di individuazione e convalida dei modelli dei provider utilizzano `src/shared/network/safeOutboundFetch.ts`, che applica la protezione prima di ogni richiesta in uscita
+- Gli errori della protezione vengono esposti come `URL_GUARD_BLOCKED` con HTTP 503 (`getSafeOutboundFetchErrorStatus`; la route di individuazione dei modelli restituisce 400) e i blocchi SSRF effettivi durante la convalida vengono registrati nel log di audit come eventi `provider.validation.ssrf_blocked`
 
 ## Osservabilità e segnali operativi
 

@@ -15,7 +15,7 @@ OmniRoute הוא שער ניתוב מקומי לבינה מלאכותית ולו
 
 יכולות עיקריות:
 
-- ממשק API תואם OpenAI עבור כלי CLI וכלים אחרים (375 ספקים, 156 מודולי ביצוע)
+- ממשק API תואם OpenAI עבור כלי CLI וכלים אחרים (376 ספקים, 156 מודולי ביצוע)
 - תרגום בקשות/תגובות בין פורמטים של ספקים
 - מעבר חלופי באמצעות קומבינציית מודלים (רצף מרובה מודלים)
 - שלבי קומבינציה מובנים (`provider + model + connection`) עם סידור בזמן ריצה לפי `compositeTiers`
@@ -1102,11 +1102,11 @@ flowchart LR
 - מיגרציות של סכמת SQLite ונקודות חיבור לשדרוג אוטומטי בעת ההפעלה
 - נתיב תאימות למיגרציה מ-JSON ישן ל-SQLite
 
-## 6) SSRF / מגן כתובות URL יוצאות
+## 6) SSRF / הגנה על כתובות URL יוצאות
 
-- `src/shared/network/outboundUrlGuard.ts` חוסם את כל כתובות ה-URL הפרטיות/loopback/link-local לפני שהן מגיעות למבצעי הבקשות של הספק
-- נתיבי גילוי ואימות המודלים של הספק משתמשים ב-`src/shared/network/safeOutboundFetch.ts`, שמחיל את המגן לפני כל בקשה יוצאת
-- שגיאות המגן מוצגות כ-`URL_GUARD_BLOCKED` עם HTTP 422 ונרשמות ביומן ביקורת התאימות באמצעות `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) מחיל את `src/shared/network/outboundUrlGuard.ts` על בקשות צ'אט שנשלחות דרך `BaseExecutor.execute()`. במצב ציבורי בלבד (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` כשהדגל הפרטי כבוי), הוא חוסם מארחים פרטיים ומארחי loopback, וכן את 169.254.0.0/16; בכל מצב אחר הוא חוסם מארחי מטא-נתונים של שירותי ענן. הוא בודק את שם המארח או את ליטרל כתובת ה-IP כפי שנכתב, לפני כל בדיקת DNS. ספקים מקומיים מובנים מדלגים עליו.
+- נתיבי גילוי ואימות המודלים של הספק משתמשים ב-`src/shared/network/safeOutboundFetch.ts`, שמחיל את ההגנה לפני כל בקשה יוצאת
+- שגיאות ההגנה מוצגות כ-`URL_GUARD_BLOCKED` עם HTTP 503 (`getSafeOutboundFetchErrorStatus`; נתיב גילוי המודלים מחזיר 400), וחסימות SSRF אמיתיות במהלך האימות נרשמות ביומן הביקורת כאירועי `provider.validation.ssrf_blocked`
 
 ## נראות ואותות תפעוליים
 

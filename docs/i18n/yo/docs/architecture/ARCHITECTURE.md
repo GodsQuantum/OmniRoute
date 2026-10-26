@@ -15,7 +15,7 @@ OmniRoute jẹ́ ẹnu-ọ̀nà ìdarí AI abẹ́lẹ̀ àti pátákó ìṣàk
 
 Àwọn agbára pàtàkì:
 
-- Ojú API tó bá OpenAI mu fún CLI/irinṣẹ́ (àwọn olupèsè 375, àwọn mójúùlù olùmúṣẹ 156)
+- Ojú API tó bá OpenAI mu fún CLI/irinṣẹ́ (àwọn olupèsè 376, àwọn mójúùlù olùmúṣẹ 156)
 - Ìtumọ̀ ìbéèrè/ìdáhùn láàárín àwọn fọ́ọ̀mù olupèsè
 - Ìyípadà àṣàyàn àkójọpọ̀ model (ọ̀wọ̀ọ̀wọ́ ọ̀pọ̀ model)
 - Àwọn ìgbésẹ̀ àkójọpọ̀ tí a ṣètò (`provider + model + connection`) pẹ̀lú ìṣètò ní àkókò ìṣiṣẹ́ nípasẹ̀ `compositeTiers`
@@ -1100,11 +1100,11 @@ A pa olùkọ̀sílẹ̀ ìbéèrè onífáìlì ti àtijọ́ (`open-sse/utils/
 - àwọn ìṣílọ schema SQLite àti àwọn hook ìmúdójúìwọ̀n aládàáṣiṣẹ́ nígbà ìbẹ̀rẹ̀
 - ipa ọ̀nà ìbámu ìṣílọ JSON àtijọ́ → SQLite
 
-## 6) Ààbò SSRF / URL Tí Ń Jáde
+## 6) SSRF / Ààbò URL Tí ń Jáde
 
-- `src/shared/network/outboundUrlGuard.ts` ń dí gbogbo URL ibi-àfojúsùn private/loopback/link-local kí wọ́n tó dé ọ̀dọ̀ àwọn olùṣe olùpèsè
-- Àwọn ipa ọ̀nà ìṣàwárí àti ìfìdímúlẹ̀ awoṣe olùpèsè ń lo `src/shared/network/safeOutboundFetch.ts`, èyí tí ń lo ààbò náà ṣáájú gbogbo ìbéèrè tó ń jáde
-- Àwọn àṣìṣe ààbò máa ń farahàn gẹ́gẹ́ bí `URL_GUARD_BLOCKED` pẹ̀lú HTTP 422, a sì máa ń kọ wọ́n sínú àkọsílẹ̀ àyẹ̀wò ìbámu nípasẹ̀ `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) ń lo `src/shared/network/outboundUrlGuard.ts` sí àwọn ìbéèrè ìfọ̀rọ̀wérọ̀ tí a fi ránṣẹ́ nípasẹ̀ `BaseExecutor.execute()`. Ní ipò ti gbogbo ènìyàn nìkan (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` pẹ̀lú àsìá àdáni tí a pa), ó ń dí àwọn olùgbàlejò àdáni àti loopback, àti 169.254.0.0/16; ní gbogbo ipò mìíràn, ó ń dí àwọn olùgbàlejò metadata àwọsánmà. Ó ń ṣàyẹ̀wò orúkọ olùgbàlejò tàbí IP gẹ́gẹ́ bí a ṣe kọ ọ́, ṣáájú ìṣàwárí DNS èyíkéyìí. Àwọn olupèsè agbègbè tí a fi sínú ètò máa ń foju kọ ọ́.
+- Ìṣàwárí àti àwọn ipa-ọ̀nà ìfàṣẹsí àwòṣe olupèsè ń lo `src/shared/network/safeOutboundFetch.ts`, èyí tí ń lo ààbò náà ṣáájú gbogbo ìbéèrè tí ń jáde
+- Àwọn àṣìṣe ààbò máa ń hàn gẹ́gẹ́ bí `URL_GUARD_BLOCKED` pẹ̀lú HTTP 503 (`getSafeOutboundFetchErrorStatus`; ipa-ọ̀nà ìṣàwárí àwòṣe máa ń dá 400 padà), a sì máa ń ṣe àkọsílẹ̀ àwọn ìdènà SSRF gidi nígbà ìfàṣẹsí sínú àkọsílẹ̀ àyẹ̀wò gẹ́gẹ́ bí àwọn ìṣẹ̀lẹ̀ `provider.validation.ssrf_blocked`
 
 ## Àkíyèsí àti Àwọn Àmì Ìṣiṣẹ́
 

@@ -15,7 +15,7 @@ Ia menyediakan satu titik akhir yang serasi dengan OpenAI (`/v1/*`) dan menghala
 
 Keupayaan teras:
 
-- Permukaan API yang serasi dengan OpenAI untuk CLI/alat (375 penyedia, 156 modul pelaksana)
+- Permukaan API yang serasi dengan OpenAI untuk CLI/alat (376 penyedia, 156 modul pelaksana)
 - Terjemahan permintaan/respons merentasi format penyedia
 - Mekanisme sandaran gabungan model (jujukan berbilang model)
 - Langkah gabungan berstruktur (`provider + model + connection`) dengan pengisihan masa jalan mengikut `compositeTiers`
@@ -1102,11 +1102,11 @@ keserasian legasi. Kontrak masa jalan semasa menggunakan:
 - migrasi skema SQLite dan cangkuk naik taraf automatik semasa permulaan
 - laluan keserasian migrasi JSON legasi → SQLite
 
-## 6) SSRF / Pengawal URL Keluar
+## 6) Pengawal SSRF / URL Keluar
 
-- `src/shared/network/outboundUrlGuard.ts` menyekat semua URL sasaran peribadi/gelung balik/pautan setempat sebelum URL tersebut sampai kepada pelaksana penyedia
-- Laluan penemuan dan pengesahan model penyedia menggunakan `src/shared/network/safeOutboundFetch.ts` yang menerapkan pengawal sebelum setiap permintaan keluar
-- Ralat pengawal dipaparkan sebagai `URL_GUARD_BLOCKED` dengan HTTP 422 dan direkodkan ke dalam jejak audit pematuhan melalui `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) menggunakan `src/shared/network/outboundUrlGuard.ts` pada permintaan sembang yang dihantar melalui `BaseExecutor.execute()`. Dalam mod awam sahaja (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` dengan bendera peribadi dimatikan), ia menyekat hos peribadi dan gelung balik serta 169.254.0.0/16; dalam setiap mod lain, ia menyekat hos metadata awan. Ia menyemak nama hos atau literal IP seperti yang ditulis, sebelum sebarang carian DNS. Penyedia tempatan terbina dalam dikecualikan daripadanya.
+- Laluan penemuan dan pengesahan model penyedia menggunakan `src/shared/network/safeOutboundFetch.ts` yang menggunakan pengawal sebelum setiap permintaan keluar
+- Ralat pengawal dipaparkan sebagai `URL_GUARD_BLOCKED` dengan HTTP 503 (`getSafeOutboundFetchErrorStatus`; laluan penemuan model mengembalikan 400), dan sekatan SSRF sebenar semasa pengesahan direkodkan dalam jejak audit sebagai peristiwa `provider.validation.ssrf_blocked`
 
 ## Kebolehcerapan dan Isyarat Operasi
 

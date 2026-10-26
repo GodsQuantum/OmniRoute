@@ -15,7 +15,7 @@ Den tillhandahåller en enda OpenAI-kompatibel slutpunkt (`/v1/*`) och dirigerar
 
 Huvudfunktioner:
 
-- OpenAI-kompatibelt API-gränssnitt för CLI/verktyg (375 leverantörer, 156 exekveringsmoduler)
+- OpenAI-kompatibelt API-gränssnitt för CLI/verktyg (376 leverantörer, 156 exekveringsmoduler)
 - Översättning av förfrågningar/svar mellan leverantörsformat
 - Reservväxling för modellkombinationer (sekvens med flera modeller)
 - Strukturerade kombinationssteg (`provider + model + connection`) med körningsordning baserad på `compositeTiers`
@@ -1102,11 +1102,11 @@ bakåtkompatibilitet. Det aktuella körningskontraktet använder:
 - SQLite-schemamigreringar och krokar för automatisk uppgradering vid start
 - kompatibilitetsväg för migrering från äldre JSON-format till SQLite
 
-## 6) SSRF-/skydd för utgående URL:er
+## 6) SSRF-/utgående URL-skydd
 
-- `src/shared/network/outboundUrlGuard.ts` blockerar alla privata, lokala och länklokala mål-URL:er innan de når leverantörsexekverarna
-- Rutter för identifiering och validering av leverantörsmodeller använder `src/shared/network/safeOutboundFetch.ts`, som tillämpar skyddet före varje utgående förfrågan
-- Skyddsfel exponeras som `URL_GUARD_BLOCKED` med HTTP 422 och loggas i efterlevnadsgranskningsloggen via `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) tillämpar `src/shared/network/outboundUrlGuard.ts` på chattförfrågningar som skickas via `BaseExecutor.execute()`. I läget endast offentlig åtkomst (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` med den privata flaggan avstängd) blockerar det privata värdar, loopback-värdar och 169.254.0.0/16. I alla andra lägen blockerar det värdar för molnmetadata. Det kontrollerar värdnamnet eller den ordagranna IP-adressen exakt som den skrivits, före DNS-uppslagning. Inbyggda lokala leverantörer kringgår kontrollen.
+- Rutter för identifiering och validering av leverantörsmodeller använder `src/shared/network/safeOutboundFetch.ts`, som tillämpar skyddet före varje utgående förfrågan.
+- Skyddsfel visas som `URL_GUARD_BLOCKED` med HTTP 503 (`getSafeOutboundFetchErrorStatus`; rutten för modellidentifiering returnerar 400), och faktiska SSRF-blockeringar under validering loggas i granskningsloggen som `provider.validation.ssrf_blocked`-händelser.
 
 ## Observerbarhet och driftssignaler
 

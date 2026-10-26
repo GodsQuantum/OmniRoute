@@ -15,7 +15,7 @@ O, vahid OpenAI-uyğun son nöqtə (`/v1/*`) təqdim edir və trafiki format çe
 
 Əsas imkanlar:
 
-- CLI/alətlər üçün OpenAI-uyğun API səthi (375 provayder, 156 icraçı modul)
+- CLI/alətlər üçün OpenAI-uyğun API səthi (376 provayder, 156 icraçı modul)
 - Provayder formatları arasında sorğu/cavab çevirməsi
 - Model kombinasiyası üzrə alternativə keçid (çoxmodelli ardıcıllıq)
 - `compositeTiers` əsasında icra zamanı sıralanan strukturlaşdırılmış kombinasiya addımları (`provider + model + connection`)
@@ -1083,11 +1083,11 @@ köhnə sistemlərlə uyğunluq üçün saxlanılır. Cari icra mühiti müqavil
 - işəsalma zamanı SQLite sxem miqrasiyaları və avtomatik təkmilləşdirmə qarmaqları
 - köhnə JSON → SQLite miqrasiyası üçün uyğunluq yolu
 
-## 6) SSRF / Xarici URL Qoruyucusu
+## 6) SSRF / Xarici URL Mühafizəsi
 
-- `src/shared/network/outboundUrlGuard.ts` bütün özəl/dövrəvi keçid/lokal keçid hədəf URL-lərini provayder icraçılarına çatmazdan əvvəl bloklayır
-- Provayder modellərinin aşkarlanması və doğrulama marşrutları hər xarici sorğudan əvvəl qoruyucunu tətbiq edən `src/shared/network/safeOutboundFetch.ts` faylından istifadə edir
-- Qoruyucu xətaları HTTP 422 ilə `URL_GUARD_BLOCKED` kimi göstərilir və `providerAudit.ts` vasitəsilə uyğunluq audit jurnalına yazılır
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) `BaseExecutor.execute()` vasitəsilə göndərilən çat sorğularına `src/shared/network/outboundUrlGuard.ts` tətbiq edir. Yalnız ictimai rejimdə (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, özəl bayraq söndürülmüş halda) özəl və geri dövrə hostlarını, eləcə də 169.254.0.0/16 diapazonunu bloklayır; bütün digər rejimlərdə isə bulud metadata hostlarını bloklayır. O, hər hansı DNS axtarışından əvvəl host adını və ya IP literalını yazıldığı şəkildə yoxlayır. Daxili lokal provayderlər bu yoxlamadan keçirilmirlər.
+- Provayder modellərinin aşkarlanması və doğrulanması marşrutları hər xarici sorğudan əvvəl mühafizəni tətbiq edən `src/shared/network/safeOutboundFetch.ts` faylından istifadə edir
+- Mühafizə xətaları HTTP 503 ilə `URL_GUARD_BLOCKED` kimi göstərilir (`getSafeOutboundFetchErrorStatus`; model aşkarlama marşrutu 400 qaytarır), doğrulama zamanı həqiqi SSRF bloklamaları isə audit jurnalında `provider.validation.ssrf_blocked` hadisələri kimi qeydə alınır
 
 ## Müşahidə İmkanı və Əməliyyat Siqnalları
 

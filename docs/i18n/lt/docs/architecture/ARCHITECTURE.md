@@ -15,7 +15,7 @@ Jis suteikia vieną su „OpenAI“ suderinamą galinį tašką (`/v1/*`) ir nuk
 
 Pagrindinės galimybės:
 
-- Su „OpenAI“ suderinama API sąsaja, skirta CLI ir įrankiams (375 paslaugų teikėjai, 156 vykdymo moduliai)
+- Su „OpenAI“ suderinama API sąsaja, skirta CLI ir įrankiams (376 paslaugų teikėjai, 156 vykdymo moduliai)
 - Užklausų ir atsakymų konvertavimas tarp paslaugų teikėjų formatų
 - Modelių derinio atsarginis perjungimas (kelių modelių seka)
 - Struktūrizuoti derinio žingsniai (`provider + model + connection`) su vykdymo metu nustatoma tvarka pagal `compositeTiers`
@@ -1102,11 +1102,11 @@ suderinamumo su senosiomis versijomis. Dabartinė vykdymo aplinkos sutartis naud
 - SQLite schemos migracijos ir automatinio naujovinimo procedūros paleidimo metu
 - suderinamumo kelias senųjų JSON duomenų migracijai į SQLite
 
-## 6) SSRF / siunčiamų URL apsauga
+## 6) SSRF / išeinančių URL apsauga
 
-- `src/shared/network/outboundUrlGuard.ts` blokuoja visus privačius, grįžtamojo ryšio ir vietinio ryšio paskirties URL prieš jiems pasiekiant teikėjo vykdymo priemones
-- teikėjo modelių aptikimo ir tikrinimo maršrutai naudoja `src/shared/network/safeOutboundFetch.ts`, kuri pritaiko apsaugą prieš kiekvieną siunčiamą užklausą
-- apsaugos klaidos pateikiamos kaip `URL_GUARD_BLOCKED` su HTTP 422 ir registruojamos atitikties audito žurnale naudojant `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) pokalbių užklausoms, siunčiamoms per `BaseExecutor.execute()`, taiko `src/shared/network/outboundUrlGuard.ts`. Tik viešųjų adresų režimu (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, kai privačių adresų vėliavėlė išjungta) ji blokuoja privačius ir vietinio kompiuterio ciklo adresus bei 169.254.0.0/16; visais kitais režimais ji blokuoja debesijos metaduomenų serverius. Prieš atlikdama bet kokią DNS paiešką, ji tikrina pagrindinio kompiuterio vardą arba IP adreso literalą tokį, koks jis parašytas. Integruotiesiems vietiniams teikėjams ji netaikoma.
+- Teikėjų modelių aptikimo ir tikrinimo maršrutai naudoja `src/shared/network/safeOutboundFetch.ts`, kuris prieš kiekvieną išeinančią užklausą pritaiko apsaugą.
+- Apsaugos klaidos pateikiamos kaip `URL_GUARD_BLOCKED` su HTTP 503 (`getSafeOutboundFetchErrorStatus`; modelių aptikimo maršrutas grąžina 400), o tikri SSRF blokavimo atvejai tikrinimo metu įrašomi į audito žurnalą kaip `provider.validation.ssrf_blocked` įvykiai.
 
 ## Stebimumas ir veikimo signalai
 

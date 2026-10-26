@@ -15,7 +15,7 @@ Inatoa endpoint moja inayooana na OpenAI (`/v1/*`) na kuelekeza trafiki kupitia 
 
 Uwezo mkuu:
 
-- Kiolesura cha API kinachooana na OpenAI kwa CLI/zana (watoa huduma 375, moduli 156 za utekelezaji)
+- Kiolesura cha API kinachooana na OpenAI kwa CLI/zana (watoa huduma 376, moduli 156 za utekelezaji)
 - Tafsiri ya maombi/majibu kati ya miundo ya watoa huduma
 - Fallback ya mchanganyiko wa modeli (mfuatano wa modeli nyingi)
 - Hatua zilizopangwa za mchanganyiko (`provider + model + connection`) zenye upangaji wakati wa utekelezaji kwa kutumia `compositeTiers`
@@ -1101,11 +1101,11 @@ uoanifu na mifumo ya zamani pekee. Mkataba wa sasa wa wakati wa utekelezaji hutu
 - uhamishaji wa schema za SQLite na vihusishi vya uboreshaji otomatiki wakati wa kuanzisha
 - njia ya uoanifu ya uhamishaji kutoka JSON ya zamani → SQLite
 
-## 6) Kizuizi cha SSRF / URL Zinazotoka Nje
+## 6) SSRF / Ulinzi wa URL Zinazotoka Nje
 
-- `src/shared/network/outboundUrlGuard.ts` huzuia URL zote lengwa za faragha/loopback/link-local kabla hazijafikia vitekelezaji vya mtoa huduma
-- Njia za kugundua na kuthibitisha modeli za mtoa huduma hutumia `src/shared/network/safeOutboundFetch.ts`, ambayo hutumia kizuizi kabla ya kila ombi linalotoka nje
-- Hitilafu za kizuizi huonyeshwa kama `URL_GUARD_BLOCKED` zikiwa na HTTP 422 na huwekwa kwenye kumbukumbu ya ukaguzi wa uzingatiaji kupitia `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) hutumia `src/shared/network/outboundUrlGuard.ts` kwa maombi ya gumzo yanayotumwa kupitia `BaseExecutor.execute()`. Katika hali ya umma pekee (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` huku alama ya faragha ikiwa imezimwa), huzuia vipangishi vya faragha na vya loopback pamoja na 169.254.0.0/16; katika kila hali nyingine, huzuia vipangishi vya metadata ya wingu. Hukagua jina la kipangishi au IP halisi kama ilivyoandikwa, kabla ya utafutaji wowote wa DNS. Watoa huduma wa ndani waliojengewa ndani huruka ukaguzi huu.
+- Njia za ugunduzi na uthibitishaji wa modeli za mtoa huduma hutumia `src/shared/network/safeOutboundFetch.ts`, ambayo hutumia ulinzi huo kabla ya kila ombi linalotoka nje
+- Hitilafu za ulinzi hujitokeza kama `URL_GUARD_BLOCKED` zikiwa na HTTP 503 (`getSafeOutboundFetchErrorStatus`; njia ya ugunduzi wa modeli hurejesha 400), na vizuizi halisi vya SSRF wakati wa uthibitishaji hurekodiwa katika kumbukumbu ya ukaguzi kama matukio ya `provider.validation.ssrf_blocked`
 
 ## Uangalizi na Ishara za Uendeshaji
 

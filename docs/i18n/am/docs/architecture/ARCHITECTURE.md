@@ -15,7 +15,7 @@ OmniRoute በNext.js ላይ የተገነባ የአካባቢ AI ማዘዋወሪ�
 
 ዋና ችሎታዎች፦
 
-- ለCLI/መሣሪያዎች ከOpenAI ጋር ተኳሃኝ የAPI በይነገጽ (375 አቅራቢዎች፣ 156 አስፈጻሚ ሞጁሎች)
+- ለCLI/መሣሪያዎች ከOpenAI ጋር ተኳሃኝ የAPI በይነገጽ (376 አቅራቢዎች፣ 156 አስፈጻሚ ሞጁሎች)
 - በአቅራቢ ቅርጸቶች መካከል የጥያቄ/ምላሽ ትርጉም
 - የሞዴል ጥምር ተተኪ ሂደት (ባለብዙ ሞዴል ቅደም ተከተል)
 - በ`compositeTiers` መሠረት በሩጫ ጊዜ የሚደረደሩ የተዋቀሩ የጥምር ደረጃዎች (`provider + model + connection`)
@@ -1018,24 +1018,24 @@ flowchart LR
 
 - OpenAI ውይይት/Responses
 - Claude
-- Gemini/Antigravity ኤንቨሎፕ
+- Gemini/Antigravity መጠቅለያ
 - Kiro
 - Cursor
 
-ትርጉሞች **OpenAIን እንደ ማዕከላዊ ቅርጸት** ይጠቀማሉ — ሁሉም ልወጣዎች OpenAIን እንደ መካከለኛ ደረጃ ይጠቀማሉ፦
+ትርጉሞች **OpenAIን እንደ ማዕከላዊ ቅርጸት** ይጠቀማሉ — ሁሉም ልወጣዎች OpenAIን እንደ መካከለኛ ቅርጸት ይጠቀማሉ፦
 
 ```
 የምንጭ ቅርጸት → OpenAI (ማዕከል) → የዒላማ ቅርጸት
 ```
 
-ትርጉሞች በምንጭ የውሂብ ጭነት ቅርጽ እና በአቅራቢው የዒላማ ቅርጸት መሠረት በተለዋዋጭ ሁኔታ ይመረጣሉ።
+ትርጉሞች በምንጩ የውሂብ ጭነት ቅርጽ እና በአቅራቢው የዒላማ ቅርጸት መሠረት በተለዋዋጭ ሁኔታ ይመረጣሉ።
 
-በትርጉም ቧንቧው ውስጥ ያሉ ተጨማሪ የማቀናበሪያ ንብርብሮች፦
+በትርጉም መስመሩ ውስጥ ያሉ ተጨማሪ የማቀናበሪያ ንብርብሮች፦
 
-- **የምላሽ ማጽዳት** — ጥብቅ የSDK ተኳሃኝነትን ለማረጋገጥ፣ መደበኛ ያልሆኑ መስኮችን ከOpenAI-ቅርጸት ምላሾች (ዥረት ያላቸውም ሆነ ዥረት የሌላቸው) ያስወግዳል
-- **የሚና መደበኛነት** — OpenAI ላልሆኑ ዒላማዎች `developer` → `system` ይቀይራል፤ የስርዓት ሚናን ውድቅ ለሚያደርጉ ሞዴሎች (GLM፣ ERNIE) `system` → `user` ያዋህዳል
-- **የThink መለያ ማውጣት** — ከይዘት ውስጥ ያሉ `\<think>...\</think>` ብሎኮችን በመተንተን ወደ `reasoning_content` መስክ ያስገባል
-- **የተዋቀረ ውፅዓት** — የOpenAI `response_format.json_schema`ን ወደ Gemini `responseMimeType` + `responseSchema` ይቀይራል
+- **የምላሽ ማጽዳት** — ጥብቅ የSDK ተኳሃኝነትን ለማረጋገጥ ከOpenAI-ቅርጸት ምላሾች (በዥረት የሚተላለፉ እና በዥረት የማይተላለፉ) መደበኛ ያልሆኑ መስኮችን ያስወግዳል
+- **የሚና መደበኛነት** — OpenAI ላልሆኑ ዒላማዎች `developer` → `system` ይለውጣል፤ የስርዓት ሚናን ለማይቀበሉ ሞዴሎች (GLM፣ ERNIE) `system` → `user` ያዋህዳል
+- **የአስተሳሰብ መለያ ማውጣት** — ከይዘት ውስጥ ያሉ `<think>...</think>` ብሎኮችን በመተንተን ወደ `reasoning_content` መስክ ያስገባል
+- **የተዋቀረ ውጤት** — የOpenAI `response_format.json_schema`ን ወደ Gemini `responseMimeType` + `responseSchema` ይለውጣል
 
 ## የሚደገፉ የAPI መጨረሻ ነጥቦች
 
@@ -1100,11 +1100,11 @@ flowchart LR
 - የSQLite የመርሃ ግብር ፍልሰቶች እና በጅምር ጊዜ ራስ-ሰር የማሻሻያ ማያያዣዎች
 - የቆየ JSON → SQLite የፍልሰት ተኳሃኝነት መንገድ
 
-## 6) SSRF / የወጪ URL ጥበቃ
+## 6) SSRF / ወደ ውጭ የሚላኩ URL-ዎች ጥበቃ
 
-- `src/shared/network/outboundUrlGuard.ts` ሁሉንም የግል/loopback/link-local ዒላማ URLዎች ወደ አቅራቢ አስፈጻሚዎች ከመድረሳቸው በፊት ያግዳል
-- የአቅራቢ ሞዴል ፍለጋ እና የማረጋገጫ መስመሮች `src/shared/network/safeOutboundFetch.ts`ን ይጠቀማሉ፤ ይህም ከእያንዳንዱ የወጪ ጥያቄ በፊት ጥበቃውን ይተገብራል
-- የጥበቃ ስህተቶች HTTP 422 ያለው `URL_GUARD_BLOCKED` ሆነው ይታያሉ፣ እና በ`providerAudit.ts` በኩል በተገዢነት ኦዲት ዱካ ውስጥ ይመዘገባሉ
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) በ`BaseExecutor.execute()` በኩል በሚላኩ የውይይት ጥያቄዎች ላይ `src/shared/network/outboundUrlGuard.ts`ን ይተገብራል። ለሕዝብ ብቻ በተዘጋጀ ሁነታ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` ሆኖ የግል ምልክቱ ሲጠፋ) የግል እና loopback አስተናጋጆችን እንዲሁም 169.254.0.0/16ን ያግዳል፤ በሌሎች ሁነታዎች ሁሉ የደመና ሜታዳታ አስተናጋጆችን ያግዳል። ማንኛውም የDNS ፍለጋ ከመከናወኑ በፊት፣ የአስተናጋጁን ስም ወይም የIP ቀጥተኛ እሴት በተጻፈበት መልኩ ይፈትሻል። አብረው የተካተቱ አካባቢያዊ አቅራቢዎች ይህን ጥበቃ ያልፋሉ።
+- የአቅራቢ ሞዴል ፍለጋ እና የማረጋገጫ መስመሮች `src/shared/network/safeOutboundFetch.ts`ን ይጠቀማሉ፤ ይህም ከእያንዳንዱ ወደ ውጭ የሚላክ ጥያቄ በፊት ጥበቃውን ይተገብራል
+- የጥበቃ ስህተቶች እንደ `URL_GUARD_BLOCKED` ከHTTP 503 ጋር ይታያሉ (`getSafeOutboundFetchErrorStatus`፤ የሞዴል ፍለጋ መስመሩ 400ን ይመልሳል)፣ እና በማረጋገጥ ወቅት የሚከሰቱ እውነተኛ የSSRF እገዳዎች እንደ `provider.validation.ssrf_blocked` ክስተቶች በኦዲት መዝገብ ውስጥ ይመዘገባሉ
 
 ## ምልከታ እና የክወና ምልክቶች
 

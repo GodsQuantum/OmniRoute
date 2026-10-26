@@ -15,7 +15,7 @@ OmniRoute は、Next.js を基盤とするローカル AI ルーティングゲ�
 
 主な機能：
 
-- CLI／ツール向けの OpenAI 互換 API サーフェス（375 プロバイダー、156 エグゼキューターモジュール）
+- CLI／ツール向けの OpenAI 互換 API サーフェス（376 プロバイダー、156 エグゼキューターモジュール）
 - プロバイダー形式間でのリクエスト／レスポンス変換
 - モデルコンボのフォールバック（複数モデルのシーケンス）
 - 構造化されたコンボステップ（`provider + model + connection`）と、`compositeTiers` によるランタイム順序付け
@@ -1079,11 +1079,11 @@ flowchart LR
 - 起動時の SQLite スキーママイグレーションおよび自動アップグレードフック
 - レガシー JSON → SQLite マイグレーションの互換パス
 
-## 6) SSRF／送信先 URL ガード
+## 6) SSRF / 外向き URL ガード
 
-- `src/shared/network/outboundUrlGuard.ts` は、プロバイダーエグゼキューターに到達する前に、すべてのプライベート／ループバック／リンクローカルのターゲット URL をブロックします
-- プロバイダーモデルの検出および検証ルートでは、すべての送信リクエストの前にガードを適用する `src/shared/network/safeOutboundFetch.ts` を使用します
-- ガードエラーは HTTP 422 の `URL_GUARD_BLOCKED` として通知され、`providerAudit.ts` を介してコンプライアンス監査証跡に記録されます
+- `BaseExecutor.assertOutboundUrlAllowed`（`open-sse/executors/base.ts`）は、`BaseExecutor.execute()` を通じて送信されるチャットリクエストに `src/shared/network/outboundUrlGuard.ts` を適用します。公開 URL のみを許可するモード（`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` かつプライベートフラグがオフ）では、プライベートホスト、ループバックホスト、および 169.254.0.0/16 をブロックします。それ以外のすべてのモードでは、クラウドメタデータホストをブロックします。DNS ルックアップを実行する前に、記述されたとおりのホスト名または IP リテラルを確認します。組み込みのローカルプロバイダーでは、このチェックはスキップされます。
+- プロバイダーモデルの検出および検証ルートでは、すべての外向きリクエストの前にガードを適用する `src/shared/network/safeOutboundFetch.ts` を使用します
+- ガードエラーは、HTTP 503（`getSafeOutboundFetchErrorStatus`。モデル検出ルートは 400 を返します）とともに `URL_GUARD_BLOCKED` として表面化し、検証中に実際に発生した SSRF ブロックは、`provider.validation.ssrf_blocked` イベントとして監査証跡に記録されます
 
 ## オブザーバビリティと運用シグナル
 

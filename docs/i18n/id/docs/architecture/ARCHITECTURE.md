@@ -15,7 +15,7 @@ OmniRoute menyediakan satu endpoint yang kompatibel dengan OpenAI (`/v1/*`) dan 
 
 Kemampuan utama:
 
-- Antarmuka API yang kompatibel dengan OpenAI untuk CLI/alat (375 penyedia, 156 modul eksekutor)
+- Antarmuka API yang kompatibel dengan OpenAI untuk CLI/alat (376 penyedia, 156 modul eksekutor)
 - Penerjemahan permintaan/respons di antara berbagai format penyedia
 - Fallback kombinasi model (urutan multi-model)
 - Langkah kombinasi terstruktur (`provider + model + connection`) dengan pengurutan runtime berdasarkan `compositeTiers`
@@ -1102,11 +1102,11 @@ kompatibilitas lama. Kontrak runtime saat ini menggunakan:
 - migrasi skema SQLite dan hook peningkatan otomatis saat startup
 - jalur kompatibilitas migrasi JSON lama → SQLite
 
-## 6) Pelindung SSRF / URL Keluar
+## 6) SSRF / Perlindungan URL Keluar
 
-- `src/shared/network/outboundUrlGuard.ts` memblokir semua URL target privat/loopback/link-local sebelum mencapai eksekutor penyedia
-- Rute penemuan dan validasi model penyedia menggunakan `src/shared/network/safeOutboundFetch.ts` yang menerapkan pelindung sebelum setiap permintaan keluar
-- Kesalahan pelindung ditampilkan sebagai `URL_GUARD_BLOCKED` dengan HTTP 422 dan dicatat ke jejak audit kepatuhan melalui `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) menerapkan `src/shared/network/outboundUrlGuard.ts` pada permintaan chat yang dikirim melalui `BaseExecutor.execute()`. Dalam mode khusus publik (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` dengan flag privat dinonaktifkan), mekanisme ini memblokir host privat dan loopback serta 169.254.0.0/16; dalam setiap mode lainnya, mekanisme ini memblokir host metadata cloud. Pemeriksaan dilakukan terhadap hostname atau literal IP sebagaimana ditulis, sebelum pencarian DNS apa pun. Penyedia lokal bawaan tidak melewati pemeriksaan ini.
+- Rute penemuan dan validasi model penyedia menggunakan `src/shared/network/safeOutboundFetch.ts`, yang menerapkan perlindungan sebelum setiap permintaan keluar
+- Kesalahan perlindungan muncul sebagai `URL_GUARD_BLOCKED` dengan HTTP 503 (`getSafeOutboundFetchErrorStatus`; rute penemuan model mengembalikan 400), dan pemblokiran SSRF yang sebenarnya selama validasi dicatat ke dalam jejak audit sebagai peristiwa `provider.validation.ssrf_blocked`
 
 ## Observabilitas dan Sinyal Operasional
 

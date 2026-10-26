@@ -15,7 +15,7 @@ Se tarjoaa yhden OpenAI-yhteensopivan päätepisteen (`/v1/*`) ja reitittää li
 
 Keskeiset ominaisuudet:
 
-- OpenAI-yhteensopiva API-rajapinta komentorivityökaluille ja muille työkaluille (375 palveluntarjoajaa, 156 suoritusmoduulia)
+- OpenAI-yhteensopiva API-rajapinta komentorivityökaluille ja muille työkaluille (376 palveluntarjoajaa, 156 suoritusmoduulia)
 - Pyyntöjen ja vastausten muuntaminen palveluntarjoajien eri muotojen välillä
 - Malliyhdistelmien varajärjestelyt (usean mallin sarja)
 - Rakenteiset yhdistelmävaiheet (`provider + model + connection`) ja niiden ajonaikainen järjestäminen `compositeTiers`-arvon perusteella
@@ -1102,11 +1102,11 @@ taaksepäin yhteensopivuutta varten. Nykyinen ajonaikainen sopimus käyttää se
 - SQLite-skeeman migraatiot ja automaattisen päivityksen kytkennät käynnistyksen yhteydessä
 - vanhan JSON → SQLite -migraation yhteensopivuuspolku
 
-## 6) SSRF / lähtevien URL-osoitteiden suojaus
+## 6) SSRF / Lähtevien URL-osoitteiden suojaus
 
-- `src/shared/network/outboundUrlGuard.ts` estää kaikki yksityiset, loopback- ja link-local-kohde-URL-osoitteet ennen kuin ne saavuttavat palveluntarjoajien suorittimet
-- palveluntarjoajien mallien etsintä- ja validointireitit käyttävät tiedostoa `src/shared/network/safeOutboundFetch.ts`, joka suorittaa suojauksen ennen jokaista lähtevää pyyntöä
-- suojausvirheet näytetään virheenä `URL_GUARD_BLOCKED` ja HTTP-tilakoodilla 422 sekä kirjataan vaatimustenmukaisuuden auditointijälkeen `providerAudit.ts`-tiedoston kautta
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) soveltaa tiedoston `src/shared/network/outboundUrlGuard.ts` suojausta `BaseExecutor.execute()`-metodin kautta lähetettäviin keskustelupyyntöihin. Vain julkiset osoitteet sallivassa tilassa (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, kun yksityinen valitsin ei ole käytössä) se estää yksityiset osoitteet, loopback-isännät ja osoitealueen 169.254.0.0/16; kaikissa muissa tiloissa se estää pilvipalvelujen metatietoisännät. Se tarkistaa isäntänimen tai IP-literaalin kirjoitetussa muodossa ennen DNS-hakua. Sisäänrakennetut paikalliset palveluntarjoajat ohittavat tarkistuksen.
+- Palveluntarjoajien mallien etsintä- ja validointireitit käyttävät tiedostoa `src/shared/network/safeOutboundFetch.ts`, joka soveltaa suojausta ennen jokaista lähtevää pyyntöä
+- Suojauksen virheet näkyvät virheenä `URL_GUARD_BLOCKED`, jonka HTTP-tilakoodi on 503 (`getSafeOutboundFetchErrorStatus`; mallien etsintäreitti palauttaa tilakoodin 400), ja aidot validoinnin aikana estetyt SSRF-yritykset kirjataan auditointilokiin tapahtumina `provider.validation.ssrf_blocked`
 
 ## Havainnoitavuus ja operatiiviset signaalit
 

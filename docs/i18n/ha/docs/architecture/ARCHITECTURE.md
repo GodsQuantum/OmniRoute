@@ -15,7 +15,7 @@ Tana samar da maƙura guda ɗaya mai jituwa da OpenAI (`/v1/*`) kuma tana karkat
 
 Muhimman ƙwarewa:
 
-- API mai jituwa da OpenAI don CLI/kayan aiki (masu samarwa 375, executor modules 156)
+- API mai jituwa da OpenAI don CLI/kayan aiki (masu samarwa 376, executor modules 156)
 - Fassarar buƙata/amsa tsakanin tsarin masu samarwa
 - Madadin haɗin model (jerin model da yawa)
 - Matakan haɗi masu tsari (`provider + model + connection`) tare da tsara jeri a lokacin aiki bisa `compositeTiers`
@@ -1104,9 +1104,9 @@ dacewa da tsofaffin tsare-tsare. Yarjejeniyar lokacin aiki ta yanzu tana amfani 
 
 ## 6) SSRF / Kariyar URL Mai Fita
 
-- `src/shared/network/outboundUrlGuard.ts` yana toshe duk URL ɗin manufa masu zaman kansu/loopback/link-local kafin su isa ga masu aiwatar da buƙatun mai samar da sabis
-- Hanyoyin gano da tabbatar da samfuran mai samar da sabis suna amfani da `src/shared/network/safeOutboundFetch.ts`, wanda ke amfani da kariyar kafin kowace buƙata mai fita
-- Kurakuran kariyar suna bayyana a matsayin `URL_GUARD_BLOCKED` tare da HTTP 422 kuma ana rubuta su a rajistar binciken bin ƙa'ida ta hanyar `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) yana amfani da `src/shared/network/outboundUrlGuard.ts` ga buƙatun taɗi da ake aikawa ta `BaseExecutor.execute()`. A yanayin na jama'a kaɗai (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` tare da kashe tutar masu zaman kansu), yana toshe masauƙan masu zaman kansu da na loopback da kuma 169.254.0.0/16; a kowane sauran yanayi, yana toshe masauƙan metadata na girgije. Yana bincika sunan masauki ko rubutacciyar adireshin IP yadda aka rubuta shi, kafin kowane binciken DNS. Ginannun masu samarwa na gida suna tsallake shi.
+- Hanyoyin gano da tabbatar da samfurin mai samarwa suna amfani da `src/shared/network/safeOutboundFetch.ts`, wanda ke amfani da kariyar kafin kowace buƙata mai fita.
+- Kurakuran kariyar suna bayyana a matsayin `URL_GUARD_BLOCKED` tare da HTTP 503 (`getSafeOutboundFetchErrorStatus`; hanyar gano samfuri tana mayar da 400), sannan ana rubuta ainihin toshewar SSRF yayin tabbatarwa a cikin kundin binciken tsaro a matsayin abubuwan da suka faru na `provider.validation.ssrf_blocked`.
 
 ## Sa Ido da Alamomin Aiki
 

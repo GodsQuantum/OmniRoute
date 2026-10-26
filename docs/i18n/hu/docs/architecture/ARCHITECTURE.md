@@ -15,7 +15,7 @@ Egyetlen OpenAI-kompatibilis végpontot (`/v1/*`) biztosít, és több felsőbb 
 
 Fő képességek:
 
-- OpenAI-kompatibilis API-felület CLI-khez és eszközökhöz (375 szolgáltató, 156 végrehajtómodul)
+- OpenAI-kompatibilis API-felület CLI-khez és eszközökhöz (376 szolgáltató, 156 végrehajtómodul)
 - Kérések és válaszok átalakítása a szolgáltatói formátumok között
 - Modellkombinációs tartalék útvonal (többmodellből álló sorozat)
 - Strukturált kombinációs lépések (`provider + model + connection`), futásidejű sorrendezéssel a `compositeTiers` alapján
@@ -1088,11 +1088,11 @@ A régebbi, fájlalapú kérésnaplózó (`open-sse/utils/requestLogger.ts`) csa
 - SQLite-sémamigrációk és automatikus frissítési horgok indításkor
 - visszamenőleges kompatibilitási útvonal a régi JSON → SQLite migrációhoz
 
-## 6) SSRF / kimenő URL-ek védelme
+## 6) SSRF / Kimenő URL-ek védelme
 
-- a `src/shared/network/outboundUrlGuard.ts` blokkol minden privát, visszacsatolási és helyi kapcsolati cél-URL-t, mielőtt azok elérnék a szolgáltatói végrehajtókat
-- a szolgáltatói modellek felderítési és ellenőrzési útvonalai a `src/shared/network/safeOutboundFetch.ts` fájlt használják, amely minden kimenő kérés előtt alkalmazza a védelmet
-- a védelmi hibák `URL_GUARD_BLOCKED` hibakóddal és HTTP 422-es állapotkóddal jelennek meg, és a `providerAudit.ts` segítségével bekerülnek a megfelelőségi auditnaplóba
+- A `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) a `src/shared/network/outboundUrlGuard.ts` védelmet alkalmazza a `BaseExecutor.execute()` metóduson keresztül elküldött csevegési kérésekre. Kizárólag nyilvános mód esetén (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false`, kikapcsolt privát jelzővel) blokkolja a privát és visszacsatolási hosztokat, valamint a 169.254.0.0/16 tartományt; minden más módban a felhőalapú metaadat-szolgáltatások hosztjait blokkolja. A hosztnevet vagy a literálisan megadott IP-címet minden DNS-keresés előtt ellenőrzi. A beépített helyi szolgáltatók esetén ez az ellenőrzés kimarad.
+- A szolgáltatói modellek felderítésére és ellenőrzésére szolgáló útvonalak a `src/shared/network/safeOutboundFetch.ts` fájlt használják, amely minden kimenő kérés előtt alkalmazza a védelmet
+- A védelem hibái `URL_GUARD_BLOCKED` hibaként, HTTP 503-as állapotkóddal jelennek meg (`getSafeOutboundFetchErrorStatus`; a modellfelderítési útvonal 400-as kódot ad vissza), a valódi SSRF-blokkolásokat pedig az ellenőrzés során `provider.validation.ssrf_blocked` eseményként rögzíti az auditnapló
 
 ## Megfigyelhetőség és üzemeltetési jelzések
 

@@ -17,7 +17,7 @@ Pruža jedinstvenu krajnju točku kompatibilnu s OpenAI-jem (`/v1/*`) i usmjerav
 
 Ključne mogućnosti:
 
-- API sučelje kompatibilno s OpenAI-jem za CLI/alate (375 pružatelja, 156 izvršnih modula)
+- API sučelje kompatibilno s OpenAI-jem za CLI/alate (376 pružatelja, 156 izvršnih modula)
 - Prevođenje zahtjeva/odgovora između formata pružatelja
 - Pričuvno prebacivanje kombinacija modela (slijed više modela)
 - Strukturirani koraci kombinacije (`provider + model + connection`) s redoslijedom tijekom izvođenja prema `compositeTiers`
@@ -1027,24 +1027,24 @@ Ciljni formati uključuju:
 
 - OpenAI chat/Responses
 - Claude
-- Gemini/Antigravity omotnicu (envelope)
+- Gemini/Antigravity omotnicu
 - Kiro
 - Cursor
 
-Prijevodi koriste **OpenAI kao središnji (hub) format** — svi se pretvaraju posredstvom OpenAI formata:
+Prijevodi koriste **OpenAI kao središnji format** — sve pretvorbe prolaze kroz OpenAI kao međukorak:
 
 ```
-Izvorni format → OpenAI (hub) → Ciljni format
+Izvorni format → OpenAI (središnji format) → Ciljni format
 ```
 
-Prijevodi se dinamički odabiru na temelju oblika izvornog payloada i ciljnog formata pružatelja usluge.
+Prijevodi se odabiru dinamički na temelju strukture izvornog korisnog sadržaja i ciljnog formata pružatelja usluge.
 
-Dodatni sloj obrade u pipelineu prijevoda:
+Dodatni slojevi obrade u procesu prijevoda:
 
-- **Sanitizacija odgovora** — Uklanja nestandardna polja iz odgovora u OpenAI formatu (i streaming i non-streaming) radi osiguravanja stroge usklađenosti sa SDK-om
-- **Normalizacija ulogâ** — Pretvara `developer` → `system` za ciljeve koji nisu OpenAI; spaja `system` → `user` za modele koji odbijaju ulogu system (GLM, ERNIE)
-- **Ekstrakcija think tagova** — Parsira blokove `` iz sadržaja u polje `reasoning_content`
-- **Strukturirani izlaz** — Pretvara OpenAI `response_format.json_schema` u Geminijev `responseMimeType` + `responseSchema`
+- **Pročišćavanje odgovora** — Uklanja nestandardna polja iz odgovora u OpenAI formatu (i protočnih i neprotočnih) kako bi se osigurala stroga usklađenost sa SDK-om
+- **Normalizacija uloga** — Pretvara `developer` → `system` za ciljeve koji nisu OpenAI; spaja `system` → `user` za modele koji odbacuju ulogu sustava (GLM, ERNIE)
+- **Izdvajanje oznaka razmišljanja** — Raščlanjuje blokove `<think>...</think>` iz sadržaja u polje `reasoning_content`
+- **Strukturirani izlaz** — Pretvara OpenAI `response_format.json_schema` u Gemini `responseMimeType` + `responseSchema`
 
 ## Podržani API krajnje točke (endpoints)
 
@@ -1110,11 +1110,11 @@ kompatibilnosti sa starijim verzijama. Trenutni ugovor za vrijeme izvođenja kor
 - SQLite migracije sheme i kuke za automatsko nadograđivanje pri pokretanju
 - put kompatibilnosti za migraciju sa starijeg JSON formata na SQLite
 
-## 6) SSRF / zaštita izlaznih URL-ova
+## 6) SSRF / zaštita odlaznih URL-ova
 
-- `src/shared/network/outboundUrlGuard.ts` blokira sve privatne/loopback/link-local ciljne URL-ove prije nego što dođu do izvršitelja pružatelja usluge
-- Rute za otkrivanje i validaciju modela pružatelja usluge koriste `src/shared/network/safeOutboundFetch.ts` koji primjenjuje zaštitu prije svakog izlaznog zahtjeva
-- Greške zaštite prikazuju se kao `URL_GUARD_BLOCKED` s HTTP 422 statusom i bilježe se u revizijski trag usklađenosti putem `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) primjenjuje `src/shared/network/outboundUrlGuard.ts` na zahtjeve za razgovor poslane putem `BaseExecutor.execute()`. U načinu rada samo za javne adrese (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` uz isključenu oznaku za privatne adrese) blokira privatna i povratna (loopback) računala te raspon 169.254.0.0/16; u svakom drugom načinu rada blokira računala s metapodacima oblaka. Provjerava naziv računala ili doslovno zapisanu IP adresu prije bilo kakvog DNS pretraživanja. Ugrađeni lokalni pružatelji preskaču ovu provjeru.
+- Rute za otkrivanje i provjeru valjanosti modela pružatelja koriste `src/shared/network/safeOutboundFetch.ts`, koji primjenjuje zaštitu prije svakog odlaznog zahtjeva
+- Pogreške zaštite prikazuju se kao `URL_GUARD_BLOCKED` uz HTTP 503 (`getSafeOutboundFetchErrorStatus`; ruta za otkrivanje modela vraća 400), a stvarne SSRF blokade tijekom provjere valjanosti bilježe se u revizijski trag kao događaji `provider.validation.ssrf_blocked`
 
 ## Vidljivost i operativni signali
 

@@ -15,7 +15,7 @@ Poskytuje jednotný koncový bod kompatibilní s OpenAI (`/v1/*`) a směruje pro
 
 Hlavní funkce:
 
-- Rozhraní API kompatibilní s OpenAI pro CLI/nástroje (375 poskytovatelů, 156 prováděcích modulů)
+- Rozhraní API kompatibilní s OpenAI pro CLI/nástroje (376 poskytovatelů, 156 prováděcích modulů)
 - Převod požadavků a odpovědí mezi formáty jednotlivých poskytovatelů
 - Záložní přepínání mezi kombinacemi modelů (sekvence více modelů)
 - Strukturované kroky kombinací (`provider + model + connection`) s pořadím za běhu podle `compositeTiers`
@@ -1102,11 +1102,11 @@ zpětné kompatibilitě. Aktuální běhový kontrakt používá:
 - migrace schématu SQLite a mechanismy automatického upgradu při spuštění
 - cesta kompatibility pro migraci ze staršího formátu JSON → SQLite
 
-## 6) Ochrana před SSRF / odchozími URL
+## 6) Ochrana proti SSRF / odchozím URL
 
-- `src/shared/network/outboundUrlGuard.ts` blokuje všechny soukromé, loopback a link-local cílové adresy URL dříve, než se dostanou k vykonavatelům poskytovatele
-- trasy pro vyhledávání a ověřování modelů poskytovatelů používají `src/shared/network/safeOutboundFetch.ts`, který aplikuje ochranu před každým odchozím požadavkem
-- chyby ochrany jsou hlášeny jako `URL_GUARD_BLOCKED` s HTTP 422 a zaznamenávány do auditní stopy souladu prostřednictvím `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) aplikuje `src/shared/network/outboundUrlGuard.ts` na požadavky chatu odesílané prostřednictvím `BaseExecutor.execute()`. V režimu pouze pro veřejné adresy (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` s vypnutým příznakem soukromých adres) blokuje privátní hostitele, hostitele zpětné smyčky a rozsah 169.254.0.0/16; ve všech ostatních režimech blokuje hostitele cloudových metadat. Kontroluje název hostitele nebo IP literál v zadané podobě ještě před jakýmkoli vyhledáním DNS. Vestavění lokální poskytovatelé tuto kontrolu přeskakují.
+- Trasy pro zjišťování a ověřování modelů poskytovatelů používají `src/shared/network/safeOutboundFetch.ts`, který ochranu aplikuje před každým odchozím požadavkem.
+- Chyby ochrany se projeví jako `URL_GUARD_BLOCKED` se stavem HTTP 503 (`getSafeOutboundFetchErrorStatus`; trasa pro zjišťování modelů vrací 400) a skutečná blokování SSRF během ověřování se zaznamenávají do auditní stopy jako události `provider.validation.ssrf_blocked`.
 
 ## Pozorovatelnost a provozní signály
 

@@ -15,7 +15,7 @@ OmniRoute គឺជា gateway សម្រាប់បញ្ជូនផ្ល�
 
 សមត្ថភាពស្នូល៖
 
-- ផ្ទៃ API ដែលឆបគ្នាជាមួយ OpenAI សម្រាប់ CLI/tools (375 providers, 156 executor modules)
+- ផ្ទៃ API ដែលឆបគ្នាជាមួយ OpenAI សម្រាប់ CLI/tools (376 providers, 156 executor modules)
 - ការបម្លែង request/response រវាងទ្រង់ទ្រាយរបស់ provider ផ្សេងៗ
 - ការបម្រុងទុកដោយប្រើ model combo (លំដាប់ multi-model)
 - ជំហាន combo ដែលមានរចនាសម្ព័ន្ធ (`provider + model + connection`) ជាមួយការរៀបលំដាប់ពេលដំណើរការដោយ `compositeTiers`
@@ -1102,11 +1102,11 @@ Provider នីមួយៗមាន executor ឯកទេសមួយដែល�
 - migration របស់ schema SQLite និង hook ដំឡើងកំណែដោយស្វ័យប្រវត្តិនៅពេលចាប់ផ្តើម
 - ផ្លូវភាពឆបគ្នាសម្រាប់ migration ពី JSON ចាស់ → SQLite
 
-## 6) របាំង SSRF / URL ចេញក្រៅ
+## 6) ការការពារ SSRF / URL ចេញក្រៅ
 
-- `src/shared/network/outboundUrlGuard.ts` រារាំង URL គោលដៅ private/loopback/link-local ទាំងអស់ មុនពេលពួកវាទៅដល់ executor របស់អ្នកផ្តល់សេវា
-- route សម្រាប់ការស្វែងរក និងផ្ទៀងផ្ទាត់ model របស់អ្នកផ្តល់សេវា ប្រើ `src/shared/network/safeOutboundFetch.ts` ដែលអនុវត្ត guard មុនរាល់សំណើចេញក្រៅ
-- កំហុស guard ត្រូវបានបង្ហាញជា `URL_GUARD_BLOCKED` ជាមួយ HTTP 422 ហើយត្រូវបានកត់ត្រាទៅក្នុងប្រវត្តិសវនកម្មអនុលោមភាពតាមរយៈ `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) អនុវត្ត `src/shared/network/outboundUrlGuard.ts` ចំពោះសំណើជជែកដែលត្រូវបានបញ្ជូនតាមរយៈ `BaseExecutor.execute()`។ នៅក្នុងរបៀបសាធារណៈតែប៉ុណ្ណោះ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` ដោយបិទទង់ឯកជន) វាទប់ស្កាត់ម៉ាស៊ីនមេឯកជន ម៉ាស៊ីនមេ loopback និង 169.254.0.0/16; នៅក្នុងរបៀបផ្សេងទៀតទាំងអស់ វាទប់ស្កាត់ម៉ាស៊ីនមេ cloud-metadata។ វាពិនិត្យឈ្មោះម៉ាស៊ីនមេ ឬ IP literal តាមដែលបានសរសេរ មុនពេលធ្វើការស្វែងរក DNS ណាមួយ។ អ្នកផ្តល់សេវាមូលដ្ឋានដែលមានស្រាប់នឹងរំលងការពារនេះ។
+- ផ្លូវសម្រាប់ការស្វែងរក និងផ្ទៀងផ្ទាត់ម៉ូដែលរបស់អ្នកផ្តល់សេវា ប្រើ `src/shared/network/safeOutboundFetch.ts` ដែលអនុវត្តការការពារមុនពេលសំណើចេញក្រៅនីមួយៗ
+- កំហុសនៃការការពារត្រូវបានបង្ហាញជា `URL_GUARD_BLOCKED` ជាមួយ HTTP 503 (`getSafeOutboundFetchErrorStatus`; ផ្លូវស្វែងរកម៉ូដែលត្រឡប់ 400) ហើយការទប់ស្កាត់ SSRF ពិតប្រាកដក្នុងអំឡុងពេលផ្ទៀងផ្ទាត់ ត្រូវបានកត់ត្រាទៅក្នុងកំណត់ហេតុសវនកម្មជា event `provider.validation.ssrf_blocked`
 
 ## ភាពអាចសង្កេតបាន និងសញ្ញាប្រតិបត្តិការ
 

@@ -15,7 +15,7 @@ Nó cung cấp một endpoint duy nhất tương thích với OpenAI (`/v1/*`) v
 
 Các khả năng cốt lõi:
 
-- Bề mặt API tương thích với OpenAI dành cho CLI/công cụ (375 nhà cung cấp, 156 mô-đun thực thi)
+- Bề mặt API tương thích với OpenAI dành cho CLI/công cụ (376 nhà cung cấp, 156 mô-đun thực thi)
 - Chuyển đổi yêu cầu/phản hồi giữa các định dạng của nhà cung cấp
 - Dự phòng theo tổ hợp mô hình (chuỗi nhiều mô hình)
 - Các bước tổ hợp có cấu trúc (`provider + model + connection`) với thứ tự lúc chạy dựa trên `compositeTiers`
@@ -1102,11 +1102,11 @@ tương thích với hệ thống cũ. Hợp đồng runtime hiện tại sử d
 - di chuyển lược đồ SQLite và các hook tự động nâng cấp khi khởi động
 - đường dẫn tương thích để di chuyển từ JSON cũ → SQLite
 
-## 6) Cơ chế bảo vệ URL gửi đi / SSRF
+## 6) Bảo vệ chống SSRF / URL gửi đi
 
-- `src/shared/network/outboundUrlGuard.ts` chặn tất cả URL đích riêng tư/loopback/link-local trước khi chúng đến các trình thực thi của nhà cung cấp
-- Các route khám phá và xác thực mô hình của nhà cung cấp sử dụng `src/shared/network/safeOutboundFetch.ts`, áp dụng cơ chế bảo vệ trước mỗi yêu cầu gửi đi
-- Lỗi từ cơ chế bảo vệ được hiển thị dưới dạng `URL_GUARD_BLOCKED` với HTTP 422 và được ghi vào dấu vết kiểm toán tuân thủ thông qua `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) áp dụng `src/shared/network/outboundUrlGuard.ts` cho các yêu cầu trò chuyện được gửi qua `BaseExecutor.execute()`. Ở chế độ chỉ công khai (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` khi cờ riêng tư bị tắt), cơ chế này chặn các máy chủ riêng tư, máy chủ loopback và dải 169.254.0.0/16; trong mọi chế độ khác, cơ chế này chặn các máy chủ siêu dữ liệu đám mây. Nó kiểm tra tên máy chủ hoặc địa chỉ IP dạng literal đúng như được ghi, trước khi thực hiện bất kỳ thao tác tra cứu DNS nào. Các nhà cung cấp cục bộ tích hợp sẵn sẽ bỏ qua bước kiểm tra này.
+- Các tuyến khám phá và xác thực mô hình của nhà cung cấp sử dụng `src/shared/network/safeOutboundFetch.ts`, áp dụng cơ chế bảo vệ trước mỗi yêu cầu gửi đi
+- Lỗi từ cơ chế bảo vệ được trả về dưới dạng `URL_GUARD_BLOCKED` với HTTP 503 (`getSafeOutboundFetchErrorStatus`; tuyến khám phá mô hình trả về 400), và các trường hợp chặn SSRF thực sự trong quá trình xác thực được ghi vào nhật ký kiểm tra dưới dạng sự kiện `provider.validation.ssrf_blocked`
 
 ## Khả năng quan sát và tín hiệu vận hành
 

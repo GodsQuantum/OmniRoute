@@ -15,7 +15,7 @@ OmniRoute је локални AI мрежни пролаз за усмерава
 
 Кључне могућности:
 
-- API површина компатибилна са OpenAI-јем за CLI/алате (375 провајдера, 156 извршних модула)
+- API површина компатибилна са OpenAI-јем за CLI/алате (376 провајдера, 156 извршних модула)
 - Превођење захтева/одговора између формата провајдера
 - Резервни прелаз кроз комбинацију модела (секвенца више модела)
 - Структурирани кораци комбинације (`provider + model + connection`) са редоследом током извршавања на основу `compositeTiers`
@@ -1006,37 +1006,37 @@ flowchart LR
 | OpenCode (Go/Zen)   | openai           | OAuth                      | ✅               | ✅            | ✅            | ❌                      |
 | CLIProxyAPI         | openai           | Прилагођено                | ✅               | ✅            | ❌            | ❌                      |
 
-## Покривеност превода формата
+## Покривеност превођења формата
 
-Детектовани извориформати укључују:
+Откривени изворни формати обухватају:
 
 - `openai`
 - `openai-responses`
 - `claude`
 - `gemini`
 
-Циљни формати укључују:
+Циљни формати обухватају:
 
 - OpenAI chat/Responses
 - Claude
-- Gemini/Antigravity envelope
+- Gemini/Antigravity омотач
 - Kiro
 - Cursor
 
-Преводи користе **OpenAI као централни (hub) формат** — све конверзије пролазе кроз OpenAI као посредни формат:
+Превођења користе **OpenAI као централни формат** — све конверзије пролазе кроз OpenAI као посредни формат:
 
 ```
-Изворни формат → OpenAI (hub) → Циљни формат
+Изворни формат → OpenAI (централни формат) → Циљни формат
 ```
 
-Преводи се бирају динамички на основу облика изворног payload-а и циљног формата провајдера.
+Превођења се динамички бирају на основу структуре изворног корисног садржаја и циљног формата добављача.
 
-Додатни слојеви обраде у пипелајну превода:
+Додатни слојеви обраде у процесу превођења:
 
-- **Санитизација одговора** — Уклања нестандардна поља из одговора у OpenAI формату (и стриминг и не-стриминг) ради обезбеђивања строге усклађености са SDK-ом
-- **Нормализација улога** — Конвертује `developer` → `system` за не-OpenAI циљеве; спаја `system` → `user` за моделе који одбијају улогу system (GLM, ERNIE)
-- **Екстракција think ознака** — Парсира `` блокове из садржаја у поље `reasoning_content`
-- **Структурисани излаз** — Конвертује OpenAI `response_format.json_schema` у Gemini-јев `responseMimeType` + `responseSchema`
+- **Пречишћавање одговора** — Уклања нестандардна поља из одговора у OpenAI формату (и стримованих и нестримованих) како би се обезбедила строга усклађеност са SDK-ом
+- **Нормализација улога** — Конвертује `developer` → `system` за циљеве који нису OpenAI; спаја `system` → `user` за моделе који одбацују системску улогу (GLM, ERNIE)
+- **Издвајање ознака размишљања** — Анализира блокове `<think>...</think>` из садржаја и смешта их у поље `reasoning_content`
+- **Структурирани излаз** — Конвертује OpenAI `response_format.json_schema` у Gemini `responseMimeType` + `responseSchema`
 
 ## Подржани API крајњи циљеви (endpoints)
 
@@ -1102,11 +1102,11 @@ legacy компатибилност. Тренутни runtime уговор ко�
 - SQLite шема миграције и куке за аутоматско ажурирање при покретању
 - путања компатибилности за миграцију legacy JSON → SQLite
 
-## 6) SSRF / Заштита излазних URL адреса
+## 6) SSRF / Zaštita odlaznih URL-ova
 
-- `src/shared/network/outboundUrlGuard.ts` блокира све приватне/loopback/link-local циљне URL адресе пре него што стигну до извршиоца провајдера
-- Руте за откривање и валидацију модела провајдера користе `src/shared/network/safeOutboundFetch.ts`, који примењује заштиту пре сваког излазног захтева
-- Грешке заштите се приказују као `URL_GUARD_BLOCKED` са HTTP 422 статусом и логују се у трагу ревизије усклађености (compliance audit trail) путем `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) primenjuje `src/shared/network/outboundUrlGuard.ts` na zahteve za ćaskanje koji se šalju putem `BaseExecutor.execute()`. U režimu samo za javne adrese (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` kada je oznaka za privatne adrese isključena), blokira privatne i povratne hostove, kao i opseg 169.254.0.0/16; u svakom drugom režimu blokira hostove metapodataka u oblaku. Proverava ime hosta ili doslovno navedenu IP adresu onako kako je zapisana, pre bilo kakvog DNS upita. Ugrađeni lokalni provajderi preskaču ovu proveru.
+- Rute za otkrivanje i validaciju modela provajdera koriste `src/shared/network/safeOutboundFetch.ts`, koji primenjuje zaštitu pre svakog odlaznog zahteva
+- Greške zaštite prikazuju se kao `URL_GUARD_BLOCKED` uz HTTP 503 (`getSafeOutboundFetchErrorStatus`; ruta za otkrivanje modela vraća 400), a stvarne SSRF blokade tokom validacije beleže se u revizionom tragu kao događaji `provider.validation.ssrf_blocked`
 
 ## Опсервабилност и оперативни сигнали
 
