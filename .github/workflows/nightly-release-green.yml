@@ -343,24 +343,51 @@ jobs:
           echo "------- report -------"
           cat release-green.log
 
+      - name: Record incomplete validation after setup failure
+        if: ${{ failure() && !cancelled() && steps.validate.outcome == 'skipped' }}
+        env:
+          TARGET: ${{ steps.branch.outputs.target }}
+          VALIDATED_SHA: ${{ steps.revision.outputs.sha }}
+          VALIDATION_OUTCOME: ${{ steps.validate.outcome }}
+          SCANNER_OUTCOME: ${{ steps.workflow_scanners.outcome }}
+        run: |
+          set -euo pipefail
+          # No validator ran: retain a diagnostic, never a fabricated gate report
+          # or a report left by an earlier attempt on a persistent runner.
+          rm -f -- release-green.json
+          {
+            echo '{"exit":1,"verdict":"UNKNOWN","evidenceState":"INCOMPLETE","reason":"Validation did not run after setup failed"}'
+            printf 'Target: %s\nRevision: %s\nValidation step: %s\nScanner setup: %s\n' \
+              "${TARGET:-UNKNOWN}" "${VALIDATED_SHA:-UNKNOWN}" \
+              "${VALIDATION_OUTCOME:-UNKNOWN}" "${SCANNER_OUTCOME:-UNKNOWN}"
+          } > release-green.log
+          cat release-green.log >> "$GITHUB_STEP_SUMMARY"
+
       - name: Open / update tracking issue on HARD failure
-        if: steps.validate.outputs.exit != '0'
+        if: ${{ !cancelled() && steps.revision.outputs.sha != '' && steps.branch.outputs.target != '' && steps.validate.outputs.exit != '0' }}
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET: ${{ steps.branch.outputs.target }}
+          VALIDATED_SHA: ${{ steps.revision.outputs.sha }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           EVENT_NAME: ${{ github.event_name }}
           BEFORE_SHA: ${{ github.event.before }}
           AFTER_SHA: ${{ github.event.after }}
         run: |
           set -euo pipefail
+          if ! [[ "${VALIDATED_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || \
+             ! [[ "${TARGET:-}" =~ ^release/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Missing or invalid observed revision/target; retaining diagnostics without changing issues."
+            exit 0
+          fi
           TITLE="🔴 Release branch not green: ${TARGET}"
           {
-            echo "The **release-green** validation found HARD failures on \`${TARGET}\`."
+            echo "The **release-green** observation did not complete successfully on \`${TARGET}\`."
             echo "The required validation failed or its evidence was incomplete. Compare the"
             echo "signature on the exact base before attributing a defect to a contributor."
             echo ""
             echo "**Run:** ${RUN_URL} (mode: ${EVENT_NAME})"
+            echo "**Observed revision:** \`${VALIDATED_SHA}\`"
             # This is an observed range, not proof of causality. Compare with the base.
             if [ "$EVENT_NAME" = "push" ] && [ -n "${BEFORE_SHA:-}" ] && \
                git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
@@ -372,7 +399,9 @@ jobs:
             fi
             echo ""
             echo '```'
-            if grep -q '──────── verdict ────────' release-green.log; then
+            if [ ! -s release-green.log ]; then
+              echo '{"verdict":"UNKNOWN","evidenceState":"INCOMPLETE","reason":"Validation log is missing"}'
+            elif grep -q '──────── verdict ────────' release-green.log; then
               sed -n '/──────── verdict ────────/,$p' release-green.log
             else
               tail -40 release-green.log
@@ -532,29 +561,50 @@ jobs:
           echo "------- report -------"
           cat main-green.log
 
+      - name: Record incomplete validation after setup failure
+        if: ${{ failure() && !cancelled() && steps.validate.outcome == 'skipped' }}
+        env:
+          TARGET: main
+          VALIDATED_SHA: ${{ steps.revision.outputs.sha }}
+          VALIDATION_OUTCOME: ${{ steps.validate.outcome }}
+          SCANNER_OUTCOME: ${{ steps.workflow_scanners.outcome }}
+        run: |
+          set -euo pipefail
+          rm -f -- main-green.json
+          {
+            echo '{"exit":1,"verdict":"UNKNOWN","evidenceState":"INCOMPLETE","reason":"Validation did not run after setup failed"}'
+            printf 'Target: %s\nRevision: %s\nValidation step: %s\nScanner setup: %s\n' \
+              "${TARGET:-UNKNOWN}" "${VALIDATED_SHA:-UNKNOWN}" \
+              "${VALIDATION_OUTCOME:-UNKNOWN}" "${SCANNER_OUTCOME:-UNKNOWN}"
+          } > main-green.log
+          cat main-green.log >> "$GITHUB_STEP_SUMMARY"
+
       - name: Open / update tracking issue on HARD failure
-        if: steps.validate.outputs.exit != '0'
+        if: ${{ !cancelled() && steps.revision.outputs.sha != '' && steps.validate.outputs.exit != '0' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          VALIDATED_SHA: ${{ steps.revision.outputs.sha }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
+          if ! [[ "${VALIDATED_SHA:-}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Missing or invalid observed revision; retaining diagnostics without changing issues."
+            exit 0
+          fi
           TITLE="🔴 main branch not green"
           {
-            echo "The **main-green** validation found HARD failures on \`main\`."
-            echo ""
-            echo "Because \`main\` only receives merged work at the release squash, a gate/infra"
-            echo "fix that landed only on the release branch leaves \`main\` broken for the whole"
-            echo "cycle — and repo-wide gates (CodeQL alert count, ratchet baselines) then turn"
-            echo "**every open PR into main** red on a check unrelated to its diff. The fix is a"
-            echo "companion PR \`--base main\` carrying the release-side fix (see"
-            echo "\`_shared/merge-gates.md\` §8), NOT chasing each contributor PR."
+            echo "The **main-green** observation did not complete successfully on \`main\`."
+            echo "The required validation failed or its evidence was incomplete. Compare the"
+            echo "signature on the exact base before attributing a defect to a contributor."
             echo ""
             echo "**Run:** ${RUN_URL} (mode: ${EVENT_NAME})"
+            echo "**Observed revision:** \`${VALIDATED_SHA}\`"
             echo ""
             echo '```'
-            if grep -q '──────── verdict ────────' main-green.log; then
+            if [ ! -s main-green.log ]; then
+              echo '{"verdict":"UNKNOWN","evidenceState":"INCOMPLETE","reason":"Validation log is missing"}'
+            elif grep -q '──────── verdict ────────' main-green.log; then
               sed -n '/──────── verdict ────────/,$p' main-green.log
             else
               tail -40 main-green.log
