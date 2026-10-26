@@ -13,30 +13,30 @@
 
 ## Hvad det er
 
-OmniRoute registrerer 375 udbydere, herunder 155 katalogposter markeret som **gratis/uden-godkendelse**
-(uden-godkendelse,
-OAuth på gratisniveau eller API-nøgle på gratisniveau — se
-[guiden til gratisniveauer](../getting-started/FREE-TIERS-GUIDE.md) og den fulde
-[oversigt over gratisniveauer](../reference/FREE_TIERS.md)). Haken ved det: gratis udbydere varierer
-voldsomt i modelkvalitet. En udbyder uden godkendelse, der serverer en frontløbermodel, er langt mere nyttig
-end en, der serverer en lille, ældre model.
+OmniRoute registrerer 376 udbydere, herunder 155 katalogposter markeret som **gratis/uden godkendelse**
+(uden godkendelse,
+gratis OAuth-niveau eller gratis API-nøgleniveau — se
+[Guiden til gratis niveauer](../getting-started/FREE-TIERS-GUIDE.md) og den komplette
+[mappe over gratis niveauer](../reference/FREE_TIERS.md)). Udfordringen er, at gratis udbydere varierer
+markant i modelkvalitet. En udbyder uden godkendelse, der tilbyder en frontier-model, er langt mere nyttig
+end en, der tilbyder en lille ældre model.
 
-**Free Provider Rankings** besvarer "**hvilken gratis udbyder giver mig den bedste model?**" ved at
-kombinere hver gratis udbyders katalog med **crowdsourcede kvalitetsscorer** fra
-**Arena AI-ranglisten** (ELO baseret på menneskelige præferencer, samme idé bag LMArena
-chatbot-arenaen). Udbyderne rangeres derefter efter styrken af deres **bedste gratis model**.
+**Rangeringer af gratis udbydere** besvarer spørgsmålet "**hvilken gratis udbyder giver mig den bedste model?**" ved at
+sammenkoble hver gratis udbyders katalog med **crowdsourcede kvalitetsscorer** fra
+**Arena AI-ranglisten** (ELO baseret på menneskelige præferencer, samme idé som ligger bag LMArena-
+chatbotarenaen). Udbyderne rangeres derefter efter styrken af deres **bedste gratis model**.
 
 Rangeringen beregnes ud fra tre reelle kilder:
 
-1. Listerne over gratis udbydere — `NOAUTH_PROVIDERS`, plus `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS`-poster markeret med `hasFree`
+1. Listerne over gratis udbydere — `NOAUTH_PROVIDERS` samt poster i `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS`, der er markeret med `hasFree`
    (`src/shared/constants/providers.ts`).
-2. Hver udbyders modelkatalog fra udbyderregistret
+2. Hver udbyders modelkatalog fra udbyderregistreringsdatabasen
    (`open-sse/config/providerRegistry.ts`).
-3. ELO-afledte opgaveegnethedsscorer lagret i DB-tabellen `model_intelligence` af
-   Arena ELO-synkroniseringsmotoren (`src/lib/arenaEloSync.ts`).
+3. ELO-afledte scorer for opgaveegnethed, der gemmes i DB-tabellen `model_intelligence` af
+   synkroniseringsmotoren til Arena ELO (`src/lib/arenaEloSync.ts`).
 
-Sammenkædningslogikken findes i `src/lib/freeProviderRankings.ts`.
+Sammenkoblingslogikken findes i `src/lib/freeProviderRankings.ts`.
 
 ---
 

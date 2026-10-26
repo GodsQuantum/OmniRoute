@@ -11,30 +11,32 @@
 
 ---
 
-## Ohun Tó Jẹ́
+## Kí Ni Ó Jẹ́
 
-OmniRoute forúkọ sílẹ̀ àwọn olùpèsè 375, pẹ̀lú àwọn ẹ̀yà àkójọ 155 tí a ṣàmì sí **free/no-auth**
-(no-auth,
-OAuth ipele-ọfẹ́, tàbí kì API ipele-ọfẹ́ — wo
-[Ìtọ́nisọ́nà Àwọn Ipele Ọfẹ́](../getting-started/FREE-TIERS-GUIDE.md) àti
-[àkópọ̀ Àwọn Ipele Ọfẹ́](../reference/FREE_TIERS.md) kíkún). Ohun tó yẹ ká ṣàkíyèsí ni pé: àwọn olùpèsè ọfẹ́ yàtọ̀ sí gan-an ní didára àwoṣe. Olùpèsè no-auth kan tó ń pèsè àwoṣe tó ga jù lọ ní òde-òní wúlò ju ẹni tó ń pèsè àwoṣe àtijọ́ kékeré kan lọ.
+OmniRoute forúkọsílẹ̀ àwọn olùpèsè 376, pẹ̀lú àwọn àkọsílẹ̀ katalọ́ọ̀gù 155 tí a sàmì sí gẹ́gẹ́ bí **ọ̀fẹ́/kò nílò ìfàṣẹsí**
+(kò nílò ìfàṣẹsí,
+OAuth ipele-ọ̀fẹ́, tàbí kọ́kọ́rọ́ API ipele-ọ̀fẹ́ — wo
+[Ìtọ́sọ́nà Àwọn Ipele Ọ̀fẹ́](../getting-started/FREE-TIERS-GUIDE.md) àti
+[Àkójọ Àwọn Ipele Ọ̀fẹ́](../reference/FREE_TIERS.md) ní ẹ̀kúnrẹ́rẹ́). Ṣùgbọ́n ohun pàtàkì kan wà: àwọn olùpèsè ọ̀fẹ́ yàtọ̀
+gidigidi nípa dídára àwòṣe. Olùpèsè tí kò nílò ìfàṣẹsí, tí ó ń pèsè àwòṣe tó ga jù lọ, wúlò púpọ̀ sí i
+ju èyí tí ó ń pèsè àwòṣe kékeré ti ìgbà àtijọ́ lọ.
 
-**Free Provider Rankings** dáhùn ìbéèrè "**èwo nínú àwọn olùpèsè ọfẹ́ ló ń fún mí ní àwoṣe tó dára jù lọ?**" nípa
-dídàpọ̀ àkójọ olùpèsè ọfẹ́ kọ̀ọ̀kan pẹ̀lú **àwọn ìwọ̀ntúnwọ̀nsì didára láti ọ̀dọ́ àwùjọ** láti inú
-**Arena AI leaderboard** (ELO ìfẹ́ràn ènìyàn, èròjà kannáà tó wà lẹ́yìn LMArena
-chatbot arena). A sì ń ṣe àtòlẹ́sẹ̀sẹ̀ àwọn olùpèsè gẹ́gẹ́ bí agbára **àwoṣe ọfẹ́ tó dára jù lọ** wọn ṣe rí.
+**Ìṣàkóso Àwọn Olùpèsè Ọ̀fẹ́** dáhùn ìbéèrè náà pé "**olùpèsè ọ̀fẹ́ wo ló fún mi ní àwòṣe tó dára jù lọ?**" nípa
+sísopọ̀ katalọ́ọ̀gù olùpèsè ọ̀fẹ́ kọ̀ọ̀kan mọ́ **àwọn àmì ìdánilójú dídára tí ọ̀pọ̀ ènìyàn kó jọ** láti
+**àtẹ ìṣàkóso Arena AI** (ELO ààyò-ẹ̀dá, èrò kan náà tí ó wà lẹ́yìn pápá ìdíje chatbot
+LMArena). Lẹ́yìn náà, a máa ṣètò àwọn olùpèsè ní ipò gẹ́gẹ́ bí agbára **àwòṣe ọ̀fẹ́ tó dára jù lọ** wọn.
 
-A ń ṣe ìṣirò àtòlẹ́sẹ̀sẹ̀ náà láti àwọn orísun tòótọ́ mẹ́ta:
+A ṣe ìṣírò ìṣàkóso náà láti inú àwọn orísun gidi mẹ́ta:
 
-1. Àwọn àtòjọ àwọn olùpèsè ọfẹ́ — `NOAUTH_PROVIDERS`, pẹ̀lú àwọn ìforúkọsílẹ̀ `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` tí a fi àmì `hasFree` sí
+1. Àwọn àkójọ olùpèsè ọ̀fẹ́ — `NOAUTH_PROVIDERS`, pẹ̀lú àwọn àkọsílẹ̀ `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS` tí a sàmì sí `hasFree`
    (`src/shared/constants/providers.ts`).
-2. Àkójọ àwoṣe olùpèsè kọ̀ọ̀kan láti inú ìforúkọsílẹ̀ olùpèsè
+2. Katalọ́ọ̀gù àwòṣe olùpèsè kọ̀ọ̀kan láti ibi ìforúkọsílẹ̀ olùpèsè
    (`open-sse/config/providerRegistry.ts`).
-3. Àwọn ìwọ̀ntúnwọ̀nsì ìbámu-iṣẹ́ tí wọ́n yọ láti inú ELO tí a pamọ́ sínú tábìlì DB `model_intelligence` nípasẹ̀
-   ẹ̀rọ ìṣọ́pọ̀ Arena ELO (`src/lib/arenaEloSync.ts`).
+3. Àwọn àmì ìbámu iṣẹ́ tí a yọ láti inú ELO, tí ẹ̀rọ ìṣiṣẹ́pọ̀ Arena ELO fi pamọ́ sínú tábìlì DB `model_intelligence`
+   (`src/lib/arenaEloSync.ts`).
 
-Ìlànà dídàpọ̀ náà wà nínú `src/lib/freeProviderRankings.ts`.
+Ìlànà ìsopọ̀ náà wà nínú `src/lib/freeProviderRankings.ts`.
 
 ---
 

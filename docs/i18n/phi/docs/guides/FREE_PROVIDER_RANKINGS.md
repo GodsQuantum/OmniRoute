@@ -13,21 +13,30 @@
 
 ## Ano Ito
 
-Ang OmniRoute ay nagrehistro ng 375 provider, kabilang ang 155 catalog entry na minarkahan bilang **free/no-auth** (no-auth, free-tier OAuth, o free-tier API key — tingnan ang [Gabay sa Free Tiers](../getting-started/FREE-TIERS-GUIDE.md) at ang buong [direktoryo ng Free Tiers](../reference/FREE_TIERS.md)). Ang problema: lubhang nagkakaiba-iba ang mga libreng provider sa kalidad ng modelo. Ang isang no-auth provider na naghahatid ng frontier model ay mas kapaki-pakinabang kaysa sa isang naghahatid ng maliit na legacy model.
+Nagrerehistro ang OmniRoute ng 376 na provider, kabilang ang 155 catalog entry na minarkahang **libre/walang auth**
+(walang auth,
+free-tier OAuth, o free-tier API key — tingnan ang
+[Gabay sa Mga Free Tier](../getting-started/FREE-TIERS-GUIDE.md) at ang buong
+[Direktoryo ng Mga Free Tier](../reference/FREE_TIERS.md)). Ang kapalit: lubhang magkakaiba
+ang kalidad ng modelo ng mga libreng provider. Ang provider na walang auth na naghahatid ng frontier model ay higit na mas kapaki-pakinabang
+kaysa sa provider na naghahatid ng maliit na legacy model.
 
-Sinasagot ng **Free Provider Rankings** ang tanong na "**alin na libreng provider ang nagbibigay sa akin ng pinakamahusay na modelo?**" sa pamamagitan ng pagsasama ng catalog ng bawat libreng provider sa mga **crowd-sourced na quality score** mula sa **Arena AI leaderboard** (ELO na batay sa kagustuhan ng tao, ang parehong ideya sa likod ng LMArena chatbot arena). Ang mga provider ay iniraranggo batay sa lakas ng kanilang **pinakamahusay na libreng modelo**.
+Sinasagot ng **Mga Ranggo ng Libreng Provider** ang "**aling libreng provider ang nagbibigay sa akin ng pinakamahusay na modelo?**" sa pamamagitan ng
+pagsasama ng catalog ng bawat libreng provider sa **mga marka ng kalidad na mula sa komunidad** mula sa
+**leaderboard ng Arena AI** (ELO batay sa kagustuhan ng tao, ang kaparehong konsepto sa likod ng chatbot arena ng LMArena).
+Pagkatapos, niraranggo ang mga provider batay sa lakas ng kanilang **pinakamahusay na libreng modelo**.
 
-Ang ranggo ay kinakalkula mula sa tatlong tunay na pinagmulan:
+Kinukuwenta ang ranggo mula sa tatlong tunay na source:
 
-1. Ang mga listahan ng libreng provider — `NOAUTH_PROVIDERS`, kasama ang mga entry ng `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` na naka-flag na `hasFree`
+1. Ang mga listahan ng libreng provider — `NOAUTH_PROVIDERS`, kasama ang mga entry sa `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS` na may flag na `hasFree`
    (`src/shared/constants/providers.ts`).
-2. Ang catalog ng modelo ng bawat provider mula sa provider registry
+2. Ang catalog ng modelo ng bawat provider mula sa registry ng provider
    (`open-sse/config/providerRegistry.ts`).
-3. Ang mga task-fit score na hango sa ELO na nakaimbak sa DB table na `model_intelligence` ng
+3. Mga score ng pagiging angkop sa gawain na hinango mula sa ELO at naka-store sa `model_intelligence` DB table ng
    Arena ELO sync engine (`src/lib/arenaEloSync.ts`).
 
-Ang join logic ay matatagpuan sa `src/lib/freeProviderRankings.ts`.
+Makikita ang logic ng join sa `src/lib/freeProviderRankings.ts`.
 
 ---
 

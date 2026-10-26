@@ -13,30 +13,30 @@
 
 ## Ni Nini
 
-OmniRoute husajili watoa huduma 375, ikijumuisha viingilio 155 vya katalogi vilivyowekewa alama **bure/bila-uthibitishaji**
-(bila-uthibitishaji,
+OmniRoute husajili watoa huduma 376, ikijumuisha maingizo 155 ya katalogi yaliyowekwa alama ya **bure/hayahitaji uthibitishaji**
+(hayahitaji uthibitishaji,
 OAuth ya kiwango cha bure, au ufunguo wa API wa kiwango cha bure — angalia
 [Mwongozo wa Viwango vya Bure](../getting-started/FREE-TIERS-GUIDE.md) na
-[Saraka kamili ya Viwango vya Bure](../reference/FREE_TIERS.md)). Shida ni kwamba: watoa huduma wa bure hutofautiana
-sana katika ubora wa modeli. Mtoa huduma wa bila-uthibitishaji anayetoa modeli ya kisasa ni muhimu zaidi
+[orodha kamili ya Viwango vya Bure](../reference/FREE_TIERS.md)). Changamoto ni kwamba: watoa huduma wa bure hutofautiana
+sana katika ubora wa modeli. Mtoa huduma asiyehitaji uthibitishaji na anayetoa modeli ya kisasa zaidi ana manufaa makubwa zaidi
 kuliko yule anayetoa modeli ndogo ya zamani.
 
-**Mpangilio wa Watoa Huduma wa Bure** hujibu swali "**ni mtoa huduma yupi wa bure ananipa modeli bora?**" kwa
-kuunganisha katalogi ya kila mtoa huduma wa bure na **alama za ubora zilizokusanywa kutoka kwa umma** kutoka kwa
-**jedwali la vinara la Arena AI** (ELO ya mapendeleo ya binadamu, wazo lile lile lililo nyuma ya uwanja wa
-chatbot wa LMArena). Watoa huduma kisha hupangiwa nafasi kulingana na nguvu ya **modeli yao bora ya bure**.
+**Viwango vya Watoa Huduma wa Bure** hujibu "**ni mtoa huduma gani wa bure anayenipa modeli bora zaidi?**" kwa
+kuunganisha katalogi ya kila mtoa huduma wa bure na **alama za ubora zinazokusanywa kutoka kwa umma** kutoka kwenye
+**jedwali la viongozi la Arena AI** (ELO ya mapendeleo ya binadamu, dhana ileile inayotumiwa katika uwanja wa
+chatiboti wa LMArena). Kisha watoa huduma hupangwa kulingana na uwezo wa **modeli yao bora zaidi ya bure**.
 
-Mpangilio huhesabiwa kutoka vyanzo vitatu halisi:
+Mpangilio huo hukokotolewa kutoka katika vyanzo vitatu halisi:
 
-1. Orodha za watoa huduma wa bure — `NOAUTH_PROVIDERS`, pamoja na viingilio vya `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` vilivyowekewa bendera `hasFree`
+1. Orodha za watoa huduma wa bure — `NOAUTH_PROVIDERS`, pamoja na maingizo ya `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS` yaliyowekwa alama ya `hasFree`
    (`src/shared/constants/providers.ts`).
-2. Katalogi ya modeli ya kila mtoa huduma kutoka kwa rejista ya watoa huduma
+2. Katalogi ya modeli za kila mtoa huduma kutoka kwenye sajili ya watoa huduma
    (`open-sse/config/providerRegistry.ts`).
-3. Alama za ulinganifu wa kazi zilizotokana na ELO zilizohifadhiwa katika jedwali la DB la `model_intelligence`
-   na injini ya usawazishaji wa Arena ELO (`src/lib/arenaEloSync.ts`).
+3. Alama za ufaafu kwa kazi zinazotokana na ELO zilizohifadhiwa katika jedwali la hifadhidata la `model_intelligence` na
+   injini ya ulandanishi ya Arena ELO (`src/lib/arenaEloSync.ts`).
 
-Mantiki ya kuunganisha iko katika `src/lib/freeProviderRankings.ts`.
+Mantiki ya uunganishaji iko katika `src/lib/freeProviderRankings.ts`.
 
 ---
 

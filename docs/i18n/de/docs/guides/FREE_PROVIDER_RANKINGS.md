@@ -12,28 +12,28 @@
 
 ## Was es ist
 
-OmniRoute registriert 375 Anbieter, darunter 155 Katalogeinträge mit der Markierung **kostenlos/ohne Auth**
-(ohne Auth,
-kostenloser OAuth-Tier oder kostenloser API-Key-Tier — siehe den
-[Free-Tiers-Leitfaden](../getting-started/FREE-TIERS-GUIDE.md) und das vollständige
-[Free-Tiers-Verzeichnis](../reference/FREE_TIERS.md)). Der Haken: Kostenlose Anbieter variieren
-erheblich in der Modellqualität. Ein No-Auth-Anbieter, der ein Frontier-Modell bereitstellt, ist weitaus nützlicher
+OmniRoute registriert 376 Anbieter, darunter 155 Katalogeinträge, die als **kostenlos/ohne Authentifizierung** gekennzeichnet sind
+(ohne Authentifizierung,
+kostenlose OAuth-Stufe oder kostenloser API-Key-Tarif — siehe den
+[Leitfaden zu kostenlosen Tarifen](../getting-started/FREE-TIERS-GUIDE.md) und das vollständige
+[Verzeichnis kostenloser Tarife](../reference/FREE_TIERS.md)). Der Haken: Kostenlose Anbieter unterscheiden sich
+erheblich in der Modellqualität. Ein Anbieter ohne Authentifizierung, der ein Frontier-Modell bereitstellt, ist weitaus nützlicher
 als einer, der ein kleines Legacy-Modell anbietet.
 
-**Free Provider Rankings** beantwortet die Frage „**Welcher kostenlose Anbieter bietet mir das beste Modell?**“, indem
-der Katalog jedes kostenlosen Anbieters mit **Crowd-basierten Qualitätsbewertungen** aus der
-**Arena-AI-Bestenliste** verknüpft wird (ELO auf Basis menschlicher Präferenzen, dieselbe Idee wie hinter der LMArena
-Chatbot Arena). Die Anbieter werden dann nach der Stärke ihres **besten kostenlosen Modells** eingestuft.
+**Rangliste kostenloser Anbieter** beantwortet die Frage „**Welcher kostenlose Anbieter bietet mir das beste Modell?**“, indem
+der Katalog jedes kostenlosen Anbieters mit **Crowdsourcing-Qualitätsbewertungen** aus der
+**Arena-AI-Bestenliste** verknüpft wird (ELO basierend auf menschlichen Präferenzen, dasselbe Konzept wie hinter der LMArena-
+Chatbot-Arena). Die Anbieter werden anschließend nach der Leistungsfähigkeit ihres **besten kostenlosen Modells** eingestuft.
 
-Das Ranking wird aus drei realen Quellen berechnet:
+Die Rangliste wird anhand von drei realen Quellen berechnet:
 
-1. Die Listen kostenloser Anbieter — `NOAUTH_PROVIDERS`, sowie `OAUTH_PROVIDERS`-/
-   `APIKEY_PROVIDERS`-Einträge mit dem Flag `hasFree`
+1. Die Listen kostenloser Anbieter — `NOAUTH_PROVIDERS` sowie Einträge aus `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS`, die mit `hasFree` gekennzeichnet sind
    (`src/shared/constants/providers.ts`).
-2. Der Modellkatalog jedes Anbieters aus der Provider-Registry
+2. Der Modellkatalog jedes Anbieters aus der Anbieterregistrierung
    (`open-sse/config/providerRegistry.ts`).
-3. Aus ELO abgeleitete Aufgabeneignungs-Scores, die von der Arena-ELO-Sync-Engine
-   (`src/lib/arenaEloSync.ts`) in der DB-Tabelle `model_intelligence` gespeichert werden.
+3. Aus ELO abgeleitete Bewertungen der Aufgabeneignung, die von der
+   Arena-ELO-Synchronisierungs-Engine (`src/lib/arenaEloSync.ts`) in der DB-Tabelle `model_intelligence` gespeichert werden.
 
 Die Verknüpfungslogik befindet sich in `src/lib/freeProviderRankings.ts`.
 
