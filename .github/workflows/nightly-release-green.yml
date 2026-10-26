@@ -130,8 +130,10 @@ jobs:
           - { name: unit-10, script: "test:unit:ci:shard", shard: "10/12" }
           - { name: unit-11, script: "test:unit:ci:shard", shard: "11/12" }
           - { name: unit-12, script: "test:unit:ci:shard", shard: "12/12" }
-          - { name: integration-1, script: "test:integration:ci", shard: "1/2" }
-          - { name: integration-2, script: "test:integration:ci", shard: "2/2" }
+          - { name: integration-1, script: "test:integration:ci", shard: "1/4" }
+          - { name: integration-2, script: "test:integration:ci", shard: "2/4" }
+          - { name: integration-3, script: "test:integration:ci", shard: "3/4" }
+          - { name: integration-4, script: "test:integration:ci", shard: "4/4" }
           - { name: vitest-1, script: "test:vitest:ui", shard: "1/4" }
           - { name: vitest-2, script: "test:vitest:ui", shard: "2/4" }
           - { name: vitest-3, script: "test:vitest:ui", shard: "3/4" }
