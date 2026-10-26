@@ -83,31 +83,13 @@
 
 ## 2. กฎ
 
-1. ใช้โทเค็น ไม่ใช้ค่าลิเทอรัล ข้อยกเว้นที่ตั้งใจคงไว้ ได้แก่ เทอร์มินัลคอนโซลที่เป็นธีมมืดเสมอ, เส้น SVG ของ ReactFlow
-   ผ่าน `STATUS_HEX` (`src/shared/constants/statusColors.ts`) และพาเล็ตสีแบบจัดหมวดหมู่
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) และ
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)
-2. ห้ามแก้ไข `packages/ui-kit/src` ด้วยตนเอง: ให้ซิงค์ด้วย `scripts/dev/sync-ui-kit.sh <commit>`; เกต
-   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) จะล้มเหลวหากมีไบต์ใดแตกต่าง
-   จากคอมมิตต้นทางที่ปักหมุดไว้ (โดยจะข้ามพร้อมคำเตือนเมื่อไม่มีโคลนต้นทาง
-   `UI_KIT_CLONE` หรือ `_references/cheaper-inference-ui-kit`) เมื่อ kit ไม่มีสิ่งที่ต้องการ
-   ให้หาทางแก้ในอะแดปเตอร์หรือหน้าจอ และร้องขอไปยังต้นทาง
-3. ข้อความเริ่มต้นของ kit เป็นภาษาอังกฤษ (`label = "Loading"`, `loadingLabel = "Loading table"`…) — ส่งสตริงที่แปลแล้ว
-   จาก `useTranslations(...)` ทุกครั้งที่คอมโพเนนต์ของ kit เรนเดอร์ข้อความ
-4. ยูทิลิตีของ Tailwind มีลำดับความสำคัญเหนือคลาสของคอมโพเนนต์ kit (kit ประกาศ
-   `@layer theme, base, components, utilities` และกฎของ kit อยู่ใน `components`) — ใช้ยูทิลิตีสำหรับ
-   ระยะห่างและเลย์เอาต์ ไม่ใช่เพื่อเปลี่ยนสีคอมโพเนนต์ของ kit
-5. หัวเรื่อง: ใช้ `.ci-heading` (Inter, ไม่มีการปรับระยะห่างตัวอักษร) สำหรับชื่อหน้าและชื่อส่วน; ใช้ `.ci-dashboard-display`
-   (Instrument Serif) เฉพาะข้อความแสดงผลขนาดใหญ่ที่มีองค์ประกอบน้อย เช่น รหัสสถานะบนหน้าข้อผิดพลาด
-6. `tests/unit/dashboard-kit-sweep.test.ts` ควบคุมการนำ kit มาใช้: ห้ามมีสแปน Material ligature ภายใต้
-   `src/app` หรือ `src/shared/components`; ในโครงสร้างแดชบอร์ด (`src/app/(dashboard)` และ
-   `src/shared/components`) ห้ามใช้ `<select>`, `<textarea>` หรือ `<table>` แบบดิบ และห้ามสร้าง
-   `role="dialog"` เองนอกเหนือจากข้อยกเว้นที่ระบุไว้ (สาขาแบบเนทีฟของอะแดปเตอร์ `Select`,
-   `RequestLoggerDetail`); `<button>` หรือ `<input>` แบบดิบทุกตัวในบริเวณดังกล่าวต้องมีความคิดเห็นที่มี
-   `kit-exception:` (พร้อมเหตุผล) และสิ้นสุดไม่เกิน 3 บรรทัดก่อนองค์ประกอบนั้น; เฉดสีของพาเล็ตและตัวแปร
-   `dark:` อนุญาตเฉพาะในไฟล์ที่การทดสอบระบุไว้
-7. ตรวจสอบทั้งสองธีมและวิวพอร์ตขนาด 390 px ก่อนเปิด PR (พร้อมภาพหน้าจอ); `tests/e2e/a11y.spec.ts` จะรัน
-   axe
+1. ใช้โทเค็นเสมอ ห้ามใช้ค่าลิเทอรัล ข้อยกเว้นที่ตั้งใจคงไว้: เทอร์มินัลคอนโซลที่เป็นธีมมืดเสมอ และเส้น SVG ของ ReactFlow ผ่าน `STATUS_HEX` (`src/shared/constants/statusColors.ts`) พาเลตของกลยุทธ์การกำหนดเส้นทางและเลเยอร์การบีบอัดใช้โทเค็นแผนภูมิของชุด UI ผ่าน `strategyColorVar` และ `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`)
+2. ห้ามแก้ไข `packages/ui-kit/src` ด้วยตนเอง: ให้ซิงค์ด้วย `scripts/dev/sync-ui-kit.sh <commit>`; จุดตรวจสอบก่อนคอมมิต `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) จะล้มเหลวหากมีไบต์ใดแตกต่างจากคอมมิตต้นทางที่ปักหมุดไว้ (ระบบจะข้ามพร้อมคำเตือนเมื่อไม่มีโคลนต้นทาง `UI_KIT_CLONE` หรือ `_references/cheaper-inference-ui-kit`) เมื่อชุด UI ไม่มีสิ่งที่ต้องการ ให้แก้ปัญหาเฉพาะหน้าในอะแดปเตอร์หรือหน้าจอ และส่งคำขอไปยังต้นทาง
+3. ข้อความเริ่มต้นของชุด UI เป็นภาษาอังกฤษ (`label = "Loading"`, `loadingLabel = "Loading table"`…) — ให้ส่งสตริงที่แปลแล้วจาก `useTranslations(...)` ทุกครั้งที่คอมโพเนนต์ของชุด UI แสดงข้อความ
+4. ยูทิลิตี Tailwind มีลำดับความสำคัญเหนือคลาสของคอมโพเนนต์ในชุด UI (ชุด UI ประกาศ `@layer theme, base, components, utilities` และกฎของชุดอยู่ใน `components`) — ใช้ยูทิลิตีสำหรับระยะห่างและเลย์เอาต์ ไม่ใช่เพื่อเปลี่ยนสีคอมโพเนนต์ของชุด UI
+5. หัวเรื่อง: ใช้ `.ci-heading` (Inter, ไม่มีระยะห่างตัวอักษร) สำหรับชื่อหน้าและชื่อส่วน; ใช้ `.ci-dashboard-display` (Instrument Serif) เฉพาะข้อความแสดงผลขนาดใหญ่ที่มีองค์ประกอบไม่หนาแน่น เช่น รหัสสถานะในหน้าข้อผิดพลาด
+6. `tests/unit/dashboard-kit-sweep.test.ts` ทำหน้าที่กำกับการนำชุด UI มาใช้: ห้ามมี span ลิเกเจอร์ของ Material ภายใต้ `src/app` หรือ `src/shared/components`; ในโครงสร้างแดชบอร์ด (`src/app/(dashboard)` และ `src/shared/components`) ห้ามใช้ `<select>`, `<textarea>` หรือ `<table>` แบบดิบ และห้ามสร้าง `role="dialog"` เองนอกเหนือจากข้อยกเว้นที่ระบุไว้ (สาขาเนทีฟของอะแดปเตอร์ `Select`, `RequestLoggerDetail`); `<button>` หรือ `<input>` แบบดิบทุกรายการในบริเวณดังกล่าวต้องมีความคิดเห็นที่มี `kit-exception:` (พร้อมเหตุผล) โดยสิ้นสุดไม่เกิน 3 บรรทัดเหนือองค์ประกอบนั้น; อนุญาตให้ใช้เฉดสีของพาเลตและตัวแปร `dark:` ได้เฉพาะในไฟล์ที่การทดสอบระบุไว้เท่านั้น
+7. ตรวจสอบทั้งสองธีมและวิวพอร์ตขนาด 390 px ก่อนสร้าง PR (พร้อมภาพหน้าจอ); `tests/e2e/a11y.spec.ts` เรียกใช้ axe
 
 ## 3. การเพิ่มหน้าจอ
 

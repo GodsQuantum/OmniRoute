@@ -86,30 +86,30 @@
 
 ## 2. Taisyklės
 
-1. Naudokite žetonus, niekada literalines reikšmes. Sąmoningai paliktos išimtys: visada tamsus konsolės terminalas, ReactFlow SVG
-   brūkšniai per `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ir kategorinės paletės
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) bei
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Niekada nekeiskite `packages/ui-kit/src` rankiniu būdu: sinchronizuokite naudodami `scripts/dev/sync-ui-kit.sh <commit>`; prieš
-   patvirtinimą vykdoma patikra `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nepavyksta, jei bent vienas baitas
-   skiriasi nuo užfiksuoto pirminio repozitorijos patvirtinimo (jei nėra pirminio repozitorijos klono,
-   `UI_KIT_CLONE` arba `_references/cheaper-inference-ui-kit`, patikra praleidžiama pateikiant įspėjimą). Kai rinkinyje ko nors trūksta,
-   raskite alternatyvų sprendimą adapteryje arba ekrane ir paprašykite tai įtraukti į pirminę repozitoriją.
-3. Numatytosios rinkinio tekstinės reikšmės yra anglų kalba (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kai rinkinio komponentas atvaizduoja tekstą,
-   perduokite išverstas eilutes iš `useTranslations(...)`.
-4. Tailwind pagalbinės klasės turi pirmenybę prieš rinkinio komponentų klases (rinkinys deklaruoja
-   `@layer theme, base, components, utilities`, o jo taisyklės yra sluoksnyje `components`) — tarpus ir išdėstymą
-   valdykite pagalbinėmis klasėmis, tačiau nenaudokite jų rinkinio komponentų spalvoms keisti.
+1. Naudokite prieigos raktus, o ne tiesiogines reikšmes. Sąmoningai paliktos išimtys: visada tamsus konsolės terminalas ir ReactFlow
+   SVG brūkšniai per `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Maršruto parinkimo strategijos ir
+   glaudinimo sluoksnio paletės naudoja rinkinio diagramų prieigos raktus per `strategyColorVar` ir
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Niekada nekeiskite `packages/ui-kit/src` rankiniu būdu: sinchronizuokite naudodami `scripts/dev/sync-ui-kit.sh <commit>`;
+   prieš patvirtinimą vykdoma patikra `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nepavyksta, jei bent vienas baitas
+   skiriasi nuo prisegto pirminio patvirtinimo (patikra praleidžiama pateikiant įspėjimą, kai nėra pirminio klono
+   `UI_KIT_CLONE` arba `_references/cheaper-inference-ui-kit`). Kai rinkinyje ko nors trūksta,
+   pritaikykite alternatyvų sprendimą adapteryje arba ekrane ir paprašykite, kad tai būtų pridėta pirminiame projekte.
+3. Numatytasis rinkinio tekstas yra anglų kalba (`label = "Loading"`, `loadingLabel = "Loading table"`…) — perduokite iš
+   `useTranslations(...)` gautas išverstas eilutes, kai rinkinio komponentas atvaizduoja tekstą.
+4. Tailwind pagalbinės klasės turi pirmenybę prieš rinkinio komponentų klases (rinkinyje deklaruojama
+   `@layer theme, base, components, utilities`, o jo taisyklės yra sluoksnyje `components`) — pagalbines klases naudokite
+   tarpams ir išdėstymui, o ne rinkinio komponentų spalvoms keisti.
 5. Antraštės: `.ci-heading` (Inter, be tarpų tarp raidžių) puslapių ir skyrių pavadinimams; `.ci-dashboard-display`
-   (Instrument Serif) naudokite tik dideliam, retai išdėstytam demonstraciniam tekstui, pavyzdžiui, klaidos puslapio būsenos kodui.
-6. `tests/unit/dashboard-kit-sweep.test.ts` prižiūri rinkinio naudojimą: po
-   `src/app` arba `src/shared/components` negali būti Material ligatūros elemento; informacijos suvestinės medyje (`src/app/(dashboard)` ir
-   `src/shared/components`) negali būti neapdorotų `<select>`, `<textarea>` ar `<table>` elementų ir savarankiškai sukurtų
-   `role="dialog"` už išvardytų išimčių ribų (`Select` adapterio vietinės realizacijos šaka,
-   `RequestLoggerDetail`); prieš kiekvieną ten esantį neapdorotą `<button>` arba `<input>` turi būti komentaras su
-   `kit-exception:` (ir priežastimi), pasibaigiantis ne daugiau kaip 3 eilutėmis aukščiau; palečių atspalviai ir `dark:` variantai
+   (Instrument Serif) naudokite tik dideliam, retai rodomam tekstui, pavyzdžiui, klaidos puslapio būsenos kodui.
+6. `tests/unit/dashboard-kit-sweep.test.ts` užtikrina rinkinio naudojimą: jokių Material ligatūrų `span` elementų
+   po `src/app` ar `src/shared/components`; ataskaitų srities medyje (`src/app/(dashboard)` ir
+   `src/shared/components`) negali būti tiesioginių `<select>`, `<textarea>` ar `<table>` elementų ir rankiniu būdu sukurtų
+   `role="dialog"` už išvardytų išimčių ribų (`Select` adapterio savosios šakos ir
+   `RequestLoggerDetail`); kiekvienam tiesioginiam `<button>` ar `<input>` elementui ten būtinas komentaras, kuriame yra
+   `kit-exception:` (su priežastimi), pasibaigiantis ne daugiau kaip 3 eilutėmis aukščiau; paletės atspalviai ir `dark:` variantai
    leidžiami tik testo išvardytuose failuose.
-7. Prieš PR patikrinkite abi temas ir 390 px peržiūros sritį (padarykite ekrano kopijas); `tests/e2e/a11y.spec.ts` vykdo
+7. Prieš PR patikrinkite abi temas ir 390 px peržiūros sritį (naudodami ekrano kopijas); `tests/e2e/a11y.spec.ts` vykdo
    axe.
 
 ## 3. Ekrano pridėjimas

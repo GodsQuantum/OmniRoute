@@ -81,30 +81,30 @@
 
 ## 2. Regler
 
-1. Bruk tokens, aldri literalverdier. Unntak som er beholdt med hensikt: den alltid mørke konsollterminalen, ReactFlow SVG-
-   streker via `STATUS_HEX` (`src/shared/constants/statusColors.ts`) og de kategoriske palettene
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) og
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Aldri endre `packages/ui-kit/src` manuelt: synkroniser med `scripts/dev/sync-ui-kit.sh <commit>`; pre-
-   commit-kontrollen `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mislykkes for enhver byte som
-   avviker fra den festede oppstrømscommiten (den hoppes over med en advarsel når oppstrømsklonen,
+1. Tokens, aldri literaler. Bevisste unntak: den alltid mørke konsollterminalen og ReactFlow-
+   SVG-streker via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palettene for rutingstrategi og
+   komprimeringslag bruker diagramtokenene fra kitet gjennom `strategyColorVar` og
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Endre aldri `packages/ui-kit/src` manuelt: synkroniser med `scripts/dev/sync-ui-kit.sh <commit>`; pre-commit-
+   kontrollen `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mislykkes hvis én eneste byte
+   avviker fra den festede oppstrøms-commiten (den hopper over med en advarsel når oppstrømsklonen,
    `UI_KIT_CLONE` eller `_references/cheaper-inference-ui-kit`, mangler). Når kitet mangler noe,
    omgå det i adapteren eller skjermbildet, og be oppstrømsprosjektet om det.
 3. Standardtekstene i kitet er på engelsk (`label = "Loading"`, `loadingLabel = "Loading table"`…) — send inn oversatte
-   strenger fra `useTranslations(...)` hver gang en kitkomponent gjengir tekst.
-4. Tailwind-verktøyklasser overstyrer kitkomponentenes klasser (kitet deklarerer
+   strenger fra `useTranslations(...)` når en kit-komponent gjengir tekst.
+4. Tailwind-verktøyklasser overstyrer kit-komponentklassene (kitet deklarerer
    `@layer theme, base, components, utilities`, og reglene ligger i `components`) — bruk verktøyklasser for
-   avstand og layout, ikke for å endre fargene på kitkomponenter.
+   avstand og layout, ikke for å endre fargene på kit-komponenter.
 5. Overskrifter: `.ci-heading` (Inter, uten tegnavstand) for side- og seksjonstitler; `.ci-dashboard-display`
-   (Instrument Serif) kun for stor, luftig visningstekst, for eksempel statuskoden på feilsiden.
-6. `tests/unit/dashboard-kit-sweep.test.ts` håndhever bruken av kitet: ingen Material-ligaturspenn under
-   `src/app` eller `src/shared/components`; i dashboard-treet (`src/app/(dashboard)` og
-   `src/shared/components`) skal det ikke finnes rå `<select>`, `<textarea>` eller `<table>`, og ingen egenimplementert
-   `role="dialog"` utenfor de oppførte unntakene (`Select`-adapterens native gren,
+   (Instrument Serif) bare for stor, sparsom visningstekst, for eksempel statuskoden på feilsiden.
+6. `tests/unit/dashboard-kit-sweep.test.ts` sikrer bruken av kitet: ingen Material-ligaturspenn under
+   `src/app` eller `src/shared/components`; i dashbordtreet (`src/app/(dashboard)` og
+   `src/shared/components`) skal det ikke finnes rå `<select>`, `<textarea>` eller `<table>`, og ingen håndlagde
+   `role="dialog"` utenfor de oppførte unntakene (`Select`-adapterens opprinnelige gren,
    `RequestLoggerDetail`); hver rå `<button>` eller `<input>` der krever en kommentar som inneholder
-   `kit-exception:` (med begrunnelse) og avsluttes høyst 3 linjer over elementet; palettfargetoner og `dark:`-varianter
-   er kun tillatt i filene testen oppgir.
-7. Kontroller begge temaene og visningsbredden på 390 px før en PR (skjermbilder); `tests/e2e/a11y.spec.ts` kjører
+   `kit-exception:` (med begrunnelsen), og som avsluttes høyst 3 linjer over elementet; palettfargetoner og `dark:`-varianter
+   er bare tillatt i filene testen oppgir.
+7. Kontroller begge temaene og visningsporten på 390 px før en PR (skjermbilder); `tests/e2e/a11y.spec.ts` kjører
    axe.
 
 ## 3. Legge til et skjermbilde

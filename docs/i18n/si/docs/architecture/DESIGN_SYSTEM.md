@@ -81,27 +81,27 @@
 
 ## 2. නීති
 
-1. ලිටරල් අගයන් නොව, ටෝකන භාවිත කරන්න. හිතාමතා තබා ඇති ව්යතිරේක: සැමවිටම අඳුරු කොන්සෝල් ටර්මිනලය, `STATUS_HEX` (`src/shared/constants/statusColors.ts`) හරහා ReactFlow SVG
-   ස්ට්රෝක්, සහ `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) හා
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`) යන වර්ගීකරණ වර්ණ මාලා.
-2. `packages/ui-kit/src` කිසිවිටෙක අතින් පැච් නොකරන්න: `scripts/dev/sync-ui-kit.sh <commit>` සමඟ සමමුහුර්ත කරන්න; පින් කර ඇති upstream commit එකෙන් වෙනස් වන ඕනෑම බයිටයක් සඳහා
-   pre-commit gate වන `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) අසාර්ථක වේ (upstream clone එක,
-   `UI_KIT_CLONE` හෝ `_references/cheaper-inference-ui-kit`, නොමැති විට එය අනතුරු ඇඟවීමක් සමඟ මඟ හරියි). kit එකේ යමක් නොමැති විට,
-   adapter එකේ හෝ screen එකේ ඒ සඳහා විකල්ප විසඳුමක් යොදා upstream වෙතින් එය ඉල්ලන්න.
-3. Kit පෙළෙහි පෙරනිමි ඉංග්රීසියෙන් ඇත (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit component එකක් පෙළ පෙන්වන සෑම අවස්ථාවකම `useTranslations(...)` වෙතින් පරිවර්තනය කළ
-   පෙළ යොමු කරන්න.
-4. Tailwind utility, kit component class අභිබවා ක්රියා කරයි (kit එක
-   `@layer theme, base, components, utilities` ප්රකාශ කරන අතර එහි rules `components` තුළ පවතී) — kit component නැවත වර්ණ ගැන්වීමට නොව,
-   පරතරය සහ layout සඳහා utility භාවිත කරන්න.
-5. ශීර්ෂ: page සහ section title සඳහා `.ci-heading` (Inter, tracking රහිත); error-page status code වැනි විශාල, විරල display text සඳහා පමණක් `.ci-dashboard-display`
-   (Instrument Serif).
-6. `tests/unit/dashboard-kit-sweep.test.ts` මඟින් kit භාවිතය ආරක්ෂා කරයි: `src/app` හෝ `src/shared/components` යටතේ
+1. ලිටරල් නොව, ටෝකන භාවිත කරන්න. අරමුණින්ම තබා ඇති ව්යතිරේක: සැමවිටම අඳුරු console terminal එක සහ `STATUS_HEX` (`src/shared/constants/statusColors.ts`) හරහා ReactFlow
+   SVG strokes. Routing strategy සහ compression-layer palettes, `strategyColorVar` සහ
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) හරහා kit chart tokens භාවිත කරයි.
+2. `packages/ui-kit/src` කිසිවිටෙක අතින් patch නොකරන්න: `scripts/dev/sync-ui-kit.sh <commit>` මඟින් sync කරන්න; pinned upstream commit එකෙන් වෙනස් වන ඕනෑම byte එකක් සඳහා
+   pre-commit gate වන `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) අසමත් වේ (upstream clone එක,
+   `UI_KIT_CLONE` හෝ `_references/cheaper-inference-ui-kit`, නොමැති විට එය අනතුරු ඇඟවීමක් සමඟ skip වේ). Kit එකේ යමක් නොමැති විට,
+   adapter එකේ හෝ screen එකේ workaround එකක් යොදා එය upstream වෙතින් ඉල්ලන්න.
+3. Kit text defaults ඉංග්රීසියෙන් ඇත (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit component එකක් පෙළ render කරන සෑම විටම `useTranslations(...)` වෙතින් පරිවර්තනය කළ
+   strings ලබා දෙන්න.
+4. Tailwind utilities, kit component classes අභිබවා ක්රියා කරයි (kit එක
+   `@layer theme, base, components, utilities` ප්රකාශ කරන අතර එහි rules `components` තුළ පවතී) — kit components නැවත වර්ණ ගැන්වීමට නොව,
+   spacing සහ layout සඳහා utilities භාවිත කරන්න.
+5. ශීර්ෂ: page සහ section titles සඳහා `.ci-heading` (Inter, tracking නොමැතිව); error-page status code වැනි විශාල, විරල display text සඳහා පමණක් `.ci-dashboard-display`
+   (Instrument Serif) භාවිත කරන්න.
+6. `tests/unit/dashboard-kit-sweep.test.ts` මඟින් kit adoption එක ආරක්ෂා කරයි: `src/app` හෝ `src/shared/components` යටතේ
    Material ligature span නොතිබිය යුතුය; dashboard tree එකේ (`src/app/(dashboard)` සහ
-   `src/shared/components`) raw `<select>`, `<textarea>` හෝ `<table>` නොතිබිය යුතු අතර ලැයිස්තුගත ව්යතිරේකවලින් (`Select` adapter හි native branch එක,
-   `RequestLoggerDetail`) පිටත අතින් සකස් කළ `role="dialog"` නොතිබිය යුතුය; එහි ඇති සෑම raw `<button>` හෝ `<input>` එකකටම,
-   එයට උපරිම වශයෙන් පේළි 3කට ඉහළින් අවසන් වන, හේතුව සහිත `kit-exception:` අඩංගු comment එකක් අවශ්යය; palette hue සහ `dark:` variant
-   සඳහා අවසර ඇත්තේ test එක ලැයිස්තුගත කරන file තුළ පමණි.
-7. PR එකකට පෙර theme දෙකම සහ 390 px viewport එකත් සත්යාපනය කරන්න (screenshot සමඟ); `tests/e2e/a11y.spec.ts` මඟින්
+   `src/shared/components`) raw `<select>`, `<textarea>` හෝ `<table>` නොතිබිය යුතු අතර, ලැයිස්තුගත ව්යතිරේකවලින් (`Select` adapter එකේ native branch එක,
+   `RequestLoggerDetail`) පිටත අතින් සාදන ලද `role="dialog"` නොතිබිය යුතුය; එහි ඇති සෑම raw `<button>` හෝ `<input>` එකකටම
+   ඊට උපරිම වශයෙන් පේළි 3කට ඉහළින් අවසන් වන, හේතුව සමඟ `kit-exception:` අඩංගු comment එකක් අවශ්ය වේ; palette hues සහ `dark:` variants
+   test එක ලැයිස්තුගත කරන files තුළ පමණක් තිබිය යුතුය.
+7. PR එකකට පෙර themes දෙකම සහ 390 px viewport එක screenshots මඟින් සත්යාපනය කරන්න; `tests/e2e/a11y.spec.ts` මඟින්
    axe ධාවනය කරයි.
 
 ## 3. Screen එකක් එක් කිරීම

@@ -82,31 +82,13 @@
 
 ## 2. Pravidla
 
-1. Tokeny, nikdy literály. Záměrně zachované výjimky: vždy tmavý konzolový terminál, tahy SVG
-   ReactFlow přes `STATUS_HEX` (`src/shared/constants/statusColors.ts`) a kategoriální palety
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) a
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Nikdy ručně neupravujte `packages/ui-kit/src`: synchronizujte pomocí `scripts/dev/sync-ui-kit.sh <commit>`;
-   kontrola před commitem `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) selže při jakémkoli
-   bajtu, který se liší od připnutého upstream commitu (pokud upstream klon,
-   `UI_KIT_CLONE` nebo `_references/cheaper-inference-ui-kit`, chybí, kontrola se přeskočí s varováním).
-   Pokud sadě něco chybí, obejděte to v adaptéru nebo na obrazovce a požádejte upstream o doplnění.
-3. Výchozí texty sady jsou v angličtině (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kdykoli
-   komponenta sady vykresluje text, předejte jí přeložené řetězce z `useTranslations(...)`.
-4. Utility Tailwind mají přednost před třídami komponent sady (sada deklaruje
-   `@layer theme, base, components, utilities` a její pravidla se nacházejí v `components`) — utility
-   používejte pro rozestupy a rozvržení, nikoli pro změnu barev komponent sady.
-5. Nadpisy: `.ci-heading` (Inter, bez prostrkání) pro názvy stránek a sekcí; `.ci-dashboard-display`
-   (Instrument Serif) pouze pro velký, střídmě používaný výrazný text, například stavový kód na chybové stránce.
-6. Přijetí sady hlídá `tests/unit/dashboard-kit-sweep.test.ts`: žádný span s ligaturou Material pod
-   `src/app` ani `src/shared/components`; ve stromu dashboardu (`src/app/(dashboard)` a
-   `src/shared/components`) žádné přímé `<select>`, `<textarea>` ani `<table>` a žádný ručně vytvořený
-   `role="dialog"` mimo uvedené výjimky (nativní větev adaptéru `Select`,
-   `RequestLoggerDetail`); každé přímé `<button>` nebo `<input>` tam musí mít komentář obsahující
-   `kit-exception:` (s důvodem), který končí nejvýše 3 řádky nad ním; odstíny palety a varianty `dark:`
-   pouze v souborech uvedených testem.
-7. Před PR ověřte obě témata a viewport o šířce 390 px (pomocí snímků obrazovky);
-   `tests/e2e/a11y.spec.ts` spouští axe.
+1. Tokeny, nikdy ne literály. Záměrně zachované výjimky: vždy tmavý terminál konzole a tahy SVG v ReactFlow přes `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palety strategie směrování a kompresní vrstvy používají tokeny grafů z kitu prostřednictvím `strategyColorVar` a `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Nikdy ručně neupravujte `packages/ui-kit/src`: synchronizujte pomocí `scripts/dev/sync-ui-kit.sh <commit>`; kontrola před commitem `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) selže při jakémkoli bajtu, který se liší od připnutého upstream commitu (pokud upstream klon, `UI_KIT_CLONE` nebo `_references/cheaper-inference-ui-kit`, chybí, kontrola se přeskočí s varováním). Pokud v kitu něco chybí, vyřešte to v adaptéru nebo na obrazovce a požádejte upstream o doplnění.
+3. Výchozí texty kitu jsou v angličtině (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kdykoli komponenta kitu vykresluje text, předejte jí přeložené řetězce z `useTranslations(...)`.
+4. Utility Tailwindu mají přednost před třídami komponent kitu (kit deklaruje `@layer theme, base, components, utilities` a jeho pravidla jsou ve vrstvě `components`) — utility používejte pro rozestupy a rozvržení, nikoli k přebarvování komponent kitu.
+5. Nadpisy: `.ci-heading` (Inter, bez prostrkání) pro názvy stránek a sekcí; `.ci-dashboard-display` (Instrument Serif) pouze pro velký, řídce používaný výrazný text, například stavový kód na chybové stránce.
+6. `tests/unit/dashboard-kit-sweep.test.ts` hlídá používání kitu: žádný element span s ligaturou Material pod `src/app` ani `src/shared/components`; ve stromu dashboardu (`src/app/(dashboard)` a `src/shared/components`) žádné nezpracované `<select>`, `<textarea>` ani `<table>` a žádné vlastní implementace `role="dialog"` mimo uvedené výjimky (nativní větev adaptéru `Select`, `RequestLoggerDetail`); každý nezpracovaný `<button>` nebo `<input>` v této oblasti vyžaduje komentář obsahující `kit-exception:` (s důvodem), který končí nejvýše 3 řádky nad ním; odstíny palety a varianty `dark:` jsou povoleny pouze v souborech uvedených v testu.
+7. Před PR ověřte obě témata a viewport o šířce 390 px (pomocí snímků obrazovky); `tests/e2e/a11y.spec.ts` spouští axe.
 
 ## 3. Přidání obrazovky
 

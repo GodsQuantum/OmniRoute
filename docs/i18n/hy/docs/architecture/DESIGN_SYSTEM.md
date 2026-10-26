@@ -88,31 +88,31 @@
 
 ## 2. Կանոններ
 
-1. Օգտագործեք թոքեններ, ոչ երբեք լիտերալներ։ Դիտավորյալ պահպանված բացառություններն են՝ մշտապես մուգ կոնսոլային տերմինալը, ReactFlow SVG
-   գծերը՝ `STATUS_HEX`-ի միջոցով (`src/shared/constants/statusColors.ts`), և կատեգորիական գունապնակները՝
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ու
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)։
-2. Երբեք ձեռքով մի փոփոխեք `packages/ui-kit/src`-ը․ համաժամացրեք այն `scripts/dev/sync-ui-kit.sh <commit>` հրամանով։
-   Pre-commit ստուգիչը՝ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`), ձախողվում է, եթե որևէ բայթ
+1. Թոքեններ, ոչ երբեք լիտերալներ։ Դիտմամբ պահպանված բացառություններն են՝ միշտ մուգ կոնսոլային տերմինալը և ReactFlow-ի
+   SVG եզրագծերը՝ `STATUS_HEX`-ի միջոցով (`src/shared/constants/statusColors.ts`)։ Ուղղորդման ռազմավարության և
+   սեղմման շերտերի գունապնակներն օգտագործում են փաթեթի գծապատկերային թոքենները՝ `strategyColorVar`-ի և
+   `categoricalSlotFor`-ի միջոցով (`src/shared/utils/categoricalPalette.ts`)։
+2. Երբեք ձեռքով մի փոփոխեք `packages/ui-kit/src`-ը․ համաժամեցրեք `scripts/dev/sync-ui-kit.sh <commit>`-ով։
+   Նախնական commit-ի ստուգումը՝ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`), ձախողվում է, եթե որևէ բայթ
    տարբերվում է ամրագրված upstream commit-ից (այն զգուշացմամբ բաց է թողնում ստուգումը, երբ upstream clone-ը՝
-   `UI_KIT_CLONE`-ը կամ `_references/cheaper-inference-ui-kit`-ը, բացակայում է)։ Երբ հավաքածուում որևէ բան չկա,
-   շրջանցող լուծումն իրականացրեք ադապտերում կամ էկրանում և խնդրեք upstream-ին ավելացնել այն։
-3. Հավաքածուի տեքստային լռելյայն արժեքներն անգլերեն են (`label = "Loading"`, `loadingLabel = "Loading table"`…)․ երբ
-   հավաքածուի բաղադրիչը տեքստ է ցուցադրում, փոխանցեք `useTranslations(...)`-ից ստացված թարգմանված տողերը։
-4. Tailwind-ի utility դասերը գերակայում են հավաքածուի բաղադրիչների դասերի նկատմամբ (հավաքածուն հայտարարում է
-   `@layer theme, base, components, utilities`, իսկ դրա կանոնները գտնվում են `components`-ում)․ utility դասերն
-   օգտագործեք տարածությունների և դասավորության համար, ոչ թե հավաքածուի բաղադրիչները վերագունավորելու։
-5. Վերնագրեր․ էջերի և բաժինների վերնագրերի համար օգտագործեք `.ci-heading` (Inter, առանց տառամիջակայքի), իսկ
-   `.ci-dashboard-display`-ը (Instrument Serif)՝ միայն խոշոր, նոսր ցուցադրվող տեքստի համար, օրինակ՝ սխալի էջի կարգավիճակի կոդը։
-6. `tests/unit/dashboard-kit-sweep.test.ts`-ը վերահսկում է հավաքածուի կիրառումը․ `src/app`-ի կամ
-   `src/shared/components`-ի տակ Material ligature span չպետք է լինի, իսկ dashboard-ի ծառում
-   (`src/app/(dashboard)` և `src/shared/components`) չպետք է լինեն անմիջական `<select>`, `<textarea>` կամ `<table>`,
-   ինչպես նաև ձեռքով իրականացված `role="dialog"`՝ նշված բացառություններից դուրս (`Select` ադապտերի native ճյուղը,
-   `RequestLoggerDetail`)։ Այնտեղ յուրաքանչյուր անմիջական `<button>` կամ `<input>` պետք է ունենա պատճառը նշող
-   `kit-exception:` պարունակող մեկնաբանություն, որը ավարտվում է դրանից առավելագույնը 3 տող վերև։ Գունապնակի երանգներն ու `dark:`
-   տարբերակները թույլատրվում են միայն թեստում նշված ֆայլերում։
-7. PR-ից առաջ ստուգեք երկու թեմաներն էլ և 390 px լայնությամբ viewport-ը (սքրինշոթներով)․ `tests/e2e/a11y.spec.ts`-ը
-   գործարկում է axe-ը։
+   `UI_KIT_CLONE`-ը կամ `_references/cheaper-inference-ui-kit`-ը, բացակայում է)։ Երբ փաթեթում ինչ-որ բան բացակայում է,
+   շրջանցող լուծում կիրառեք ադապտերում կամ էկրանում և դրա ավելացումը խնդրեք upstream-ից։
+3. Փաթեթի տեքստերի լռելյայն արժեքներն անգլերեն են (`label = "Loading"`, `loadingLabel = "Loading table"`…)․ փոխանցեք թարգմանված
+   տողեր `useTranslations(...)`-ից, երբ փաթեթի որևէ բաղադրիչ տեքստ է արտապատկերում։
+4. Tailwind-ի օգտակար դասերը գերակայում են փաթեթի բաղադրիչների դասերին (փաթեթը հայտարարում է
+   `@layer theme, base, components, utilities`, իսկ դրա կանոնները գտնվում են `components`-ում)․ օգտակար դասերն օգտագործեք
+   տարածությունների և դասավորության համար, ոչ թե փաթեթի բաղադրիչների գույները փոխելու նպատակով։
+5. Վերնագրեր․ `.ci-heading` (Inter, առանց տառամիջակայքի փոփոխության)՝ էջերի և բաժինների վերնագրերի համար, իսկ `.ci-dashboard-display`
+   (Instrument Serif)՝ միայն խոշոր, նոսր ցուցադրական տեքստի համար, օրինակ՝ սխալի էջի կարգավիճակի կոդը։
+6. `tests/unit/dashboard-kit-sweep.test.ts`-ը վերահսկում է փաթեթի կիրառումը․ `src/app`-ի կամ `src/shared/components`-ի ներքո
+   չպետք է լինի Material-ի լիգատուրային span, իսկ վահանակի ծառում (`src/app/(dashboard)` և
+   `src/shared/components`) չպետք է լինեն անմիջական `<select>`, `<textarea>` կամ `<table>` և ձեռքով ստեղծված
+   `role="dialog"`՝ թվարկված բացառություններից դուրս (`Select` ադապտերի բնիկ ճյուղը,
+   `RequestLoggerDetail`)։ Այնտեղ յուրաքանչյուր անմիջական `<button>` կամ `<input>` պետք է ունենա
+   `kit-exception:` պարունակող մեկնաբանություն՝ պատճառի նշմամբ, որը պետք է ավարտվի դրանից առավելագույնը 3 տող վերև։
+   Գունապնակի երանգներն ու `dark:` տարբերակները թույլատրվում են միայն թեստում թվարկված ֆայլերում։
+7. PR-ից առաջ ստուգեք երկու թեմաներն ու 390 px դիտադաշտը (սքրինշոթներով)․ `tests/e2e/a11y.spec.ts`-ը գործարկում է
+   axe-ը։
 
 ## 3. Էկրանի ավելացում
 

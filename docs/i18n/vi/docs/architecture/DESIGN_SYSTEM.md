@@ -81,31 +81,13 @@
 
 ## 2. Quy tắc
 
-1. Dùng token, không dùng giá trị trực tiếp. Các ngoại lệ được giữ lại có chủ đích: terminal console luôn tối, các nét SVG của ReactFlow
-   thông qua `STATUS_HEX` (`src/shared/constants/statusColors.ts`), cùng các bảng màu phân loại
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) và
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Không bao giờ chỉnh sửa thủ công `packages/ui-kit/src`: hãy đồng bộ bằng `scripts/dev/sync-ui-kit.sh <commit>`; cổng kiểm tra
-   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sẽ thất bại nếu có bất kỳ byte nào
-   khác với commit upstream đã ghim (kiểm tra này sẽ được bỏ qua kèm cảnh báo khi không có bản sao upstream,
-   `UI_KIT_CLONE` hoặc `_references/cheaper-inference-ui-kit`). Khi kit thiếu thành phần nào đó,
-   hãy xử lý vòng qua adapter hoặc màn hình và yêu cầu upstream bổ sung.
-3. Văn bản mặc định của kit là tiếng Anh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — hãy truyền các chuỗi đã dịch
-   từ `useTranslations(...)` mỗi khi một thành phần của kit hiển thị văn bản.
-4. Các utility của Tailwind được ưu tiên hơn class của thành phần kit (kit khai báo
-   `@layer theme, base, components, utilities` và các quy tắc của nó nằm trong `components`) — dùng utility cho
-   khoảng cách và bố cục, không dùng chúng để đổi màu các thành phần kit.
-5. Tiêu đề: `.ci-heading` (Inter, không giãn ký tự) cho tiêu đề trang và phần; `.ci-dashboard-display`
-   (Instrument Serif) chỉ dành cho văn bản hiển thị lớn, thưa, chẳng hạn như mã trạng thái trên trang lỗi.
-6. `tests/unit/dashboard-kit-sweep.test.ts` bảo vệ việc áp dụng kit: không có span ligature Material trong
-   `src/app` hoặc `src/shared/components`; trong cây dashboard (`src/app/(dashboard)` và
-   `src/shared/components`) không có `<select>`, `<textarea>` hoặc `<table>` thô và không có
-   `role="dialog"` tự triển khai ngoài các ngoại lệ được liệt kê (nhánh native của adapter `Select`,
-   `RequestLoggerDetail`); mọi `<button>` hoặc `<input>` thô tại đó đều cần một chú thích chứa
-   `kit-exception:` (kèm lý do) và kết thúc cách phần tử đó không quá 3 dòng phía trên; sắc độ bảng màu và các biến thể `dark:`
-   chỉ được phép xuất hiện trong những tệp được liệt kê trong bài kiểm thử.
-7. Xác minh cả hai giao diện và viewport 390 px trước khi tạo PR (bằng ảnh chụp màn hình); `tests/e2e/a11y.spec.ts` chạy
-   axe.
+1. Dùng token, không dùng giá trị literal. Các ngoại lệ được chủ ý giữ lại: terminal console luôn ở giao diện tối và các nét SVG của ReactFlow thông qua `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Bảng màu của chiến lược định tuyến và lớp nén sử dụng các token biểu đồ của kit thông qua `strategyColorVar` và `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Không bao giờ sửa thủ công `packages/ui-kit/src`: hãy đồng bộ bằng `scripts/dev/sync-ui-kit.sh <commit>`; bước kiểm tra pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sẽ thất bại nếu có bất kỳ byte nào khác với commit upstream đã ghim (bước này sẽ được bỏ qua kèm cảnh báo khi không có bản clone upstream, `UI_KIT_CLONE` hoặc `_references/cheaper-inference-ui-kit`). Khi kit thiếu nội dung nào đó, hãy xử lý tạm trong adapter hoặc màn hình và yêu cầu upstream bổ sung.
+3. Văn bản mặc định của kit là tiếng Anh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — hãy truyền các chuỗi đã dịch từ `useTranslations(...)` bất cứ khi nào một thành phần kit hiển thị văn bản.
+4. Các utility của Tailwind được ưu tiên hơn các lớp thành phần của kit (kit khai báo `@layer theme, base, components, utilities` và các quy tắc của nó nằm trong `components`) — hãy dùng utility cho khoảng cách và bố cục, không dùng chúng để đổi màu các thành phần kit.
+5. Tiêu đề: `.ci-heading` (Inter, không giãn cách ký tự) dành cho tiêu đề trang và phần; `.ci-dashboard-display` (Instrument Serif) chỉ dành cho văn bản hiển thị lớn, thưa, chẳng hạn như mã trạng thái trên trang lỗi.
+6. `tests/unit/dashboard-kit-sweep.test.ts` kiểm soát việc áp dụng kit: không có span ligature Material trong `src/app` hoặc `src/shared/components`; trong cây dashboard (`src/app/(dashboard)` và `src/shared/components`), không có `<select>`, `<textarea>` hoặc `<table>` thô và không có `role="dialog"` tự triển khai ngoài các ngoại lệ đã liệt kê (nhánh native của adapter `Select`, `RequestLoggerDetail`); mỗi `<button>` hoặc `<input>` thô tại đó đều cần một chú thích chứa `kit-exception:` (kèm lý do), kết thúc cách phần tử đó không quá 3 dòng phía trên; các sắc độ của bảng màu và biến thể `dark:` chỉ được phép xuất hiện trong các tệp mà bài kiểm thử liệt kê.
+7. Xác minh cả hai giao diện và viewport 390 px trước khi tạo PR (kèm ảnh chụp màn hình); `tests/e2e/a11y.spec.ts` chạy axe.
 
 ## 3. Thêm màn hình
 

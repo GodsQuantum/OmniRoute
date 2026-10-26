@@ -81,31 +81,13 @@
 
 ## 2. Peraturan
 
-1. Gunakan token, bukan nilai literal. Pengecualian yang dikekalkan secara sengaja: terminal konsol yang sentiasa gelap, garisan SVG ReactFlow
-   melalui `STATUS_HEX` (`src/shared/constants/statusColors.ts`), serta palet kategori
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) dan
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Jangan sekali-kali menampal `packages/ui-kit/src` secara manual: segerakkan dengan `scripts/dev/sync-ui-kit.sh <commit>`; pengadang
-   prakomit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) akan gagal jika terdapat mana-mana bait yang
-   berbeza daripada komit huluan yang ditetapkan (ia dilangkau dengan amaran apabila klon huluan,
-   `UI_KIT_CLONE` atau `_references/cheaper-inference-ui-kit`, tiada). Apabila kit tidak menyediakan sesuatu,
-   tangani kekurangan itu dalam penyesuai atau skrin dan minta pihak huluan menyediakannya.
-3. Teks lalai kit adalah dalam bahasa Inggeris (`label = "Loading"`, `loadingLabel = "Loading table"`…) — berikan rentetan
-   terjemahan daripada `useTranslations(...)` apabila komponen kit memaparkan teks.
-4. Utiliti Tailwind mengatasi kelas komponen kit (kit mengisytiharkan
-   `@layer theme, base, components, utilities` dan peraturannya berada dalam `components`) — gunakan utiliti untuk
-   jarak dan reka letak, bukan untuk mewarnakan semula komponen kit.
-5. Tajuk: `.ci-heading` (Inter, tanpa penjejakan) untuk tajuk halaman dan seksyen; `.ci-dashboard-display`
-   (Instrument Serif) hanya untuk teks paparan yang besar dan jarang, seperti kod status halaman ralat.
-6. `tests/unit/dashboard-kit-sweep.test.ts` mengawal penggunaan kit: tiada span ligatur Material di bawah
-   `src/app` atau `src/shared/components`; dalam pepohon papan pemuka (`src/app/(dashboard)` dan
-   `src/shared/components`) tiada `<select>`, `<textarea>` atau `<table>` mentah dan tiada
-   `role="dialog"` buatan sendiri di luar pengecualian yang disenaraikan (cabang asli penyesuai `Select`,
-   `RequestLoggerDetail`); setiap `<button>` atau `<input>` mentah di situ memerlukan komen yang mengandungi
-   `kit-exception:` (berserta sebab) yang berakhir tidak lebih daripada 3 baris di atasnya; rona palet dan varian `dark:`
-   hanya dibenarkan dalam fail yang disenaraikan oleh ujian.
-7. Sahkan kedua-dua tema dan ruang pandang 390 px sebelum PR (tangkap layar); `tests/e2e/a11y.spec.ts` menjalankan
-   axe.
+1. Token, bukan nilai literal. Pengecualian yang dikekalkan dengan sengaja: terminal konsol yang sentiasa gelap dan goresan SVG ReactFlow melalui `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategi penghalaan dan palet lapisan pemampatan menggunakan token carta kit melalui `strategyColorVar` dan `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Jangan sesekali tampal `packages/ui-kit/src` secara manual: segerakkan dengan `scripts/dev/sync-ui-kit.sh <commit>`; get pra-komit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) akan gagal jika terdapat sebarang bait yang berbeza daripada komit huluan yang telah ditetapkan (ia dilangkau dengan amaran apabila klon huluan, `UI_KIT_CLONE` atau `_references/cheaper-inference-ui-kit`, tiada). Apabila kit tidak menyediakan sesuatu, gunakan penyelesaian alternatif dalam penyesuai atau skrin dan minta penambahbaikan tersebut daripada pihak huluan.
+3. Teks lalai kit adalah dalam bahasa Inggeris (`label = "Loading"`, `loadingLabel = "Loading table"`…) — berikan rentetan terjemahan daripada `useTranslations(...)` apabila komponen kit memaparkan teks.
+4. Utiliti Tailwind mengatasi kelas komponen kit (kit mengisytiharkan `@layer theme, base, components, utilities` dan peraturannya terletak dalam `components`) — gunakan utiliti untuk jarak dan reka letak, bukan untuk mewarnakan semula komponen kit.
+5. Tajuk: `.ci-heading` (Inter, tanpa penjarakan huruf) untuk tajuk halaman dan seksyen; `.ci-dashboard-display` (Instrument Serif) hanya untuk teks paparan yang besar dan jarang digunakan, seperti kod status halaman ralat.
+6. `tests/unit/dashboard-kit-sweep.test.ts` mengawal penggunaan kit: tiada span ligatur Material di bawah `src/app` atau `src/shared/components`; dalam pepohon papan pemuka (`src/app/(dashboard)` dan `src/shared/components`), tiada `<select>`, `<textarea>` atau `<table>` mentah dan tiada `role="dialog"` buatan sendiri di luar pengecualian yang disenaraikan (cabang asli penyesuai `Select`, `RequestLoggerDetail`); setiap `<button>` atau `<input>` mentah di situ memerlukan komen yang mengandungi `kit-exception:` (berserta sebabnya) dan berakhir paling banyak 3 baris di atasnya; rona palet dan varian `dark:` hanya dibenarkan dalam fail yang disenaraikan oleh ujian tersebut.
+7. Sahkan kedua-dua tema dan ruang pandang 390 px sebelum PR (tangkapan skrin); `tests/e2e/a11y.spec.ts` menjalankan axe.
 
 ## 3. Menambahkan skrin
 

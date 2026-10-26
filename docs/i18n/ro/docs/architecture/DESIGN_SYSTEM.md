@@ -81,30 +81,30 @@
 
 ## 2. Reguli
 
-1. Tokenuri, niciodată valori literale. Excepții păstrate intenționat: terminalul consolei, întotdeauna întunecat, contururile SVG ReactFlow
-   prin `STATUS_HEX` (`src/shared/constants/statusColors.ts`) și paletele categoriale
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) și
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
+1. Tokenuri, niciodată valori literale. Excepții păstrate intenționat: terminalul consolei, întotdeauna întunecat, și contururile SVG ReactFlow
+   prin `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategia de rutare și paletele stratului
+   de compresie folosesc tokenurile pentru grafice ale kitului prin `strategyColorVar` și
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
 2. Nu modificați niciodată manual `packages/ui-kit/src`: sincronizați cu `scripts/dev/sync-ui-kit.sh <commit>`; verificarea
-   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) eșuează la orice octet care
-   diferă de commitul upstream fixat (este omisă cu un avertisment când clona upstream,
+   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) eșuează pentru orice octet care
+   diferă de commitul upstream fixat (este omisă cu un avertisment atunci când clona upstream,
    `UI_KIT_CLONE` sau `_references/cheaper-inference-ui-kit`, lipsește). Când kitului îi lipsește ceva,
-   găsiți o soluție alternativă în adaptor sau în ecran și solicitați funcționalitatea upstream.
-3. Textele implicite ale kitului sunt în engleză (`label = "Loading"`, `loadingLabel = "Loading table"`…) — transmiteți șiruri
+   implementați o soluție alternativă în adaptor sau în ecran și solicitați funcționalitatea upstream.
+3. Textele implicite ale kitului sunt în limba engleză (`label = "Loading"`, `loadingLabel = "Loading table"`…) — transmiteți șiruri
    traduse din `useTranslations(...)` ori de câte ori o componentă a kitului redă text.
 4. Utilitarele Tailwind au prioritate față de clasele componentelor kitului (kitul declară
    `@layer theme, base, components, utilities`, iar regulile sale se află în `components`) — folosiți utilitare pentru
-   spațiere și aspect, nu pentru a recolora componentele kitului.
+   spațiere și dispunere, nu pentru a recolora componentele kitului.
 5. Titluri: `.ci-heading` (Inter, fără spațiere între litere) pentru titlurile paginilor și secțiunilor; `.ci-dashboard-display`
    (Instrument Serif) numai pentru texte de afișare mari și rarefiate, precum codul de stare de pe pagina de eroare.
-6. `tests/unit/dashboard-kit-sweep.test.ts` asigură adoptarea kitului: niciun span cu ligatură Material în
-   `src/app` sau `src/shared/components`; în arborele tabloului de bord (`src/app/(dashboard)` și
+6. `tests/unit/dashboard-kit-sweep.test.ts` protejează adoptarea kitului: niciun element span cu ligatură Material în
+   `src/app` sau `src/shared/components`; în arborele panoului de control (`src/app/(dashboard)` și
    `src/shared/components`), niciun `<select>`, `<textarea>` sau `<table>` brut și niciun
    `role="dialog"` implementat manual în afara excepțiilor enumerate (ramura nativă a adaptorului `Select`,
    `RequestLoggerDetail`); fiecare `<button>` sau `<input>` brut de acolo necesită un comentariu care conține
-   `kit-exception:` (cu motivul), terminându-se cu cel mult 3 linii deasupra sa; nuanțele paletei și variantele `dark:`
+   `kit-exception:` (împreună cu motivul), al cărui sfârșit se află cu cel mult 3 linii mai sus; nuanțele paletei și variantele `dark:`
    sunt permise numai în fișierele enumerate de test.
-7. Verificați ambele teme și fereastra de vizualizare de 390 px înainte de un PR (capturi de ecran); `tests/e2e/a11y.spec.ts` rulează
+7. Verificați ambele teme și viewportul de 390 px înainte de un PR (capturi de ecran); `tests/e2e/a11y.spec.ts` rulează
    axe.
 
 ## 3. Adăugarea unui ecran

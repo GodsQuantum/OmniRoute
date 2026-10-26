@@ -81,30 +81,30 @@
 
 ## 2. Regeln
 
-1. Tokens, niemals Literale. Bewusst beibehaltene Ausnahmen: das stets dunkle Konsolenterminal, ReactFlow-SVG-
-   Konturen über `STATUS_HEX` (`src/shared/constants/statusColors.ts`) sowie die kategorialen Paletten
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) und
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. `packages/ui-kit/src` niemals manuell patchen: mit `scripts/dev/sync-ui-kit.sh <commit>` synchronisieren; die
+1. Tokens, niemals Literale. Bewusst beibehaltene Ausnahmen: das stets dunkle Konsolenterminal und ReactFlow-
+   SVG-Konturen über `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Die Paletten für Routingstrategien und
+   Komprimierungsebenen verwenden die Diagramm-Tokens des Kits über `strategyColorVar` und
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. `packages/ui-kit/src` niemals manuell ändern: Synchronisierung mit `scripts/dev/sync-ui-kit.sh <commit>`; die
    Pre-Commit-Prüfung `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) schlägt bei jedem Byte fehl, das
    vom angehefteten Upstream-Commit abweicht (sie wird mit einer Warnung übersprungen, wenn der Upstream-Klon,
-   `UI_KIT_CLONE` oder `_references/cheaper-inference-ui-kit`, fehlt). Wenn dem Kit etwas fehlt,
-   im Adapter oder im Bildschirm eine Umgehung implementieren und die Funktion beim Upstream-Projekt anfragen.
-3. Die Standardtexte des Kits sind Englisch (`label = "Loading"`, `loadingLabel = "Loading table"`…) — immer
-   übersetzte Zeichenfolgen aus `useTranslations(...)` übergeben, wenn eine Kit-Komponente Text darstellt.
-4. Tailwind-Utilities haben Vorrang vor den Komponentenklassen des Kits (das Kit deklariert
-   `@layer theme, base, components, utilities`, und seine Regeln befinden sich in `components`) — Utilities für
+   `UI_KIT_CLONE` oder `_references/cheaper-inference-ui-kit`, nicht vorhanden ist). Wenn im Kit etwas fehlt,
+   dies im Adapter oder in der Ansicht umgehen und upstream danach fragen.
+3. Die Standardtexte des Kits sind auf Englisch (`label = "Loading"`, `loadingLabel = "Loading table"`…) — übersetzte
+   Zeichenfolgen aus `useTranslations(...)` übergeben, sobald eine Kit-Komponente Text darstellt.
+4. Tailwind-Dienstprogramme haben Vorrang vor den Komponentenklassen des Kits (das Kit deklariert
+   `@layer theme, base, components, utilities`, und seine Regeln befinden sich in `components`) — Dienstprogramme für
    Abstände und Layout verwenden, nicht zum Umfärben von Kit-Komponenten.
-5. Überschriften: `.ci-heading` (Inter, kein Zeichenabstand) für Seiten- und Abschnittstitel; `.ci-dashboard-display`
+5. Überschriften: `.ci-heading` (Inter, ohne Zeichenabstand) für Seiten- und Abschnittstitel; `.ci-dashboard-display`
    (Instrument Serif) nur für große, sparsam eingesetzte Anzeigetexte wie den Statuscode auf der Fehlerseite.
-6. `tests/unit/dashboard-kit-sweep.test.ts` überwacht die Kit-Einführung: kein Material-Ligatur-Span unter
+6. `tests/unit/dashboard-kit-sweep.test.ts` stellt die Kit-Nutzung sicher: keine Material-Ligatur-Spans unter
    `src/app` oder `src/shared/components`; im Dashboard-Baum (`src/app/(dashboard)` und
-   `src/shared/components`) keine rohen `<select>`-, `<textarea>`- oder `<table>`-Elemente und keine selbst
-   implementierten `role="dialog"` außerhalb der aufgeführten Ausnahmen (der native Zweig des `Select`-Adapters,
-   `RequestLoggerDetail`); jeder rohe `<button>` oder `<input>` dort benötigt einen Kommentar mit
-   `kit-exception:` (einschließlich Begründung), der höchstens 3 Zeilen darüber endet; Palettenfarbtöne und
-   `dark:`-Varianten sind nur in den von diesem Test aufgeführten Dateien zulässig.
-7. Vor einem PR beide Themes und den 390-px-Viewport überprüfen (Screenshots); `tests/e2e/a11y.spec.ts` führt
+   `src/shared/components`) keine unverarbeiteten `<select>`-, `<textarea>`- oder `<table>`-Elemente und keine selbst
+   erstellten `role="dialog"` außerhalb der aufgeführten Ausnahmen (der native Zweig des `Select`-Adapters,
+   `RequestLoggerDetail`); jedes unverarbeitete `<button>`- oder `<input>`-Element dort benötigt einen Kommentar mit
+   `kit-exception:` (einschließlich Begründung), der höchstens 3 Zeilen darüber endet; Palettenfarbtöne und `dark:`-Varianten
+   sind nur in den von diesem Test aufgeführten Dateien zulässig.
+7. Vor einem PR beide Themes und den Viewport mit 390 px überprüfen (Screenshots); `tests/e2e/a11y.spec.ts` führt
    axe aus.
 
 ## 3. Einen Bildschirm hinzufügen
