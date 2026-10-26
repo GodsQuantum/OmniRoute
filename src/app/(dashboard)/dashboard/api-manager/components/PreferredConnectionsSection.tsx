@@ -2,8 +2,9 @@
 
 import { memo, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import Button from "@/shared/components/Button";
 import { compareTr } from "@/shared/utils/turkishText";
+import Button from "@/shared/components/Button";
+import Icon from "@/shared/components/Icon";
 import type { ProviderConnection } from "./ProviderConnectionPermissionList";
 
 export interface PreferredConnectionsSectionProps {
@@ -59,7 +60,7 @@ export const PreferredConnectionsSection = memo(function PreferredConnectionsSec
             size="sm"
             type="button"
             onClick={onClearPreferred}
-            className="h-auto shrink-0 px-2 py-1 text-xs text-text-muted"
+            className="shrink-0 text-xs font-medium text-text-muted"
           >
             {t("preferredConnectionsClear")}
           </Button>
@@ -93,7 +94,7 @@ export const PreferredConnectionsSection = memo(function PreferredConnectionsSec
                     type="button"
                     aria-pressed={isPreferred}
                     onClick={() => onTogglePreferred(conn.id)}
-                    className="h-auto min-w-0 flex-1 justify-start gap-2 p-0 text-left text-xs text-inherit hover:bg-transparent"
+                    className="h-auto min-w-0 flex-1 justify-start gap-2 px-0 py-0 text-left text-xs font-normal"
                   >
                     <span
                       className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 text-[10px] font-semibold ${
@@ -114,25 +115,27 @@ export const PreferredConnectionsSection = memo(function PreferredConnectionsSec
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        icon="arrow_upward"
                         type="button"
                         aria-label={tc("moveUp")}
                         title={tc("moveUp")}
                         disabled={rank === 0}
                         onClick={() => onMovePreferred(conn.id, -1)}
-                        className="size-6 disabled:opacity-30"
-                      />
+                        className="h-6 w-6 disabled:opacity-30"
+                      >
+                        <Icon name="arrow_upward" size={16} />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        icon="arrow_downward"
                         type="button"
                         aria-label={tc("moveDown")}
                         title={tc("moveDown")}
                         disabled={rank === preferredConnections.length - 1}
                         onClick={() => onMovePreferred(conn.id, 1)}
-                        className="size-6 disabled:opacity-30"
-                      />
+                        className="h-6 w-6 disabled:opacity-30"
+                      >
+                        <Icon name="arrow_downward" size={16} />
+                      </Button>
                     </div>
                   )}
                 </div>

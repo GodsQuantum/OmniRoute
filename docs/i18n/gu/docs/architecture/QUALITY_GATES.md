@@ -19,216 +19,240 @@ ratchet baseline અથવા pass/fail policy નો ઉપયોગ કરે 
 
 ### ઉમેદવારની સ્વીકૃતિ
 
-CI અને Quality Gates વર્કફ્લો દરેક એક સ્થિર ચુકાદો આપે છે: `Gate / CI` અને
-`Gate / Quality`. તેમની વર્ઝન કરેલી સ્વીકૃતિ નીતિ દરેક અપસ્ટ્રીમ જૉબને
-આવશ્યક અથવા સલાહરૂપ તરીકે સૂચિબદ્ધ કરે છે. લાગુ પડતી આવશ્યક જૉબ સફળ થવી આવશ્યક છે:
-ગેરહાજર, રદ થયેલા, સ્કિપ થયેલા, બાકી રહેલા અને અજ્ઞાત પરિણામો PASS સ્થાપિત કરી શકતા નથી. માન્ય
-માત્ર-દસ્તાવેજો અથવા માત્ર-કૅટલૉગ વર્ગીકરણ કોડ લેનને લાગુ ન પડતી બનાવી શકે છે;
-ડ્રાફ્ટ PR સ્વીકૃત ઉમેદવાર નથી. `hotfix` લેબલ પુરાવાની આવશ્યકતા માફ કરતું નથી.
+CI અને Quality Gates વર્કફ્લો દરેક એક સ્થિર નિર્ણય આપે છે: `Gate / CI` અને
+`Gate / Quality`. તેમની વર્ઝનવાળી સ્વીકૃતિ નીતિ દરેક અપસ્ટ્રીમ જોબને
+આવશ્યક અથવા સલાહરૂપ તરીકે સૂચિબદ્ધ કરે છે. લાગુ પડતી આવશ્યક જોબ સફળ થવી આવશ્યક છે:
+ગેરહાજર, રદ થયેલા, છોડી દેવાયેલા, બાકી રહેલા અને અજ્ઞાત પરિણામો PASS સ્થાપિત કરી શકતા નથી.
+માન્ય માત્ર-દસ્તાવેજો અથવા માત્ર-કૅટલોગ વર્ગીકરણ કોડ લેનને લાગુ ન પડતી બનાવી શકે છે;
+ડ્રાફ્ટ PR સ્વીકૃત ઉમેદવાર નથી. `hotfix` લેબલ પુરાવાની આવશ્યકતા દૂર કરતું નથી.
 
-બંને વર્કફ્લો main/release બ્રાન્ચમાં આવતા PR, `main` પરના પુશ, મેન્યુઅલ ડિસ્પેચ
-અને merge-group ઇવેન્ટ્સને આવરી લે છે. પુશ, ડિસ્પેચ અને merge-group સંપૂર્ણ પસંદગી ચલાવે છે.
-`release/**` પરના પુશ તેમને શરૂ કરતા નથી (2026-10-18): દરેક ફેરફાર તેના PR પર
-પહેલેથી જ મેટ્રિક્સમાંથી પસાર થઈ ચૂક્યો હોય છે અને મર્જ કરેલું સંયોજન Release-Greenનું કાર્ય છે
-(`docs/ops/RUNNER_BOX.md` → Hosted લેન). ફોર્ક્સ અને merge groups એવી જૉબ્સ માટે hosted runners
-વાપરે છે જે અન્યથા self-hosted runners પસંદ કરે છે; રોલઆઉટ પહેલાં પૂરતી hosted ક્ષમતાની
+બંને વર્કફ્લો main/release બ્રાન્ચમાં આવતા PR, `main` પરના push, મેન્યુઅલ dispatch
+અને merge-group ઇવેન્ટ્સને આવરી લે છે. Push, dispatch અને merge-group સંપૂર્ણ પસંદગી ચલાવે છે.
+`release/**` પરના push તેમને શરૂ કરતા નથી (2026-10-18): દરેક ફેરફાર તેના PR પર પહેલેથી જ
+મેટ્રિક્સમાંથી પસાર થયો હોય છે અને મર્જ થયેલા સંયોજનની ચકાસણી Release-Greenનું કાર્ય છે
+(`docs/ops/RUNNER_BOX.md` → Hosted લેન). Fork અને merge group એવી જોબ માટે hosted runner
+વાપરે છે જે અન્યથા self-hosted runner પસંદ કરે છે; રોલઆઉટ પહેલાં પૂરતી hosted ક્ષમતાની
 ચકાસણી કરવી આવશ્યક છે.
 
-દરેક JSON રસીદ checkout કરેલ SHA, workflow run અને attempt ઓળખાવે છે.
-CLI checkout/event SHA mismatch ને નકારે છે. વર્કફ્લો પરીક્ષણો નીતિના સભ્યપદને
-verdict jobની `needs` સૂચિ સાથે બાંધે છે, જેથી નવી અથવા દૂર કરેલી લેન નિઃશબ્દ રીતે અદૃશ્ય ન થઈ શકે.
-રસીદો પોતાના વર્કફ્લોને આવરી લે છે, પ્રકાશન, ડિપ્લોયમેન્ટ અથવા હાલના
-સલાહરૂપ સ્કેનરની આંતરિક બાબતોને નહીં. બ્રાન્ચ નિયમોમાં બંને ચેક નામ સક્રિય કરવાં એ
-અલગ વહીવટી ફેરફાર છે; આ જૉબ્સ ઉમેરવાથી બ્રાન્ચને આપમેળે સુરક્ષા મળતી નથી.
+દરેક JSON રસીદ ચેકઆઉટ કરાયેલ SHA, વર્કફ્લો રન અને પ્રયાસને ઓળખાવે છે.
+CLI ચેકઆઉટ/ઇવેન્ટ SHA અસંગતતાને નકારે છે. વર્કફ્લો પરીક્ષણો નીતિના સભ્યપદને
+નિર્ણય આપતી જોબની `needs` સૂચિ સાથે બાંધે છે, જેથી નવી અથવા દૂર કરાયેલી લેન
+ચુપચાપ અદૃશ્ય ન થઈ શકે. રસીદો તેમના પોતાના વર્કફ્લોને આવરી લે છે, પ્રકાશન,
+ડિપ્લોયમેન્ટ અથવા હાલના સલાહરૂપ સ્કેનરની આંતરિક પ્રક્રિયાઓને નહીં. બ્રાન્ચ નિયમોમાં
+બંને ચેક નામ સક્રિય કરવાં એ એક અલગ વહીવટી ફેરફાર છે; આ જોબ ઉમેરવાથી બ્રાન્ચ
+આપમેળે સુરક્ષિત થતી નથી.
 
-### સ્ટેટિક સ્કૅન ઇન્વેન્ટરી
+### UI એક્ઝિક્યુશન ક્ષમતા
 
-વર્ઝન કરેલી npm-alias ઇન્વેન્ટરી અને static-scan સભ્યપદ
-`config/quality/gate-manifest.json`માં રહે છે. સ્ક્રિપ્ટનાં નામો અને ચોક્કસ કમાન્ડ્સને
-`package.json` સામે માન્ય કરવા માટે `npm run check:gate-manifest` ચલાવો; ઉમેરાઓ, દૂર કરવું
-અને કમાન્ડમાં વિચલન, બંને સ્થાનિક હૂક અને CIમાં change-classification jobsને નિષ્ફળ કરે છે.
-alias એ workflow job, matrix instance અથવા test case નથી: આ ગણતરીઓને
-પરસ્પર વિનિમયક્ષમ તરીકે રજૂ કરવી જોઈએ નહીં.
+CI સંપૂર્ણ UI ઇન્વેન્ટરીને ચાર `test-vitest` મેટ્રિક્સ શાર્ડ તરીકે ચલાવે છે, જેમાં
+દરેક માટે વધુમાં વધુ ચાર worker અને હાલની 15-મિનિટની જોબ સમયમર્યાદા હોય છે.
+પ્રથમ શાર્ડ MCP/autoCombo Vitest suite પણ ચલાવે છે. આવશ્યક જોબનું પરિણામ દરેક
+મેટ્રિક્સ લેગને આવરી લે છે; એક શાર્ડની નિષ્ફળતા અથવા રદ્દીકરણ ઉમેદવારની સ્વીકૃતિ
+સ્થાપિત કરી શકતું નથી.
 
-પસંદ કરેલા aliasesને ચલાવ્યા વિના તપાસવા માટે `npm run quality:scan -- --list` અથવા
-`npm run quality:scan:fast -- --list` વાપરો. રનર npm entrypointને ચલાવે છે, તેથી તેનો
-runtime (જ્યાં ગોઠવાયેલ હોય ત્યાં Bun સહિત) જળવાઈ રહે છે.
-મેનિફેસ્ટ આ પ્રોફાઇલ્સની બહારના aliasesને અલગથી ચલાવવામાં આવતા તરીકે નોંધે છે, અને
-ફક્ત-વાંચન scan profilesમાં maintenance commands પ્રતિબંધિત છે.
+રાત્રિકાલીન observer દરેક UI શાર્ડ માટે અલગ ચોક્કસ-ઉમેદવાર રસીદ જાળવી રાખે છે,
+જેમાં પ્રથમ રસીદમાં MCP એક્ઝિક્યુશનનો પણ સમાવેશ થાય છે. ચારેય રસીદો, લોગ અને મેળ ખાતી
+એક્ઝિક્યુશન ઓળખ આવશ્યક છે. સ્થાનિક `npm run test:vitest:ui` હજુ પણ સંપૂર્ણ suite પસંદ
+કરે છે; એક `--shard` રન માત્ર આંશિક પુરાવો છે.
 
-આ પ્રોફાઇલ્સ માત્ર static scanને આવરી લે છે. તેઓ product tests,
-coverage, packaging, external checks અથવા ઉમેદવારની સંપૂર્ણ release acceptanceને પ્રમાણિત કરતા નથી.
-Workflow admission લિંક કરેલ `config/quality/admission-policy.json` અને
-`scripts/quality/admission-verdict.mjs`નો ઉપયોગ કરે છે. Release-observer profiles અલગ રહે છે;
-તેમના લાગુ પડતા checks અને receiptsને સ્વતંત્ર રીતે તપાસો. નીચે આપેલી ગદ્યરૂપ
-ઇન્વેન્ટરી એક સંદર્ભ છે, ગેટ ખરેખર ચાલ્યો હતો તેનો પુરાવો નહીં.
+### સ્ટેટિક સ્કેન ઇન્વેન્ટરી
 
-સ્ક્રિપ્ટ્સ `scripts/check/` (policy gates) અને `scripts/quality/` (ratchet engine) હેઠળ રહે છે.
-CI માટે અધિકૃત સ્રોત `.github/workflows/ci.yml` છે.
+વર્ઝનવાળી npm-alias ઇન્વેન્ટરી અને સ્ટેટિક-સ્કેન સભ્યપદ
+`config/quality/gate-manifest.json`માં છે. સ્ક્રિપ્ટ નામો અને ચોક્કસ commandsને
+`package.json` સામે માન્ય કરવા માટે `npm run check:gate-manifest` ચલાવો; ઉમેરાઓ,
+દૂર કરાયેલ વસ્તુઓ અને command drift સ્થાનિક hook તથા CIમાં change-classification
+જોબ—બંનેને નિષ્ફળ બનાવે છે. Alias એ વર્કફ્લો જોબ, મેટ્રિક્સ instance અથવા test case
+નથી: આ ગણતરીઓને એકબીજાના સમકક્ષ તરીકે રજૂ કરવી જોઈએ નહીં.
+
+પસંદ કરેલા aliasને ચલાવ્યા વિના તપાસવા માટે `npm run quality:scan -- --list` અથવા
+`npm run quality:scan:fast -- --list` વાપરો. Runner npm entrypoint ચલાવે છે, તેથી
+તેનું runtime—જ્યાં ગોઠવેલું હોય ત્યાં Bun સહિત—જળવાઈ રહે છે. Manifest આ
+પ્રોફાઇલની બહારના aliasને અલગથી ચલાવવામાં આવતા તરીકે નોંધે છે અને read-only
+scan profileમાં maintenance command પ્રતિબંધિત છે.
+
+આ પ્રોફાઇલ માત્ર સ્ટેટિક સ્કેનને આવરી લે છે. તે product test, coverage, packaging,
+external check અથવા ઉમેદવારની સંપૂર્ણ release acceptanceને પ્રમાણિત કરતા નથી.
+વર્કફ્લો સ્વીકૃતિ લિંક કરેલા `config/quality/admission-policy.json` અને
+`scripts/quality/admission-verdict.mjs`નો ઉપયોગ કરે છે. Release-observer profile
+અલગ રહે છે; તેમની લાગુ પડતી ચકાસણીઓ અને રસીદો સ્વતંત્ર રીતે તપાસો. સંપૂર્ણ
+observerના static command `config/quality/release-green-static-profile.json`માં
+જાહેર કરેલા છે, જેમાં `audit:deps`, mutation-test પસંદગી અને translation checkનો
+સમાવેશ થાય છે. Loader npm commandને package.json અને મોડેલ કરેલી CI/Quality
+ઘોષણાઓ સામે માન્ય કરે છે; તે shell tokenને argument તરીકે ચલાવવાને બદલે driftને
+નકારે છે. આવશ્યક scannerનું SKIP/INCOMPLETE output PASS સ્થાપિત કરી શકતું નથી.
+પ્રોફાઇલ તેના external exclusion નોંધે છે અને hosted coverage, test matrix,
+package અથવા deployment evidenceને બદલતું નથી. નીચેની ગદ્ય ઇન્વેન્ટરી માત્ર સંદર્ભ
+છે, ગેટ ખરેખર ચાલ્યો હોવાનો પુરાવો નથી.
+
+સ્ક્રિપ્ટ `scripts/check/` (policy gate) અને `scripts/quality/` (ratchet engine) હેઠળ
+રહેલી છે. CI માટે સત્યનો અધિકૃત સ્ત્રોત `.github/workflows/ci.yml` છે.
 
 ### Release PR ફાસ્ટ-પાથ (`quality.yml`)
 
-`.github/workflows/quality.yml` main/release PRs, `main` પરના pushes,
-dispatch અને merge groups માટે CIને પૂરક બને છે. PRs path-filtered ઝડપી checksનો ઉપયોગ કરે છે.
-કાયમી રીતે અક્ષમ duplicate build દૂર કરવામાં આવ્યું હતું; વાસ્તવિક build/package/boot checks CIમાં યથાવત્ છે.
+`.github/workflows/quality.yml` main/release PR, `main` પરના push, dispatch અને
+merge group માટે CIને પૂરક બને છે. PR path-filtered ઝડપી check વાપરે છે. કાયમી રીતે
+નિષ્ક્રિય duplicate build દૂર કરવામાં આવ્યું હતું; વાસ્તવિક build/package/boot check
+CIમાં યથાવત્ છે.
 
-| જૉબ                                              | વ્યાપ                                                                                                                                                                                                                      | અવરોધક         |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `Docs Gates (fast-path)`                         | Docs/code PRs; API docs refs અને docs-all                                                                                                                                                                                  | હા             |
-| `Fast Quality Gates`                             | Code PRs; static checks, typecheck, dashboard typecheck, અસરગ્રસ્ત unit tests                                                                                                                                              | હા             |
-| `Forgotten sibling tests`                        | Code PRs; બદલાયેલા modulesને static consumers અને candidate sibling tests સુધી ટ્રેસ કરવામાં આવે છે; barrel અને dynamic-import pathsને સંદર્ભિત allowlist exceptions સાથે સલાહરૂપ diagnostics તરીકે રિપોર્ટ કરવામાં આવે છે | **સલાહરૂપ**    |
-| `Vitest (fast-path)`                             | Code PRs; ઝડપી vitest suite                                                                                                                                                                                                | હા             |
-| `Unit Tests fast-path`                           | Code PRs; 4-shard unit suite                                                                                                                                                                                               | હા             |
-| `No new ESLint warnings`                         | Code PRs; suppressions-aware lint guard                                                                                                                                                                                    | હા, forks સહિત |
-| `Merge integrity (changelog + generated skills)` | Non-draft PRs; changelog અને generated skill sync                                                                                                                                                                          | હા, forks સહિત |
+| જોબ                                              | વ્યાપ                                                                                                                                                                                                                | અવરોધક           |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `Docs Gates (fast-path)`                         | દસ્તાવેજો/કોડ PRs; API દસ્તાવેજ સંદર્ભો અને docs-all                                                                                                                                                                 | હા               |
+| `Fast Quality Gates`                             | કોડ PRs; સ્ટેટિક તપાસો, ટાઇપચેક, ડૅશબોર્ડ ટાઇપચેક, પ્રભાવિત યુનિટ પરીક્ષણો                                                                                                                                           | હા               |
+| `Forgotten sibling tests`                        | કોડ PRs; બદલાયેલા મોડ્યુલોને સ્ટેટિક વપરાશકર્તાઓ અને સંભવિત સિબલિંગ પરીક્ષણો સુધી ટ્રેસ કરવામાં આવે છે; બેરલ અને ડાયનેમિક-ઇમ્પોર્ટ પાથ્સને સંદર્ભિત અલાઉલિસ્ટ અપવાદો સાથે સલાહરૂપ નિદાન તરીકે રિપોર્ટ કરવામાં આવે છે | **સલાહરૂપ**      |
+| `Vitest (fast-path)`                             | કોડ PRs; ઝડપી vitest સ્યુટ                                                                                                                                                                                           | હા               |
+| `Unit Tests fast-path`                           | કોડ PRs; 4-શાર્ડ યુનિટ સ્યુટ                                                                                                                                                                                         | હા               |
+| `No new ESLint warnings`                         | કોડ PRs; સપ્રેશન-અવેર લિન્ટ ગાર્ડ                                                                                                                                                                                    | હા, ફોર્ક્સ સહિત |
+| `Merge integrity (changelog + generated skills)` | બિન-ડ્રાફ્ટ PRs; ચેન્જલોગ અને જનરેટ કરેલી સ્કિલ્સનું સિંક્રનાઇઝેશન                                                                                                                                                   | હા, ફોર્ક્સ સહિત |
 
-#### ભૂલી ગયેલા sibling testsનો રિપોર્ટ
+#### ભૂલી ગયેલા સિબલિંગ પરીક્ષણોનો રિપોર્ટ
 
-`npm run check:forgotten-sibling-tests` ટેસ્ટ-ઇમ્પેક્ટ મેપ પાછળના ઇમ્પોર્ટ રિઝોલ્વરનો પુનઃઉપયોગ કરે છે.
-બદલાયેલા દરેક પ્રોડક્શન મોડ્યુલ માટે, જ્યારે ઉમેદવાર ટેસ્ટ પુલ-રિક્વેસ્ટ ડિફમાં
-ગેરહાજર હોય ત્યારે તે નિર્ધારિત
-`changed module/symbol -> static consumer -> candidate sibling test` શૃંખલાઓનો અહેવાલ આપે છે. કોઈપણ બ્લોકિંગ રોલઆઉટ પહેલાં કેલિબ્રેશન માટે Markdown સારાંશ અને JSON પરિણામને
+`npm run check:forgotten-sibling-tests` પરીક્ષણ-પ્રભાવ મેપ પાછળના ઇમ્પોર્ટ રિઝોલ્વરનો ફરી ઉપયોગ કરે છે.
+દરેક બદલાયેલા પ્રોડક્શન મોડ્યુલ માટે, જ્યારે સંભવિત પરીક્ષણ પુલ-રિક્વેસ્ટ ડિફમાં હાજર ન હોય ત્યારે તે નિર્ધારિત
+`changed module/symbol -> static consumer -> candidate sibling test` શૃંખલાઓનો રિપોર્ટ કરે છે. કોઈપણ અવરોધક
+રોલઆઉટ પહેલાં કેલિબ્રેશન માટે Markdown સારાંશ અને JSON પરિણામને
 `forgotten-sibling-tests` વર્કફ્લો આર્ટિફેક્ટ તરીકે જાળવી રાખવામાં આવે છે.
 
-બેરલ રી-એક્સપોર્ટ્સ અને ડાયનેમિક ઇમ્પોર્ટ્સ માત્ર રિઝોલ્યુશન ડાયગ્નોસ્ટિક્સ છે; તેઓ ક્યારેય
-બ્લોકિંગ તારણ બનાવતા નથી. સમીક્ષા કરાયેલા અપવાદો
-`config/quality/forgotten-sibling-allowlist.json`માં રહે છે. દરેક એન્ટ્રીમાં કન્ઝ્યુમર અને ઉમેદવાર
-ટેસ્ટનું નામ, ચોક્કસ કારણ અને GitHub ઇશ્યૂ અથવા પુલ રિક્વેસ્ટની લિંક હોવી આવશ્યક છે. ખામીયુક્ત એન્ટ્રીઓ
-બંધ સ્થિતિમાં નિષ્ફળ જાય છે. અપવાદો કાઢી નાખવામાં આવેલા ઉમેદવાર ટેસ્ટ અથવા `.skip`/`.todo` ઉમેરતા ડિફને દબાવી શકતા નથી;
-એસર્શનને નબળું બનાવવું અને અન્ય માસ્કિંગ સ્વતંત્ર રીતે બ્લોકિંગ
+બેરલ રી-એક્સપોર્ટ્સ અને ડાયનેમિક ઇમ્પોર્ટ્સ માત્ર રિઝોલ્યુશન નિદાન છે; તેઓ ક્યારેય
+અવરોધક તારણ બનાવતા નથી. સમીક્ષા કરેલા અપવાદો
+`config/quality/forgotten-sibling-allowlist.json`માં રહે છે. દરેક એન્ટ્રીમાં વપરાશકર્તા અને સંભવિત
+પરીક્ષણનું નામ, ચોક્કસ કારણ અને GitHub ઇશ્યૂ અથવા પુલ રિક્વેસ્ટની લિંક હોવી આવશ્યક છે. ખામીયુક્ત એન્ટ્રીઓ
+ફેલ-ક્લોઝ્ડ થાય છે. અપવાદો કાઢી નાખેલા સંભવિત પરીક્ષણ અથવા `.skip`/`.todo` ઉમેરતા ડિફને દબાવી શકતા નથી;
+અસર્શનને નબળું કરવું અને અન્ય માસ્કિંગ સ્વતંત્ર રીતે અવરોધક
 `check:test-masking` ગેટના કાર્યક્ષેત્રમાં રહે છે.
 
-### જૉબ: `lint`
+### જોબ: `lint`
+
+`main` માટેના દરેક PR પર ચાલે છે. નિષ્ફળતા થાય તો મર્જને અવરોધે છે.
+
+| સ્ક્રિપ્ટ (`npm run ...`)         | શું માન્ય કરે છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | અવરોધક                                  |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `check:node-runtime`              | Node.js સંસ્કરણ સમર્થિત શ્રેણીમાં છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | હા                                      |
+| `check:test-tla-order`            | `tests/unit` હેઠળની કોઈપણ `node:test` ફાઇલ પહેલાં ટેસ્ટ રજિસ્ટર કરે, પછી ટોચના સ્તરનું `await` ચલાવે અને ત્યારબાદ વધુ ટેસ્ટ રજિસ્ટર કરે નહીં (#18045; રૅચેટ: `test-tla-order-allowlist.json` માત્ર સંકોચાઈ શકે છે)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | હા                                      |
+| `check:cycles`                    | સમગ્ર `src/` + `open-sse/` માં સર્ક્યુલર ઇમ્પોર્ટ્સ (AST-આધારિત, tsconfig `paths` રિઝોલ્વ કરેલા). જ્યારે પણ કોઈ સાયકલ અસ્તિત્વમાં હોય ત્યારે મૂળ આદેશ 1 સાથે બહાર નીકળે છે (#15281થી fail-closed) અને SCCsની યાદી આપે છે. `check:cycles:ratchet` (જે CI ચલાવે છે) ત્યારે અવરોધે છે જ્યારે સંખ્યા `quality-baseline.json` માંની `metrics.cycles` મર્યાદા કરતાં વધી જાય — હાલમાં 14, `direction: down`, તેથી તે માત્ર ઘટી શકે છે (#15159 G-01/G-02)                                                                                                                                                                                                                                                                                                                                                                                                                                                    | હા (રૅચેટ)                              |
+| `check:boundary`                  | `open-sse → src` કપલિંગ: એન્જિનમાંથી ઍપમાં થતા અનન્ય ફાઇલ-થી-ફાઇલ ઇમ્પોર્ટ્સ (`scripts/quality/measure-boundary.mjs`; એજ સૂચિ v4 કોર/મોડ્યુલ-સ્પ્લિટ સુધારણા માટેનો બૅકલૉગ છે). મૂળ આદેશ = સલાહાત્મક અહેવાલ (`quality:boundary` જેવો જ). `check:boundary:ratchet` (જે CI ચલાવે છે અને `quality.yml` ફાસ્ટ-ગેટ્સ રૅચેટ લૂપમાં પણ છે) ત્યારે અવરોધે છે જ્યારે સંખ્યા `quality-baseline.json` માંની `metrics.boundaryOpenSseToSrc` મર્યાદા કરતાં વધી જાય — માપવામાં આવેલા 771થી પ્રારંભ કરાયેલ, `direction: down`; `--update` તેને માત્ર ઘટાડે છે; PRs પર બેઝ-સાપેક્ષ (`--base-ref`, નીચે જુઓ)                                                                                                                                                                                                                                                                                                          | હા (રૅચેટ)                              |
+| `check:route-validation:t06`      | તમામ routes પર Zod schemas હાજર છે (Tier 6 નીતિ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | હા                                      |
+| `check:any-budget:t11`            | `@ts-expect-error // any` ની સંખ્યા નિર્ધારિત મર્યાદાથી વધુ નથી (Tier 11 catraca)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | હા                                      |
+| `check:provider-consistency`      | `providers.ts` માંના દરેક provider માટે `providerRegistry.ts` માં સુસંગત entry છે (અને તેનાથી વિપરીત પણ, allowlistની અંદર)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | હા                                      |
+| `check:model-lifecycle`           | હાથથી જાળવવામાં આવતા ત્રણ routing tables checked-in lifecycle snapshot (#11503) સાથે સુસંગત રહે છે: `FITNESS_TABLE` (`taskFitness.ts`) એવા કોઈ નિવૃત્ત idને score કરતું નથી જેને `REGISTRY` route કરી શકે; દરેક `BUILT_IN_ALIASES` target `REGISTRY` માં હાજર અને નિવૃત્ત-id snapshotમાં ગેરહાજર છે; `REGISTRY` માં હજુ પણ રહેલા દરેક નિવૃત્ત idને forward કરવામાં આવે છે અથવા `allowedRetiredInCatalog` માં સૂચિબદ્ધ કરવામાં આવે છે; અને કોઈ `DEFAULT_DEGRADATION_MAP` source અથવા target તે snapshotમાં નિવૃત્ત તરીકે દેખાતું નથી. આ સાબિત કરતું નથી કે કોઈ model હાલમાં live upstream દ્વારા serve કરવામાં આવે છે. Offline — `config/quality/model-lifecycle.json` સાથે સરખામણી કરે છે, જેને `npm run quality:refresh-model-lifecycle` વડે હાથથી refresh કરવામાં આવે છે (network; CI સાથે જોડાયેલ નથી). `allowedRetiredInCatalog` એ burn-down ratchet છે: entry ફક્ત tracking issue સાથે જ ઉમેરો. | હા                                      |
+| `check:fetch-targets`             | client-side `src/` માંનું દરેક `fetch("/api/...")` વાસ્તવિક `route.ts` તરફ resolve થાય છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | હા                                      |
+| `check:deps`                      | repoમાંના દરેક `package.json` માં રહેલી તમામ `npm install` કરી શકાય તેવી deps `dependency-allowlist.json` માં છે; નવા unpinned અથવા slopsquatted packagesને flag કરવામાં આવે છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | હા                                      |
+| `audit:deps`                      | તમામ પાંચ સ્વતંત્ર lockfiles (root, Electron, OpenCode plugins v1/v2 અને provider) નું npm audit. ગંભીર advisories અવરોધે છે; ઉચ્ચ advisories દૃશ્યમાન ચેતવણીઓ તરીકે રહે છે. ખૂટતા/નિષ્ફળ audits INCOMPLETE ગણાય છે અને અવરોધે છે; દરેક scope માટેના lock hashes અને reports જાળવી રાખવામાં આવે છે.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | હા                                      |
+| `check:lockfile`                  | `package-lock.json` ની અખંડિતતા — https registry, integrity hashes, કોઈ host overrides નહીં                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | હા                                      |
+| `check:licenses`                  | production dependencies માટે SPDX license allowlist                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | હા                                      |
+| `check:tracked-artifacts`         | કોઈ build artifacts / commit કરેલી `node_modules` symlinks નહીં (husky pre-commit માં પણ ચાલે છે; pre-push ઇરાદાપૂર્વક હળવું છે — #6716)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | હા                                      |
+| `check:ai-attribution`            | PR commits, title અથવા body માં કોઈ AI/bot `Co-Authored-By` trailer કે AI-generation footer નહીં — Hard Rule #16 (`quality.yml` ના PR→`release/**` માટેના fast-gates loop માં — event payload વાંચે છે, PR સિવાય no-op કરે છે — અને `ci.yml` lint માં PR→`main` માટેનું માત્ર-PR step; તેમજ husky `commit-msg` hook; માનવીય co-authors માન્ય છે; #14436)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `check:vitest-exclusions`         | દરેક Vitest exclusion tracking issue નો ઉલ્લેખ કરે છે અને `config/quality/vitest-exclusions.json` માં દેખાય છે (#13204)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `check:file-size`                 | સોર્સ ફાઇલો (`src/`, `open-sse/`, `electron/`, `bin/`માં `.ts`/`.tsx`) `cap`ની અને ટેસ્ટ ફાઇલો (`*.test.ts(x)`) `testCap`ની મર્યાદામાં રહે છે; `file-size-baseline.json`માં ફ્રીઝ કરેલી ફાઇલો (`frozen` / `testFrozen`) તેમના નોંધાયેલા કદથી વધુ મોટી થવી જોઈએ નહીં                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | હા                                      |
+| `check:error-helper`              | એક્ઝિક્યુટર્સ/હેન્ડલર્સમાં ભૂલ પ્રતિસાદો `buildErrorBody()` / `sanitizeErrorMessage()`નો ઉપયોગ કરે છે (કડક નિયમ #12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | હા                                      |
+| `check:migration-numbering`       | માઇગ્રેશન SQL ફાઇલોને કોઈ ખાલી ક્રમ કે ડુપ્લિકેટ વિના ક્રમિક રીતે નંબર આપવામાં આવ્યા છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `check:public-creds`              | `publicCreds.ts`ની બહાર કોઈ લિટરલ OAuth `client_id`/`client_secret` અથવા Firebase Web કી નથી (કડક નિયમ #11)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | હા                                      |
+| `check:db-rules`                  | `src/lib/db/` મોડ્યુલોની બહાર કોઈ રૉ SQL નથી; `localDb.ts`માંથી કોઈ બેરલ-ઇમ્પોર્ટ નથી (કડક નિયમો #2/#5)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `check:known-symbols`             | તેમની ડિસ્પેચ ટેબલોમાં નોંધાયેલા પ્રોવાઇડર એક્ઝિક્યુટર્સ, રાઉટિંગ વ્યૂહરચનાઓ અને ટ્રાન્સલેટર્સ ડિસ્ક પરની ફાઇલો સાથે મેળ ખાય છે—કોઈ અનાથ અથવા અઘોષિત સિમ્બોલ નથી                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | હા                                      |
+| `check:route-guard-membership`    | ચાઇલ્ડ પ્રોસેસ શરૂ કરતો દરેક રૂટ `isLocalOnlyPath()` દ્વારા વર્ગીકૃત કરવામાં આવે છે (કડક નિયમો #15/#17)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `check:test-discovery`            | રિપોઝિટરીમાંની દરેક `*.test.ts` / `*.spec.ts` ફાઇલ ઓછામાં ઓછા એક ટેસ્ટ રનર દ્વારા એકત્રિત કરવામાં આવે છે (રૅચેટ: `test-discovery-baseline.json` માં અનાથ ફાઇલોની સૂચિ માત્ર ઘટી શકે છે)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `check:agent-skills-sync`         | જનરેટ કરેલી એજન્ટ-સ્કિલ્સ આર્ટિફેક્ટ્સ તેમના સ્રોત કૅટલૉગ સાથે મેળ ખાય છે (કોઈ વિચલન નથી)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `check:provider-asset-provenance` | પ્રદાતાના લોગો/એસેટ્સ માટે નોંધાયેલ ઉત્પત્તિ-વિગત હોય છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `lint:json`                       | JSON કૉન્ફિગ ફાઇલો પાર્સ થાય છે અને રિપોઝિટરીના લિન્ટ નિયમોનું પાલન કરે છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `typecheck:core`                  | ભૂલો વિના TypeScript કમ્પાઇલેશન (માત્ર સલાહરૂપ ચેતવણીઓ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
+| `typecheck:noimplicit:core`       | કડક `noImplicitAny` — ભવિષ્યલક્ષી; અગાઉથી અસ્તિત્વમાં રહેલી ઘણી કૉલ સાઇટ્સને હજુ પણ ઍનોટેશન્સની જરૂર છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | **સલાહરૂપ** (`continue-on-error: true`) |
+| `check:dashboard-typecheck`       | `src/app/(dashboard)/**` સુધી મર્યાદિત `tsc` (#7033) — `typecheck:core` ની કાળજીપૂર્વક પસંદ કરેલી 27-ફાઇલની allowlist માં કોઈ dashboard TSX સમાવિષ્ટ નથી, અને `next build` પણ ક્યારેય તેનું type-check કરતું નથી (`next.config.mjs` માં `ignoreBuildErrors: true` સેટ કરેલું છે), તેથી ત્યાંના orphaned-identifier regressions (#6625/#6909) CI ને દેખાતા નહોતા. સ્થિર કરેલી પ્રતિ-ફાઇલ/પ્રતિ-TS-code સંખ્યાની baseline (`config/quality/dashboard-typecheck-baseline.json`, `check:known-symbols` જેવી જ stale-enforcement પદ્ધતિ) સામે તફાવત તપાસે છે — baseline સંખ્યા કરતાં વધુ માત્ર નવી ભૂલો જ gate ને નિષ્ફળ બનાવે છે; અગાઉથી અસ્તિત્વ ધરાવતી ભૂલ સુધારવામાં આવે ત્યારે `--update` વડે તેને ક્રમશઃ ઘટાડો.                                                                                                                                                                                     | હા                                      |
+
+### જોબ: `quality-gate`
+
+`test-coverage` પછી ચાલે છે. નિષ્ફળતા થાય તો merge અવરોધે છે.
+
+| સ્ક્રિપ્ટ                    | શું માન્ય કરે છે                                                                                                                                                                 | અવરોધક                       |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `quality:collect`            | `quality-metrics.json` ઉત્પન્ન કરે છે (ESLint ચેતવણીઓની સંખ્યા, મર્જ કરાયેલા shard રિપોર્ટમાંથી coverage)                                                                        | હા (ratchet પહેલાંનું પગલું) |
+| `quality:ratchet`            | `quality-baseline.json` માંનું દરેક metric પાછું ગયું નથી (ESLint ચેતવણીઓ ≤ baseline; coverage ≥ baseline)                                                                       | હા                           |
+| `check:duplication`          | કોડ duplication (jscpd@4) `quality-baseline.json` માંની baseline કરતાં વધતું નથી                                                                                                 | હા                           |
+| `check:complexity`           | ફાઇલ-સ્તરની cyclomatic complexity મર્યાદા કરતાં વધતી નથી (મુખ્ય ESLint `complexity` + `max-lines-per-function`)                                                                  | હા                           |
+| `check:cognitive-complexity` | Cognitive complexity ratchet (`eslint-plugin-sonarjs`) — અલગ ESLint pass; CI બંનેને એક જ `check:complexity-ratchets` પગલા તરીકે મર્જ કરીને ચલાવે છે                              | હા                           |
+| `check:dead-code`            | વણવપરાયેલા exports / files નું ratchet (knip) baseline ની સરખામણીમાં પાછું જતું નથી                                                                                              | હા                           |
+| `check:compression-budget`   | Compression benchmark budget — પ્રતિ-engine token-savings ની ન્યૂનતમ મર્યાદાઓ પાછી જવી જોઈએ નહીં                                                                                 | હા                           |
+| `check:type-coverage`        | Percent-typed ratchet (`type-coverage`) પાછું જતું નથી; મોટાભાગે `typecheck:noimplicit:core` ને સમાવી લે છે                                                                      | હા                           |
+| `check:codeql-ratchet`       | ખુલ્લા CodeQL alerts ની સંખ્યા પાછી જતી નથી (`gh api` મારફતે વાંચે છે; token વિના શિષ્ટતાપૂર્વક skip કરે છે) — refresh આવર્તન અને manual trigger માટે: નીચે "CodeQL ratchet" જુઓ | હા                           |
+
+### જોબ: `quality-extended`
+
+આ જોબ લાગુ પડતા candidates ને અવરોધે છે. Bundle size, secret findings, vulnerability
+findings, workflow findings અને OpenAPI ફેરફારો required ratchets વડે તપાસવામાં આવે છે.
+Circular-dependency diagnostics અને scanner installation સલાહાત્મક પગલાં છે; નિષ્ફળ
+installation પછીના જરૂરી measurement ને માફ કરતું નથી. ગુમ થયેલા tools,
+અમાન્ય reports અથવા ગુમ થયેલી baselines જરૂરી scanner gate ને INCOMPLETE રાખે છે.
+
+| સ્ક્રિપ્ટ                | શું માન્ય કરે છે                                                                                                                                                                                            | અવરોધક                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `check:circular-deps`    | કોઈ ચક્રીય નિર્ભરતાઓ નથી (dpdm)                                                                                                                                                                             | **સલાહરૂપ**                           |
+| `check:bundle-size`      | બંડલનું કદ મર્યાદાથી વધતું નથી; માપ ઉપલબ્ધ ન હોય તો નિષ્ફળતા થાય છે                                                                                                                                         | **--ratchet સાથે અવરોધક**             |
+| `check:secrets`          | Gitleaksનાં તારણોમાં વધઘટ થતી નથી; આવશ્યક સ્કૅન ગુમ થયેલાં ટૂલ્સ/સોર્સ/બેઝલાઇન, નિષ્ફળ સ્કૅન અને અમાન્ય રિપોર્ટ્સને નકારે છે                                                                                | **--ratchet સાથે અવરોધક**             |
+| `check:vuln-ratchet`     | નિર્ભરતાની નબળાઈઓમાં વધઘટ થતી નથી; આવશ્યક સ્કૅન ગુમ થયેલાં ટૂલ્સ, અમાન્ય રિપોર્ટ્સ અથવા ગુમ થયેલી બેઝલાઇનને નકારે છે                                                                                        | **--ratchet સાથે અવરોધક**             |
+| `check:workflows`        | વર્કફ્લો લિન્ટ (actionlint + zizmor); ગુમ/ખામીયુક્ત સ્કૅનર્સ, અમાન્ય રિપોર્ટ્સ અથવા ગુમ થયેલી રૅચેટ બેઝલાઇન INCOMPLETE તરીકે નિષ્ફળ થાય છે. માન્ય તારણો પસંદ કરેલી strict/advisory/ratchet નીતિને અનુસરે છે | અમલ આવશ્યક; CIમાં zizmor રૅચેટ અવરોધક |
+| `check:openapi-breaking` | પિન કરેલા ઇવેન્ટ કમિટ્સ સામે જાહેર API કરાર (PR merge-base, push પહેલાં, merge-group base; શેડ્યૂલ કરેલા/મૅન્યુઅલ ચેકઆઉટ માટે પ્રથમ પેરેન્ટ); આવશ્યક માપ બંધ સ્થિતિમાં નિષ્ફળ થાય છે                        | **--ratchet સાથે અવરોધક**             |
+
+### જૉબ: `docs-sync-strict`
 
 `main` માટેની દરેક PR પર ચાલે છે. નિષ્ફળતા આવે તો મર્જને અવરોધે છે.
 
-| સ્ક્રિપ્ટ (`npm run ...`)         | શું માન્ય કરે છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | અવરોધક                                  |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `check:node-runtime`              | Node.js સંસ્કરણ સમર્થિત શ્રેણીમાં છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | હા                                      |
-| `check:cycles`                    | સમગ્ર `src/` + `open-sse/` માં ચક્રીય imports (AST-આધારિત, tsconfig `paths` ઉકેલાયેલા). કોઈપણ cycle અસ્તિત્વમાં હોય ત્યારે મૂળ સ્ક્રિપ્ટ 1 સાથે બહાર નીકળે છે (#15281થી fail-closed) અને SCCsની યાદી આપે છે. `check:cycles:ratchet` (જે CI ચલાવે છે) ત્યારે અવરોધે છે જ્યારે ગણતરી `quality-baseline.json`માંની `metrics.cycles` મર્યાદા કરતાં વધી જાય — હાલમાં 14, `direction: down`, તેથી તે માત્ર ઘટી શકે છે (#15159 G-01/G-02)                                                                                                                                                                                                                                                                                                                                                                                                                                        | હા (ratchet)                            |
-| `check:boundary`                  | `open-sse → src` coupling: engineમાંથી appમાં આવતા અનન્ય file-to-file imports (`scripts/quality/measure-boundary.mjs`; edge સૂચિ v4 core/module-split remediation backlog છે). મૂળ સ્ક્રિપ્ટ = સલાહરૂપ અહેવાલ (`quality:boundary` જેવો જ). `check:boundary:ratchet` (જે CI ચલાવે છે અને `quality.yml` fast-gates ratchet loopમાં પણ છે) ત્યારે અવરોધે છે જ્યારે ગણતરી `quality-baseline.json`માંની `metrics.boundaryOpenSseToSrc` મર્યાદા કરતાં વધી જાય — માપવામાં આવેલા 771 પર પ્રારંભિક રીતે નિર્ધારિત, `direction: down`; `--update` તેને માત્ર ઘટાડે છે; PRs પર base-relative (`--base-ref`, નીચે જુઓ)                                                                                                                                                                                                                                                                | હા (ratchet)                            |
-| `check:route-validation:t06`      | તમામ routes પર Zod schemas હાજર છે (Tier 6 નીતિ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | હા                                      |
-| `check:any-budget:t11`            | `@ts-expect-error // any` ની સંખ્યા બજેટ કરતાં વધુ નથી (ટિયર 11 કાત્રાકા)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | હા                                      |
-| `check:provider-consistency`      | `providers.ts` માંના દરેક પ્રદાતા માટે `providerRegistry.ts` માં મેળ ખાતી એન્ટ્રી છે (અને તેનાથી વિપરીત પણ, મંજૂરીસૂચિની મર્યાદામાં)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | હા                                      |
-| `check:model-lifecycle`           | હાથથી જાળવવામાં આવતા ત્રણ રાઉટિંગ કોષ્ટકો ચેક-ઇન કરેલા લાઇફસાઇકલ સ્નૅપશૉટ (#11503) સાથે સુસંગત રહે છે: `FITNESS_TABLE` (`taskFitness.ts`) એવા કોઈ નિવૃત્ત IDને સ્કોર કરતું નથી જેને `REGISTRY` રૂટ કરી શકે; દરેક `BUILT_IN_ALIASES` લક્ષ્ય `REGISTRY` માં હાજર અને નિવૃત્ત-ID સ્નૅપશૉટમાં ગેરહાજર છે; `REGISTRY` માં હજી રહેલો દરેક નિવૃત્ત ID ફોરવર્ડ કરાયેલો છે અથવા `allowedRetiredInCatalog` માં સૂચિબદ્ધ છે; અને `DEFAULT_DEGRADATION_MAP` નો કોઈ સ્રોત કે લક્ષ્ય તે સ્નૅપશૉટમાં નિવૃત્ત તરીકે દેખાતું નથી. આ સાબિત કરતું નથી કે કોઈ મોડલ હાલમાં જીવંત અપસ્ટ્રીમ દ્વારા સેવા અપાય છે. ઑફલાઇન — `config/quality/model-lifecycle.json` સાથે તુલના કરે છે, જેને `npm run quality:refresh-model-lifecycle` વડે હાથથી રિફ્રેશ કરવામાં આવે છે (નેટવર્ક; CI સાથે જોડાયેલું નથી). `allowedRetiredInCatalog` એ બર્ન-ડાઉન રૅચેટ છે: માત્ર ટ્રૅકિંગ ઇશ્યૂ સાથે જ એન્ટ્રી ઉમેરો. | હા                                      |
-| `check:fetch-targets`             | ક્લાયન્ટ-સાઇડ `src/` માંનું દરેક `fetch("/api/...")` વાસ્તવિક `route.ts` પર રિઝોલ્વ થાય છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | હા                                      |
-| `check:deps`                      | રિપોઝિટરીના દરેક `package.json` માંની બધી `npm install`-યોગ્ય ડિપેન્ડન્સીઓ `dependency-allowlist.json` માં છે; નવી અનપિન કરેલી અથવા સ્લોપસ્ક્વૅટ કરેલી પૅકેજો ફ્લૅગ થાય છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | હા                                      |
-| `audit:deps`                      | `npm audit` (રૂટ + electron) — કોઈ ઉચ્ચ/ગંભીર ઍડવાઇઝરી નથી (osv `check:vuln-ratchet` સાથે ઓવરલૅપ થાય છે; રૅશનલાઇઝેશન બૅકલૉગ જુઓ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | હા                                      |
-| `check:lockfile`                  | `package-lock.json` અખંડિતતા — https રજિસ્ટ્રી, અખંડિતતા હૅશ, કોઈ હોસ્ટ ઓવરરાઇડ નહીં                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | હા                                      |
-| `check:licenses`                  | પ્રોડક્શન ડિપેન્ડન્સીઓ માટે SPDX લાઇસન્સની મંજૂર સૂચિ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | હા                                      |
-| `check:tracked-artifacts`         | કોઈ બિલ્ડ આર્ટિફેક્ટ્સ / કમિટ કરેલી `node_modules` સિમલિંક્સ નહીં (husky pre-commitમાં પણ ચાલે છે; pre-pushને ઇરાદાપૂર્વક હળવું રાખવામાં આવ્યું છે — #6716)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | હા                                      |
-| `check:ai-attribution`            | PR કમિટ્સ, શીર્ષક અથવા બોડીમાં કોઈ AI/બોટ `Co-Authored-By` ટ્રેલર અથવા AI-જનરેશન ફૂટર નહીં — કઠોર નિયમ #16 (`quality.yml`ના PR→`release/**` માટેના fast-gates લૂપમાં — ઇવેન્ટ પેલોડ વાંચે છે, PR ન હોય ત્યારે કંઈ કરતું નથી — અને PR→`main` માટે `ci.yml` lintમાં માત્ર-PR પગલું; તેમજ husky `commit-msg` હૂક; માનવીય સહ-લેખકોને મંજૂરી છે; #14436)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `check:vitest-exclusions`         | દરેક Vitest બાકાત રાખવાની નોંધમાં ટ્રૅકિંગ ઇશ્યૂ દર્શાવેલો હોવો જોઈએ અને તે `config/quality/vitest-exclusions.json`માં દેખાવી જોઈએ (#13204)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | હા                                      |
-| `check:file-size`                 | સોર્સ ફાઇલો (`src/`, `open-sse/`, `electron/`, `bin/`માં `.ts`/`.tsx`) `cap`ની મર્યાદામાં અને ટેસ્ટ ફાઇલો (`*.test.ts(x)`) `testCap`ની મર્યાદામાં રહેવી જોઈએ; `file-size-baseline.json`માં ફ્રીઝ કરેલી ફાઇલો (`frozen` / `testFrozen`) તેમના નોંધાયેલા કદથી વધુ વધવી જોઈએ નહીં                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | હા                                      |
-| `check:error-helper`              | એક્ઝિક્યુટર્સ/હેન્ડલર્સમાં ભૂલ પ્રતિસાદો `buildErrorBody()` / `sanitizeErrorMessage()` નો ઉપયોગ કરે છે (કડક નિયમ #12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | હા                                      |
-| `check:migration-numbering`       | માઇગ્રેશન SQL ફાઇલોને ક્રમિક રીતે નંબર આપવામાં આવ્યા છે, કોઈ ખાલી જગ્યા કે ડુપ્લિકેટ નથી                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | હા                                      |
-| `check:public-creds`              | `publicCreds.ts` ની બહાર કોઈ લિટરલ OAuth `client_id`/`client_secret` અથવા Firebase Web કી નથી (કડક નિયમ #11)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | હા                                      |
-| `check:db-rules`                  | `src/lib/db/` મોડ્યુલોની બહાર કોઈ રૉ SQL નથી; `localDb.ts` માંથી કોઈ બેરલ-ઇમ્પોર્ટ નથી (કડક નિયમો #2/#5)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | હા                                      |
-| `check:known-symbols`             | તેમના ડિસ્પેચ કોષ્ટકોમાં નોંધાયેલા પ્રોવાઇડર એક્ઝિક્યુટર્સ, રાઉટિંગ વ્યૂહરચનાઓ અને ટ્રાન્સલેટર્સ ડિસ્ક પરની ફાઇલો સાથે મેળ ખાય છે — કોઈ અનાથ અથવા અઘોષિત સિમ્બોલ નથી                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | હા                                      |
-| `check:route-guard-membership`    | ચાઇલ્ડ પ્રોસેસ શરૂ કરતો દરેક રૂટ `isLocalOnlyPath()` દ્વારા વર્ગીકૃત થયેલો છે (કડક નિયમો #15/#17)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | હા                                      |
-| `check:test-discovery`            | રેપોમાંની દરેક `*.test.ts` / `*.spec.ts` ફાઇલ ઓછામાં ઓછા એક ટેસ્ટ રનર દ્વારા એકત્રિત કરવામાં આવે છે (રૅચેટ: `test-discovery-baseline.json` માં અનાથ ફાઇલોની યાદી માત્ર નાની થઈ શકે છે)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | હા                                      |
-| `check:test-tla-order`            | `tests/unit` હેઠળની કોઈપણ `node:test` ફાઇલ ટેસ્ટ રજિસ્ટર કર્યા પછી ટોપ-લેવલ `await` સુધી પહોંચીને ત્યારબાદ વધુ ટેસ્ટ રજિસ્ટર કરતી નથી (#18045; રૅચેટ: `test-tla-order-allowlist.json` માત્ર નાની થઈ શકે છે)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | હા                                      |
-| `check:agent-skills-sync`         | જનરેટ કરેલી એજન્ટ-સ્કિલ્સ આર્ટિફેક્ટ્સ તેમના સ્રોત કૅટલૉગ સાથે મેળ ખાય છે (કોઈ વિસંગતિ નથી)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `check:provider-asset-provenance` | પ્રોવાઇડરના લોગો/એસેટ્સ માટે નોંધાયેલ ઉદ્ભવની એન્ટ્રી હોય છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `lint:json`                       | JSON કૉન્ફિગ ફાઇલો પાર્સ થાય છે અને રેપોના લિન્ટ નિયમોનું પાલન કરે છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `typecheck:core`                  | ભૂલો વિના TypeScript કમ્પાઇલેશન (માત્ર સલાહરૂપ ચેતવણીઓ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | હા                                      |
-| `typecheck:noimplicit:core`       | કડક `noImplicitAny` — ભવિષ્યલક્ષી; પહેલાથી અસ્તિત્વમાં રહેલી ઘણી કૉલ સાઇટ્સને હજી પણ ઍનોટેશન્સની જરૂર છે                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | **સલાહરૂપ** (`continue-on-error: true`) |
-| `check:dashboard-typecheck`       | `src/app/(dashboard)/**` સુધી મર્યાદિત `tsc` (#7033) — `typecheck:core`ની પસંદ કરેલી 27-ફાઇલની મંજૂરી-સૂચિમાં કોઈ dashboard TSX સામેલ નથી અને `next build` પણ ક્યારેય તેનું type-check કરતું નથી (`next.config.mjs`માં `ignoreBuildErrors: true` સેટ છે), તેથી ત્યાંના અનાથ-ઓળખકર્તા રિગ્રેશન્સ (#6625/#6909) CI માટે અદૃશ્ય હતા. સ્થિર કરેલા પ્રતિ-ફાઇલ/પ્રતિ-TS-code ગણતરી બેઝલાઇન (`config/quality/dashboard-typecheck-baseline.json`, `check:known-symbols` જેવી જ stale-enforcement પદ્ધતિ) સામે તફાવત તપાસે છે — બેઝલાઇન કરેલી ગણતરીથી વધુ માત્ર નવી ભૂલો જ ગેટને નિષ્ફળ બનાવે છે; અગાઉથી અસ્તિત્વમાં રહેલી ભૂલ સુધારાય ત્યારે `--update` વડે રૅચેટ ઘટાડો.                                                                                                                                                                                                          | હા                                      |
+| સ્ક્રિપ્ટ                      | શું માન્ય કરે છે                                                                                                                                           | અવરોધક                       |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `check:docs-all`               | નીચેના 6 સબ-ગેટ્સને ક્રમશઃ ચલાવતો મેટા-ગેટ                                                                                                                 | હા                           |
+| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt સંસ્કરણની સુસંગતતા                                                                                                           | હા                           |
+| ↳ `check:docs-counts`          | ગદ્યમાંની ગણતરીઓ (પ્રદાતાઓની સંખ્યા, માઇગ્રેશનોની સંખ્યા વગેરે) વાસ્તવિક ગણતરીઓની રૅચેટ વિન્ડોની અંદર હોય છે                                               | હા                           |
+| ↳ `check:env-doc-sync`         | `.env.example`માંનો દરેક env var દસ્તાવેજોના કોષ્ટકમાં દસ્તાવેજીકૃત છે અને તેનાથી વિપરીત પણ                                                                | હા                           |
+| ↳ `check:deprecated-versions`  | દસ્તાવેજોમાં કોઈ અપ્રચલિત સંસ્કરણ સ્ટ્રિંગ્સ નથી                                                                                                           | હા                           |
+| ↳ `check:doc-links`            | દસ્તાવેજોમાંની આંતરિક markdown લિંક્સ વાસ્તવિક ફાઇલોને નિર્દેશ કરે છે (`[text]`/`(path)` સ્વરૂપ)                                                           | હા                           |
+| ↳ `check:fabricated-docs`      | દસ્તાવેજોમાં ઉલ્લેખિત રૂટ્સ, env vars, CLI કમાન્ડ્સ, હૂક નામો અને ફાઇલ પાથ કોડબેઝમાં અસ્તિત્વ ધરાવે છે. `--strict` દ્વારા હાર્ડ ગેટ; ફ્લૅગ વિના સોફ્ટ-ફેલ. | હા (CIમાં `--strict` દ્વારા) |
+| `check:cli-i18n`               | CLI કમાન્ડ સ્ટ્રિંગ્સ બધી i18n લોકેલ ફાઇલોમાં હાજર છે                                                                                                      | હા                           |
+| `check:openapi-coverage`       | OpenAPI સ્પેક વાસ્તવિક રૂટ્સના ઓછામાં ઓછા રૅચેટેડ ન્યૂનતમ સ્તરને આવરી લે છે                                                                                | હા                           |
+| `check:openapi-security-tiers` | `openapi.yaml`માંની સુરક્ષા સ્તરની ઍનોટેશન્સ `routeGuard.ts` વર્ગીકરણો સાથે સુસંગત છે                                                                      | **સલાહરૂપ**                  |
+| `check:openapi-routes`         | `openapi.yaml`માંનો દરેક પાથ વાસ્તવિક `route.ts`ને નિર્દેશ કરે છે (કલ્પિત માહિતી વિરોધી)                                                                   | હા                           |
+| `check:docs-symbols`           | `docs/**/*.md`માંનો દરેક `/api/...` સંદર્ભ વાસ્તવિક `route.ts`ને નિર્દેશ કરે છે (કલ્પિત માહિતી વિરોધી)                                                     | હા                           |
+| `i18n translation drift`       | i18n લોકેલ ફાઇલોમાં અનુવાદ ન થયેલી કીઝ — માત્ર ચેતવણી                                                                                                      | **સલાહરૂપ**                  |
 
-### કાર્ય: `quality-gate`
+### જૉબ: `i18n-ui-coverage`
 
-`test-coverage` પછી ચાલે છે. નિષ્ફળતા પર મર્જને અવરોધે છે.
+| સ્ક્રિપ્ટ                         | શું માન્ય કરે છે                                                                                                                                                                  | અવરોધક      |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `check-ui-keys-coverage` (ઇનલાઇન) | UI i18n કી કવરેજ ≥ 65% છે                                                                                                                                                         | હા          |
+| `check-ui-value-drift` (ઇનલાઇન)   | ફરી લખાયેલું અંગ્રેજી **મૂલ્ય** પાછળ કોઈ જૂનો અનુવાદ છોડતું નથી                                                                                                                   | હા          |
+| `check-new-key-coverage` (ઇનલાઇન) | **નવી** અંગ્રેજી કીનો દરેક locale માં અનુવાદ થયેલો છે — `__MISSING__:` માર્કર નકારવામાં આવે છે                                                                                    | હા          |
+| `check-translation-ratio`         | locale દીઠ વાસ્તવિક-અનુવાદનો ગુણોત્તર (અંગ્રેજી સમાન / placeholder / allowlist બહારની ગુમ એન્ટ્રીઓ) `config/quality/i18n-translation-baseline.json` + slack કરતાં વધુ ન હોવો જોઈએ | **સલાહરૂપ** |
 
-| સ્ક્રિપ્ટ                    | શું માન્ય કરે છે                                                                                                                                                                  | અવરોધક                 |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `quality:collect`            | `quality-metrics.json` ઉત્પન્ન કરે છે (ESLint ચેતવણીઓની સંખ્યા, મર્જ કરેલા shard રિપોર્ટમાંથી કવરેજ)                                                                              | હા (રૅચેટનું upstream) |
-| `quality:ratchet`            | `quality-baseline.json`માંનો દરેક મેટ્રિક પાછો પડ્યો નથી (ESLint ચેતવણીઓ ≤ બેઝલાઇન; કવરેજ ≥ બેઝલાઇન)                                                                              | હા                     |
-| `check:duplication`          | કોડ ડુપ્લિકેશન (jscpd@4) `quality-baseline.json`માંની બેઝલાઇનથી વધુ નથી                                                                                                           | હા                     |
-| `check:complexity`           | ફાઇલ-સ્તરની cyclomatic complexity મર્યાદાથી વધુ નથી (મુખ્ય ESLint `complexity` + `max-lines-per-function`)                                                                        | હા                     |
-| `check:cognitive-complexity` | Cognitive complexity રૅચેટ (`eslint-plugin-sonarjs`) — અલગ ESLint પાસ; CI બંનેને એક જ `check:complexity-ratchets` પગલા તરીકે મર્જ કરીને ચલાવે છે                                  | હા                     |
-| `check:dead-code`            | વપરાશમાં ન લેવાતા exports / files રૅચેટ (knip) બેઝલાઇનની સરખામણીએ પાછો પડતો નથી                                                                                                   | હા                     |
-| `check:compression-budget`   | કમ્પ્રેશન બેન્ચમાર્ક બજેટ — પ્રતિ-engine token-savingsની ન્યૂનતમ મર્યાદા પાછી પડવી જોઈએ નહીં                                                                                      | હા                     |
-| `check:type-coverage`        | ટકાવારી-typed રૅચેટ (`type-coverage`) પાછો પડતો નથી; મોટાભાગે `typecheck:noimplicit:core`ને આવરી લે છે                                                                            | હા                     |
-| `check:codeql-ratchet`       | ખુલ્લી CodeQL ચેતવણીઓની સંખ્યા પાછી પડતી નથી (`gh api` દ્વારા વાંચે છે; token વિના સુરક્ષિત રીતે skip કરે છે) — refresh આવર્તન અને મેન્યુઅલ trigger માટે: નીચે "CodeQL રૅચેટ" જુઓ | હા                     |
+`fetch-depth: 0` જરૂરી છે — value-drift gate, merge base સામે `en.json` નો diff કરે છે.
 
-### કાર્ય: `quality-extended`
+#### `check-ui-value-drift` — જૂના-અનુવાદનું gate
 
-આખું કાર્ય સલાહાત્મક છે (`continue-on-error: true`). npm-આધારિત રૅચેટ્સ
-વાસ્તવમાં ચાલે છે; બાહ્ય scanners `gh release download` દ્વારા ઇન્સ્ટોલ થાય છે અને
-binary હજી પણ ગેરહાજર હોય ત્યારે પોતે skip થાય છે (exit 0).
+આ તે એક i18n regression પકડે છે જેને અન્ય gates માળખાકીય રીતે જોઈ શકતા નથી: કોઈ અંગ્રેજી મૂલ્ય
+ફરી લખવામાં આવે અને _અગાઉના_ અંગ્રેજી પરથી બનાવેલા અનુવાદો યથાવત્ રહી જાય, જેથી
+બિન-અંગ્રેજી વપરાશકર્તાઓ આત્મવિશ્વાસપૂર્વક લખાયેલું, પરંતુ હવે ખોટું લખાણ વાંચતા રહે.
 
-| સ્ક્રિપ્ટ                | શું માન્ય કરે છે                                                                                                                                                                                           | અવરોધક                                      |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `check:circular-deps`    | કોઈ circular dependencies નથી (dpdm)                                                                                                                                                                       | **સલાહાત્મક**                               |
-| `check:bundle-size`      | Bundleનું કદ મર્યાદાથી વધુ નથી                                                                                                                                                                             | **સલાહાત્મક**                               |
-| `check:secrets`          | Secret scanning (gitleaks) — binary ગેરહાજર હોય તો skip કરે છે                                                                                                                                             | **સલાહાત્મક**                               |
-| `check:vuln-ratchet`     | Dependency vulnerabilities (osv-scanner) પાછી પડતી નથી — binary ગેરહાજર હોય તો skip કરે છે                                                                                                                 | **સલાહાત્મક**                               |
-| `check:workflows`        | Workflow lint (actionlint + zizmor); ગેરહાજર/ખામીયુક્ત scanners, અમાન્ય reports અથવા ગેરહાજર રૅચેટ બેઝલાઇન INCOMPLETE તરીકે નિષ્ફળ થાય છે. માન્ય તારણો પસંદ કરેલી strict/advisory/ratchet નીતિને અનુસરે છે | અમલીકરણ જરૂરી; CIમાં zizmor રૅચેટ અવરોધક છે |
-| `check:openapi-breaking` | મૂળ branchની સરખામણીએ જાહેર API contract (`openapi.yaml`)માં breaking changes (oasdiff) — `openapiBreaking=N` ઉત્પન્ન કરે છે; oasdiff ગેરહાજર હોય અથવા મૂળ spec resolve ન થઈ શકે તો skip કરે છે            | **સલાહાત્મક**                               |
+આ ખરેખર રિલીઝ થયું હતું. Antigravity login helper ઉમેરાયો ત્યારે (#5203)
+`oauthModal.googleOAuthWarning` ફરી લખવામાં આવ્યું હતું; **43 માંથી 39 locales** માં operators ને "સંપૂર્ણ
+URL કૉપિ કરો અને તેને નીચે પેસ્ટ કરો" કહેતું લખાણ યથાવત્ રહ્યું — એવી flow જે તે provider માટે પૂર્ણ થઈ શકતી નથી. આ બાબત
+#8463 સુધી ધ્યાનમાં ન આવી કારણ કે:
 
-### કાર્ય: `docs-sync-strict`
+- `sync-ui-keys` ફક્ત **ગેરહાજર** keys જ backfill કરે છે, **જૂની** થયેલી keys ક્યારેય નહીં;
+- `check-ui-keys-coverage` key ની _હાજરી_ ગણે છે, તેથી જૂનો અનુવાદ પણ covered તરીકે ગણાય છે;
+- `check-translation-drift` એ `docs/i18n/<locale>/**.md` documentation mirrors ટ્રૅક કરે છે —
+  તે ક્યારેય `src/i18n/messages/*.json` વાંચતું નથી. 2026-09 re-sync પછીથી job `docs-sync-strict` માં અવરોધક:
+  મુખ્ય doc સંપાદિત કરો → `npm run i18n:run -- --files=<doc>` (section-level, ઓછા ખર્ચાળ).
 
-`main` માટેની દરેક PR પર ચાલે છે. નિષ્ફળતા પર મર્જને અવરોધે છે.
+**Diff-aware, baseline-backed નહીં.** તે merge base પરના `en.json` ની working tree સાથે સરખામણી કરે છે;
+જે દરેક key નું અંગ્રેજી મૂલ્ય બદલાયું હોય, તેમાં કોઈ locale હજુ પણ અસ્પર્શિત અનુવાદ ધરાવતું હોય
+તો તે જૂનું ગણાય છે. આ ઇરાદાપૂર્વક **પહેલેથી અસ્તિત્વમાં રહેલું દેવું સ્થિર કરે છે** — લાંબા સમયથી રહેલો અનુવાદ
+કયા જૂના અંગ્રેજી લખાણ પરથી આવ્યો હતો તે diff બતાવી શકતું નથી, તેથી gate માત્ર વર્તમાન ફેરફાર જે સ્પર્શે છે
+તેનું જ મૂલ્યાંકન કરે છે. વિકલ્પ (દર-key hash baseline) માટે લગભગ 600 KB ની generated file જોઈએ,
+જે હાલના સૌથી મોટા baseline કરતાં 3× મોટી હોય અને દરેક i18n PR પર બદલાતી રહે.
 
-| સ્ક્રિપ્ટ                      | શું ચકાસે છે                                                                                                                                                 | અવરોધક                        |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
-| `check:docs-all`               | નીચેના 6 ઉપ-ગેટને ક્રમશઃ ચલાવતો મેટા-ગેટ                                                                                                                     | હા                            |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt સંસ્કરણની સુસંગતતા                                                                                                             | હા                            |
-| ↳ `check:docs-counts`          | ગદ્યમાં દર્શાવેલી સંખ્યાઓ (પ્રદાતાઓની સંખ્યા, માઇગ્રેશનની સંખ્યા વગેરે) વાસ્તવિક સંખ્યાઓની રૅચેટ વિન્ડોની અંદર છે                                            | હા                            |
-| ↳ `check:env-doc-sync`         | `.env.example` માંનો દરેક env var દસ્તાવેજોના કોષ્ટકમાં દસ્તાવેજીકૃત છે અને તેનાથી ઊલટું પણ સાચું છે                                                         | હા                            |
-| ↳ `check:deprecated-versions`  | દસ્તાવેજોમાં કોઈ અવમૂલ્યિત સંસ્કરણ સ્ટ્રિંગ નથી                                                                                                              | હા                            |
-| ↳ `check:doc-links`            | દસ્તાવેજોમાંની આંતરિક markdown લિંક્સ વાસ્તવિક ફાઇલો તરફ નિર્દેશ કરે છે (`[text]`/`(path)` સ્વરૂપ)                                                           | હા                            |
-| ↳ `check:fabricated-docs`      | દસ્તાવેજોમાં ઉલ્લેખિત રૂટ્સ, env vars, CLI કમાન્ડ્સ, હૂકનાં નામ અને ફાઇલ પાથ કોડબેઝમાં અસ્તિત્વ ધરાવે છે. `--strict` દ્વારા હાર્ડ ગેટ; ફ્લૅગ વિના સોફ્ટ-ફેલ. | હા (CI માં `--strict` દ્વારા) |
-| `check:cli-i18n`               | CLI કમાન્ડ સ્ટ્રિંગ્સ બધી i18n લોકેલ ફાઇલોમાં હાજર છે                                                                                                        | હા                            |
-| `check:openapi-coverage`       | OpenAPI સ્પેકમાં વાસ્તવિક રૂટ્સની ઓછામાં ઓછી રૅચેટ કરેલી ન્યૂનતમ સંખ્યા આવરી લેવાય છે                                                                        | હા                            |
-| `check:openapi-security-tiers` | `openapi.yaml` માંની સુરક્ષા સ્તરની ઍનોટેશન્સ `routeGuard.ts` ના વર્ગીકરણો સાથે સુસંગત છે                                                                    | **સલાહરૂપ**                   |
-| `check:openapi-routes`         | `openapi.yaml` માંનો દરેક પાથ વાસ્તવિક `route.ts` તરફ નિર્દેશ કરે છે (ભ્રામક માહિતી-વિરોધી)                                                                  | હા                            |
-| `check:docs-symbols`           | `docs/**/*.md` માંનો દરેક `/api/...` સંદર્ભ વાસ્તવિક `route.ts` તરફ નિર્દેશ કરે છે (ભ્રામક માહિતી-વિરોધી)                                                    | હા                            |
-| `i18n translation drift`       | i18n લોકેલ ફાઇલોમાં અનુવાદ ન થયેલી કીઝ — માત્ર ચેતવણી                                                                                                        | **સલાહરૂપ**                   |
-
-### જોબ: `i18n-ui-coverage`
-
-| સ્ક્રિપ્ટ                         | શું ચકાસે છે                                                                                                                                                                         | અવરોધક      |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
-| `check-ui-keys-coverage` (ઇનલાઇન) | UI i18n કી કવરેજ ≥ 65% છે                                                                                                                                                            | હા          |
-| `check-ui-value-drift` (ઇનલાઇન)   | ફરી લખાયેલું અંગ્રેજી **મૂલ્ય** કોઈ જૂનો અનુવાદ પાછળ છોડતું નથી                                                                                                                      | હા          |
-| `check-new-key-coverage` (ઇનલાઇન) | એક **નવી** અંગ્રેજી કીનો દરેક લોકેલમાં અનુવાદ થયેલો છે — `__MISSING__:` માર્કર નકારવામાં આવે છે                                                                                      | હા          |
-| `check-translation-ratio`         | લોકેલ દીઠ વાસ્તવિક અનુવાદનો ગુણોત્તર (અંગ્રેજી સમાન / પ્લેસહોલ્ડર / અનુમતિસૂચિની બહારની ગેરહાજર લીફ્સ) `config/quality/i18n-translation-baseline.json` + છૂટ કરતાં વધારે ન હોવો જોઈએ | **સલાહરૂપ** |
-
-`fetch-depth: 0` જરૂરી છે — વેલ્યૂ-ડ્રિફ્ટ ગેટ મર્જ બેઝ સામે `en.json` નો તફાવત તપાસે છે.
-
-#### `check-ui-value-drift` — જૂના અનુવાદનો ગેટ
-
-આ ગેટ એવી એક i18n રિગ્રેશન પકડે છે જેને અન્ય ગેટ માળખાકીય રીતે જોઈ શકતા નથી: કોઈ અંગ્રેજી મૂલ્ય
-ફરી લખાય છે અને _અગાઉના_ અંગ્રેજીમાંથી બનાવેલા અનુવાદો પાછળ રહી જાય છે, જેથી
-બિન-અંગ્રેજી વપરાશકર્તાઓ આત્મવિશ્વાસપૂર્વક લખાયેલું, પરંતુ હવે ખોટું લખાણ વાંચવાનું ચાલુ રાખે છે.
-
-આ સમસ્યા ખરેખર રિલીઝ થઈ હતી. Antigravity લૉગિન હેલ્પર ઉમેરાયો ત્યારે (#5203)
-`oauthModal.googleOAuthWarning` ફરી લખવામાં આવ્યું હતું; **43 માંથી 39 લોકેલ્સમાં** ઓપરેટરોને "સંપૂર્ણ
-URL કૉપિ કરીને નીચે પેસ્ટ કરો" એવું કહેતો ટેક્સ્ટ યથાવત્ રહ્યો — એવી પ્રક્રિયા જે તે પ્રદાતા માટે પૂર્ણ થઈ જ શકતી નથી. આ બાબત
-#8463 સુધી ધ્યાનમાં આવી નહોતી, કારણ કે:
-
-- `sync-ui-keys` ફક્ત **ગેરહાજર** કીઝને જ બૅકફિલ કરે છે, **જૂની** કીઝને ક્યારેય નહીં;
-- `check-ui-keys-coverage` કીની _હાજરી_ ગણે છે, તેથી જૂના અનુવાદને આવરી લેવાયેલો ગણવામાં આવે છે;
-- `check-translation-drift` `docs/i18n/<locale>/**.md` દસ્તાવેજીકરણ મિરર્સને ટ્રૅક કરે છે —
-  તે ક્યારેય `src/i18n/messages/*.json` વાંચતું નથી. 2026-09 રિ-સિંકથી જોબ `docs-sync-strict` માં અવરોધક:
-  મુખ્ય દસ્તાવેજ સંપાદિત કરો → `npm run i18n:run -- --files=<doc>` (વિભાગ-સ્તરનું, સસ્તું).
-
-**ડિફ-અવેર, બેઝલાઇન-બેક્ડ નહીં.** તે મર્જ બેઝ પરના `en.json`ની વર્કિંગ ટ્રી સાથે
-સરખામણી કરે છે; જે દરેક કીનું અંગ્રેજી મૂલ્ય બદલાયું હોય, તેના માટે હજુ પણ
-અપરિવર્તિત અનુવાદ ધરાવતી કોઈપણ લોકેલ જૂની ગણાય છે. આ જાણીજોઈને **પહેલેથી અસ્તિત્વમાં રહેલું ઋણ સ્થિર રાખે છે** — ડિફ
-એ જાહેર કરી શકતો નથી કે લાંબા સમયથી અસ્તિત્વમાં રહેલો અનુવાદ કયા જૂના અંગ્રેજી લખાણમાંથી આવ્યો હતો, તેથી ગેટ
-માત્ર વર્તમાન ફેરફાર જેને સ્પર્શે છે તેનું જ મૂલ્યાંકન કરે છે. વિકલ્પ (પ્રતિ-કી હેશ બેઝલાઇન) માટે
-લગભગ 600 KBની જનરેટ થયેલી ફાઇલની જરૂર પડશે, જે અસ્તિત્વમાં રહેલી સૌથી મોટી બેઝલાઇન કરતાં 3× મોટી હશે અને દરેક i18n PR પર બદલાતી રહેશે.
-
-તેને સંતોષવાની બે રીતો છે:
+તેને સંતોષવાના બે રસ્તા છે:
 
 1. અસરગ્રસ્ત અનુવાદો અપડેટ કરો, અથવા
-2. તેમને `__MISSING__:<new english>` પર સેટ કરો — ત્યારબાદ રનટાઇમ સુધારેલું અંગ્રેજી
-   (`src/i18n/request.ts::deepMergeFallback`, #7258) પ્રદાન કરે છે અને કી અનુવાદ માટે કતારમાં ઉમેરાય છે.
+2. તેમને `__MISSING__:<new english>` પર સેટ કરો — ત્યારબાદ runtime સુધારેલું અંગ્રેજી આપે છે
+   (`src/i18n/request.ts::deepMergeFallback`, #7258) અને key અનુવાદ માટે queue થાય છે.
 
-જો સ્ટ્રિંગનો **અર્થ** બદલાયો હોય, તો **કીનું નામ બદલવાનું** પસંદ કરો: નવી કી
-જૂનો અનુવાદ વારસામાં મેળવી શકતી નથી. #8463માં આ જ પેટર્નનો ઉપયોગ થયો હતો.
+જો string નો **અર્થ** બદલાયો હોય, તો **key નું નામ બદલવાનું** પસંદ કરો: નવી key જૂનો અનુવાદ વારસામાં મેળવી શકતી નથી.
+#8463 માં આ જ pattern વપરાઈ હતી.
 
 ```bash
 npm run i18n:check-value-drift          # કડક (CI જે ચલાવે છે)
@@ -236,50 +260,50 @@ npm run i18n:check-value-drift:warn     # ફક્ત અહેવાલ
 BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 ```
 
-જ્યારે બેઝ કેટલોગ વાંચી શકાતો નથી (બેઝ ref વિનાનો શેલો
-ક્લોન), ત્યારે `SKIP reason=base-unresolved` સાથે 0 એક્ઝિટ કરે છે, જે `check-openapi-breaking`ને પ્રતિબિંબિત કરે છે.
+જ્યારે base catalog વાંચી ન શકાય ત્યારે `SKIP reason=base-unresolved` સાથે 0 exit કરે છે (base ref વિનાનો shallow
+clone), જે `check-openapi-breaking` ને અનુસરે છે.
 
-### જોબ: `i18n`
+### Job: `i18n`
 
-સંપૂર્ણ i18n માન્યતા મેટ્રિક્સ (દરેક લોકેલ માટે એક જોબ). આખી જોબ સલાહરૂપ છે.
+સંપૂર્ણ i18n validation matrix (locale દીઠ એક job). આખો job સલાહરૂપ છે.
 
-| સ્ક્રિપ્ટ                       | શું માન્ય કરે છે                | અવરોધક                                             |
-| ------------------------------- | ------------------------------- | -------------------------------------------------- |
-| `validate_translation.py quick` | દરેક લોકેલ દીઠ અનુવાદની પૂર્ણતા | **સલાહરૂપ** (આખી જોબ પર `continue-on-error: true`) |
+| સ્ક્રિપ્ટ                       | શું માન્ય કરે છે            | અવરોધક                                               |
+| ------------------------------- | --------------------------- | ---------------------------------------------------- |
+| `validate_translation.py quick` | locale દીઠ અનુવાદની પૂર્ણતા | **સલાહરૂપ** (સમગ્ર job પર `continue-on-error: true`) |
 
-### જોબ: `pr-test-policy`
+### Job: `pr-test-policy`
 
-ફક્ત પુલ રિક્વેસ્ટ્સ પર ચાલે છે.
+માત્ર pull requests પર ચાલે છે.
 
-| સ્ક્રિપ્ટ              | શું માન્ય કરે છે                                                                                                                       | અવરોધક |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `check:pr-test-policy` | `src/`, `open-sse/`, `electron/`, અથવા `bin/`માં પ્રોડક્શન કોડ બદલતા PRમાં પરીક્ષણો સામેલ અથવા અપડેટ થયેલા હોવા જરૂરી છે (કડક નિયમ #8) | હા     |
-| `check:test-masking`   | બદલાયેલી ટેસ્ટ ફાઇલો કુલ assert સંખ્યા ઘટાડતી નથી અથવા `assert.ok(true)` જેવી સ્વયંસિદ્ધ અભિવ્યક્તિઓ ઉમેરતી નથી                        | હા     |
-| `check:pr-evidence`    | PR બોડી ફેરફાર માટેના ટેસ્ટ/VPS પુરાવાનો ઉલ્લેખ કરે છે (PRના ગદ્યમાં શોધ કરીને કડક નિયમ #18ને યાંત્રિક બનાવે છે — નાજુક, Backlog જુઓ)  | હા     |
+| સ્ક્રિપ્ટ              | શું માન્ય કરે છે                                                                                                                     | અવરોધક |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| `check:pr-test-policy` | `src/`, `open-sse/`, `electron/`, અથવા `bin/` માં production code બદલતા PRs એ tests સામેલ અથવા અપડેટ કરવા જરૂરી છે (Hard Rule #8)    | હા     |
+| `check:test-masking`   | બદલાયેલી test files કુલ assert count ઘટાડતી નથી અથવા `assert.ok(true)` જેવી tautologies ઉમેરતી નથી                                   | હા     |
+| `check:pr-evidence`    | PR body ફેરફાર માટે test/VPS evidence દર્શાવે છે (PR prose ને grep કરીને Hard Rule #18 ને યાંત્રિક બનાવે છે — નાજુક છે, Backlog જુઓ) | હા     |
 
-### જોબ: `test-vitest`
+### Job: `test-vitest`
 
-`build` પછી ચાલે છે. નિષ્ફળતા પર મર્જને અવરોધે છે.
+`build` પછી ચાલે છે. નિષ્ફળતા આવે તો merge અવરોધે છે.
 
-| સ્યુટ            | શું માન્ય કરે છે                                   | અવરોધક                                                                                                                                        |
-| ---------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `test:vitest`    | MCP સર્વર (110 ટૂલ્સ), autoCombo, કૅશ — vitest રનર | હા                                                                                                                                            |
-| `test:vitest:ui` | UI કમ્પોનન્ટ પરીક્ષણો — vitest રનર                 | **અવરોધક** — પહેલેથી અસ્તિત્વમાં રહેલી નિષ્ફળતાઓ `vitest.config.ts`માં સ્પષ્ટ રીતે બાકાત રાખવામાં આવી છે; નવી નિષ્ફળતાઓ જોબને નિષ્ફળ બનાવે છે |
+| સ્યુટ            | શું માન્ય કરે છે                                   | અવરોધક                                                                                                                           |
+| ---------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `test:vitest`    | MCP સર્વર (110 ટૂલ્સ), autoCombo, કૅશ — vitest રનર | હા                                                                                                                               |
+| `test:vitest:ui` | UI કમ્પોનન્ટ પરીક્ષણો — vitest રનર                 | **અવરોધક** — પહેલેથી હાજર નિષ્ફળતાઓને `vitest.config.ts`માં સ્પષ્ટપણે બાકાત રાખવામાં આવી છે; નવી નિષ્ફળતાઓ જોબને નિષ્ફળ બનાવે છે |
 
 ### રાત્રિકાલીન વર્કફ્લો (નિર્ધારિત, સલાહરૂપ)
 
 આ cron શેડ્યૂલ પર (અને `workflow_dispatch` દ્વારા) ચાલે છે, PR પર ક્યારેય નહીં. બધા સલાહરૂપ છે.
 
-| વર્કફ્લો               | શું માન્ય કરે છે                                                                                                                                                    | અવરોધક      |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `nightly-property`     | રેન્ડમ સીડ + ઊંચી રન સંખ્યા સાથે fast-check પ્રોપર્ટી ટેસ્ટ્સ                                                                                                       | **સલાહરૂપ** |
-| `nightly-resilience`   | હીપ-ગ્રોથ ગેટ, કેઓસ ફૉલ્ટ-ઇન્જેક્શન, k6 લોડ/સોક                                                                                                                     | **સલાહરૂપ** |
-| `nightly-llm-security` | promptfoo ઇન્જેક્શન ગાર્ડ (બ્લોક મોડ) + garak પ્રોબ્સ (પ્રોવાઇડર સિક્રેટ વિના છોડવામાં આવે છે)                                                                      | **સલાહરૂપ** |
-| `nightly-schemathesis` | `docs/openapi.yaml`નો ઉપયોગ કરીને લાઇવ OmniRoute સામે OpenAPI કોન્ટ્રાક્ટ ફઝિંગ (schemathesis) — સ્પેકના ઉલ્લંઘનો / હેન્ડલ ન થયેલા 500s ઉજાગર કરે છે (તબક્કો 8 B.4) | **સલાહરૂપ** |
-| `nightly-mutation`     | ઝડપી યુનિટ લેન પર Stryker મ્યુટેશન-ટેસ્ટિંગ સ્કોર — બચી ગયેલા મ્યુટન્ટ્સ નબળા asserts ઉજાગર કરે છે                                                                  | **સલાહરૂપ** |
-| `nightly-compat`       | સમર્થિત `engines.node` રેન્જમાં Node એન્જિન સુસંગતતા મેટ્રિક્સ                                                                                                      | **સલાહરૂપ** |
+| વર્કફ્લો               | શું માન્ય કરે છે                                                                                                                                                         | અવરોધક      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `nightly-property`     | રૅન્ડમ સીડ અને ઉચ્ચ રન સંખ્યા સાથેના fast-check પ્રોપર્ટી પરીક્ષણો                                                                                                       | **સલાહરૂપ** |
+| `nightly-resilience`   | હીપ-વૃદ્ધિ ગેટ, કેઓસ ફૉલ્ટ-ઇન્જેક્શન, k6 લોડ/સોક                                                                                                                         | **સલાહરૂપ** |
+| `nightly-llm-security` | promptfoo ઇન્જેક્શન ગાર્ડ (બ્લૉક મોડ) + garak પ્રોબ્સ (પ્રોવાઇડર સિક્રેટ વિના છોડવામાં આવે છે)                                                                           | **સલાહરૂપ** |
+| `nightly-schemathesis` | `docs/openapi.yaml`નો ઉપયોગ કરીને લાઇવ OmniRoute સામે OpenAPI કૉન્ટ્રૅક્ટ ફઝિંગ (schemathesis) — સ્પેકનાં ઉલ્લંઘનો / હેન્ડલ ન થયેલી 500 ભૂલો ઉજાગર કરે છે (તબક્કો 8 B.4) | **સલાહરૂપ** |
+| `nightly-mutation`     | ઝડપી યુનિટ લેન પર Stryker મ્યુટેશન-ટેસ્ટિંગ સ્કોર — ટકી રહેલા મ્યુટન્ટ્સ નબળા અસર્ટ્સ ઉજાગર કરે છે                                                                       | **સલાહરૂપ** |
+| `nightly-compat`       | સમર્થિત `engines.node` રેન્જમાં Node એન્જિન સુસંગતતા મેટ્રિક્સ                                                                                                           | **સલાહરૂપ** |
 
-પર્ફોર્મન્સ બેઝલાઇન્સ (હીપ, TTFB, બિલ્ડ સમય) રેકોર્ડ કરવામાં આવે છે, ગેટ કરવામાં આવતી નથી: [`PERF_BASELINE.md`](../ops/PERF_BASELINE.md) (`npm run perf:lts-baseline`) જુઓ.
+પ્રદર્શન બેઝલાઇન (હીપ, TTFB, બિલ્ડ સમય) નોંધવામાં આવે છે, પરંતુ તેને ગેટ કરવામાં આવતી નથી: [`PERF_BASELINE.md`](../ops/PERF_BASELINE.md) (`npm run perf:lts-baseline`) જુઓ.
 
 ---
 
@@ -498,38 +522,37 @@ PR બ્રાન્ચને વારંવાર ફરીથી બિલ�
 જૉબ ક્યારેય `release/*` પર push કરતી નથી — કોઈ માનવી PR મર્જ કરે છે, તેથી ખોટું માપન
 સમીક્ષા વિના સામેલ થઈ શકતું નથી.
 
-## મંજૂર-યાદી નીતિ
+## અનુમતિસૂચિ નીતિ
 
-પહેલેથી અસ્તિત્વમાં રહેલા ઉલ્લંઘનોને કારણે નિષ્ફળ ન થઈ શકે તેવો દરેક ગેટ સ્થિર મંજૂર-યાદીનો ઉપયોગ કરે છે
+પહેલેથી અસ્તિત્વમાં રહેલા ઉલ્લંઘનોને કારણે નિષ્ફળ ન થઈ શકે તેવો દરેક ગેટ સ્થિર કરેલી અનુમતિસૂચિનો ઉપયોગ કરે છે
 (દા.ત., `KNOWN_STALE_DOC_REFS`, `KNOWN_MISSING`, `KNOWN_RAW_SQL`). નીતિ આ છે:
 
-**મૂળ કારણ સુધારો; મંજૂર-યાદીનો ઉપયોગ માત્ર ત્યારે જ કરો જ્યારે ઉલ્લંઘન પહેલેથી અસ્તિત્વમાં હોય અને
+**મૂળ કારણને સુધારો; અનુમતિસૂચિનો ઉપયોગ ફક્ત ત્યારે કરો જ્યારે ઉલ્લંઘન પહેલેથી અસ્તિત્વમાં હોય અને
 તેને એ જ PRમાં સુધારી ન શકાય.**
 
-મંજૂર-યાદીમાં એન્ટ્રી ઉમેરતી વખતે:
+અનુમતિસૂચિમાં એન્ટ્રી ઉમેરતી વખતે:
 
 1. વાજબી કારણ દર્શાવતી ટિપ્પણી સામેલ કરો.
-2. ટ્રેકિંગ ઇશ્યૂનો સંદર્ભ આપો (દા.ત., `// #3498 — તબક્કો 2 સુવિધા, હજુ અમલમાં મૂકાઈ નથી`).
-3. ઉલ્લંઘન સુધારતા એ જ PRમાં એન્ટ્રી દૂર કરો — હવે કોઈ સક્રિય ઉલ્લંઘનને
-   દબાવતી ન હોય તેવી જૂની એન્ટ્રી પોતે જ એક ખામી છે (એકવાર અમલમાં મૂકાયા પછી 6A.3 જૂના-અમલીકરણની તપાસ
-   અનાથ મંજૂર-યાદી એન્ટ્રી પર ગેટને નિષ્ફળ કરશે).
+2. ટ્રેકિંગ ઇશ્યૂનો સંદર્ભ આપો (દા.ત., `// #3498 — Phase 2 feature, not yet implemented`).
+3. ઉલ્લંઘનને સુધારતા એ જ PRમાં એન્ટ્રી દૂર કરો — હવે સક્રિય ઉલ્લંઘનને
+   દબાવતી ન હોય તેવી જૂની એન્ટ્રી પોતે જ એક ખામી છે (અમલીકરણ થયા પછી 6A.3નું જૂનું-એન્ફોર્સમેન્ટ
+   અનાથ અનુમતિસૂચિ એન્ટ્રીને કારણે ગેટને નિષ્ફળ કરશે).
 
-પરીક્ષણો ઝડપથી પાસ કરાવવા માટે મંજૂર-યાદી એન્ટ્રીઓ ઉમેરશો **નહીં**. વધતી જતી
-મંજૂર-યાદી સાથેનો લીલો ગેટ ગુણવત્તાની ખોટી ખાતરી આપે છે.
+ટેસ્ટ ઝડપથી પાસ કરાવવા માટે અનુમતિસૂચિમાં એન્ટ્રીઓ **ઉમેરશો નહીં**. સતત વધતી
+અનુમતિસૂચિ સાથેનો લીલો ગેટ ગુણવત્તાનો ખોટો અહેસાસ આપે છે.
 
 ### જ્યારે તમારા PR પર કોઈ ગેટ નિષ્ફળ જાય
 
-1. **ગેટનું આઉટપુટ ધ્યાનપૂર્વક વાંચો** — તે તમને ચોક્કસ જણાવે છે કે કઈ ફાઇલ અથવા સિમ્બલે
+1. **ગેટનું આઉટપુટ ધ્યાનપૂર્વક વાંચો** — તે તમને ચોક્કસપણે જણાવે છે કે કઈ ફાઇલ અથવા સિમ્બલે
    નિયમનું ઉલ્લંઘન કર્યું છે.
-2. **ઉલ્લંઘન સુધારો** — મોટાભાગના ગેટ નિર્ધારિત ફાઇલસિસ્ટમ તપાસો છે, જે કોડ સાચો
-   થતાં જ પાસ થાય છે.
-3. **જો ઉલ્લંઘન પહેલેથી અસ્તિત્વમાં હોય** (એટલે કે, તમે તેને રજૂ કર્યું નથી, પરંતુ હવે ગેટ
-   તેને આવરે છે): વાજબી કારણ દર્શાવતી ટિપ્પણી અને ટ્રેકિંગ ઇશ્યૂ સાથે મંજૂર-યાદી એન્ટ્રી ઉમેરો.
-4. **જો ગેટ રૅચેટ હોય** (કવરેજ, ESLint ચેતવણીઓ, પુનરાવર્તન, જટિલતા):
-   તમારા ફેરફારે મેટ્રિકને ખરાબ બનાવ્યું છે. મૂળભૂત સમસ્યા સુધારો અથવા (ભાગ્યે જ)
-   જો ફેરફાર ઇરાદાપૂર્વકનો હોય અને મેટ્રિકમાં થયેલો ઘટાડો સ્વીકાર્ય હોય, તો
-   `npm run quality:ratchet -- --update` ચલાવો — પરંતુ PRના વર્ણનમાં તેનું કારણ દસ્તાવેજિત કરો.
-5. **સલાહકારી ગેટ** (`continue-on-error: true`) માહિતીપ્રદ છે — તે મર્જને અવરોધતા
+2. **ઉલ્લંઘન સુધારો** — મોટાભાગના ગેટ નિર્ધારિત ફાઇલસિસ્ટમ ચકાસણીઓ છે, જે કોડ સાચો થતાં જ
+   પાસ થઈ જાય છે.
+3. **જો ઉલ્લંઘન પહેલેથી અસ્તિત્વમાં હોય** (એટલે કે, તમે તેને રજૂ કર્યું નથી, પરંતુ હવે ગેટ તેને
+   આવરી લે છે): વાજબી કારણ દર્શાવતી ટિપ્પણી અને ટ્રેકિંગ ઇશ્યૂ સાથે અનુમતિસૂચિમાં એન્ટ્રી ઉમેરો.
+4. **જો ગેટ રૅચેટ હોય** (કવરેજ, ESLint ચેતવણીઓ, ડુપ્લિકેશન, જટિલતા):
+   તમારા ફેરફારે મેટ્રિકને ખરાબ બનાવ્યું છે. મૂળ સમસ્યાને સુધારો, અથવા (ભાગ્યે જ) જો ફેરફાર ઇરાદાપૂર્વકનો હોય અને મેટ્રિકમાં
+   ઘટાડો સ્વીકાર્ય હોય તો `npm run quality:ratchet -- --update` ચલાવો — પરંતુ PRના વર્ણનમાં તેનું કારણ નોંધો.
+5. **સલાહરૂપ ગેટ** (`continue-on-error: true`) માત્ર માહિતી માટે છે — તે મર્જને અવરોધતા
    નથી, પરંતુ CI સારાંશમાં દેખાય છે. તેમ છતાં તેમને સુધારો.
 
 ---
@@ -560,43 +583,43 @@ CI ગેટ ઉપરાંત, OmniRoute એક **વૈકલ્પિક** `
 
 ---
 
-## તર્કસંગતીકરણ બૅકલૉગ (ROI સમીક્ષા — તબક્કો 9 તરંગ 3)
+## તર્કસંગતીકરણ બેકલૉગ (ROI સમીક્ષા — તબક્કો 9 તરંગ 3)
 
-આ ઇન્વેન્ટરીનું 2026-06-17ના રોજ `ci.yml` સામે સમાધાન કરવામાં આવ્યું હતું (અગાઉની આવૃત્તિમાં
+આ ઇન્વેન્ટરીનું 2026-06-17ના રોજ `ci.yml` સામે સમાધાન કરવામાં આવ્યું હતું (અગાઉના સંસ્કરણમાં
 `audit:deps`, `check:tracked-artifacts`, `check:lockfile`, `check:licenses`,
 `check:dead-code`, `check:cognitive-complexity`, `check:type-coverage`,
-`check:codeql-ratchet`, `check:pr-evidence` છૂટી ગયાં હતાં). સમાધાન કરાયેલા સમૂહની ROI સમીક્ષાએ
-નીચેના તર્કસંગતીકરણ ઉમેદવારો ઓળખ્યા. **મર્જ યાંત્રિક CI ફેરફારો છે;
-ફ્લિપ/ડ્રૉપ ઓપરેટર માટે અનામત નીતિગત નિર્ણયો છે.** નીચેનું કશું હજી
-લાગુ કરવામાં આવ્યું નથી.
+`check:codeql-ratchet`, `check:pr-evidence` છૂટી ગયા હતા). સમાધાન કરાયેલા સમૂહની ROI સમીક્ષાએ
+નીચેના તર્કસંગતીકરણ ઉમેદવારો ઓળખ્યા. **મર્જ યાંત્રિક CI
+ફેરફારો છે; ફ્લિપ/ડ્રૉપ એ ઑપરેટર માટે અનામત નીતિગત નિર્ણયો છે.** નીચેનું કંઈપણ
+હજુ લાગુ કરવામાં આવ્યું નથી.
 
-**ઉપર દસ્તાવેજીકૃત ન થયેલું પણ** (સલાહરૂપ, ઓછો સંકેત): `docs-lint` જોબ
-(markdownlint + Vale, સમગ્ર જોબ `continue-on-error`) અને સ્વતંત્ર સ્કૅનર વર્કફ્લો
+**ઉપર દસ્તાવેજીકૃત ન કરેલું પણ** (સલાહરૂપ, ઓછો સંકેત): `docs-lint` જૉબ
+(markdownlint + Vale, સમગ્ર જૉબ `continue-on-error`) અને સ્વતંત્ર સ્કેનર વર્કફ્લો
 `semgrep.yml` / `codeql.yml` / `scorecard.yml`. `semgrepFindings: 0`
-`quality-baseline.json`માં છે, પરંતુ `ci.yml`માં અવરોધક રૅચેટ સાથે જોડાયેલું નથી — મેટ્રિક
+`quality-baseline.json`માં છે, પરંતુ `ci.yml`માં તેને બ્લૉકિંગ રૅચેટ સાથે જોડવામાં આવ્યું નથી — આ મેટ્રિક
 હાલમાં અનાથ છે.
 
-### મર્જ / ડિડુપ્લિકેશન (યાંત્રિક, ઓછું જોખમ)
+### મર્જ / ડીડુપ્લિકેશન (યાંત્રિક, ઓછું જોખમ)
 
 દરેક ઉમેદવારને 2026-06-17ના રોજ લાઇવ ગેટ સ્થિતિ સામે માન્ય કરવામાં આવ્યો હતો (વિશ્વાસ કરો, પણ ચકાસો);
-કેટલાક "સ્પષ્ટ" મર્જ હકીકતમાં ટેક્નિકલ ઋણ છુપાવતા હોવાનું બહાર આવ્યું અને તે **સ્વચ્છ ડ્રૉપ-ઇન નથી**.
+કેટલાક "સ્પષ્ટ" મર્જ વાસ્તવમાં છુપાયેલું ઋણ ધરાવતા હોવાનું બહાર આવ્યું અને તે **સ્વચ્છ ડ્રૉપ-ઇન નથી**.
 
-- **`check:docs-sync` બે વાર ચાલે છે** — `lint` જોબમાં સ્વતંત્ર રીતે અને ફરીથી `check:docs-all` (`docs-sync-strict`) તથા husky pre-commit હૂકની અંદર. ✅ **પૂર્ણ** — સ્વતંત્ર `lint` ઇન્વોકેશન દૂર કરવામાં આવ્યું.
-- **CVE સ્કૅનિંગ** — ❌ **સ્વચ્છ મર્જ નથી.** `audit:deps` કોઈપણ high/critical CVE પર હાર્ડ-ફેઇલ થાય છે; `check:vuln-ratchet` (osv) માત્ર બેઝલાઇનની સરખામણીએ _રીગ્રેશન_ પર નિષ્ફળ થાય છે (હાલમાં 1 MODERATE). સિમેન્ટિક્સ અલગ છે — `audit:deps` દૂર કરવાથી નિરપેક્ષ high/critical ગેટ ગુમાવવો પડે. બંને રાખો.
-- **સાઇકલ શોધ** — ✅ **પૂર્ણ** (#15159 G-01/G-02). અહીંના જૂના લખાણમાં `check:cycles`ને "લીલું, કાળજીપૂર્વક પસંદ કરેલું" ગેટ કહેવાયું હતું અને તેને અવરોધક રાખવાનું સમર્થન એ આધારે કરાયું હતું કે `check:circular-deps` (dpdm)એ 91 સાઇકલ દર્શાવ્યાં હતાં. એ લીલું પરિણામ **ખોટું લીલું પરિણામ** હતું: `check:cycles`એ 5 સબડિરેક્ટરી (450 ફાઇલ) સ્કૅન કરી હતી, માત્ર સ્થિર `import|export … from` સાથે મેળ સાધ્યો હતો અને દરેક `@/` તથા `@omniroute/open-sse/` સ્પેસિફાયર કાઢી નાખ્યો હતો, તેથી તે રિપોઝિટરીમાં પ્રભુત્વ ધરાવતી dynamic-import + alias સાઇકલ જોઈ શકતું નહોતું. સુધાર્યું: ગેટ હવે `src` + `open-sse` (5023 ફાઇલ)માં ફરે છે, TypeScript ASTમાંથી સ્પેસિફાયર એકત્ર કરે છે (જેથી `import("…")` ગણાય છે અને ટાઇપ-સ્થાનમાં `typeof import("…")` ગણાતું નથી), અને tsconfig `paths`નું રિઝોલ્યુશન કરે છે. તેને 0 નહીં, પરંતુ **14** સાઇકલ મળે છે. અગાઉથી અસ્તિત્વમાં રહેલી 14 સાઇકલને ગેટ PRમાં સુધારી શકાતી ન હોવાથી, `check:cycles` હવે **રૅચેટ** છે (`--ratchet`, `quality-baseline.json`માં ઉચ્ચતમ મર્યાદા `metrics.cycles.value = 14`, `direction: down`) — તે કોઈપણ _રીગ્રેશન_ને અવરોધે છે અને ગણતરી માત્ર ઘટી શકે છે. CI `npm run check:cycles:ratchet` ચલાવે છે. ઘટાડાની કામગીરી **A-01** સાથે આગળ વધે છે. વધુ વ્યાપક બીજા અભિપ્રાય તરીકે `check:circular-deps` (dpdm) સલાહરૂપ રહે છે.
-- **જટિલતા** — ✅ **પૂર્ણ** (`check:complexity-ratchets` / `eslint.complexity-ratchets.config.mjs`): એક ESLint વૉક, ruleId પ્રમાણે ગણતરી કરે છે જેથી cyclomatic+max-lines અને cognitive બેઝલાઇન સ્વતંત્ર રહે; સ્થાનિક `--update` માટે વ્યક્તિગત `check:complexity` / `check:cognitive-complexity` યથાવત્ રહે છે.
-- **`/api` ઍન્ટિ-હેલ્યુસિનેશન** — ✅ **પૂર્ણ** (`check:api-docs-refs` + `scripts/check/lib/apiRoutes.mjs`): `src/app/api`ની એક FS ઇન્વેન્ટરી, openapi-routes + docs-symbols હજી પણ સ્વતંત્ર રીતે અહેવાલ આપે છે; સ્થાનિક રન માટે વ્યક્તિગત ચેક્સ યથાવત્ રહે છે.
-- **`check:node-runtime` 11 જોબમાં ચાલે છે** — ⚠️ **ઓછું ROI.** દરેક અલગ રનર છે અને ચેક <1sનો છે; સસ્તું પ્રતિ-જોબ સુરક્ષા નિયંત્રણ ગુમાવવાની સામે કુલ બચત ~10s છે. આટલી ઉથલપાથલ યોગ્ય નથી.
-- **CI lint પર `typecheck:noimplicit:core`** — ✅ **lint જોબમાંથી દૂર કરાયું** (સલાહરૂપ `continue-on-error` હતું); અવરોધક ટાઇપ સપાટી `typecheck:core` + `check:type-coverage` છે. સ્થાનિક સ્ક્રિપ્ટ જાળવી રાખવામાં આવી છે.
+- **`check:docs-sync` બે વખત ચાલે છે** — `lint` જૉબમાં સ્વતંત્ર રીતે અને ફરીથી `check:docs-all` (`docs-sync-strict`)ની અંદર તથા husky pre-commit હૂકમાં. ✅ **પૂર્ણ** — સ્વતંત્ર `lint` ઇન્વોકેશન દૂર કરવામાં આવ્યું.
+- **CVE સ્કેનિંગ** — ❌ **સ્વચ્છ મર્જ નથી.** `audit:deps` તમામ પાંચ lockfilesમાં critical advisories અને અધૂરા auditsને બ્લૉક કરે છે, જ્યારે વર્તમાન નીતિ હેઠળ high advisoriesને ચેતવણી તરીકે રિપોર્ટ કરે છે; `check:vuln-ratchet` (osv) માત્ર ચેક-ઇન કરેલી baselineની તુલનામાં થયેલી _પીછેહઠ_ પર નિષ્ફળ જાય છે અને જ્યારે માપન જરૂરી હોય ત્યારે ગુમ થયેલા માપનોને નકારે છે. અર્થભેદ છે — `audit:deps`ને દૂર કરવાથી absolute critical gate અને સ્વતંત્ર package audit receipts ગુમ થશે. બંને રાખો.
+- **સાઇકલ શોધ** — ✅ **પૂર્ણ** (#15159 G-01/G-02). અહીંના જૂના લખાણે `check:cycles`ને "લીલું, ક્યુરેટેડ" ગેટ ગણાવ્યું હતું અને `check:circular-deps` (dpdm)એ 91 સાઇકલ રિપોર્ટ કર્યા હોવાથી તેને બ્લૉકિંગ રાખવાનું વાજબી ઠેરવ્યું હતું. એ લીલી સ્થિતિ **ખોટી લીલી સ્થિતિ** હતી: `check:cycles`એ 5 સબડિરેક્ટરી (450 ફાઇલો) સ્કેન કરી હતી, માત્ર સ્થિર `import|export … from`ને મેળ ખાતું હતું અને દરેક `@/` તથા `@omniroute/open-sse/` સ્પેસિફાયર છોડી દીધા હતા, તેથી તે રેપોમાં પ્રભુત્વ ધરાવતી dynamic-import + alias સાઇકલ જોઈ શકતું નહોતું. સુધારાયું: ગેટ હવે `src` + `open-sse` (5023 ફાઇલો)માં ફરે છે, TypeScript ASTમાંથી સ્પેસિફાયર એકત્ર કરે છે (એટલે `import("…")` ગણાય છે અને type-position `typeof import("…")` ગણાતું નથી), અને tsconfig `paths`ને રિઝૉલ્વ કરે છે. તે 0 નહીં, પરંતુ **14** સાઇકલ શોધે છે. ગેટ PRમાં અગાઉથી અસ્તિત્વ ધરાવતી 14 સાઇકલ સુધારી શકાતી ન હોવાથી, `check:cycles` હવે **રૅચેટ** છે (`--ratchet`, `quality-baseline.json`માં ceiling `metrics.cycles.value = 14`, `direction: down`) — તે કોઈપણ _પીછેહઠ_ને બ્લૉક કરે છે અને ગણતરી ફક્ત ઘટી શકે છે. CI `npm run check:cycles:ratchet` ચલાવે છે. ઘટાડો **A-01** સાથે આગળ વધે છે. `check:circular-deps` (dpdm) વ્યાપક બીજા અભિપ્રાય તરીકે સલાહરૂપ રહે છે.
+- **જટિલતા** — ✅ **પૂર્ણ** (`check:complexity-ratchets` / `eslint.complexity-ratchets.config.mjs`): એક ESLint વૉક, ruleId પ્રમાણે ગણતરી કરે છે જેથી cyclomatic+max-lines અને cognitive baselines સ્વતંત્ર રહે; વ્યક્તિગત `check:complexity` / `check:cognitive-complexity` સ્થાનિક `--update` માટે યથાવત્ રહે છે.
+- **`/api` એન્ટિ-હેલ્યુસિનેશન** — ✅ **પૂર્ણ** (`check:api-docs-refs` + `scripts/check/lib/apiRoutes.mjs`): `src/app/api`ની એક FS ઇન્વેન્ટરી, openapi-routes + docs-symbols હજી પણ સ્વતંત્ર રીતે રિપોર્ટ કરે છે; વ્યક્તિગત ચેક્સ સ્થાનિક રન માટે યથાવત્ રહે છે.
+- **`check:node-runtime` 11 જૉબમાં ચાલે છે** — ⚠️ **ઓછો ROI.** દરેક અલગ runner છે અને ચેક <1s છે; સસ્તું per-job guard ગુમાવવાની સામે કુલ બચત ~10s છે. આ ફેરફારનો ઉપદ્રવ યોગ્ય નથી.
+- **CI lint પર `typecheck:noimplicit:core`** — ✅ **lint જૉબમાંથી દૂર કર્યું** (તે સલાહરૂપ `continue-on-error` હતું); બ્લૉકિંગ type surface `typecheck:core` + `check:type-coverage` છે. સ્થાનિક સ્ક્રિપ્ટ જાળવી રાખવામાં આવી છે.
 
-### ફ્લિપ / નિર્ણય (ઓપરેટર નીતિ)
+### ફ્લિપ / નિર્ણય (ઑપરેટર નીતિ)
 
-- `check:openapi-security-tiers` (સલાહરૂપ) — ❌ **સ્વચ્છ રીતે ફ્લિપ કરી શકાય તેમ નથી.** તે 0 સાથે એક્ઝિટ થાય છે, પરંતુ ચેતવણી આપે છે કે `LOCAL_ONLY_API_PREFIXES` હેઠળના કેટલાક `traffic-inspector` રૂટમાં `x-loopback-only: true` ઍનોટેશન નથી. તેને અમલમાં મૂકતાં પહેલાં `openapi.yaml`માં એ ઍનોટેશન ઉમેરવા જરૂરી છે.
-- `typecheck:noimplicit:core` (સલાહરૂપ) — અવરોધક `check:type-coverage` રૅચેટ દ્વારા મોટા ભાગે આવરી લેવાય છે. તેને રૅચેટમાં ફ્લિપ કરો અથવા બિનજરૂરી બીજા `tsc` પાસને દૂર કરો.
-- `test:vitest:ui` (હવે **અવરોધક**) — અગાઉથી અસ્તિત્વમાં રહેલી નિષ્ફળતાઓને `vitest.config.ts`માં `// #8618` ટ્રૅકિંગ ટિપ્પણીઓ સાથે સ્પષ્ટ રીતે બાકાત રાખવામાં આવી છે; નવી નિષ્ફળતાઓ જોબને નિષ્ફળ બનાવે છે.
-- `check:secrets` (gitleaks, 3 દસ્તાવેજીકૃત false-positive પર સ્થિર કરાયેલ અવરોધક રૅચેટ) — 0 સુધી પહોંચવા માટે એ 3ને allowlist કરો અથવા તેને સલાહરૂપ સ્તરે ઉતારો. GitHubના મૂળ secret-scanning + `check:public-creds` સાથે ઓવરલેપ થાય છે.
-- `check:pr-evidence` (અવરોધક, PR-bodyના ગદ્યમાં greps કરે છે) — false-positiveનું ઊંચું જોખમ; તેને દૂર કરવાથી Hard Rule #18નો અમલ નબળો પડે છે, તેથી આ ખરેખર નીતિગત નિર્ણય છે.
-- `semgrep` (સલાહરૂપ સ્વતંત્ર) — OWASP ફૅમિલી માટે CodeQL સાથે ઓવરલેપ થાય છે; તેની બેઝલાઇનને રૅચેટ સાથે જોડો અથવા તેને દૂર કરો.
+- `check:openapi-security-tiers` (સલાહરૂપ) — ❌ **સ્વચ્છ રીતે ફ્લિપ કરી શકાય તેમ નથી.** તે 0 સાથે exit થાય છે, પરંતુ ચેતવણી આપે છે કે `LOCAL_ONLY_API_PREFIXES` હેઠળના કેટલાક `traffic-inspector` routesમાં `x-loopback-only: true` annotation નથી. તેને અમલમાં મૂકવા માટે પહેલાં `openapi.yaml`માં એ annotations ઉમેરવા જરૂરી છે.
+- `typecheck:noimplicit:core` (સલાહરૂપ) — મોટા ભાગે બ્લૉકિંગ `check:type-coverage` રૅચેટ હેઠળ આવરી લેવાય છે. તેને રૅચેટમાં ફ્લિપ કરો અથવા વધારાનો બિનજરૂરી બીજો `tsc` પાસ દૂર કરો.
+- `test:vitest:ui` (હવે **બ્લૉકિંગ**) — અગાઉથી અસ્તિત્વ ધરાવતી નિષ્ફળતાઓને `vitest.config.ts`માં `// #8618` ટ્રૅકિંગ ટિપ્પણીઓ સાથે સ્પષ્ટપણે બાકાત રાખવામાં આવી છે; નવી નિષ્ફળતાઓ જૉબને નિષ્ફળ બનાવે છે.
+- `check:secrets` (gitleaks, બ્લૉકિંગ રૅચેટ) — વર્તમાન ceiling `quality-baseline.json`માં `metrics.secretFindings` છે. કોઈપણ અપવાદ માટે ન્યાયસંગત `.gitleaks.toml` એન્ટ્રી જરૂરી છે; અનુપલબ્ધ માપન INCOMPLETE છે. આ સ્કેન GitHub native secret scanning અને `check:public-creds`ને પૂરક છે.
+- `check:pr-evidence` (બ્લૉકિંગ, PR-body ગદ્યમાં greps કરે છે) — false-positiveનું ઊંચું જોખમ; તેને દૂર કરવાથી Hard Rule #18નું અમલીકરણ નબળું પડે છે, તેથી આ વાસ્તવિક નીતિગત નિર્ણય છે.
+- `semgrep` (સલાહરૂપ સ્વતંત્ર) — OWASP પરિવારો માટે CodeQL સાથે ઓવરલેપ થાય છે; તેની baselineને રૅચેટ સાથે જોડો અથવા તેને દૂર કરો.
 
 ---
 
