@@ -685,16 +685,18 @@ test("one gate can never land in BOTH verdict buckets of the same report (#9985)
   );
 });
 
-test("the --full-ci loop uses the declared policy and keeps curated buckets consistent", async () => {
-  const fs = await import("node:fs");
-  const src = fs.readFileSync(
-    new URL("../../scripts/quality/validate-release-green.mjs", import.meta.url),
-    "utf8"
-  );
-  assert.match(
-    src,
-    /kind:\s*fullCiKindFor\(g\.id,\s*results,\s*g\.kind\)/,
-    "--full-ci must classify using the reviewed static policy"
+test("the real full profile requires workflow audits even when the curated observer reports drift", async () => {
+  const { fileURLToPath } = await import("node:url");
+  const { loadFullCiProfile } =
+    await import("../../scripts/quality/release-green-static-profile.mjs");
+  const { fullCiKindFor } = await import("../../scripts/quality/validate-release-green.mjs");
+  const gates = loadFullCiProfile(fileURLToPath(new URL("../../", import.meta.url)));
+  const workflow = gates.find((gate) => gate.id === "check:workflows");
+  assert.ok(workflow, "the full profile must include workflow auditing");
+  assert.equal(workflow.kind, "hard");
+  assert.equal(
+    fullCiKindFor(workflow.id, [{ id: "workflow-lint", kind: "drift", ok: false }], workflow.kind),
+    "hard"
   );
 });
 

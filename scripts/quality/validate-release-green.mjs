@@ -320,6 +320,27 @@ export function computeVerdict(results) {
   return { releaseGreen: hardFailures.length === 0, hardFailures, drift };
 }
 
+/** Missing scanner evidence is execution failure, never measured ratchet drift. */
+function evaluateWorkflowRun({ code, out }) {
+  const states = [...String(out).matchAll(/^workflowAuditState=([^\r\n]*)\r?$/gm)];
+  const policyCounts = ["provenanceRunnerFindings", "scheduledGuardFindings"].map((name) => {
+    const matches = [...String(out).matchAll(new RegExp(`^${name}=(\\d+)\\r?$`, "gm"))];
+    return matches.length === 1 ? Number(matches[0][1]) : null;
+  });
+  const measured =
+    states.length === 1 &&
+    states[0][1] === "MEASURED" &&
+    [0, 1].includes(code) &&
+    policyCounts.every((count) => Number.isSafeInteger(count) && count >= 0);
+  const policyFailure = policyCounts.some((count) => count > 0);
+  return {
+    kind: measured && !policyFailure ? "drift" : "hard",
+    ok: measured && !policyFailure && code === 0,
+    evidenceState: measured ? "MEASURED" : "INCOMPLETE",
+    detail: measured && !policyFailure && code === 0 ? "within baseline" : firstFailureLine(out),
+  };
+}
+
 // Legacy extraction remains a discovery helper for callers/tests. Full execution
 // uses the reviewed argv manifest, never whitespace-split workflow shell.
 
@@ -804,6 +825,7 @@ async function main() {
     });
   };
 
+  // Workflow auditing additionally requires explicit scanner measurement evidence.
   // Curated ratchets retain their diagnostic bucket here. The full profile overrides
   // it with the applicable policy, and incomplete command receipts remain blocking.
   // ALL checks run regardless of earlier failures (the report is collected, not
@@ -815,9 +837,13 @@ async function main() {
     record({
       id,
       label,
-      kind: "drift",
-      ok: code === 0,
-      detail: code === 0 ? okDetail : firstFailureLine(out),
+      ...(id === "workflow-lint"
+        ? evaluateWorkflowRun({ code, out })
+        : {
+            kind: "drift",
+            ok: code === 0,
+            detail: code === 0 ? okDetail : firstFailureLine(out),
+          }),
     });
   };
 
@@ -1211,7 +1237,7 @@ async function main() {
     process.stderr.write(`\n──── full-ci explicit static gates (${gates.length}) ────\n`);
     for (const g of gates) {
       const prior = results.find((result) => result.id === curatedEquivalentId(g.id));
-      if (prior) prior.kind = g.kind;
+      if (prior && !(g.id === "check:workflows" && prior.kind === "hard")) prior.kind = g.kind;
       // Skip a gate the curated pass already ran with the same id (avoid double-running lint).
       if (already.has(g.id)) continue;
       const collectsMetrics = g.args[1] === "quality:collect";
@@ -1235,19 +1261,25 @@ async function main() {
       });
       saveGateLog(`fullci-${g.id.replace(/[^a-z0-9]+/gi, "-")}`, out);
       const outcome = staticGateOutcome(code, out, receipt.outcome);
+      const workflowOutcome =
+        g.id === "check:workflows" ? evaluateWorkflowRun({ code, out }) : null;
       if (collectsMetrics) metricsCollected = outcome.ok;
       record({
         id: g.id,
         label: `${g.job} → npm ${g.args.join(" ")}`,
-        kind: fullCiKindFor(g.id, results, g.kind),
-        ok: outcome.ok,
-        evidenceState: outcome.evidenceState,
-        detail:
-          outcome.evidenceState === "INCOMPLETE"
-            ? "required measurement incomplete; inspect gate log"
-            : outcome.ok
-              ? "pass"
-              : firstFailureLine(out),
+        ...(workflowOutcome
+          ? workflowOutcome
+          : {
+              ok: outcome.ok,
+              evidenceState: outcome.evidenceState,
+              detail:
+                outcome.evidenceState === "INCOMPLETE"
+                  ? "required measurement incomplete; inspect gate log"
+                  : outcome.ok
+                    ? "pass"
+                    : firstFailureLine(out),
+            }),
+        kind: workflowOutcome?.kind === "hard" ? "hard" : fullCiKindFor(g.id, results, g.kind),
       });
     }
   }
@@ -1294,7 +1326,13 @@ async function main() {
           releaseGreen,
           hardFailures: hardFailures.map((r) => ({ id: r.id, label: r.label, detail: r.detail })),
           drift: drift.map((r) => ({ id: r.id, label: r.label, detail: r.detail })),
-          checks: results.map((r) => ({ id: r.id, kind: r.kind, ok: r.ok, detail: r.detail })),
+          checks: results.map((r) => ({
+            id: r.id,
+            kind: r.kind,
+            ok: r.ok,
+            detail: r.detail,
+            ...(r.evidenceState ? { evidenceState: r.evidenceState } : {}),
+          })),
           commandReceipts,
         },
         null,
