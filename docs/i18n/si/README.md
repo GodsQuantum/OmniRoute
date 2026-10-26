@@ -687,15 +687,15 @@ omniroute configure codex          # මේවාද ඇත: claude opencode qwe
 
 <div align="center">
 
-## 🌐 AI සැපයුම්කරුවන් 376ක් — නාමාවලියේ නොමිලේ ලෙස සලකුණු කළ 153ක්
+## 🌐 AI සපයන්නන් 376ක් — නාමාවලියේ සලකුණු කළ නොමිලේ සපයන්නන් 153ක්
 
 </div>
 
-> කැනොනිකල් කතාබස්, මාධ්ය, සෙවුම්, දේශීය, ක්ලවුඩ්-නියෝජිත සහ පද්ධති එකතු හරහා **ලියාපදිංචි සැපයුම්කරුවන් 376ක්** ඇත; ඒ අතරින් **153ක් `hasFree: true` සොයාගැනීමේ පාරදත්ත දරයි**. කතාබස් මාදිලි ලේඛනය **සැපයුම්කරුවන් 239ක් / එකිනෙකට වෙනස් සැපයුම්කරු-මාදිලි යුගල 3,059ක් / අමු මාදිලි හැඳුනුම් 1,475ක්** ආවරණය කරයි; වෙනම ඇති නොමිලේ-අයවැය නාමාවලියෙහි **එක් එක් මාදිලිය සඳහා පේළි 471ක්**, **පුනරාවර්තන සංචිත 34ක්** සහ **පුනරාවර්තන/යතුරු-රහිත සදහටම නොමිලේ සැපයුම්කරුවන් 52ක්** ඇත. සැලසුම අනුව මේවා වෙනස් හරයන් වේ; අර්ථදැක්වීම් සහ සංචිත-අනුපිටපත් ඉවත් කළ ගණනය කිරීම් [සැපයුම්කරු යොමුව](docs/reference/PROVIDER_REFERENCE.md) සහ [නොමිලේ ස්ථර](docs/reference/FREE_TIERS.md) තුළ ඇත.
+> සම්මත chat, media, search, local, cloud-agent සහ system එකතු හරහා **ලියාපදිංචි සපයන්නන් 376ක්** ඇති අතර, එයට **`hasFree: true` සොයාගැනීමේ metadata සහිත සපයන්නන් 153ක්** ඇතුළත් වේ. chat model registry එක **සපයන්නන් 239ක් / එකිනෙකට වෙනස් provider-model යුගල 3,059ක් / raw model ID 1,475ක්** ආවරණය කරයි; වෙනම ඇති free-budget නාමාවලියේ **model එකකට අදාළ පේළි 484ක්**, **පුනරාවර්තන pool 34ක්** සහ **පුනරාවර්තන/keyless free-forever සපයන්නන් 52ක්** ඇත. සැලසුම අනුව මේවා වෙනස් හරයන් වේ; අර්ථදැක්වීම් සහ pool-අනුපිටපත් ඉවත් කළ ගණනය කිරීම් [සපයන්නන් පිළිබඳ යොමුව](docs/reference/PROVIDER_REFERENCE.md) සහ [නොමිලේ ස්තර](docs/reference/FREE_TIERS.md) තුළ ඇත.
 
 <div align="center">
 
-### 🏢 සෑම ප්රධාන පර්යේෂණාගාරයක්ම — එක් අන්ත ලක්ෂ්යයක් හරහා
+### 🏢 සෑම ප්රධාන පර්යේෂණාගාරයක්ම — එක් endpoint එකක් හරහා
 
 <table>
   <tr>
@@ -724,7 +724,7 @@ omniroute configure codex          # මේවාද ඇත: claude opencode qwe
   </tr>
 </table>
 
-<sub>…සහ තවත් 350කට වැඩි ප්රමාණයක් — සෑම නිරූපකයක්ම උපකරණ පුවරුවේ සැපයුම්කරු නාමාවලියෙන් සජීවීව ලබාගැනේ. 📖 [සැපයුම්කරු යොමුව](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…සහ තවත් 350කට වැඩි ගණනක් — සෑම icon එකක්ම dashboard එකේ provider catalog එකෙන් සජීවීව ලබාගනී. 📖 [සපයන්නන් පිළිබඳ යොමුව](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
@@ -742,9 +742,9 @@ omniroute configure codex          # මේවාද ඇත: claude opencode qwe
   <tr>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="42" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Qwen3-Max, Kimi-K2<br/>අසීමිතව නොමිලේ</sub></td>
     <td align="center" width="150"><img src="./public/providers/pollinations.svg" width="42" alt="Pollinations"/><br/><b>Pollinations</b><br/><sub>GPT, Llama, Claude<br/>යතුරක් අවශ්ය නොවේ</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>මාදිලි 50කට වැඩි ප්රමාණයක්<br/>දිනකට නියුරෝන 10Kක්</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>මාදිලි 50+<br/>දිනකට නියුරෝන 10K</sub></td>
     <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>නොමිලේ ~40 RPM</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>එක් වරක් පමණක් ලැබෙන $5 ණය; කාඩ්පතක් අවශ්යයි</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>එක් වරක් ලැබෙන $5 ණය; කාඩ්පතක් අවශ්යයි</sub></td>
     <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free මාදිලි<br/>+$10 → ඉහළ RPM</sub></td>
   </tr>
 </table>

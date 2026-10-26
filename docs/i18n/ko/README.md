@@ -691,7 +691,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
 
 </div>
 
-> 정식 채팅, 미디어, 검색, 로컬, 클라우드 에이전트 및 시스템 컬렉션 전반에 걸쳐 **376개의 등록된 제공업체**가 있으며, 이 중 **153개에는 `hasFree: true` 검색 메타데이터가 포함**되어 있습니다. 채팅 모델 레지스트리는 **239개 제공업체 / 3,059개의 고유한 제공업체-모델 쌍 / 1,475개의 원시 모델 ID**를 포함하며, 별도의 무료 예산 카탈로그에는 **모델별 행 471개**, **반복 제공 풀 34개**, **반복 제공/키 불필요 영구 무료 제공업체 52개**가 있습니다. 이는 의도적으로 서로 다른 분모를 사용합니다. 정의와 풀 중복을 제거한 계산 방식은 [제공업체 참조](docs/reference/PROVIDER_REFERENCE.md) 및 [무료 등급](docs/reference/FREE_TIERS.md)에서 확인할 수 있습니다.
+> 정식 채팅, 미디어, 검색, 로컬, 클라우드 에이전트 및 시스템 컬렉션 전반에 걸쳐 **376개의 등록된 제공업체**가 있으며, 이 중 **153개에는 `hasFree: true` 검색 메타데이터가 포함**되어 있습니다. 채팅 모델 레지스트리는 **239개 제공업체 / 3,059개의 고유한 제공업체-모델 쌍 / 1,475개의 원시 모델 ID**를 포괄하며, 별도의 무료 예산 카탈로그에는 **모델별 행 484개**, **반복 제공 풀 34개**, **반복 제공/키 불필요 영구 무료 제공업체 52개**가 있습니다. 이는 의도적으로 서로 다른 분모를 사용합니다. 정의와 풀 중복을 제거한 계산은 [제공업체 레퍼런스](docs/reference/PROVIDER_REFERENCE.md)와 [무료 티어](docs/reference/FREE_TIERS.md)에서 확인할 수 있습니다.
 
 <div align="center">
 
@@ -724,7 +724,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
   </tr>
 </table>
 
-<sub>…그리고 350개 이상 — 모든 아이콘은 대시보드의 제공업체 카탈로그에서 실시간으로 불러옵니다. 📖 [제공업체 참조](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…그 외 350개 이상 — 모든 아이콘은 대시보드의 제공업체 카탈로그에서 실시간으로 불러옵니다. 📖 [제공업체 레퍼런스](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
@@ -732,7 +732,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
 
 <table>
   <tr>
-    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>토큰 한도 없음</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>토큰 제한 없음</sub></td>
     <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="Kilo Code"/><br/><b>Kilo Code</b><br/><sub>자동 라우터, Tencent Hy3<br/>영구 무료</sub></td>
     <td align="center" width="150"><img src="./public/providers/requesty.svg" width="42" alt="Requesty"/><br/><b>Requesty</b><br/><sub>GPT-OSS 120B, Nemotron<br/>영구 무료</sub></td>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/siliconcloud-color.svg" width="42" alt="SiliconFlow"/><br/><b>SiliconFlow</b><br/><sub>DeepSeek V3.2 / R1<br/>무료 등급</sub></td>
@@ -742,14 +742,14 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
   <tr>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="42" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Qwen3-Max, Kimi-K2<br/>무제한 무료</sub></td>
     <td align="center" width="150"><img src="./public/providers/pollinations.svg" width="42" alt="Pollinations"/><br/><b>Pollinations</b><br/><sub>GPT, Llama, Claude<br/>키 불필요</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50개 이상의 모델<br/>일일 뉴런 10K개</sub></td>
-    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>무료 약 40 RPM</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>일회성 $5 크레딧; 카드 필요</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50개 이상의 모델<br/>일일 10K 뉴런</sub></td>
+    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>무료로 약 40 RPM</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>일회성 $5 크레딧, 카드 필요</sub></td>
     <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free 모델<br/>+$10 → 더 높은 RPM</sub></td>
   </tr>
 </table>
 
-📖 전체 머신 리더블 카탈로그 → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
+📖 전체 기계 판독 가능 카탈로그 → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
 
 <br/>
 </div>

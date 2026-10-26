@@ -687,11 +687,11 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
 
 <div align="center">
 
-## 🌐 376টি AI প্রদানকারী — 153টি ক্যাটালগে বিনামূল্য হিসেবে চিহ্নিত
+## 🌐 376টি AI প্রদানকারী — 153টি ক্যাটালগে বিনামূল্যের হিসেবে চিহ্নিত
 
 </div>
 
-> ক্যানোনিক্যাল চ্যাট, মিডিয়া, সার্চ, লোকাল, ক্লাউড-এজেন্ট ও সিস্টেম সংগ্রহজুড়ে **376টি নিবন্ধিত প্রদানকারী**, যার মধ্যে **153টির ডিসকভারি মেটাডেটায় `hasFree: true` রয়েছে**। চ্যাট মডেল রেজিস্ট্রিতে রয়েছে **239টি প্রদানকারী / 3,059টি স্বতন্ত্র প্রদানকারী-মডেল জোড়া / 1,475টি অপরিশোধিত মডেল ID**; পৃথক বিনামূল্যের-বাজেট ক্যাটালগে রয়েছে **প্রতি-মডেলের 471টি সারি**, **34টি পুনরাবৃত্ত পুল** এবং **52টি পুনরাবৃত্ত/কীবিহীন চিরস্থায়ী বিনামূল্যের প্রদানকারী**। নকশাগতভাবেই এগুলোর বিভাজক আলাদা; সংজ্ঞা ও পুল-ডিডুপ্লিকেট করা হিসাব [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md) এবং [বিনামূল্যের স্তরসমূহ](docs/reference/FREE_TIERS.md)-এ রয়েছে।
+> ক্যানোনিক্যাল চ্যাট, মিডিয়া, সার্চ, লোকাল, ক্লাউড-এজেন্ট এবং সিস্টেম সংগ্রহজুড়ে **376টি নিবন্ধিত প্রদানকারী**, যার মধ্যে **153টির ডিসকভারি মেটাডেটায় `hasFree: true` রয়েছে**। চ্যাট মডেল রেজিস্ট্রিতে রয়েছে **239টি প্রদানকারী / 3,059টি স্বতন্ত্র প্রদানকারী-মডেল জোড়া / 1,475টি কাঁচা মডেল ID**; পৃথক বিনামূল্যের-বাজেট ক্যাটালগে রয়েছে **প্রতি-মডেলের 484টি সারি**, **34টি পুনরাবৃত্ত পুল** এবং **52টি পুনরাবৃত্ত/কিলেস চিরকাল-বিনামূল্যের প্রদানকারী**। নকশাগতভাবেই এগুলোর হর ভিন্ন; সংজ্ঞা এবং পুল-ডিডুপ্লিকেট করা হিসাব [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md) ও [বিনামূল্যের স্তরসমূহ](docs/reference/FREE_TIERS.md)-এ রয়েছে।
 
 <div align="center">
 
@@ -724,11 +724,11 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
   </tr>
 </table>
 
-<sub>…এবং আরও 350টির বেশি — প্রতিটি আইকন ড্যাশবোর্ডের প্রদানকারী ক্যাটালগ থেকে সরাসরি রিজলভ হয়। 📖 [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…এবং আরও 350টির বেশি — প্রতিটি আইকন ড্যাশবোর্ডের প্রদানকারী ক্যাটালগ থেকে লাইভ লোড হয়। 📖 [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
-### 🆓 চিরস্থায়ী বিনামূল্যে — $0, কোনো কার্ড নয়
+### 🆓 চিরকাল বিনামূল্যে — $0, কোনো কার্ড নয়
 
 <table>
   <tr>
@@ -742,10 +742,10 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
   <tr>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="42" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Qwen3-Max, Kimi-K2<br/>সীমাহীন বিনামূল্যে</sub></td>
     <td align="center" width="150"><img src="./public/providers/pollinations.svg" width="42" alt="Pollinations"/><br/><b>Pollinations</b><br/><sub>GPT, Llama, Claude<br/>কোনো কী প্রয়োজন নেই</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50+ মডেল<br/>10K নিউরন/দিন</sub></td>
-    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>~40 RPM বিনামূল্যে</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>৫০টিরও বেশি মডেল<br/>প্রতিদিন ১০ হাজার নিউরন</sub></td>
+    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>বিনামূল্যে ~40 RPM</sub></td>
     <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>এককালীন $5 ক্রেডিট; কার্ড আবশ্যক</sub></td>
-    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free মডেল<br/>+$10 → বেশি RPM</sub></td>
+    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free মডেল<br/>+$10 → আরও বেশি RPM</sub></td>
   </tr>
 </table>
 

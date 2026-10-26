@@ -687,11 +687,11 @@ omniroute configure codex          # ଏଗୁଡ଼ିକ ମଧ୍ୟ: claude 
 
 <div align="center">
 
-## 🌐 376 AI ପ୍ରଦାନକାରୀ — 153 କ୍ୟାଟାଲଗ୍ରେ ମାଗଣା ଭାବେ ଚିହ୍ନିତ
+## 🌐 376 AI ପ୍ରଦାନକାରୀ — 153ଟି କ୍ୟାଟାଲଗ୍ରେ ମାଗଣା ଭାବେ ଚିହ୍ନିତ
 
 </div>
 
-> **376 ପଞ୍ଜୀକୃତ ପ୍ରଦାନକାରୀ** କ୍ୟାନୋନିକାଲ୍ ଚାଟ୍, ମିଡିଆ, ସନ୍ଧାନ, ସ୍ଥାନୀୟ, କ୍ଲାଉଡ୍-ଏଜେଣ୍ଟ ଏବଂ ସିଷ୍ଟମ୍ ସଂଗ୍ରହଗୁଡ଼ିକରେ ଉପଲବ୍ଧ, ଯେଉଁଥିରୁ **153ଟିରେ `hasFree: true` ଡିସ୍କଭରି ମେଟାଡାଟା ରହିଛି**। ଚାଟ୍ ମଡେଲ୍ ରେଜିଷ୍ଟ୍ରିରେ **239 ପ୍ରଦାନକାରୀ / 3,059ଟି ସ୍ୱତନ୍ତ୍ର ପ୍ରଦାନକାରୀ-ମଡେଲ୍ ଯୁଗଳ / 1,475ଟି କଞ୍ଚା ମଡେଲ୍ ID** ଅନ୍ତର୍ଭୁକ୍ତ; ପୃଥକ ମାଗଣା-ବଜେଟ୍ କ୍ୟାଟାଲଗ୍ରେ **471ଟି ପ୍ରତି-ମଡେଲ୍ ଧାଡ଼ି**, **34ଟି ପୁନରାବୃତ୍ତ ପୁଲ୍** ଏବଂ **52ଟି ପୁନରାବୃତ୍ତ/କୀ-ବିହୀନ ସବୁଦିନ-ମାଗଣା ପ୍ରଦାନକାରୀ** ଅଛନ୍ତି। ଏଗୁଡ଼ିକ ଉଦ୍ଦେଶ୍ୟମୂଳକ ଭାବେ ଭିନ୍ନ ହର; ସଂଜ୍ଞା ଏବଂ ପୁଲ୍-ଡିଡୁପ୍ଲିକେଟ୍ ହୋଇଥିବା ଗଣନାଗୁଡ଼ିକ [ପ୍ରଦାନକାରୀ ସନ୍ଦର୍ଭ](docs/reference/PROVIDER_REFERENCE.md) ଏବଂ [ମାଗଣା ସ୍ତର](docs/reference/FREE_TIERS.md)ରେ ଉପଲବ୍ଧ।
+> କ୍ୟାନୋନିକାଲ୍ ଚାଟ୍, ମିଡିଆ, ସର୍ଚ୍ଚ, ଲୋକାଲ୍, କ୍ଲାଉଡ୍-ଏଜେଣ୍ଟ ଏବଂ ସିଷ୍ଟମ୍ ସଂଗ୍ରହଗୁଡ଼ିକରେ **376 ପଞ୍ଜୀକୃତ ପ୍ରଦାନକାରୀ** ଅଛନ୍ତି, ଯେଉଁଥିରୁ **153ଟିରେ `hasFree: true` ଡିସ୍କଭରି ମେଟାଡାଟା ରହିଛି**। ଚାଟ୍ ମଡେଲ୍ ରେଜିଷ୍ଟ୍ରିରେ **239 ପ୍ରଦାନକାରୀ / 3,059ଟି ସ୍ୱତନ୍ତ୍ର ପ୍ରଦାନକାରୀ-ମଡେଲ୍ ଯୁଗଳ / 1,475ଟି କଞ୍ଚା ମଡେଲ୍ ID** ଅନ୍ତର୍ଭୁକ୍ତ; ପୃଥକ ମାଗଣା-ବଜେଟ୍ କ୍ୟାଟାଲଗ୍ରେ **484ଟି ପ୍ରତି-ମଡେଲ୍ ଧାଡ଼ି**, **34ଟି ପୁନରାବୃତ୍ତ ପୁଲ୍** ଏବଂ **52ଟି ପୁନରାବୃତ୍ତ/କୀଲେସ୍ ସର୍ବଦା-ମାଗଣା ପ୍ରଦାନକାରୀ** ଅଛନ୍ତି। ଡିଜାଇନ୍ ଅନୁଯାୟୀ ଏଗୁଡ଼ିକ ଭିନ୍ନ ହର; ସଂଜ୍ଞା ଏବଂ ପୁଲ୍-ଡିଡୁପ୍ଲିକେଟେଡ୍ ଗଣନାଗୁଡ଼ିକ [ପ୍ରଦାନକାରୀ ସନ୍ଦର୍ଭ](docs/reference/PROVIDER_REFERENCE.md) ଏବଂ [ମାଗଣା ସ୍ତର](docs/reference/FREE_TIERS.md)ରେ ଉପଲବ୍ଧ।
 
 <div align="center">
 
@@ -724,16 +724,16 @@ omniroute configure codex          # ଏଗୁଡ଼ିକ ମଧ୍ୟ: claude 
   </tr>
 </table>
 
-<sub>…ଏବଂ ଆହୁରି 350+ — ପ୍ରତ୍ୟେକ ଆଇକନ୍ ଡ୍ୟାସ୍ବୋର୍ଡର ପ୍ରଦାନକାରୀ କ୍ୟାଟାଲଗ୍ରୁ ସିଧାସଳଖ ରିଜଲ୍ଭ ହୁଏ। 📖 [ପ୍ରଦାନକାରୀ ସନ୍ଦର୍ଭ](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…ଏବଂ ଆହୁରି 350+ — ପ୍ରତ୍ୟେକ ଆଇକନ୍ ଡ୍ୟାସ୍ବୋର୍ଡର ପ୍ରଦାନକାରୀ କ୍ୟାଟାଲଗ୍ରୁ ଲାଇଭ୍ ରିଜଲ୍ଭ ହୁଏ। 📖 [ପ୍ରଦାନକାରୀ ସନ୍ଦର୍ଭ](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
-### 🆓 ସବୁଦିନ ପାଇଁ ମାଗଣା — $0, କୌଣସି କାର୍ଡ ଆବଶ୍ୟକ ନାହିଁ
+### 🆓 ସର୍ବଦା ମାଗଣା — $0, କୌଣସି କାର୍ଡ ନାହିଁ
 
 <table>
   <tr>
-    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>କୌଣସି ଟୋକେନ୍ ସୀମା ନାହିଁ</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="Kilo Code"/><br/><b>Kilo Code</b><br/><sub>ସ୍ୱୟଂଚାଳିତ ରାଉଟର୍, Tencent Hy3<br/>ସବୁଦିନ ପାଇଁ ମାଗଣା</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>ଟୋକେନ୍ ସୀମା ନାହିଁ</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="Kilo Code"/><br/><b>Kilo Code</b><br/><sub>ସ୍ୱୟଂଚାଳିତ-ରାଉଟର୍, Tencent Hy3<br/>ସବୁଦିନ ପାଇଁ ମାଗଣା</sub></td>
     <td align="center" width="150"><img src="./public/providers/requesty.svg" width="42" alt="Requesty"/><br/><b>Requesty</b><br/><sub>GPT-OSS 120B, Nemotron<br/>ସବୁଦିନ ପାଇଁ ମାଗଣା</sub></td>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/siliconcloud-color.svg" width="42" alt="SiliconFlow"/><br/><b>SiliconFlow</b><br/><sub>DeepSeek V3.2 / R1<br/>ମାଗଣା ସ୍ତର</sub></td>
     <td align="center" width="150"><img src="./public/providers/zhipu.svg" width="42" alt="Z.AI GLM"/><br/><b>Z.AI GLM</b><br/><sub>GLM-4.7 / 4.5-Flash<br/>ସବୁଦିନ ପାଇଁ ମାଗଣା</sub></td>
@@ -745,11 +745,11 @@ omniroute configure codex          # ଏଗୁଡ଼ିକ ମଧ୍ୟ: claude 
     <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50+ ମଡେଲ୍<br/>10K ନ୍ୟୁରନ୍/ଦିନ</sub></td>
     <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>~40 RPM ମାଗଣା</sub></td>
     <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>ଏକକାଳୀନ $5 କ୍ରେଡିଟ୍; କାର୍ଡ ଆବଶ୍ୟକ</sub></td>
-    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free ମଡେଲ୍<br/>+$10 → ଅଧିକ RPM</sub></td>
+    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free ମଡେଲ୍ଗୁଡ଼ିକ<br/>+$10 → ଅଧିକ RPM</sub></td>
   </tr>
 </table>
 
-📖 ସମ୍ପୂର୍ଣ୍ଣ ମେସିନ୍-ପଠନୀୟ କ୍ୟାଟାଲଗ୍ → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
+📖 ସମ୍ପୂର୍ଣ୍ଣ ମେସିନ୍-ପଠନଯୋଗ୍ୟ କ୍ୟାଟାଲଗ୍ → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
 
 <br/>
 </div>
