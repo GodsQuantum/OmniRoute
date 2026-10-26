@@ -12,35 +12,33 @@
 
 ---
 
-## Nedir
+## Nedir?
 
-OmniRoute 375 sağlayıcı kaydeder; bunların 155'i **ücretsiz/kimlik-doğrulamasız**
-olarak işaretlenmiş katalog girdisidir
-(kimlik-doğrulamasız, ücretsiz katman OAuth veya ücretsiz katman API anahtarı — bkz.
+OmniRoute, **ücretsiz/kimlik doğrulamasız** olarak işaretlenmiş 155 katalog girdisi dahil olmak üzere 376 sağlayıcı kaydeder
+(kimlik doğrulamasız,
+ücretsiz katman OAuth veya ücretsiz katman API anahtarı — bkz.
 [Ücretsiz Katmanlar Kılavuzu](../getting-started/FREE-TIERS-GUIDE.md) ve tam
-[Ücretsiz Katmanlar dizini](../reference/FREE_TIERS.md)). İşin püf noktası şu: ücretsiz
-sağlayıcılar model kalitesi açısından büyük farklılık gösterir. Öncü (frontier) bir model
-sunan kimlik-doğrulamasız bir sağlayıcı, küçük bir eski nesil model sunandan çok daha
-kullanışlıdır.
+[Ücretsiz Katmanlar dizini](../reference/FREE_TIERS.md)). Ancak ücretsiz sağlayıcılar,
+model kalitesi açısından büyük farklılıklar gösterir. Öncü bir model sunan kimlik doğrulamasız bir sağlayıcı,
+küçük ve eski bir model sunan sağlayıcıdan çok daha kullanışlıdır.
 
 **Ücretsiz Sağlayıcı Sıralamaları**, her ücretsiz sağlayıcının kataloğunu
-**Arena AI liderlik tablosundan** gelen **kitle kaynaklı kalite puanlarıyla**
-birleştirerek "**hangi ücretsiz sağlayıcı bana en iyi modeli verir?**" sorusunu yanıtlar
-(insan tercihi ELO'su; LMArena sohbet robotu arenasının arkasındaki fikrin aynısı).
-Sağlayıcılar daha sonra **en iyi ücretsiz modellerinin** gücüne göre sıralanır.
+**Arena AI liderlik tablosundaki** **kitle kaynaklı kalite puanlarıyla**
+(insan tercihine dayalı ELO; LMArena chatbot arenasının arkasındaki fikirle aynıdır)
+birleştirerek "**hangi ücretsiz sağlayıcı bana en iyi modeli sunuyor?**" sorusunu yanıtlar.
+Ardından sağlayıcılar, sundukları **en iyi ücretsiz modelin** gücüne göre sıralanır.
 
-Sıralama üç gerçek kaynaktan hesaplanır:
+Sıralama, üç gerçek kaynaktan hesaplanır:
 
-1. Ücretsiz sağlayıcı listeleri — `NOAUTH_PROVIDERS`, artı `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` içinde `hasFree` olarak işaretlenmiş girdiler
+1. Ücretsiz sağlayıcı listeleri — `NOAUTH_PROVIDERS` ve ayrıca `hasFree` olarak işaretlenmiş
+   `OAUTH_PROVIDERS` / `APIKEY_PROVIDERS` girdileri
    (`src/shared/constants/providers.ts`).
-2. Sağlayıcı kayıt defterinden her sağlayıcının model kataloğu
+2. Sağlayıcı kayıt defterindeki her sağlayıcının model kataloğu
    (`open-sse/config/providerRegistry.ts`).
 3. Arena ELO eşitleme motoru (`src/lib/arenaEloSync.ts`) tarafından
-   `model_intelligence` DB tablosunda saklanan, ELO'dan türetilmiş görev uygunluğu
-   puanları.
+   `model_intelligence` veritabanı tablosunda saklanan ELO türevi göreve uygunluk puanları.
 
-Birleştirme mantığı `src/lib/freeProviderRankings.ts` dosyasında bulunur.
+Birleştirme mantığı `src/lib/freeProviderRankings.ts` içinde yer alır.
 
 ---
 

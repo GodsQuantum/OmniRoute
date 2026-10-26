@@ -484,17 +484,17 @@ On obrađuje:
 
 ## Konfiguracija
 
-`open-sse/config/` sadrži sloj konfiguracije:
+`open-sse/config/` sadrži konfiguracijski sloj:
 
-| Fajl                          | Svrha                                                |
-| ----------------------------- | ---------------------------------------------------- |
-| `providerRegistry.ts`         | Registar chat-modela nad katalogom od 375 provajdera |
-| `providerModels.ts`           | Alijasi modela, mapiranje formata                    |
-| `constants.ts`                | Vremenska ograničenja, limiti, statusni kodovi       |
-| `defaultThinkingSignature.ts` | Zadani Claude thinking potpis                        |
-| `modelStrip.ts` (u servisima) | Uklanjanje polja po provajderu                       |
+| Datoteka                      | Namjena                                           |
+| ----------------------------- | ------------------------------------------------- |
+| `providerRegistry.ts`         | Registar chat modela za katalog od 376 provajdera |
+| `providerModels.ts`           | Aliasi modela, mapiranje formata                  |
+| `constants.ts`                | Vremenska ograničenja, limiti, statusni kodovi    |
+| `defaultThinkingSignature.ts` | Zadani Claude potpis razmišljanja                 |
+| `modelStrip.ts` (u servisima) | Uklanjanje polja specifično za svakog provajdera  |
 
-### Šema registra provajdera
+### Shema registra provajdera
 
 ```ts
 interface ProviderConfig {
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Zod validacija pri učitavanju modula osigurava da su sve konfiguracije provajdera ispravne.
+Zod validacija pri učitavanju modula osigurava da su sve konfiguracije provajdera valjane.
 
 ---
 

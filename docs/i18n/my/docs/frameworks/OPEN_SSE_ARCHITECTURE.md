@@ -482,19 +482,19 @@ createResponsesApiTransformStream(): TransformStream
 
 ---
 
-## သတ်မှတ်ချက်များ
+## ဖွဲ့စည်းသတ်မှတ်ချက်
 
-`open-sse/config/` တွင် configuration layer ကို သိမ်းဆည်းထားသည်-
+`open-sse/config/` တွင် ဖွဲ့စည်းသတ်မှတ်ချက်အလွှာ ပါဝင်သည်-
 
-| ဖိုင်                             | ရည်ရွယ်ချက်                                                              |
-| --------------------------------- | ------------------------------------------------------------------------ |
-| `providerRegistry.ts`             | provider 375 ခု ပါဝင်သော catalog အပေါ် အခြေခံထားသည့် chat-model registry |
-| `providerModels.ts`               | Model alias များ၊ format mapping                                         |
-| `constants.ts`                    | Timeout များ၊ limit များ၊ status code များ                               |
-| `defaultThinkingSignature.ts`     | Default Claude thinking signature                                        |
-| `modelStrip.ts` (services ထဲတွင်) | Provider တစ်ခုချင်းစီအတွက် field stripping                               |
+| ဖိုင်                                   | ရည်ရွယ်ချက်                                                  |
+| --------------------------------------- | ------------------------------------------------------------ |
+| `providerRegistry.ts`                   | ပံ့ပိုးသူ 376 ခုပါ ကတ်တလောက်အတွက် ချတ်မော်ဒယ် မှတ်ပုံတင်စနစ် |
+| `providerModels.ts`                     | မော်ဒယ် အမည်ကွဲများ၊ ဖော်မတ် ချိတ်ဆက်သတ်မှတ်ခြင်း            |
+| `constants.ts`                          | အချိန်ကုန်ဆုံးမှုများ၊ ကန့်သတ်ချက်များ၊ အခြေအနေကုဒ်များ      |
+| `defaultThinkingSignature.ts`           | မူလ Claude စဉ်းစားမှု လက်မှတ်                                |
+| `modelStrip.ts` (ဝန်ဆောင်မှုများအတွင်း) | ပံ့ပိုးသူတစ်ခုချင်းအလိုက် ဖီးလ်များ ဖယ်ရှားခြင်း             |
 
-### Provider Registry Schema
+### ပံ့ပိုးသူ မှတ်ပုံတင်စနစ် Schema
 
 ```ts
 interface ProviderConfig {
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Module load လုပ်ချိန်တွင် Zod validation က provider config အားလုံး မှန်ကန်ကြောင်း သေချာစေသည်။
+မော်ဂျူး စတင်ဖွင့်ချိန်တွင် Zod စစ်ဆေးအတည်ပြုခြင်းက ပံ့ပိုးသူ ဖွဲ့စည်းသတ်မှတ်ချက်အားလုံး မှန်ကန်ကြောင်း သေချာစေသည်။
 
 ---
 

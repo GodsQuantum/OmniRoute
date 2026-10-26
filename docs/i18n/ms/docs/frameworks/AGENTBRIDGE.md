@@ -14,16 +14,16 @@ AgentBridge ialah proksi MITM (Man-in-the-Middle) OmniRoute yang memintas trafik
 
 ## §1 Gambaran Keseluruhan
 
-### Apakah AgentBridge?
+### Apakah itu AgentBridge?
 
-Apabila ejen IDE (cth., GitHub Copilot, Cursor, Claude Code) membuat panggilan API, ia bersambung terus ke penyedia AI hulu (OpenAI, Anthropic, dsb.). AgentBridge memintas sambungan tersebut secara telus pada tahap TLS — tanpa memerlukan sebarang perubahan konfigurasi ejen — dan menulis semula permintaan itu melalui OmniRoute.
+Apabila ejen IDE (cth., GitHub Copilot, Cursor, Claude Code) membuat panggilan API, ia bersambung terus kepada penyedia AI huluan (OpenAI, Anthropic, dll.). AgentBridge memintas sambungan tersebut secara telus pada peringkat TLS — tanpa memerlukan sebarang perubahan konfigurasi ejen — dan menulis semula permintaan melalui OmniRoute.
 
 Ini bermakna anda boleh:
 
-- **Menghala semula sebarang ejen ke sebarang penyedia**: Copilot berhubung dengan OpenAI? Alihkannya ke Anthropic Claude, Gemini, atau mana-mana daripada 375 penyedia OmniRoute.
-- **Menggunakan pemetaan model**: `gemini-3-flash` → `claude-sonnet-4.7` secara telus pada tahap pengendali.
-- **Memerhati semua trafik ejen**: setiap permintaan yang dipintas diterbitkan ke [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
-- **Menggunakan daya tahan OmniRoute**: penghalaan kombo, pemutus litar, fallback, dan penjejakan kos turut berfungsi untuk trafik ejen IDE.
+- **Menghalakan semula mana-mana ejen kepada mana-mana penyedia**: Copilot berkomunikasi dengan OpenAI? Halakan semula kepada Anthropic Claude, Gemini, atau mana-mana daripada 376 penyedia OmniRoute.
+- **Menggunakan pemetaan model**: `gemini-3-flash` → `claude-sonnet-4.7` secara telus pada peringkat pengendali.
+- **Memantau semua trafik ejen**: setiap permintaan yang dipintas diterbitkan kepada [Pemeriksa Trafik](./TRAFFIC_INSPECTOR.md).
+- **Menggunakan daya tahan OmniRoute**: penghalaan gabungan, pemutus litar, pilihan sandaran, dan penjejakan kos turut berfungsi untuk trafik ejen IDE.
 
 ### Kedudukan berbanding pasaran
 
@@ -37,13 +37,13 @@ Ini bermakna anda boleh:
 | Zed Industries       |    —    |    ✓     |        —        |             ✓             |
 | Claude Code          |    —    |    —     |        ✓        |             ✓             |
 | Open Code            |    —    |    —     |        ✓        |             ✓             |
-| Trae                 |    —    |    —     |        —        |   🔍 Dalam Penyiasatan    |
-| UI Papan Pemuka      |    ✓    |    ✗     |        ✗        |             ✓             |
-| Traffic Inspector    |    ✗    |    ✗     |        ✓        |             ✓             |
+| Trae                 |    —    |    —     |        —        |     🔍 Dalam siasatan     |
+| UI papan pemuka      |    ✓    |    ✗     |        ✗        |             ✓             |
+| Pemeriksa Trafik     |    ✗    |    ✗     |        ✓        |             ✓             |
 | Penghalaan OmniRoute |    ✗    |    ✗     |        ✗        |             ✓             |
-| UI Pemetaan Model    |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI pemetaan model    |    ✗    |    ✗     |        ✗        |             ✓             |
 | Senarai pintasan     |    ✗    |    ✗     |        ✓        |             ✓             |
-| Sijil CA hulu        |    ✗    |    ✗     |        ✓        |             ✓             |
+| Sijil CA huluan      |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
