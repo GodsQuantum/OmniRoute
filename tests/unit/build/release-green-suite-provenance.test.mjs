@@ -17,13 +17,15 @@ const names = [
   "unit-2",
   "integration-1",
   "integration-2",
+  "integration-3",
+  "integration-4",
   "vitest-1",
   "vitest-2",
   "vitest-3",
   "vitest-4",
 ];
 const log = "Tests 5 passed\n";
-const command = (name) => ({
+const command = (name, integrationShards = 4) => ({
   script: name.startsWith("unit-")
     ? "test:unit:ci:shard"
     : name.startsWith("integration-")
@@ -31,11 +33,14 @@ const command = (name) => ({
       : name === "vitest-1"
         ? "test:vitest+test:vitest:ui"
         : "test:vitest:ui",
-  shard: `${name.split("-")[1]}/${name.startsWith("vitest-") ? 4 : 2}`,
+  shard: `${name.split("-")[1]}/${name.startsWith("unit-") ? 2 : name.startsWith("integration-") ? integrationShards : 4}`,
 });
 
 // Public observer JSON + exit, with only unrelated external commands substituted.
-function observe(mutate = () => {}, { extra = false, workflow = workflowSha, omit = [] } = {}) {
+function observe(
+  mutate = () => {},
+  { extra = false, workflow = workflowSha, omit = [], receiptIntegrationShards = 4 } = {}
+) {
   mkdirSync(join(root, "_artifacts"), { recursive: true });
   const dir = mkdtempSync(join(root, "_artifacts/suite-provenance-"));
   try {
@@ -65,20 +70,23 @@ function observe(mutate = () => {}, { extra = false, workflow = workflowSha, omi
     );
     writeFileSync(
       join(dir, ".github/workflows/ci.yml"),
-      `jobs:
-  test-unit:
-    strategy: {matrix: {shard: [1, 2]}}
-    steps:
-      - env: {TEST_SHARD: "\${{ matrix.shard }}/2"}
-  test-integration:
-    strategy: {matrix: {shard: [1, 2]}}
-    steps:
-      - env: {TEST_SHARD: "\${{ matrix.shard }}/2"}
-  test-vitest:
-    strategy: {matrix: {shard: [1, 2, 3, 4]}}
-    steps:
-      - env: {TEST_SHARD: "\${{ matrix.shard }}/4"}
-`
+      JSON.stringify({
+        jobs: {
+          "test-unit": {
+            strategy: { matrix: { shard: [1, 2] } },
+            steps: [{ env: { TEST_SHARD: "${{ matrix.shard }}/2" } }],
+          },
+          // Consume the current integration policy, so a stale two-shard workflow cannot
+          // pass by agreeing with another obsolete fixture copied into this test.
+          "test-integration": parseYaml(
+            readFileSync(join(root, ".github/workflows/ci.yml"), "utf8")
+          ).jobs["test-integration"],
+          "test-vitest": {
+            strategy: { matrix: { shard: [1, 2, 3, 4] } },
+            steps: [{ env: { TEST_SHARD: "${{ matrix.shard }}/4" } }],
+          },
+        },
+      })
     );
     const executable = (name, body) =>
       writeFileSync(join(dir, "bin", name), `#!${process.execPath}\n${body}`, { mode: 0o755 });
@@ -108,7 +116,7 @@ function observe(mutate = () => {}, { extra = false, workflow = workflowSha, omi
         nodeVersion: process.version,
         lockfileSha256: hash("{}"),
         logSha256: hash(log),
-        ...command(name),
+        ...command(name, receiptIntegrationShards),
       };
       if (name === "unit-1") mutate(receipt);
       writeFileSync(join(dir, "suites", `${name}.json`), JSON.stringify(receipt));
@@ -297,6 +305,39 @@ test(
     assert.equal(result.report.releaseGreen, true);
   }
 );
+
+test(
+  "the public observer rejects receipts from the retired two-shard integration matrix",
+  { skip: process.platform === "win32" },
+  () => {
+    const result = observe(() => {}, {
+      omit: ["integration-3", "integration-4"],
+      receiptIntegrationShards: 2,
+    });
+    assert.equal(result.status, 1);
+    assert.equal(result.report.releaseGreen, false);
+    assert.equal(
+      result.report.hardFailures.find((entry) => entry.id === "integration")?.detail,
+      "integration-1 no result, integration-2 no result, integration-3 no result, integration-4 no result"
+    );
+  }
+);
+
+for (const missing of ["integration-1", "integration-2", "integration-3", "integration-4"]) {
+  test(
+    `the public observer rejects missing hosted integration shard ${missing}`,
+    { skip: process.platform === "win32" },
+    () => {
+      const result = observe(() => {}, { omit: [missing] });
+      assert.equal(result.status, 1);
+      assert.equal(result.report.releaseGreen, false);
+      assert.equal(
+        result.report.hardFailures.find((entry) => entry.id === "integration")?.detail,
+        `${missing} no result`
+      );
+    }
+  );
+}
 
 test(
   "the public observer requires the workflow commit argument for hosted receipts",

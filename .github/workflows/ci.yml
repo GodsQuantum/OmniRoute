@@ -1429,7 +1429,7 @@ jobs:
           token: ${{ secrets.TRUNK_TOKEN }}
 
   test-integration:
-    name: Integration Tests (${{ matrix.shard }}/2)
+    name: Integration Tests (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # needs: changes (not build) — no artifact consumed; see test-unit note.
@@ -1438,7 +1438,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3, 4]
     env:
       JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-test-api-key-secret-long
@@ -1458,9 +1458,9 @@ jobs:
           # PR acceleration is not release-candidate provenance.
           cache: ${{ github.event_name == 'pull_request' }}
       - run: npm run check:node-runtime
-      - name: Integration tests (shard ${{ matrix.shard }}/2)
+      - name: Integration tests (shard ${{ matrix.shard }}/4)
         env:
-          TEST_SHARD: ${{ matrix.shard }}/2
+          TEST_SHARD: ${{ matrix.shard }}/4
         run: npm run test:integration:ci
 
   test-security:
