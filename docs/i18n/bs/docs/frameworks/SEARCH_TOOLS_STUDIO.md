@@ -4,8 +4,6 @@
 
 ---
 
-# Search Tools Studio
-
 > **Funkcionalnost:** Search Tools Studio — jedinstveni radni prostor za web alate na `/dashboard/search-tools`.
 > **Planovi:** `18-search-tools-studio-redesign.plan.md` + `_orchestration/master-plan-group-C.md`
 > **Status:** Objavljeno u v3.8.6

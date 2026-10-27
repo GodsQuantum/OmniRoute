@@ -4,8 +4,6 @@
 
 ---
 
-# Traffic Inspector
-
 Traffic Inspector je OmniRoute-ov ugrađeni HTTPS debugger saobraćaja — alat sličan Charles Proxy / mitmweb / HTTP Toolkit koji je **svjestan LLM-a** (LLM-aware) i **svjestan agenata** (agent-aware). Nalazi se na `/dashboard/tools/traffic-inspector` i prima saobraćaj uživo sa do 5 istovremenih izvora snimanja.
 
 **Lokacija kontrolne table:** `/dashboard/tools/traffic-inspector`
