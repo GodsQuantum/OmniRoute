@@ -18,7 +18,7 @@ OmniRoute xuất bản các artifact npm + Docker. Các cổng này cung cấp b
 
 Cơ chế điều chỉnh CVE của image sử dụng **hai bước** trong `docker-publish.yml`: bước SARIF (`HIGH,CRITICAL`, `exit-code: 0`) giữ cho các CVE mức HIGH+CRITICAL hiển thị trong tab Security mà không chặn; bước _cổng CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) sẽ làm thất bại quá trình phát hành nếu có CVE mức CRITICAL **có bản vá khả dụng**. `ignore-unfixed` ngăn chặn việc chặn phát hành đối với CVE của image cơ sở mà không có bản vá từ nhà cung cấp.
 
-## ⚠️ Biến động CVE (chặn các cổng osv/Trivy)
+## ⚠️ Biến động CVE (các cổng osv/Trivy có tính chặn)
 
 osv và Trivy đối chiếu các dependency với cơ sở dữ liệu CVE vốn **liên tục phát triển**. Một PR
 **không thay đổi dependency nào** vẫn có thể đột ngột chuyển sang trạng thái đỏ vì một CVE mới
@@ -34,9 +34,8 @@ Khi osv hoặc Trivy chuyển sang trạng thái đỏ do một CVE mới đư�
    - **osv:** thiết lập lại mức cơ sở cho `metrics.vulnCount` trong `config/quality/quality-baseline.json`
      (`npm run quality:ratchet -- --update` không áp dụng cho các cổng chuyên biệt — hãy chỉnh sửa giá trị
      thủ công, `direction:down`) kèm ghi chú giải thích + issue theo dõi.
-   - **Trivy:** thêm một mục vào `.trivyignore` (mỗi dòng một CVE-ID) kèm comment giải thích
-     - issue theo dõi. `ignore-unfixed: true` đã tự động bao gồm các CVE chưa có
-       bản vá.
+   - **Trivy:** thêm một mục vào `.trivyignore` (mỗi dòng một CVE-ID) kèm comment giải thích + issue theo dõi. `ignore-unfixed: true` đã tự động bao gồm các CVE chưa có
+     bản vá.
 
 Các lần thực thi OSV bắt buộc (`check:vuln-ratchet -- --ratchet`) sẽ thất bại theo cơ chế đóng an toàn với
 `INCOMPLETE` và mã thoát 2 khi không thể xác thực trình quét, báo cáo hoặc mức cơ sở.

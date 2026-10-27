@@ -18,7 +18,7 @@ Foilsíonn OmniRoute airteagail npm + Docker. Soláthraíonn na geataí seo bun�
 
 Úsáideann an ratchet CVE íomhá **dhá chéim** i `docker-publish.yml`: coinníonn an chéim SARIF (`HIGH,CRITICAL`, `exit-code: 0`) ARD+CRITICIÚIL le feiceáil sa chluaisín Slándála gan bac a chur air; teipeann ar an gcéim _geata CRITICIÚIL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) an scaoileadh ar CVE CRITICIÚIL **le réiteach ar fáil**. Cuireann `ignore-unfixed` cosc ar bhac a chur ar an scaoileadh le haghaidh CVE buníomhá gan paiste uas-srutha.
 
-## ⚠️ Athraitheacht CVE (ag blocáil geataí osv/Trivy)
+## ⚠️ Athraitheacht CVE (geataí blocála osv/Trivy)
 
 Cuireann osv agus Trivy spleáchais i gcomparáid le bunachair sonraí CVE a fhásann **go leanúnach**. Is féidir le PR
 nach **mbaineann le haon spleáchas** éirí dearg go tobann toisc gur nochtadh CVE nua
@@ -30,7 +30,7 @@ Nuair a éiríonn osv nó Trivy dearg de bharr CVE nuanochtaithe, seo a leanas a
 
 1. **Nuashonraigh an spleáchas lena mbaineann** (an rogha is fearr) — uasghrádaigh go dtí an leagan paisteáilte trí `package.json`
    `overrides` (spleáchais indíreacha) nó atóg an íomhá ar bhonn paisteáilte.
-2. **Mura bhfuil aon réiteach réamhtheachtach ann:**
+2. **Mura bhfuil aon réiteach upstream ann:**
    - **osv:** athshocraigh bunlíne `metrics.vulnCount` in `config/quality/quality-baseline.json`
      (ní chumhdaíonn `npm run quality:ratchet -- --update` geataí tiomnaithe — cuir an luach in eagar
      de láimh, `direction:down`) agus cuir nóta réasúnaithe + saincheist rianaithe leis.

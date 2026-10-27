@@ -25,7 +25,7 @@ neblokuodamas; _CRITICAL vartų_ žingsnis (`severity: CRITICAL`, `ignore-unfixe
 `exit-code: 1`) nutraukia išleidimą, jei aptinkamas CRITICAL CVE **su galimu pataisymu**. `ignore-unfixed`
 neleidžia blokuoti išleidimo dėl bazinio atvaizdo CVE be aukštesniojo lygio pataisymo.
 
-## ⚠️ CVE kintamumas (blokuojantis osv/Trivy patikras)
+## ⚠️ CVE kintamumas (blokuojančios osv/Trivy patikros)
 
 osv ir Trivy lygina priklausomybes su CVE duomenų bazėmis, kurios **nuolat auga**. PR,
 kuris **nekeičia jokių priklausomybių**, gali staiga tapti raudonas, nes buvo

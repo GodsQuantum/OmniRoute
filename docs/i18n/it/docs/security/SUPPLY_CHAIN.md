@@ -25,7 +25,7 @@ senza bloccare; il passaggio del _CRITICAL gate_ (`severity: CRITICAL`, `ignore-
 `exit-code: 1`) fa fallire il rilascio in caso di CVE CRITICAL **con una correzione disponibile**. `ignore-unfixed`
 impedisce di bloccare il rilascio per una CVE dell'immagine di base senza una patch a monte.
 
-## ⚠️ Variabilità delle CVE (blocca i gate osv/Trivy)
+## ⚠️ Variabilità delle CVE (gate osv/Trivy bloccanti)
 
 osv e Trivy confrontano le dipendenze con database di CVE che **crescono continuamente**. Una PR
 che **non modifica alcuna dipendenza** può improvvisamente diventare rossa perché una nuova CVE è stata

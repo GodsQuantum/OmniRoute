@@ -18,7 +18,7 @@ OmniRoute מפרסמת ארטיפקטים של npm + Docker. שערים אלה �
 
 מנגנון ה-CVE ratchet של התמונה משתמש ב**שני שלבים** ב-`docker-publish.yml`: שלב ה-SARIF (`HIGH,CRITICAL`, `exit-code: 0`) משאיר את HIGH+CRITICAL גלויים בלשונית האבטחה מבלי לחסום; שלב _שער ה-CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) מכשיל את השחרור על CVE קריטי **עם תיקון זמין**. `ignore-unfixed` מונע חסימת השחרור עבור CVE של תמונת בסיס ללא תיקון מהמקור.
 
-## ⚠️ שונות ב-CVE (חסימת שערי osv/Trivy)
+## ⚠️ שונות ב-CVE (שערי osv/Trivy חוסמים)
 
 osv ו-Trivy משווים תלויות מול מסדי נתונים של CVE ש**גדלים באופן רציף**. ‏PR
 ש**אינו משנה תלויות כלל** עלול להפוך לפתע לאדום משום ש-CVE חדש

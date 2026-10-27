@@ -18,7 +18,7 @@ OmniRoute na-ebipụta npm + Docker artifacts. Ọnụ ụzọ ndị a na-enye a
 
 CVE ratchet nke onyonyo na-eji **usoro abụọ** na `docker-publish.yml`: usoro SARIF (`HIGH,CRITICAL`, `exit-code: 0`) na-eme ka HIGH+CRITICAL pụta ìhè na taabụ Nchedo n'egbochighị; usoro _ọnụ ụzọ CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) na-eme ka mwepụta ahụ daa na CRITICAL CVE **nke nwere ndozi dịnụ**. `ignore-unfixed` na-egbochi igbochi mwepụta maka CVE onyonyo-isi na-enweghị patch sitere n'elu.
 
-## ⚠️ Mgbanwe CVE (na-egbochi ọnụ ụzọ osv/Trivy)
+## ⚠️ Mgbanwe CVE (ọnụ ụzọ osv/Trivy na-egbochi)
 
 osv na Trivy na-atụnyere ndabere megide ọdụ data CVE ndị **na-eto mgbe niile**. PR
 nke **na-adịghị agbanwe ndabere ọ bụla** nwere ike ịgbanwe na mberede gaa na uhie n’ihi na e

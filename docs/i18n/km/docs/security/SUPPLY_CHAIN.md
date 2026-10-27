@@ -18,7 +18,7 @@ OmniRoute បោះពុម្ពផ្សាយ npm + Docker artifacts។ ច�
 
 CVE ratchet រូបភាពប្រើប្រាស់ **ពីរជំហាន** នៅក្នុង `docker-publish.yml`: ជំហាន SARIF (`HIGH,CRITICAL`, `exit-code: 0`) រក្សា HIGH+CRITICAL ឱ្យមើលឃើញនៅក្នុងផ្ទាំង Security ដោយមិនទប់ស្កាត់; ជំហាន _CRITICAL gate_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) ធ្វើឱ្យការចេញផ្សាយបរាជ័យលើ CRITICAL CVE **ដែលមានដំណោះស្រាយដែលអាចប្រើបាន**។ `ignore-unfixed` ការពារការទប់ស្កាត់ការចេញផ្សាយសម្រាប់ base-image CVE ដែលគ្មាន upstream patch។
 
-## ⚠️ ភាពប្រែប្រួលនៃ CVE (រារាំងច្រកត្រួតពិនិត្យ osv/Trivy)
+## ⚠️ ភាពប្រែប្រួលនៃ CVE (ច្រកត្រួតពិនិត្យ osv/Trivy ដែលមានលក្ខណៈរារាំង)
 
 osv និង Trivy ប្រៀបធៀប dependencies ជាមួយមូលដ្ឋានទិន្នន័យ CVE ដែល**កើនឡើងជាបន្តបន្ទាប់**។ PR មួយដែល
 **មិនបានប៉ះពាល់ dependencies ណាមួយ** អាចប្រែជាពណ៌ក្រហមភ្លាមៗ ដោយសារ CVE ថ្មីមួយត្រូវបាន
@@ -34,9 +34,8 @@ CVE ដែលមានលក្ខណៈរារាំង មិនមែនជ
    - **osv:** កំណត់ baseline ឡើងវិញសម្រាប់ `metrics.vulnCount` នៅក្នុង `config/quality/quality-baseline.json`
      (`npm run quality:ratchet -- --update` មិនគ្របដណ្ដប់ច្រកត្រួតពិនិត្យដាច់ដោយឡែកទេ — កែតម្លៃ
      ដោយដៃ ដោយប្រើ `direction:down`) ព្រមទាំងបន្ថែមកំណត់សម្គាល់អំពីហេតុផល + issue សម្រាប់តាមដាន។
-   - **Trivy:** បន្ថែមធាតុមួយនៅក្នុង `.trivyignore` (CVE-ID មួយក្នុងមួយបន្ទាត់) ជាមួយ comment អំពីហេតុផល
-     - issue សម្រាប់តាមដាន។ `ignore-unfixed: true` គ្របដណ្ដប់ CVE ដែលគ្មាន
-       បំណះដោយស្វ័យប្រវត្តិរួចហើយ។
+   - **Trivy:** បន្ថែមធាតុមួយនៅក្នុង `.trivyignore` (CVE-ID មួយក្នុងមួយបន្ទាត់) ជាមួយ comment អំពីហេតុផល + issue សម្រាប់តាមដាន។ `ignore-unfixed: true` គ្របដណ្ដប់ CVE ដែលគ្មាន
+     បំណះដោយស្វ័យប្រវត្តិរួចហើយ។
 
 ការប្រតិបត្តិ OSV ដែលតម្រូវឱ្យមាន (`check:vuln-ratchet -- --ratchet`) នឹងបិទដោយបរាជ័យជាមួយ
 `INCOMPLETE` និង exit 2 នៅពេលមិនអាចផ្ទៀងផ្ទាត់ scanner, report ឬ baseline បាន។

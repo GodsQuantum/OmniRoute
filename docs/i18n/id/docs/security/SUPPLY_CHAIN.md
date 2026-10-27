@@ -18,7 +18,7 @@ OmniRoute memublikasikan artefak npm + Docker. Gerbang-gerbang ini menyediakan p
 
 Penyetelan CVE gambar menggunakan **dua langkah** di `docker-publish.yml`: langkah SARIF (`HIGH,CRITICAL`, `exit-code: 0`) menjaga HIGH+CRITICAL tetap terlihat di tab Keamanan tanpa memblokir; langkah _gerbang KRITIS_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) menggagalkan rilis pada CVE KRITIS **dengan perbaikan yang tersedia**. `ignore-unfixed` mencegah pemblokiran rilis untuk CVE gambar dasar tanpa patch hulu.
 
-## ⚠️ Variansi CVE (memblokir gate osv/Trivy)
+## ⚠️ Variansi CVE (gate osv/Trivy yang memblokir)
 
 osv dan Trivy membandingkan dependensi dengan basis data CVE yang **terus bertambah**. Sebuah PR
 yang **tidak mengubah dependensi apa pun** dapat tiba-tiba menjadi merah karena CVE baru

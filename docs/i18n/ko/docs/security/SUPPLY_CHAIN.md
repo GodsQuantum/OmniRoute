@@ -18,7 +18,7 @@ OmniRoute는 npm + Docker 아티팩트를 게시합니다. 이러한 게이트�
 
 이미지 CVE 래칫은 `docker-publish.yml`에서 **두 단계**를 사용합니다. SARIF 단계(`HIGH,CRITICAL`, `exit-code: 0`)는 HIGH+CRITICAL을 차단 없이 보안 탭에 표시합니다. _CRITICAL 게이트_ 단계(`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`)는 **수정 가능한** CRITICAL CVE에 대해 릴리스를 실패시킵니다. `ignore-unfixed`는 업스트림 패치가 없는 기본 이미지 CVE로 인해 릴리스가 차단되는 것을 방지합니다.
 
-## ⚠️ CVE 변동성(osv/Trivy 게이트 차단)
+## ⚠️ CVE 변동성(차단형 osv/Trivy 게이트)
 
 osv와 Trivy는 **지속적으로 증가하는** CVE 데이터베이스를 기준으로 의존성을 비교합니다. **의존성을 전혀 변경하지 않은** PR도 기존 의존성에서 새로운 CVE가 공개되면 갑자기 실패 상태가 될 수 있습니다(osv: 측정된 `vulnCount` > 기준선, Trivy: 이미지에서 수정 가능한 새로운 CRITICAL 발견). **이는 차단형 CVE 게이트에서 예상되는 운영 동작이며, 제품 회귀가 아닙니다.**
 

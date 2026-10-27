@@ -18,7 +18,7 @@ OmniRoute julkaisee npm- ja Docker-artefakteja. Nämä portit tarjoavat alkuper�
 
 Kuvan CVE-kiristys käyttää **kahta vaihetta** tiedostossa `docker-publish.yml`: SARIF-vaihe (`HIGH,CRITICAL`, `exit-code: 0`) pitää HIGH+CRITICAL-löydökset näkyvissä Turvallisuus-välilehdellä estämättä julkaisua; _CRITICAL-portin_ vaihe (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) epäonnistuttaa julkaisun, jos kriittinen CVE **korjauksella on saatavilla**. `ignore-unfixed` estää julkaisun estämisen peruskuvan CVE:n vuoksi, jos ylävirran korjausta ei ole.
 
-## ⚠️ CVE-vaihtelu (estää osv-/Trivy-porttien läpäisyn)
+## ⚠️ CVE-vaihtelu (estävät osv-/Trivy-portit)
 
 osv ja Trivy vertaavat riippuvuuksia CVE-tietokantoihin, jotka **kasvavat jatkuvasti**. PR,
 joka **ei muuta riippuvuuksia**, voi muuttua yhtäkkiä punaiseksi, koska olemassa olevasta

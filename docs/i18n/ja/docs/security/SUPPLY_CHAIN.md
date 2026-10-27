@@ -18,7 +18,7 @@ OmniRouteはnpmとDockerのアーティファクトを公開しています。�
 
 イメージCVEラチェットは、`docker-publish.yml`で**2つのステップ**を使用します。SARIFステップ（`HIGH,CRITICAL`、`exit-code: 0`）は、HIGH+CRITICALをブロックせずにセキュリティタブに表示します。_CRITICALゲート_ステップ（`severity: CRITICAL`、`ignore-unfixed: true`、`exit-code: 1`）は、**修正が利用可能な**CRITICAL CVEでリリースを失敗させます。`ignore-unfixed`は、アップストリームのパッチがないベースイメージのCVEによるリリースブロックを防ぎます。
 
-## ⚠️ CVE の変動（osv/Trivy ゲートをブロック）
+## ⚠️ CVE の変動（ブロッキング osv/Trivy ゲート）
 
 osv と Trivy は、依存関係を**継続的に増加する** CVE データベースと照合します。**依存関係を一切変更していない** PR でも、既存の依存関係に新しい CVE が公開されたことで、突然失敗することがあります（osv：測定された `vulnCount` がベースラインを超過、Trivy：イメージ内に修正可能な新しい CRITICAL が存在）。**これは、ブロッキング CVE ゲートで想定される運用上の挙動であり、製品のリグレッションではありません。**
 

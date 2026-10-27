@@ -25,7 +25,7 @@ ba tare da toshewa ba; matakin _CRITICAL gate_ (`severity: CRITICAL`, `ignore-un
 `exit-code: 1`) yana kasa sakin akan CRITICAL CVE **tare da gyara da ake samu**. `ignore-unfixed`
 yana hana toshe sakin don CVE na asali ba tare da facin sama ba.
 
-## ⚠️ Bambancin CVE (yana toshe ƙofofin osv/Trivy)
+## ⚠️ Bambancin CVE (ƙofofin osv/Trivy masu toshewa)
 
 osv da Trivy suna kwatanta dependencies da ma'ajin bayanan CVE waɗanda suke **ci gaba da ƙaruwa**. Wani PR
 wanda **bai taɓa kowace dependency ba** zai iya sauyawa zuwa ja ba zato ba tsammani saboda an

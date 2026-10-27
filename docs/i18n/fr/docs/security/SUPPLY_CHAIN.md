@@ -25,7 +25,7 @@ sans les rendre bloquantes ; l’étape de _contrôle CRITICAL_ (`severity: CRIT
 `exit-code: 1`) fait échouer la publication en présence d’une CVE CRITICAL **pour laquelle un correctif est disponible**. `ignore-unfixed`
 empêche de bloquer la publication à cause d’une CVE de l’image de base sans correctif en amont.
 
-## ⚠️ Variabilité des CVE (bloquant les contrôles osv/Trivy)
+## ⚠️ Variabilité des CVE (contrôles osv/Trivy bloquants)
 
 osv et Trivy comparent les dépendances à des bases de données de CVE qui **s’enrichissent continuellement**. Une PR
 qui **ne modifie aucune dépendance** peut soudainement passer au rouge parce qu’une nouvelle CVE a été

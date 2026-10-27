@@ -18,7 +18,7 @@ OmniRoute npm + Docker artifacts ያትማል። እነዚህ መግቢያዎች
 
 የምስሉ CVE ratchet በ`docker-publish.yml` ውስጥ **ሁለት ደረጃዎችን** ይጠቀማል፦ የSARIF ደረጃ (`HIGH,CRITICAL`, `exit-code: 0`) HIGH+CRITICALን በደህንነት ትር (Security tab) ውስጥ ሳያግድ እንዲታይ ያደርጋል፤ የ_CRITICAL gate_ ደረጃ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) **መፍትሄ ያለው** CRITICAL CVE ሲገኝ መልቀቂያውን ያቋርጣል። `ignore-unfixed` ከላይኛው ምንጭ (upstream) ጥገና የሌለውን የመሠረት ምስል (base-image) CVE መልቀቂያውን እንዳያግድ ይከላከላል።
 
-## ⚠️ የCVE ልዩነት (የosv/Trivy ጌቶችን የሚያግድ)
+## ⚠️ የCVE ልዩነት (የማገጃ osv/Trivy ጌቶች)
 
 osv እና Trivy ጥገኞችን **ያለማቋረጥ እያደጉ ካሉ** የCVE የውሂብ ጎታዎች ጋር ያነጻጽራሉ። **ምንም ጥገኞችን የማይነካ** PR፣ በነባር ጥገኛ ውስጥ አዲስ CVE ይፋ ስለተደረገ ብቻ በድንገት ቀይ ሊሆን ይችላል (osv፦ የተለካው `vulnCount` > መነሻ መለኪያ፤ Trivy፦ በምስሉ ውስጥ አዲስ ሊስተካከል የሚችል CRITICAL)። **ይህ የሚጠበቅ የማገጃ CVE ጌት የአሠራር ባህሪ እንጂ የምርት ዳግም-ማሽቆልቆል አይደለም።**
 

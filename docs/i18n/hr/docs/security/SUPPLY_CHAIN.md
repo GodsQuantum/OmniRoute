@@ -19,7 +19,7 @@ OmniRoute objavljuje npm + Docker artefakte. Ove kontrole pružaju provjerljivos
 
 CVE ratchet slike koristi **dva koraka** u `docker-publish.yml`: SARIF korak (`HIGH,CRITICAL`, `exit-code: 0`) održava HIGH+CRITICAL vidljivim u kartici Sigurnost bez blokiranja; korak _CRITICAL kontrole_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) ne uspijeva izdanje na CRITICAL CVE-u **s dostupnim popravkom**. `ignore-unfixed` sprječava blokiranje izdanja za CVE osnovne slike bez uzvodne zakrpe.
 
-## ⚠️ Varijabilnost CVE-ova (blokira osv/Trivy provjere)
+## ⚠️ Varijabilnost CVE-ova (blokirajuće osv/Trivy provjere)
 
 osv i Trivy uspoređuju ovisnosti s bazama podataka CVE-ova koje **neprestano rastu**. PR
 koji **ne mijenja nijednu ovisnost** može iznenada postati crven jer je objavljen novi CVE

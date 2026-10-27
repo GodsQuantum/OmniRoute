@@ -19,7 +19,7 @@ Postura de **asesoramiento primero** — informan ahora, y se promueven a bloque
 
 El ajuste de CVE de la imagen utiliza **dos pasos** en `docker-publish.yml`: el paso SARIF (`HIGH,CRITICAL`, `exit-code: 0`) mantiene los CVE ALTO+CRÍTICO visibles en la pestaña de Seguridad sin bloquear; el paso de _puerta CRÍTICA_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) falla el lanzamiento ante un CVE CRÍTICO **con una solución disponible**. `ignore-unfixed` evita bloquear el lanzamiento por un CVE de imagen base sin un parche ascendente.
 
-## ⚠️ Variación de CVE (bloqueo de controles de osv/Trivy)
+## ⚠️ Variación de CVE (controles bloqueantes de osv/Trivy)
 
 osv y Trivy comparan las dependencias con bases de datos de CVE que **crecen continuamente**. Una PR
 que **no modifica ninguna dependencia** puede pasar repentinamente a rojo porque se haya

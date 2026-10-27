@@ -18,7 +18,7 @@ OmniRoute npm + Docker artefaktlarını dərc edir. Bu qapılar mənşə, invent
 
 Şəkil CVE ratçeti `docker-publish.yml` faylında **iki addımdan** istifadə edir: SARIF addımı (`HIGH,CRITICAL`, `exit-code: 0`) HIGH+CRITICAL səviyyələrini Təhlükəsizlik tabında bloklamadan görünən saxlayır; _KRİTİK qapı_ addımı (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) **mövcud düzəlişi olan** KRİTİK CVE-də buraxılışı uğursuz edir. `ignore-unfixed` yuxarı axın yaması olmayan əsas şəkil CVE-si üçün buraxılışın bloklanmasının qarşısını alır.
 
-## ⚠️ CVE dəyişkənliyi (osv/Trivy keçidlərini bloklayır)
+## ⚠️ CVE dəyişkənliyi (bloklayıcı osv/Trivy keçidləri)
 
 osv və Trivy asılılıqları **davamlı olaraq genişlənən** CVE verilənlər bazaları ilə müqayisə edir. **Heç bir asılılığa toxunmayan** PR mövcud asılılıqda yeni CVE açıqlandığı üçün qəfildən uğursuz ola bilər (osv: ölçülən `vulnCount` > ilkin göstərici; Trivy: obrazda aradan qaldırıla bilən yeni CRITICAL boşluq). **Bu, məhsul reqressiyası deyil, bloklayıcı CVE keçidinin GÖZLƏNİLƏN əməliyyat davranışıdır.**
 
