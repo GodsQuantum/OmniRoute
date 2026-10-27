@@ -151,7 +151,23 @@ santykinių importų). Tada: peržiūrėkite `git diff packages/ui-kit`, vizuali
 naudojimo ir galinio taško ekranus abiejose temose, paleiskite `npm run check:ui-kit-snapshot` ir `npm run test:vitest:ui` bei
 atidarykite PR, pridėdami pirminio šaltinio pakeitimų žurnalą.
 
-## 6. Nuorodų rodyklė
+## 6. README diagramos
+
+Dvylika diagramų, įterptų į šakninį `README.md` (`docs/diagrams/*.svg`), pritaiko rinkinį statiniams vaizdams. Jos generuojamos, o ne piešiamos ranka: `scripts/docs/gen-readme-*.mjs` yra 13 generatorių failų (dvylika diagramų ir valdiklis `gen-readme-diagrams.mjs`), o `tests/unit/docs/readme-*-svg.test.ts` yra 12 pasenimo testų, po vieną diagramai. Kiekvienas testas baitas po baito lygina į commit įtrauktą failą su jo generatoriaus išvestimi (užduotis `test-unit`).
+
+- **Žetonai.** `scripts/docs/readme-diagram-theme.mjs` kopijuoja paletę iš `packages/ui-kit/src/ci-tokens.css` (atitiktį šiam failui užtikrina `tests/unit/docs/readme-diagram-theme.test.ts`) ir apibrėžia teksto vaidmenis rinkinio šriftais: Instrument Serif išskirtiniam tekstui, Inter sąsajos tekstui, IBM Plex Mono skaičiams ir kodui. Tai tie patys `@fontsource` paketai, kuriuos `src/app/globals.css` įkelia valdymo skydeliui. Šviesios reikšmės yra failo `:root` dalyje, tamsios – po `prefers-color-scheme: dark` sąlyga, todėl kiekvienas vaizdas atitinka GitHub skaitytojo spalvų schemą.
+
+- **Šriftai.** `scripts/docs/readme-fonts.mjs` apriboja šiuos woff2 failus kiekvienoje diagramoje piešiamais glifais ir įterpia juos per `@font-face` kaip `data:` URI. Taip rinkinio šriftai lieka SVG viduje. Vietinis README vaizdų bandymas tikrina, kad atvaizduojant nebūtų išorinių šriftų užklausų. Poaibiai apima tik lotyniškus ženklus; simbolių glifai, naudojantys sistemos šriftus kaip atsarginį variantą, leidžiami po vieną sąraše `SYMBOL_FALLBACKS`. Bet kuris kitas neapimtas glifas sukelia klaidą.
+
+- **Pakartotinis generavimas.** `npm run docs:readme-diagrams` perrašo visas dvylika diagramų README tvarka ir išveda po eilutę su kiekvieno failo dydžiu. Generatorius gali veikti ir atskirai (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` reikia `node --import tsx/esm`, nes skaičiai gaunami iš dabartinio katalogo įkėliklio `open-sse/config/freeModelCatalog.ts`; katalogo pakeitimo poveikis CI aprašytas `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Generatorių ir SVG įtraukite į tą patį commit.
+
+- **Įrodymas.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` atvaizduoja failą vietiniame bandyme (`<img>` žyma, ribojanti `Content-Security-Policy` ir `image/svg+xml` atsakymas), užfiksuoja šviesų bei tamsų vaizdą ir nurodo puslapio išorines šriftų užklausas; jų turi būti 0.
+
+- **Dydžio biudžetas.** Mažiau nei 200 KB failui, tai tikrina kiekvienas pasenimo testas; 500 KB yra absoliuti bet kurio README vaizdo riba (SVG studio tikrintuvo taisyklė).
+
+- **Bendras tekstas, skaičiai iš gate.** Kiekvienas generatorius saugo diagramos tekstą `*_COPY` konstantoje arba sudaro jį iš dabartinio katalogo. Tas pats tekstas piešiamas ir naudojamas šriftų poaibiui sudaryti. Kanoniniai skaičiai lieka `<text>` mazguose, kuriuos skaito `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Gate skaitomų diagramų pasenimo testai taip pat paleidžia jo tikrintuvus sugeneruotam failui. Nuo kodo nukrypęs skaičius sukelia testo nesėkmę: taisykite gate skaitomą šaltinį, o ne skaičių generatoriuje.
+
+## 7. Nuorodų rodyklė
 
 - `src/app/globals.css` — tokenų tiltas, `.dark` perrašymai, OmniRoute `@layer components` plėtiniai
 - `packages/ui-kit/UPSTREAM.md` — užfiksuotas pirminio šaltinio pakeitimas ir licencijos leidimas; `packages/ui-kit/PATCHES.md`

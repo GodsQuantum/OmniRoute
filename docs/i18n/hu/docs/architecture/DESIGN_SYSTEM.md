@@ -149,7 +149,23 @@ relatív importokból). Ezután: ellenőrizze a `git diff packages/ui-kit` kimen
 használat és végpont képernyőin mindkét témával, futtassa az `npm run check:ui-kit-snapshot` és az `npm run test:vitest:ui` parancsot, majd
 nyissa meg a PR-t az upstream változásnaplóval együtt.
 
-## 6. Hivatkozási jegyzék
+## 6. README-diagramok
+
+A gyökérkönyvtár `README.md` fájljába ágyazott tizenkét diagram (`docs/diagrams/*.svg`) statikus képeken alkalmazza a készletet. Generáltak, nem kézzel rajzoltak: 13 generátorfájl található itt: `scripts/docs/gen-readme-*.mjs` (tizenkét diagram és a `gen-readme-diagrams.mjs` vezérlő), valamint 12 elavulást vizsgáló teszt itt: `tests/unit/docs/readme-*-svg.test.ts`, diagramonként egy. Mindegyik bájtról bájtra hasonlítja össze a commitban lévő fájlt a generátor kimenetével (`test-unit` feladat).
+
+- **Tokenek.** A `scripts/docs/readme-diagram-theme.mjs` a `packages/ui-kit/src/ci-tokens.css` palettáját másolja (az egyezést a `tests/unit/docs/readme-diagram-theme.test.ts` rögzíti), és a készlet betűtípusaival határozza meg a szövegszerepeket: Instrument Serif a kiemelt szöveghez, Inter a felülethez, IBM Plex Mono a számokhoz és a kódhoz. Ugyanazokról a `@fontsource` csomagokról van szó, amelyeket a `src/app/globals.css` tölt be a vezérlőpulthoz. A világos értékek a `:root` alatt, a sötétek a `prefers-color-scheme: dark` feltétel mögött vannak a fájlban, így minden kép követi a GitHub-olvasó színsémáját.
+
+- **Betűtípusok.** A `scripts/docs/readme-fonts.mjs` ezeket a woff2 fájlokat az egyes diagramok által kirajzolt karakterképekre szűkíti, és `@font-face` szabályokkal, `data:` URI-ként ágyazza be. Így a készlet betűtípusai az SVG-n belül maradnak. A helyi README-képteszt ellenőrzi, hogy a renderelés nem küld külső betűtípus-kéréseket. A részhalmazok csak latin karaktereket tartalmaznak; a rendszer betűkészletére visszaeső szimbólumok egyenként engedélyezettek a `SYMBOL_FALLBACKS` listában. Minden más hiányzó karakterkép hibát vált ki.
+
+- **Újragenerálás.** A `npm run docs:readme-diagrams` a README sorrendjében újraírja mind a tizenkét diagramot, és fájlonként egy sort ír ki a mérettel. Egy generátor önállóan is fut (`node scripts/docs/gen-readme-<name>.mjs`; a `free-tier-budget` számára `node --import tsx/esm` szükséges, mert számai a `open-sse/config/freeModelCatalog.ts` aktuális katalógusbetöltőjéből származnak; a katalógusváltozás CI-következményét a `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` írja le). A generátort és az SVG-t együtt commitold.
+
+- **Bizonyíték.** A `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` helyi tesztben jeleníti meg a fájlt (`<img>` elem, korlátozó `Content-Security-Policy` és `image/svg+xml` válasz), világos és sötét képet készít, és jelenti az oldal külső betűtípus-kéréseit; ezek száma 0 kell legyen.
+
+- **Méretkeret.** Fájlonként 200 KB alatt, amit minden elavulást vizsgáló teszt ellenőriz; 500 KB minden README-kép abszolút felső korlátja (az SVG studio validátorának szabálya).
+
+- **Közös szöveg, számok a gate-ből.** Minden generátor egy `*_COPY` konstansban tárolja a diagram szövegét, vagy az aktuális katalógusból állítja elő. Ugyanez a szöveg kerül a képre és a betűkészlet-részhalmaz bemenetére. A kanonikus számok `<text>` csomópontokban maradnak, amelyeket a `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) olvas. A gate által olvasott diagramok elavulási tesztjei a generált fájlon annak validátorait is futtatják. A kódtól eltérő szám megbuktatja a tesztet: a gate által olvasott forrást javítsd, soha ne a generátor számát.
+
+## 7. Hivatkozási jegyzék
 
 - `src/app/globals.css` — tokenhíd, `.dark` felülírások, OmniRoute `@layer components`-bővítmények
 - `packages/ui-kit/UPSTREAM.md` — rögzített upstream commit és licencengedély; `packages/ui-kit/PATCHES.md`

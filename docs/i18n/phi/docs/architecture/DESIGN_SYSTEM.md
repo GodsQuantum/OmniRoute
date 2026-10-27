@@ -137,7 +137,23 @@ mga relative import). Pagkatapos: suriin ang `git diff packages/ui-kit`, magsaga
 paggamit, at endpoint sa parehong theme, patakbuhin ang `npm run check:ui-kit-snapshot` at `npm run test:vitest:ui`, at
 buksan ang PR kasama ang upstream changelog.
 
-## 6. Indeks ng sanggunian
+## 6. Mga diagram ng README
+
+Inilalapat ng labindalawang diagram na naka-embed sa root `README.md` (`docs/diagrams/*.svg`) ang kit sa mga static na larawan. Ginagawa ang mga ito ng generator, hindi iginuguhit nang mano-mano: may 13 generator file sa `scripts/docs/gen-readme-*.mjs` (labindalawang diagram at ang driver na `gen-readme-diagrams.mjs`), at 12 pagsubok sa pagiging luma sa `tests/unit/docs/readme-*-svg.test.ts`, isa sa bawat diagram. Inihahambing ng bawat pagsubok ang naka-commit na file sa output ng generator nito, byte sa byte (job `test-unit`).
+
+- **Mga token.** Kinokopya ng `scripts/docs/readme-diagram-theme.mjs` ang palette mula sa `packages/ui-kit/src/ci-tokens.css` (tinitiyak ng `tests/unit/docs/readme-diagram-theme.test.ts` ang tugma sa file na iyon) at itinatakda ang mga tungkulin ng teksto gamit ang mga font ng kit: Instrument Serif para sa display text, Inter para sa interface, at IBM Plex Mono para sa mga numero at code. Ito ang parehong mga `@fontsource` package na nilo-load ng `src/app/globals.css` para sa dashboard. Nasa `:root` ang mga light na halaga at nasa ilalim ng `prefers-color-scheme: dark` ang mga dark na halaga sa file, kaya sumusunod ang bawat larawan sa scheme ng mambabasa sa GitHub.
+
+- **Mga font.** Nililimitahan ng `scripts/docs/readme-fonts.mjs` ang mga woff2 file na iyon sa mga glyph na iginuguhit ng bawat diagram at ini-embed ang mga ito sa pamamagitan ng `@font-face` bilang mga `data:` URI. Sa ganitong paraan, nananatili ang mga font ng kit sa loob ng SVG. Sinusuri ng lokal na README image probe na walang ginagawang panlabas na font request ang pag-render. Latin lamang ang mga subset; ang mga symbol glyph na gumagamit ng system fonts bilang fallback ay isa-isang pinapayagan sa `SYMBOL_FALLBACKS`. Nagdudulot ng error ang anumang iba pang glyph na hindi sakop.
+
+- **Muling pagbuo.** Muling isinusulat ng `npm run docs:readme-diagrams` ang lahat ng labindalawang diagram sa pagkakasunod ng README at nagpi-print ng isang linya sa bawat file kasama ang laki nito. Maaari ring patakbuhin nang mag-isa ang isang generator (`node scripts/docs/gen-readme-<name>.mjs`; kailangan ng `free-tier-budget` ang `node --import tsx/esm` dahil galing ang mga numero nito sa loader ng kasalukuyang catalog sa `open-sse/config/freeModelCatalog.ts`; nasa `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` ang epekto sa CI ng pagbabago sa catalog). I-commit nang magkasama ang generator at ang SVG.
+
+- **Patunay.** Nire-render ng `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` ang file sa lokal na probe (isang `<img>` tag, isang mahigpit na `Content-Security-Policy`, at isang `image/svg+xml` na tugon), kumukuha ng light at dark na frame, at iniuulat ang mga panlabas na font request ng pahina; dapat 0 ang mga ito.
+
+- **Limitasyon.** Mas mababa sa 200 KB sa bawat file, na sinusuri ng bawat pagsubok sa pagiging luma; 500 KB ang mahigpit na pinakamataas na laki ng anumang larawan ng README (tuntunin ng SVG studio validator).
+
+- **Iisang teksto, mga bilang mula sa gate.** Pinananatili ng bawat generator ang teksto ng diagram nito sa isang `*_COPY` constant o binubuo ito mula sa kasalukuyang catalog. Ang parehong tekstong iyon ang iginuguhit at ginagamit na input para sa font subset. Nananatili ang mga kanonikal na numero sa mga `<text>` node na binabasa ng `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Pinapatakbo rin ng mga pagsubok sa pagiging luma ng mga diagram na binabasa ng gate ang mga validator nito sa nabuong file. Kapag lumihis ang isang numero sa code, babagsak ang pagsubok: ayusin ang pinagmulan na binabasa ng gate, hindi kailanman ang numero sa generator.
+
+## 7. Indeks ng sanggunian
 
 - `src/app/globals.css` — token bridge, mga override ng `.dark`, mga extension ng OmniRoute `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — naka-pin na upstream commit at awtorisasyon sa lisensya; `packages/ui-kit/PATCHES.md`

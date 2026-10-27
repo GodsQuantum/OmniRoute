@@ -134,7 +134,23 @@ iompórtálacha coibhneasta). Ansin: athbhreithnigh `git diff packages/ui-kit`, 
 úsáid agus críochphointe sa dá théama, rith `npm run check:ui-kit-snapshot` agus `npm run test:vitest:ui`, agus
 oscail an PR leis an loga athruithe réamhtheachtach.
 
-## 6. Innéacs tagartha
+## 6. Léaráidí README
+
+Cuireann an dá léaráid déag atá leabaithe sa `README.md` fréimhe (`docs/diagrams/*.svg`) an trealamh i bhfeidhm ar íomhánna statacha. Gintear iad, ní tharraingítear de láimh iad: 13 chomhad gineadóra in `scripts/docs/gen-readme-*.mjs` (dhá léaráid déag agus an tiománaí `gen-readme-diagrams.mjs`) agus 12 thástáil seandátaithe in `tests/unit/docs/readme-*-svg.test.ts`, ceann do gach léaráid. Déanann gach tástáil comparáid beart ar bheart idir an comhad sa commit agus aschur a ghineadóra (jab `test-unit`).
+
+- **Comharthaí.** Cóipeálann `scripts/docs/readme-diagram-theme.mjs` an pailéad ó `packages/ui-kit/src/ci-tokens.css` (coinníonn `tests/unit/docs/readme-diagram-theme.test.ts` é ar aon dul leis an gcomhad sin) agus sainíonn sé róil téacs le clófhoirne an trealaimh: Instrument Serif do théacs taispeána, Inter don chomhéadan agus IBM Plex Mono d'uimhreacha agus cód. Is iad na pacáistí `@fontsource` céanna iad a lódálann `src/app/globals.css` don deais. Tá na luachanna geala ar `:root` agus na cinn dhorcha faoi `prefers-color-scheme: dark` sa chomhad, ionas go leanann gach íomhá scéim dathanna an léitheora ar GitHub.
+
+- **Clófhoirne.** Laghdaíonn `scripts/docs/readme-fonts.mjs` na comhaid woff2 sin go dtí na glifí a tharraingíonn gach léaráid agus leabaíonn sé iad trí `@font-face` mar URIanna `data:`. Coinníonn sé seo clófhoirne an trealaimh laistigh den SVG. Seiceálann an triail áitiúil d'íomhánna README nach ndéanann an rindreáil aon iarratas seachtrach ar chlófhoirne. Níl ach carachtair Laidine sna fo-thacair; ceadaítear glifí siombailí a úsáideann clófhoirne an chórais mar chúltaca ceann ar cheann in `SYMBOL_FALLBACKS`. Cruthaíonn aon ghlif eile nach bhfuil clúdaithe earráid.
+
+- **Athghiniúint.** Athscríobhann `npm run docs:readme-diagrams` an dá léaráid déag in ord an README agus priontálann sé líne do gach comhad lena mhéid. Is féidir gineadóir a rith leis féin freisin (`node scripts/docs/gen-readme-<name>.mjs`; teastaíonn `node --import tsx/esm` ó `free-tier-budget` mar tagann a uimhreacha ó lódálaí an chatalóige reatha in `open-sse/config/freeModelCatalog.ts`; tá tionchar athrú catalóige ar CI in `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Cuir an gineadóir agus an SVG sa commit céanna.
+
+- **Cruthúnas.** Rindreálann `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` comhad sa triail áitiúil (clib `<img>`, `Content-Security-Policy` sriantach agus freagra `image/svg+xml`), gabhann sé íomhá gheal agus íomhá dhorcha agus tuairiscíonn sé iarratais sheachtracha na leathanach ar chlófhoirne; caithfidh 0 a bheith ann.
+
+- **Buiséad.** Faoi 200 KB sa chomhad, rud a dhearbhaíonn gach tástáil seandátaithe; is é 500 KB an uasteorainn chrua d'aon íomhá README (riail bhailíochtóir SVG studio).
+
+- **Téacs comhroinnte, uimhreacha ón gate.** Coinníonn gach gineadóir téacs a léaráide i dtairiseach `*_COPY` nó tógann sé é ón gcatalóg reatha. Úsáidtear an téacs céanna sa líníocht agus mar ionchur don fho-thacar clófhoirne. Fanann na huimhreacha canónacha i nóid `<text>` a léann `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Ritheann tástálacha seandátaithe na léaráidí a léann an gate a bhailíochtóirí ar an gcomhad ginte freisin. Teipeann ar an tástáil má imíonn uimhir ón gcód: ceartaigh an fhoinse a léann an gate, ní an uimhir sa ghineadóir riamh.
+
+## 7. Innéacs tagartha
 
 - `src/app/globals.css` — droichead comharthaí, sáruithe `.dark`, síntí OmniRoute `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — cur isteach réamhtheachtach pionnáilte agus údarú ceadúnais; `packages/ui-kit/PATCHES.md`

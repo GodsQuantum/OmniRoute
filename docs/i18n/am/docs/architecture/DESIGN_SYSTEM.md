@@ -140,7 +140,23 @@ imports ያስወግዳል)። ከዚያ፦ `git diff packages/ui-kit`ን ይገ
 usage እና endpointን በእይታ ይፈትሹ፣ `npm run check:ui-kit-snapshot`ን እና `npm run test:vitest:ui`ን ያስኪዱ፣ እና
 PRን ከupstream changelog ጋር ይክፈቱ።
 
-## 6. የማጣቀሻ ማውጫ
+## 6. የREADME ዲያግራሞች
+
+በሥር ማውጫው `README.md` ውስጥ የተካተቱት አሥራ ሁለት ዲያግራሞች (`docs/diagrams/*.svg`) ኪቱን በማይንቀሳቀሱ ምስሎች ላይ ይተገብራሉ። በፕሮግራም ይፈጠራሉ እንጂ በእጅ አይሳሉም፦ በ`scripts/docs/gen-readme-*.mjs` ውስጥ 13 የማመንጫ ፋይሎች (አሥራ ሁለት ዲያግራሞችና መቆጣጠሪያው `gen-readme-diagrams.mjs`)፣ በ`tests/unit/docs/readme-*-svg.test.ts` ውስጥ ደግሞ ለእያንዳንዱ ዲያግራም አንድ በድምሩ 12 የእርጅና ፈተናዎች አሉ። እያንዳንዱ ፈተና በcommit የተቀመጠውን ፋይል ከማመንጫው ውጤት ጋር ባይት በባይት ያነጻጽራል (ሥራው `test-unit`)።
+
+- **ቶከኖች።** `scripts/docs/readme-diagram-theme.mjs` የቀለም ስብስቡን ከ`packages/ui-kit/src/ci-tokens.css` ይቀዳል (ከዚያ ፋይል ጋር መጣጣሙን `tests/unit/docs/readme-diagram-theme.test.ts` ያረጋግጣል)፣ የጽሑፍ ሚናዎችንም በኪቱ ቅርጸ ፊደሎች ይወስናል፦ Instrument Serif ለጎልቶ የሚታይ ጽሑፍ፣ Inter ለበይነገጽ ጽሑፍ፣ IBM Plex Mono ለቁጥሮችና ኮድ። እነዚህ `src/app/globals.css` ለዳሽቦርዱ የሚጭናቸው ተመሳሳይ የ`@fontsource` ፓኬጆች ናቸው። ብርሃን እሴቶች በ`:root`፣ ጨለማ እሴቶች ደግሞ በ`prefers-color-scheme: dark` ሁኔታ ሥር በፋይሉ ውስጥ አሉ፤ ስለዚህ እያንዳንዱ ምስል በGitHub የአንባቢውን የቀለም ስርዓት ይከተላል።
+
+- **ቅርጸ ፊደሎች።** `scripts/docs/readme-fonts.mjs` እነዚያን የwoff2 ፋይሎች እያንዳንዱ ዲያግራም ወደሚስላቸው ግሊፎች ብቻ ያሳንሳል፣ በ`@font-face` በኩልም እንደ `data:` URI ያካትታቸዋል። ይህ የኪቱን ቅርጸ ፊደሎች በSVG ውስጥ ያቆያል። የREADME ምስል አካባቢያዊ ሙከራ ምስሉ ሲታይ ውጫዊ የቅርጸ ፊደል ጥያቄዎች እንዳይደረጉ ይፈትሻል። ንዑስ ስብስቦቹ የላቲን ምልክቶችን ብቻ ይይዛሉ፤ ወደ ስርዓቱ ቅርጸ ፊደሎች የሚመለሱ የምልክት ግሊፎች በ`SYMBOL_FALLBACKS` አንድ በአንድ ይፈቀዳሉ። ሌላ ያልተካተተ ግሊፍ ሁሉ ስህተት ያስነሳል።
+
+- **እንደገና ማመንጨት።** `npm run docs:readme-diagrams` አሥራ ሁለቱን ዲያግራሞች በREADME ቅደም ተከተል እንደገና ይጽፋል፣ ለእያንዳንዱ ፋይልም መጠኑን የያዘ አንድ መስመር ያትማል። እያንዳንዱ ማመንጫ ብቻውንም ይሠራል (`node scripts/docs/gen-readme-<name>.mjs`፤ `free-tier-budget` ቁጥሮቹ ከ`open-sse/config/freeModelCatalog.ts` የአሁኑ ካታሎግ ጫኚ ስለሚመጡ `node --import tsx/esm` ያስፈልገዋል፤ የካታሎግ ለውጥ በCI ላይ የሚያመጣው ውጤት በ`docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` አለ)። ማመንጫውንና SVGን በአንድ commit ያስቀምጡ።
+
+- **ማስረጃ።** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` ፋይልን በአካባቢያዊ ሙከራ ያሳያል (`<img>` መለያ፣ ገዳቢ `Content-Security-Policy` እና የ`image/svg+xml` ምላሽ)፣ ብርሃንና ጨለማ ምስል ይቀርጻል፣ ገጹ ያደረጋቸውንም ውጫዊ የቅርጸ ፊደል ጥያቄዎች ይዘግባል፤ ቁጥራቸው 0 መሆን አለበት።
+
+- **የመጠን ገደብ።** እያንዳንዱ ፋይል ከ200 KB በታች፣ ይህንም እያንዳንዱ የእርጅና ፈተና ያረጋግጣል፤ 500 KB ለማንኛውም README ምስል ጥብቅ ከፍተኛ ገደብ ነው (የSVG studio አረጋጋጭ ደንብ)።
+
+- **የጋራ ጽሑፍ፣ ቁጥሮች ከgate።** እያንዳንዱ ማመንጫ የዲያግራሙን ጽሑፍ በ`*_COPY` ቋሚ እሴት ያስቀምጣል ወይም ከአሁኑ ካታሎግ ይገነባዋል። ይህ ጽሑፍ የሚሳለውም የቅርጸ ፊደል ንዑስ ስብስብ ግቤትም ነው። መደበኛ ቁጥሮች `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) በሚያነባቸው የ`<text>` ኖዶች ውስጥ ይቆያሉ። gate የሚያነባቸው ዲያግራሞች የእርጅና ፈተናዎች አረጋጋጮቹንም በተመነጨው ፋይል ላይ ያስኬዳሉ። ከኮዱ የሚያፈነግጥ ቁጥር ፈተናውን ያሳጣል፦ gate የሚያነበውን ምንጭ ያስተካክሉ፣ በማመንጫው ያለውን ቁጥር ፈጽሞ አይለውጡ።
+
+## 7. የማጣቀሻ ማውጫ
 
 - `src/app/globals.css` — የtoken ድልድይ፣ `.dark` overrides፣ OmniRoute `@layer components` ቅጥያዎች
 - `packages/ui-kit/UPSTREAM.md` — የተወሰነ upstream commit እና የፈቃድ ማረጋገጫ፤ `packages/ui-kit/PATCHES.md`

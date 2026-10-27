@@ -151,7 +151,23 @@ suhteellisista tuonneista). Sen jälkeen: tarkista `git diff packages/ui-kit`, t
 käyttö ja endpoint molemmissa teemoissa, suorita `npm run check:ui-kit-snapshot` ja `npm run test:vitest:ui` sekä
 avaa PR upstream-muutoslokin kanssa.
 
-## 6. Viitehakemisto
+## 6. README-kaaviot
+
+Juurihakemiston `README.md`-tiedostoon upotetut kaksitoista kaaviota (`docs/diagrams/*.svg`) soveltavat kittiä staattisiin kuviin. Ne tuotetaan generaattoreilla, ei piirretä käsin: `scripts/docs/gen-readme-*.mjs` sisältää 13 generaattoritiedostoa (kaksitoista kaaviota ja ohjain `gen-readme-diagrams.mjs`), ja `tests/unit/docs/readme-*-svg.test.ts` sisältää 12 vanhentumista tarkistavaa testiä, yhden kutakin kaaviota kohti. Kukin testi vertaa commitoitua tiedostoa generaattorin tulokseen tavu tavulta (työ `test-unit`).
+
+- **Tokenit.** `scripts/docs/readme-diagram-theme.mjs` kopioi paletin tiedostosta `packages/ui-kit/src/ci-tokens.css` (vastaavuuden varmistaa `tests/unit/docs/readme-diagram-theme.test.ts`) ja määrittää tekstiroolit kitin kirjasimilla: Instrument Serif näyttäville otsikoille, Inter käyttöliittymätekstille ja IBM Plex Mono luvuille ja koodille. Nämä ovat samat `@fontsource`-paketit, jotka `src/app/globals.css` lataa hallintapaneelia varten. Vaaleat arvot ovat tiedoston `:root`-osassa ja tummat `prefers-color-scheme: dark`-ehdon takana, joten jokainen kuva seuraa GitHub-lukijan väriteemaa.
+
+- **Kirjasimet.** `scripts/docs/readme-fonts.mjs` rajaa nämä woff2-tiedostot kunkin kaavion piirtämiin glyyfeihin ja upottaa ne `@font-face`-määrityksinä `data:`-URI-osoitteiden avulla. Näin kitin kirjasimet pysyvät SVG:n sisällä. Paikallinen README-kuvatesti tarkistaa, ettei renderöinti tee ulkoisia kirjasinpyyntöjä. Osajoukot sisältävät vain latinalaisia merkkejä; järjestelmän kirjasinvalikoimaan turvautuvat symboliglyyfit sallitaan yksitellen kohdassa `SYMBOL_FALLBACKS`. Jokainen muu puuttuva glyyfi aiheuttaa virheen.
+
+- **Uudelleenluonti.** `npm run docs:readme-diagrams` kirjoittaa kaikki kaksitoista kaaviota uudelleen README-järjestyksessä ja tulostaa kustakin tiedostosta rivin, jolla on sen koko. Generaattorin voi ajaa myös yksin (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` tarvitsee komennon `node --import tsx/esm`, koska sen luvut tulevat ajantasaisen luettelon lataajasta `open-sse/config/freeModelCatalog.ts`; luettelomuutoksen vaikutus CI:hin kuvataan kohdassa `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commitoi generaattori ja SVG yhdessä.
+
+- **Todennus.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderöi tiedoston paikallisessa testissä (`<img>`-elementti, rajoittava `Content-Security-Policy` ja `image/svg+xml`-vastaus), tallentaa vaalean ja tumman kuvan sekä ilmoittaa sivun ulkoiset kirjasinpyynnöt; niiden määrän on oltava 0.
+
+- **Kokoraja.** Alle 200 KB tiedostoa kohti, minkä jokainen vanhentumistesti tarkistaa; 500 KB on kaikkien README-kuvien ehdoton enimmäiskoko (SVG studio -validaattorin sääntö).
+
+- **Yhteinen teksti, luvut gatesta.** Kukin generaattori säilyttää kaavionsa tekstin `*_COPY`-vakiossa tai rakentaa sen ajantasaisesta luettelosta. Sama teksti piirretään kuvaan ja syötetään kirjasinosajoukon muodostukseen. Kanoniset luvut säilyvät `<text>`-solmuissa, joita `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) lukee. Gaten lukemien kaavioiden vanhentumistestit suorittavat myös sen validaattorit tuotetulle tiedostolle. Koodista poikkeava luku kaataa testin: korjaa gaten lukema lähde, älä koskaan generaattorin lukua.
+
+## 7. Viitehakemisto
 
 - `src/app/globals.css` — token-silta, `.dark`-ohitukset, OmniRouten `@layer components` -laajennukset
 - `packages/ui-kit/UPSTREAM.md` — kiinnitetty upstream-commit ja lisenssivaltuutus; `packages/ui-kit/PATCHES.md`

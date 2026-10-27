@@ -133,7 +133,23 @@
 用量及端點進行視覺檢查、執行 `npm run check:ui-kit-snapshot` 和 `npm run test:vitest:ui`，並
 附上上游變更日誌建立 PR。
 
-## 6. 參考索引
+## 6. README 圖示
+
+根目錄 `README.md` 中嵌入的十二張圖（`docs/diagrams/*.svg`）將套件應用於靜態影像。這些圖由程式產生，而非手工繪製：`scripts/docs/gen-readme-*.mjs` 下有 13 個產生器檔案（十二張圖加上驅動程式 `gen-readme-diagrams.mjs`），`tests/unit/docs/readme-*-svg.test.ts` 下有 12 項時效性測試，每張圖一項，逐位元組比較已提交檔案與產生器輸出（工作 `test-unit`）。
+
+- **權杖。** `scripts/docs/readme-diagram-theme.mjs` 從 `packages/ui-kit/src/ci-tokens.css` 複製調色盤（由 `tests/unit/docs/readme-diagram-theme.test.ts` 鎖定與該檔案的一致性），並使用套件字型定義文字角色：Instrument Serif 用於展示文字，Inter 用於介面文字，IBM Plex Mono 用於數字和程式碼。這些是 `src/app/globals.css` 為儀表板載入的同一組 `@fontsource` 套件。檔案內的亮色值位於 `:root`，暗色值位於 `prefers-color-scheme: dark` 條件下，因此每張圖都會跟隨 GitHub 閱讀者的配色設定。
+
+- **字型。** `scripts/docs/readme-fonts.mjs` 將這些 woff2 檔案裁切為各圖實際繪製的字形，並透過 `@font-face` 以 `data:` URI 嵌入。 這樣可將套件字型保留在 SVG 內。README 影像的本機探測會檢查渲染過程不發出外部字型請求。 子集僅包含拉丁字元；退回使用系統字型堆疊的符號字形會在 `SYMBOL_FALLBACKS` 中逐一獲准，任何其他未涵蓋字形都會擲出錯誤。
+
+- **重新產生。** `npm run docs:readme-diagrams` 按 README 順序重寫全部十二張圖，並為每個檔案輸出一行大小資訊。單一產生器也可獨立執行（`node scripts/docs/gen-readme-<name>.mjs`；`free-tier-budget` 需要 `node --import tsx/esm`，因為其數字來自 `open-sse/config/freeModelCatalog.ts` 中的目前目錄載入器；目錄變更對 CI 的影響見 `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`）。請將產生器與 SVG 一起提交。
+
+- **證據。** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` 在本機探測中渲染檔案（`<img>` 標籤、具限制性的 `Content-Security-Policy` 和 `image/svg+xml` 回應），擷取亮色與暗色畫面，並回報頁面發出的外部字型請求，數量必須為 0。
+
+- **體積預算。** 每個檔案須小於 200 KB，由各項時效性測試斷言；任何 README 影像的硬性上限為 500 KB（SVG studio 驗證器的規則）。
+
+- **共用文案，計數來自 gate。** 每個產生器將圖中的文案保存在 `*_COPY` 常數中，或從目前目錄建構；同一份文案既是繪製的文字，也是字型子集的輸入。規範數字保留在 `<text>` 節點中，由 `check:docs-counts`（`scripts/check/check-docs-counts-sync.mjs`）讀取。對於 gate 會讀取的圖，其時效性測試還會對產生的檔案執行 gate 的驗證器；數字一旦偏離程式碼，測試便會失敗。應修復 gate 讀取的來源，而不要修改產生器中的數字。
+
+## 7. 參考索引
 
 - `src/app/globals.css` — token 橋接、`.dark` 覆寫、OmniRoute `@layer components` 擴充
 - `packages/ui-kit/UPSTREAM.md` — 固定的上游提交與授權許可；`packages/ui-kit/PATCHES.md`

@@ -143,7 +143,23 @@
 usage සහ endpoint දෘශ්යමය ලෙස පරීක්ෂා කරන්න, `npm run check:ui-kit-snapshot` සහ `npm run test:vitest:ui` ධාවනය කර,
 upstream changelog එක සමඟ PR එක විවෘත කරන්න.
 
-## 6. යොමු දර්ශකය
+## 6. README රූපසටහන්
+
+මූලික `README.md` තුළ ඇතුළත් රූපසටහන් දොළහ (`docs/diagrams/*.svg`) කට්ටලය ස්ථිතික රූපවලට යොදයි. ඒවා අතින් අඳින්නේ නැතිව ජනනය කෙරේ: `scripts/docs/gen-readme-*.mjs` තුළ ජනක ගොනු 13ක් (රූපසටහන් දොළහ සහ පාලක `gen-readme-diagrams.mjs`), `tests/unit/docs/readme-*-svg.test.ts` තුළ එක් රූපසටහනකට එක බැගින් යල්පැනීම පරීක්ෂා කරන පරීක්ෂණ 12ක් ඇත. සෑම පරීක්ෂණයක්ම commit කළ ගොනුව එහි ජනක ප්‍රතිදානය සමඟ බයිට් අනුව සසඳයි (කාර්යය `test-unit`).
+
+- **ටෝකන.** `scripts/docs/readme-diagram-theme.mjs` වර්ණ පුවරුව `packages/ui-kit/src/ci-tokens.css` වෙතින් පිටපත් කරයි (එම ගොනුවට ගැළපීම `tests/unit/docs/readme-diagram-theme.test.ts` සහතික කරයි), කට්ටලයේ අකුරු මෝස්තරවලින් පෙළ භූමිකා නියම කරයි: ප්‍රමුඛ දර්ශන පෙළට Instrument Serif, අතුරුමුහුණතට Inter, සංඛ්‍යා සහ කේතයට IBM Plex Mono. මේවා `src/app/globals.css` උපකරණ පුවරුව සඳහා පටවන එම `@fontsource` පැකේජමය. ගොනුව තුළ ලා අගයන් `:root` මතත් අඳුරු අගයන් `prefers-color-scheme: dark` කොන්දේසිය යටතේත් ඇත; එබැවින් සෑම රූපයක්ම GitHub පාඨකයාගේ වර්ණ සැලැස්ම අනුගමනය කරයි.
+
+- **අකුරු මෝස්තර.** `scripts/docs/readme-fonts.mjs` එම woff2 ගොනු එක් එක් රූපසටහන අඳින ග්ලිෆ්වලට සීමා කර `@font-face` හරහා `data:` URI ලෙස ඇතුළත් කරයි. එමඟින් කට්ටලයේ අකුරු මෝස්තර SVG තුළම පවතී. README රූපයේ දේශීය පරීක්ෂාව නිරූපණයේදී බාහිර අකුරු මෝස්තර ඉල්ලීම් නොකරන බව පරීක්ෂා කරයි. උපකුලකවල ඇත්තේ ලතින් අක්ෂර පමණි; පද්ධති අකුරු මෝස්තර විකල්ප ලෙස භාවිත කරන සංකේත ග්ලිෆ්වලට `SYMBOL_FALLBACKS` තුළ එකින් එක අවසර ලැබේ. වෙනත් ඕනෑම ආවරණය නොවූ ග්ලිෆ් එකක් දෝෂයක් ඇති කරයි.
+
+- **නැවත ජනනය.** `npm run docs:readme-diagrams` රූපසටහන් දොළහම README අනුපිළිවෙළට නැවත ලියයි, එක් එක් ගොනුව සඳහා එහි ප්‍රමාණය සහිත පේළියක් මුද්‍රණය කරයි. ජනකයක් තනිවමද ධාවනය කළ හැක (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` සඳහා `node --import tsx/esm` අවශ්‍ය වන්නේ සංඛ්‍යා `open-sse/config/freeModelCatalog.ts` හි වත්මන් නාමාවලි පූරකයෙන් එන බැවිනි; නාමාවලි වෙනසක CI ප්‍රතිඵලය `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` හි ඇත). ජනකය සහ SVG එකට commit කරන්න.
+
+- **සාක්ෂිය.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` දේශීය පරීක්ෂාවේදී ගොනුව නිරූපණය කරයි (`<img>` ටැගය, සීමාකාරී `Content-Security-Policy` සහ `image/svg+xml` ප්‍රතිචාරය), ලා සහ අඳුරු රාමු ගනී, පිටුව කළ බාහිර අකුරු මෝස්තර ඉල්ලීම් වාර්තා කරයි; ඒවායේ ගණන 0 විය යුතුය.
+
+- **ප්‍රමාණ සීමාව.** එක් ගොනුවක් 200 KBට අඩු විය යුතුය; සෑම යල්පැනීමේ පරීක්ෂණයක්ම මෙය තහවුරු කරයි. ඕනෑම README රූපයක දැඩි උපරිම සීමාව 500 KB වේ (SVG studio වලංගුකාරකයේ නියමය).
+
+- **හවුල් පෙළ, ගණන් gate වෙතින්.** සෑම ජනකයක්ම රූපසටහනේ පෙළ `*_COPY` නියතයක තබාගනී හෝ වත්මන් නාමාවලියෙන් ගොඩනඟයි. එම පෙළම ඇඳීමටත් අකුරු මෝස්තර උපකුලකයේ ආදානයටත් යොදාගනී. පිළිගත් සංඛ්‍යා `<text>` නෝඩවල පවතින අතර `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) ඒවා කියවයි. gate කියවන රූපසටහන්වල යල්පැනීමේ පරීක්ෂණ ජනිත ගොනුවේ එහි වලංගුකාරකද ධාවනය කරයි. කේතයෙන් වෙනස් සංඛ්‍යාවක් පරීක්ෂණය අසාර්ථක කරයි: gate කියවන මූලාශ්‍රය නිවැරදි කරන්න, ජනකයේ සංඛ්‍යාව කිසිවිටෙක නොවෙයි.
+
+## 7. යොමු දර්ශකය
 
 - `src/app/globals.css` — token bridge, `.dark` overrides, OmniRoute `@layer components` දිගු කිරීම්
 - `packages/ui-kit/UPSTREAM.md` — ස්ථිර කළ upstream commit එක සහ බලපත්ර අවසරය; `packages/ui-kit/PATCHES.md`

@@ -134,7 +134,23 @@ importów względnych). Następnie: przejrzyj `git diff packages/ui-kit`, wykona
 użycia i punktu końcowego w obu motywach, uruchom `npm run check:ui-kit-snapshot` oraz `npm run test:vitest:ui`, a następnie
 otwórz PR z dziennikiem zmian projektu nadrzędnego.
 
-## 6. Indeks referencyjny
+## 6. Diagramy README
+
+Dwanaście diagramów osadzonych w głównym `README.md` (`docs/diagrams/*.svg`) stosuje zestaw do statycznych obrazów. Są generowane, a nie rysowane ręcznie: 13 plików generatorów w `scripts/docs/gen-readme-*.mjs` (dwanaście diagramów i sterownik `gen-readme-diagrams.mjs`) oraz 12 testów aktualności w `tests/unit/docs/readme-*-svg.test.ts`, po jednym na diagram. Każdy porównuje bajt po bajcie plik zapisany w commicie z wynikiem generatora (zadanie `test-unit`).
+
+- **Tokeny.** `scripts/docs/readme-diagram-theme.mjs` kopiuje paletę z `packages/ui-kit/src/ci-tokens.css` (zgodność z tym plikiem zabezpiecza `tests/unit/docs/readme-diagram-theme.test.ts`) i definiuje role tekstu czcionkami zestawu: Instrument Serif dla tekstu ekspozycyjnego, Inter dla interfejsu oraz IBM Plex Mono dla liczb i kodu. To te same pakiety `@fontsource`, które `src/app/globals.css` ładuje dla panelu. Jasne wartości są w `:root`, a ciemne pod warunkiem `prefers-color-scheme: dark` wewnątrz pliku, więc każdy obraz podąża za schematem czytelnika na GitHubie.
+
+- **Czcionki.** `scripts/docs/readme-fonts.mjs` ogranicza te pliki woff2 do glifów rysowanych przez dany diagram i osadza je przez `@font-face` jako URI `data:`. Dzięki temu czcionki zestawu pozostają wewnątrz SVG. Lokalna próba obrazu README sprawdza, czy renderowanie nie wysyła zewnętrznych żądań czcionek. Podzbiory zawierają wyłącznie znaki łacińskie; glify symboli korzystające awaryjnie z czcionek systemowych są dopuszczane pojedynczo w `SYMBOL_FALLBACKS`. Każdy inny nieobsługiwany glif powoduje błąd.
+
+- **Ponowne generowanie.** `npm run docs:readme-diagrams` przepisuje wszystkie dwanaście diagramów w kolejności README i wypisuje wiersz z rozmiarem każdego pliku. Generator działa też samodzielnie (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` wymaga `node --import tsx/esm`, ponieważ liczby pochodzą z modułu wczytującego bieżący katalog w `open-sse/config/freeModelCatalog.ts`; wpływ zmiany katalogu na CI opisuje `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Zapisuj generator i SVG w jednym commicie.
+
+- **Dowód.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderuje plik w lokalnej próbie (znacznik `<img>`, restrykcyjna `Content-Security-Policy` i odpowiedź `image/svg+xml`), zapisuje jasny i ciemny kadr oraz raportuje zewnętrzne żądania czcionek strony; musi ich być 0.
+
+- **Budżet.** Poniżej 200 KB na plik, co sprawdza każdy test aktualności; 500 KB to nieprzekraczalny limit każdego obrazu README (reguła walidatora SVG studio).
+
+- **Wspólny tekst, liczby z gate.** Każdy generator przechowuje tekst diagramu w stałej `*_COPY` lub tworzy go z bieżącego katalogu. Ten sam tekst jest rysowany i stanowi wejście do tworzenia podzbioru czcionek. Kanoniczne liczby pozostają w węzłach `<text>`, odczytywanych przez `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Testy aktualności diagramów odczytywanych przez gate uruchamiają również jego walidatory na wygenerowanym pliku. Liczba niezgodna z kodem powoduje niepowodzenie testu: popraw źródło czytane przez gate, nigdy liczbę w generatorze.
+
+## 7. Indeks referencyjny
 
 - `src/app/globals.css` — pomost tokenów, nadpisania `.dark`, rozszerzenia OmniRoute w `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — przypięty commit projektu nadrzędnego i autoryzacja licencji; `packages/ui-kit/PATCHES.md`

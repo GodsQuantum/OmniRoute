@@ -139,7 +139,23 @@ imports relattivi). Imbagħad: irrevedi `git diff packages/ui-kit`, agħmel kont
 usage u endpoint fiż-żewġ temi, ħaddem `npm run check:ui-kit-snapshot` u `npm run test:vitest:ui`, u
 iftaħ il-PR bil-changelog upstream.
 
-## 6. Indiċi ta' referenza
+## 6. Dijagrammi README
+
+It-tnax-il dijagramma inkorporati fil-`README.md` tal-għerq (`docs/diagrams/*.svg`) japplikaw il-kit għal stampi statiċi. Huma ġġenerati, mhux imfassla bl-idejn: 13-il fajl ta' ġeneraturi f'`scripts/docs/gen-readme-*.mjs` (tnax-il dijagramma u s-sewwieq `gen-readme-diagrams.mjs`) u 12-il test tal-aġġornament f'`tests/unit/docs/readme-*-svg.test.ts`, wieħed għal kull dijagramma. Kull test iqabbel il-fajl fil-commit mal-output tal-ġeneratur tiegħu byte b'byte (xogħol `test-unit`).
+
+- **Tokens.** `scripts/docs/readme-diagram-theme.mjs` jikkopja l-paletta minn `packages/ui-kit/src/ci-tokens.css` (il-konformità ma' dak il-fajl hija żgurata minn `tests/unit/docs/readme-diagram-theme.test.ts`) u jiddefinixxi r-rwoli tat-test bil-fonts tal-kit: Instrument Serif għal test prominenti, Inter għat-test tal-interfaċċa u IBM Plex Mono għan-numri u l-kodiċi. Dawn huma l-istess pakketti `@fontsource` li `src/app/globals.css` jgħabbi għad-dashboard. Il-valuri ċari huma f'`:root` u dawk skuri taħt `prefers-color-scheme: dark` fil-fajl, biex kull stampa ssegwi l-iskema tal-qarrej fuq GitHub.
+
+- **Fonts.** `scripts/docs/readme-fonts.mjs` inaqqas dawk il-fajls woff2 għall-glifi li tiġbed kull dijagramma u jinkorporahom permezz ta' `@font-face` bħala URI `data:`. B'hekk il-fonts tal-kit jibqgħu ġewwa l-SVG. Il-prova lokali tal-istampi README tiċċekkja li r-rendering ma jagħmilx talbiet esterni għall-fonts. Is-sottogruppi fihom biss karattri Latini; il-glifi tas-simboli li jirrikorru għall-fonts tas-sistema huma permessi wieħed wieħed f'`SYMBOL_FALLBACKS`. Kull glifu ieħor mhux kopert iqajjem żball.
+
+- **Ġenerazzjoni mill-ġdid.** `npm run docs:readme-diagrams` jerġa' jikteb it-tnax-il dijagramma fl-ordni tar-README u juri linja għal kull fajl bid-daqs tiegħu. Ġeneratur jista' jaħdem ukoll waħdu (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` jeħtieġ `node --import tsx/esm` għax in-numri jiġu mil-loader tal-katalgu attwali f'`open-sse/config/freeModelCatalog.ts`; l-effett ta' bidla fil-katalgu fuq CI jinsab f'`docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Daħħal il-ġeneratur u l-SVG fl-istess commit.
+
+- **Prova.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` jirrendi fajl fil-prova lokali (tag `<img>`, `Content-Security-Policy` restrittiva u tweġiba `image/svg+xml`), jaqbad immaġni ċara u oħra skura u jirrapporta t-talbiet esterni għall-fonts magħmula mill-paġna; iridu jkunu 0.
+
+- **Baġit.** Inqas minn 200 KB għal kull fajl, ivverifikat minn kull test tal-aġġornament; 500 KB huwa l-limitu assolut għal kwalunkwe stampa README (ir-regola tal-validatur SVG studio).
+
+- **Test kondiviż, numri mill-gate.** Kull ġeneratur iżomm it-test tad-dijagramma f'kostanti `*_COPY` jew jibnih mill-katalgu attwali. L-istess test jintwera u jintuża bħala input għas-sottogrupp tal-font. In-numri kanoniċi jibqgħu f'nodi `<text>` li jinqraw minn `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). It-testijiet tal-aġġornament tad-dijagrammi li jaqra l-gate iħaddmu wkoll il-validaturi tiegħu fuq il-fajl iġġenerat. Numru li jiddevja mill-kodiċi jfalli t-test: ikkoreġi s-sors li jaqra l-gate, qatt in-numru fil-ġeneratur.
+
+## 7. Indiċi ta' referenza
 
 - `src/app/globals.css` — pont tat-tokens, overrides ta' `.dark`, estensjonijiet OmniRoute ta' `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit upstream iffissat u awtorizzazzjoni tal-liċenzja; `packages/ui-kit/PATCHES.md`

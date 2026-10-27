@@ -133,7 +133,23 @@ uletaji wa jamaa). Kisha: kagua `git diff packages/ui-kit`, fanya ukaguzi wa kuo
 usage na endpoint katika mandhari zote mbili, endesha `npm run check:ui-kit-snapshot` na `npm run test:vitest:ui`, na
 fungua PR pamoja na kumbukumbu ya mabadiliko ya upstream.
 
-## 6. Faharasa ya marejeleo
+## 6. Michoro ya README
+
+Michoro kumi na miwili iliyopachikwa kwenye `README.md` ya mzizi (`docs/diagrams/*.svg`) hutumia kit katika picha tuli. Inazalishwa, haichorwi kwa mkono: faili 13 za jenereta katika `scripts/docs/gen-readme-*.mjs` (michoro kumi na miwili pamoja na kiendeshi `gen-readme-diagrams.mjs`) na majaribio 12 ya kupitwa na wakati katika `tests/unit/docs/readme-*-svg.test.ts`, moja kwa kila mchoro. Kila jaribio hulinganisha faili iliyowekwa kwenye commit na matokeo ya jenereta yake baiti kwa baiti (kazi `test-unit`).
+
+- **Tokeni.** `scripts/docs/readme-diagram-theme.mjs` hunakili paleti kutoka `packages/ui-kit/src/ci-tokens.css` (ulinganifu na faili hiyo unathibitishwa na `tests/unit/docs/readme-diagram-theme.test.ts`) na kufafanua majukumu ya maandishi kwa fonti za kit: Instrument Serif kwa maandishi ya kuangazia, Inter kwa kiolesura, IBM Plex Mono kwa namba na msimbo. Hizi ni pakiti zilezile za `@fontsource` ambazo `src/app/globals.css` hupakia kwa dashibodi. Thamani angavu ziko kwenye `:root` na nyeusi chini ya `prefers-color-scheme: dark` ndani ya faili; hivyo kila picha hufuata mpangilio wa rangi wa msomaji kwenye GitHub.
+
+- **Fonti.** `scripts/docs/readme-fonts.mjs` hupunguza faili hizo za woff2 hadi glifu zinazochorwa na kila mchoro na kuzipachika kupitia `@font-face` kama URI za `data:`. Hivyo fonti za kit hubaki ndani ya SVG. Jaribio la ndani la picha ya README hukagua kwamba uonyeshaji hautumi maombi ya fonti za nje. Vikundi vidogo vina herufi za Kilatini pekee; glifu za alama zinazotegemea fonti za mfumo kama mbadala huruhusiwa moja moja katika `SYMBOL_FALLBACKS`. Glifu nyingine yoyote isiyojumuishwa husababisha hitilafu.
+
+- **Kuzalisha upya.** `npm run docs:readme-diagrams` huandika upya michoro yote kumi na miwili kwa mpangilio wa README na kuchapisha mstari kwa kila faili wenye ukubwa wake. Jenereta pia inaweza kuendeshwa peke yake (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` inahitaji `node --import tsx/esm` kwa sababu namba hutoka kwa kipakiaji cha katalogi ya sasa katika `open-sse/config/freeModelCatalog.ts`; athari ya kubadili katalogi kwa CI iko katika `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Weka jenereta na SVG katika commit moja.
+
+- **Uthibitisho.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` huonyesha faili katika jaribio la ndani (lebo `<img>`, `Content-Security-Policy` yenye vizuizi na jibu la `image/svg+xml`), hunasa picha angavu na nyeusi na kuripoti maombi ya fonti za nje ya ukurasa; yanapaswa kuwa 0.
+
+- **Kikomo.** Chini ya 200 KB kwa faili, kinachothibitishwa na kila jaribio la kupitwa na wakati; 500 KB ndiyo dari ngumu ya picha yoyote ya README (kanuni ya kihalalishaji cha SVG studio).
+
+- **Maandishi ya pamoja, hesabu kutoka gate.** Kila jenereta huhifadhi maandishi ya mchoro wake katika thabiti `*_COPY` au huyajenga kutoka katalogi ya sasa. Maandishi hayo ndiyo yanayochorwa na pia ingizo la kikundi kidogo cha fonti. Namba kanoni hubaki katika nodi `<text>` zinazosomwa na `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Majaribio ya kupitwa na wakati ya michoro inayosomwa na gate pia huendesha vihalalishaji vyake kwenye faili iliyozalishwa. Namba inayotofautiana na msimbo husababisha jaribio kushindwa: sahihisha chanzo kinachosomwa na gate, kamwe si namba katika jenereta.
+
+## 7. Faharasa ya marejeleo
 
 - `src/app/globals.css` — daraja la tokeni, ubatilishaji wa `.dark`, viendelezi vya OmniRoute vya `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit ya upstream iliyobandikwa na idhini ya leseni; `packages/ui-kit/PATCHES.md`

@@ -134,7 +134,23 @@ các import tương đối). Sau đó: xem xét `git diff packages/ui-kit`, ki�
 usage và endpoint trong cả hai theme, chạy `npm run check:ui-kit-snapshot` và `npm run test:vitest:ui`, rồi
 mở PR kèm changelog từ upstream.
 
-## 6. Chỉ mục tham khảo
+## 6. Sơ đồ README
+
+Mười hai sơ đồ được nhúng trong `README.md` ở thư mục gốc (`docs/diagrams/*.svg`) áp dụng bộ giao diện vào ảnh tĩnh. Chúng được sinh tự động, không vẽ tay: 13 tệp trình sinh tại `scripts/docs/gen-readme-*.mjs` (mười hai sơ đồ và trình điều khiển `gen-readme-diagrams.mjs`), cùng 12 kiểm thử độ cập nhật tại `tests/unit/docs/readme-*-svg.test.ts`, mỗi sơ đồ một kiểm thử. Mỗi kiểm thử so sánh từng byte của tệp đã commit với đầu ra trình sinh tương ứng (job `test-unit`).
+
+- **Token.** `scripts/docs/readme-diagram-theme.mjs` sao chép bảng màu từ `packages/ui-kit/src/ci-tokens.css` (được `tests/unit/docs/readme-diagram-theme.test.ts` ràng buộc khớp với tệp đó) và định nghĩa vai trò văn bản bằng phông của bộ giao diện: Instrument Serif cho chữ trình bày nổi bật, Inter cho giao diện, IBM Plex Mono cho số liệu và mã. Đây cũng là các gói `@fontsource` mà `src/app/globals.css` tải cho bảng điều khiển. Giá trị sáng nằm ở `:root`, giá trị tối dưới điều kiện `prefers-color-scheme: dark` ngay trong tệp, nên mỗi ảnh theo chế độ màu của người đọc trên GitHub.
+
+- **Phông chữ.** `scripts/docs/readme-fonts.mjs` thu gọn các tệp woff2 đó xuống những glyph mà mỗi sơ đồ vẽ và nhúng chúng qua `@font-face` dưới dạng URI `data:`. Nhờ vậy, phông của bộ giao diện nằm ngay trong SVG. Phép thử ảnh README cục bộ kiểm tra rằng quá trình kết xuất không gửi yêu cầu phông ra bên ngoài. Các tập con chỉ gồm ký tự Latin; glyph ký hiệu dùng phông hệ thống làm dự phòng được cho phép từng mục trong `SYMBOL_FALLBACKS`. Bất kỳ glyph nào khác không được bao phủ đều gây lỗi.
+
+- **Sinh lại.** `npm run docs:readme-diagrams` ghi lại cả mười hai sơ đồ theo thứ tự README và in một dòng cho mỗi tệp kèm kích thước. Mỗi trình sinh cũng chạy riêng được (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` cần `node --import tsx/esm` vì số liệu lấy từ bộ nạp danh mục hiện hành tại `open-sse/config/freeModelCatalog.ts`; tác động của thay đổi danh mục lên CI nằm ở `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commit trình sinh và SVG cùng nhau.
+
+- **Bằng chứng.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` kết xuất tệp trong phép thử cục bộ (thẻ `<img>`, một `Content-Security-Policy` hạn chế và phản hồi `image/svg+xml`), chụp một khung sáng và một khung tối, rồi báo các yêu cầu phông bên ngoài của trang; số lượng phải là 0.
+
+- **Giới hạn.** Dưới 200 KB mỗi tệp, được từng kiểm thử độ cập nhật xác nhận; 500 KB là trần cứng cho mọi ảnh README (quy tắc của bộ kiểm tra SVG studio).
+
+- **Nội dung chữ dùng chung, số liệu từ gate.** Mỗi trình sinh giữ nội dung sơ đồ trong hằng `*_COPY` hoặc dựng từ danh mục hiện hành. Nội dung này vừa được vẽ, vừa là đầu vào để tạo tập con phông. Số liệu chuẩn nằm trong các nút `<text>` được `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) đọc. Kiểm thử độ cập nhật của những sơ đồ mà gate đọc cũng chạy các bộ kiểm tra của gate trên tệp được sinh. Số liệu lệch khỏi mã làm kiểm thử thất bại: sửa nguồn mà gate đọc, tuyệt đối không sửa số trong trình sinh.
+
+## 7. Chỉ mục tham khảo
 
 - `src/app/globals.css` — cầu nối token, các ghi đè `.dark`, các phần mở rộng OmniRoute trong `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit upstream được ghim và giấy phép ủy quyền; `packages/ui-kit/PATCHES.md`

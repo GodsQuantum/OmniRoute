@@ -135,7 +135,23 @@ relativních importů). Poté: zkontrolujte `git diff packages/ui-kit`, proveďt
 využití a endpointu v obou motivech, spusťte `npm run check:ui-kit-snapshot` a `npm run test:vitest:ui` a
 otevřete PR s upstreamovým changelogem.
 
-## 6. Rejstřík odkazů
+## 6. Diagramy README
+
+Dvanáct diagramů vložených do kořenového `README.md` (`docs/diagrams/*.svg`) používá sadu ve statických obrázcích. Jsou generované, nikoli kreslené ručně: 13 souborů generátorů v `scripts/docs/gen-readme-*.mjs` (dvanáct diagramů a řídicí program `gen-readme-diagrams.mjs`) a 12 testů aktuálnosti v `tests/unit/docs/readme-*-svg.test.ts`, jeden pro každý diagram. Každý test porovnává po bajtech soubor v commitu s výstupem jeho generátoru (úloha `test-unit`).
+
+- **Tokeny.** `scripts/docs/readme-diagram-theme.mjs` kopíruje paletu z `packages/ui-kit/src/ci-tokens.css` (shodu s tímto souborem zajišťuje `tests/unit/docs/readme-diagram-theme.test.ts`) a definuje role textu pomocí písem sady: Instrument Serif pro výrazný text, Inter pro text rozhraní a IBM Plex Mono pro čísla a kód. Jde o stejné balíčky `@fontsource`, které `src/app/globals.css` načítá pro dashboard. Světlé hodnoty jsou v `:root`, tmavé pod podmínkou `prefers-color-scheme: dark` uvnitř souboru; každý obrázek tak sleduje schéma čtenáře na GitHubu.
+
+- **Písma.** `scripts/docs/readme-fonts.mjs` zúží tyto soubory woff2 na glyfy vykreslované daným diagramem a vloží je přes `@font-face` jako URI `data:`. Písma sady tak zůstávají uvnitř SVG. Místní test obrázků README kontroluje, že vykreslování nevyvolává externí požadavky na písma. Podmnožiny obsahují pouze latinku; glyfy symbolů používající systémová písma jako náhradu jsou povoleny jednotlivě v `SYMBOL_FALLBACKS`. Jakýkoli jiný nepokrytý glyf vyvolá chybu.
+
+- **Opětovné generování.** `npm run docs:readme-diagrams` přepíše všech dvanáct diagramů v pořadí README a vypíše pro každý soubor řádek s jeho velikostí. Generátor lze spustit i samostatně (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` vyžaduje `node --import tsx/esm`, protože čísla pocházejí z načítače aktuálního katalogu v `open-sse/config/freeModelCatalog.ts`; dopad změny katalogu na CI je v `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commitujte generátor a SVG společně.
+
+- **Důkaz.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` vykreslí soubor v místním testu (značka `<img>`, omezující `Content-Security-Policy` a odpověď `image/svg+xml`), pořídí světlý a tmavý snímek a hlásí externí požadavky stránky na písma; jejich počet musí být 0.
+
+- **Rozpočet.** Méně než 200 KB na soubor, což ověřuje každý test aktuálnosti; 500 KB je pevný strop pro jakýkoli obrázek README (pravidlo validátoru SVG studio).
+
+- **Sdílený text, počty z gate.** Každý generátor uchovává text diagramu v konstantě `*_COPY` nebo jej sestavuje z aktuálního katalogu. Tento text se vykresluje a zároveň slouží jako vstup pro podmnožinu písma. Kanonická čísla zůstávají v uzlech `<text>`, které čte `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Testy aktuálnosti diagramů čtených gate spouštějí také jeho validátory nad vygenerovaným souborem. Číslo odlišné od kódu způsobí selhání testu: opravte zdroj čtený gate, nikdy číslo v generátoru.
+
+## 7. Rejstřík odkazů
 
 - `src/app/globals.css` — propojení tokenů, přepsání pro `.dark`, rozšíření OmniRoute v `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — připnutý upstreamový commit a licenční oprávnění; `packages/ui-kit/PATCHES.md`

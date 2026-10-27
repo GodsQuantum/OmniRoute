@@ -149,7 +149,23 @@ relatieve imports). Daarna: controleer `git diff packages/ui-kit`, voer in beide
 gebruik en endpoint, voer `npm run check:ui-kit-snapshot` en `npm run test:vitest:ui` uit en
 open de PR met de upstream-changelog.
 
-## 6. Referentie-index
+## 6. README-diagrammen
+
+De twaalf diagrammen in het `README.md` in de hoofdmap (`docs/diagrams/*.svg`) passen de kit toe op statische afbeeldingen. Ze worden gegenereerd, niet met de hand getekend: 13 generatorbestanden onder `scripts/docs/gen-readme-*.mjs` (twaalf diagrammen plus de driver `gen-readme-diagrams.mjs`) en 12 verouderingstests onder `tests/unit/docs/readme-*-svg.test.ts`, één per diagram. Elke test vergelijkt het gecommitte bestand byte voor byte met de uitvoer van de generator (job `test-unit`).
+
+- **Tokens.** `scripts/docs/readme-diagram-theme.mjs` kopieert het palet uit `packages/ui-kit/src/ci-tokens.css` (de overeenkomst met dat bestand wordt vastgelegd door `tests/unit/docs/readme-diagram-theme.test.ts`) en definieert de tekstrollen met de lettertypen van de kit: Instrument Serif voor displaytekst, Inter voor UI-tekst en IBM Plex Mono voor cijfers en code. Dit zijn dezelfde `@fontsource`-pakketten die `src/app/globals.css` voor het dashboard laadt. Lichte waarden staan op `:root` en donkere onder `prefers-color-scheme: dark` in het bestand; zo volgt elke afbeelding het kleurenschema van de lezer op GitHub.
+
+- **Lettertypen.** `scripts/docs/readme-fonts.mjs` beperkt die woff2-bestanden tot de glyphs die elk diagram tekent en sluit ze via `@font-face` in als `data:`-URI's. Zo blijven de lettertypen van de kit in de SVG. De lokale README-afbeeldingsproef controleert dat het renderen geen externe lettertypeverzoeken doet. De subsets bevatten alleen Latijnse tekens; symboolglyphs die terugvallen op systeemlettertypen worden afzonderlijk toegestaan in `SYMBOL_FALLBACKS`. Elke andere ontbrekende glyph veroorzaakt een fout.
+
+- **Opnieuw genereren.** `npm run docs:readme-diagrams` herschrijft alle twaalf diagrammen in README-volgorde en toont per bestand één regel met de grootte. Elke generator werkt ook zelfstandig (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` vereist `node --import tsx/esm` omdat de cijfers uit de actuele cataloguslader in `open-sse/config/freeModelCatalog.ts` komen; de gevolgen van een cataloguswijziging voor CI staan in `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commit de generator en de SVG samen.
+
+- **Bewijs.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` rendert een bestand in de lokale proef (een `<img>`-tag, een beperkende `Content-Security-Policy` en een `image/svg+xml`-respons), legt een licht en een donker beeld vast en meldt de externe lettertypeverzoeken van de pagina; dat moeten er 0 zijn.
+
+- **Budget.** Minder dan 200 KB per bestand, gecontroleerd door elke verouderingstest; 500 KB is de harde bovengrens voor elke README-afbeelding (de regel van de SVG studio-validator).
+
+- **Gedeelde tekst, aantallen uit de gate.** Elke generator bewaart de diagramtekst in een `*_COPY`-constante of stelt deze samen uit de actuele catalogus. De tekst wordt zowel getekend als gebruikt voor de lettertypesubset. Canonieke cijfers blijven in `<text>`-nodes, gelezen door `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). De verouderingstests van diagrammen die de gate leest, voeren ook diens validators uit op het gegenereerde bestand. Een cijfer dat van de code afwijkt, laat de test falen: herstel de bron die de gate leest, nooit het getal in de generator.
+
+## 7. Referentie-index
 
 - `src/app/globals.css` — tokenbridge, `.dark`-overrides, OmniRoute-uitbreidingen voor `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — vastgelegde upstream-commit en licentieautorisatie; `packages/ui-kit/PATCHES.md`

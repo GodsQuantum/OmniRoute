@@ -145,7 +145,23 @@ relative importଗୁଡ଼ିକରୁ `.js` suffixକୁ ହଟାଇଦିଏ
 usage ଏବଂ endpointକୁ ଦୃଶ୍ୟଗତ ଭାବେ ଯାଞ୍ଚ କରନ୍ତୁ, `npm run check:ui-kit-snapshot` ଏବଂ `npm run test:vitest:ui` ଚଲାନ୍ତୁ, ଏବଂ
 upstream changelog ସହିତ PR ଖୋଲନ୍ତୁ।
 
-## 6. ସନ୍ଦର୍ଭ ସୂଚୀ
+## 6. README ଚିତ୍ରଗୁଡ଼ିକ
+
+ମୂଳ `README.md` ରେ ଥିବା ବାରଟି ଚିତ୍ର (`docs/diagrams/*.svg`) କିଟ୍‌କୁ ସ୍ଥିର ଛବିରେ ପ୍ରୟୋଗ କରେ। ସେଗୁଡ଼ିକ ଜେନେରେଟ୍ ହୁଏ, ହାତରେ ଅଙ୍କାଯାଏ ନାହିଁ: `scripts/docs/gen-readme-*.mjs` ରେ 13 ଜେନେରେଟର୍ ଫାଇଲ୍ (ବାରଟି ଚିତ୍ର ଓ ନିୟନ୍ତ୍ରକ `gen-readme-diagrams.mjs`), ଏବଂ `tests/unit/docs/readme-*-svg.test.ts` ରେ ପ୍ରତ୍ୟେକ ଚିତ୍ର ପାଇଁ ଗୋଟିଏ କରି 12 ପୁରୁଣା ହେବା ଯାଞ୍ଚ ଅଛି। ପ୍ରତ୍ୟେକ ଯାଞ୍ଚ commit ହୋଇଥିବା ଫାଇଲ୍‌କୁ ତାହାର ଜେନେରେଟର୍ ଆଉଟପୁଟ୍ ସହ ବାଇଟ୍ ଅନୁସାରେ ତୁଳନା କରେ (ଜବ୍ `test-unit`)।
+
+- **ଟୋକେନ୍।** `scripts/docs/readme-diagram-theme.mjs` ରଙ୍ଗ ପ୍ୟାଲେଟ୍‌କୁ `packages/ui-kit/src/ci-tokens.css` ରୁ କପି କରେ (ସେହି ଫାଇଲ୍ ସହ ମେଳ `tests/unit/docs/readme-diagram-theme.test.ts` ନିଶ୍ଚିତ କରେ) ଏବଂ କିଟ୍‌ର ଫଣ୍ଟ୍‌ରେ ଲେଖାର ଭୂମିକା ନିର୍ଦ୍ଧାରଣ କରେ: ପ୍ରମୁଖ ପ୍ରଦର୍ଶନ ଲେଖା ପାଇଁ Instrument Serif, ଇଣ୍ଟରଫେସ୍ ପାଇଁ Inter, ସଂଖ୍ୟା ଓ କୋଡ୍ ପାଇଁ IBM Plex Mono। ଏଗୁଡ଼ିକ ସେହି `@fontsource` ପ୍ୟାକେଜ୍ ଯାହା `src/app/globals.css` ଡ୍ୟାଶବୋର୍ଡ୍ ପାଇଁ ଲୋଡ୍ କରେ। ଫାଇଲ୍ ଭିତରେ ହାଲୁକା ମୂଲ୍ୟ `:root` ରେ ଓ ଗାଢ଼ ମୂଲ୍ୟ `prefers-color-scheme: dark` ସର୍ତ୍ତ ତଳେ ରହେ, ତେଣୁ ପ୍ରତ୍ୟେକ ଛବି GitHub ପାଠକଙ୍କ ରଙ୍ଗ ଯୋଜନା ଅନୁସରଣ କରେ।
+
+- **ଫଣ୍ଟ୍।** `scripts/docs/readme-fonts.mjs` ସେହି woff2 ଫାଇଲ୍‌ଗୁଡ଼ିକୁ ପ୍ରତ୍ୟେକ ଚିତ୍ରରେ ଅଙ୍କାଯାଉଥିବା ଗ୍ଲିଫ୍‌ରେ ସୀମିତ କରେ ଓ `@font-face` ମାଧ୍ୟମରେ `data:` URI ଭାବେ ସଂଯୋଜନ କରେ। ଏହା କିଟ୍‌ର ଫଣ୍ଟ୍‌ଗୁଡ଼ିକୁ SVG ଭିତରେ ରଖେ। README ଛବିର ସ୍ଥାନୀୟ ପରୀକ୍ଷା ଯାଞ୍ଚ କରେ ଯେ ରେଣ୍ଡରିଂ କୌଣସି ବାହ୍ୟ ଫଣ୍ଟ୍ ଅନୁରୋଧ କରୁନାହିଁ। ଉପସମୂହଗୁଡ଼ିକରେ କେବଳ ଲାଟିନ୍ ଅକ୍ଷର ରହେ; ସିଷ୍ଟମ୍ ଫଣ୍ଟ୍‌କୁ ବିକଳ୍ପ ଭାବେ ନେଉଥିବା ପ୍ରତୀକ ଗ୍ଲିଫ୍‌ଗୁଡ଼ିକୁ `SYMBOL_FALLBACKS` ରେ ଗୋଟିଏ ଗୋଟିଏ କରି ଅନୁମତି ମିଳେ। ଅନ୍ୟ କୌଣସି ଅନାବୃତ ଗ୍ଲିଫ୍ ତ୍ରୁଟି ସୃଷ୍ଟି କରେ।
+
+- **ପୁନଃ ତିଆରି।** `npm run docs:readme-diagrams` ସମସ୍ତ ବାରଟି ଚିତ୍ର README କ୍ରମରେ ପୁନଃ ଲେଖେ ଓ ପ୍ରତ୍ୟେକ ଫାଇଲ୍‌ର ଆକାର ସହ ଗୋଟିଏ ଧାଡ଼ି ଛାପେ। ଜେନେରେଟର୍ ଅଲଗା ଭାବେ ମଧ୍ୟ ଚାଲେ (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` ପାଇଁ `node --import tsx/esm` ଦରକାର, କାରଣ ସଂଖ୍ୟାଗୁଡ଼ିକ `open-sse/config/freeModelCatalog.ts` ର ବର୍ତ୍ତମାନ କ୍ୟାଟାଲଗ୍ ଲୋଡର୍‌ରୁ ଆସେ; କ୍ୟାଟାଲଗ୍ ପରିବର୍ତ୍ତନର CI ପ୍ରଭାବ `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` ରେ ଅଛି)। ଜେନେରେଟର୍ ଓ SVG ଏକାଠି commit କରନ୍ତୁ।
+
+- **ପ୍ରମାଣ।** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` ସ୍ଥାନୀୟ ପରୀକ୍ଷାରେ ଫାଇଲ୍ ରେଣ୍ଡର୍ କରେ (`<img>` ଟ୍ୟାଗ୍, ସୀମିତକାରୀ `Content-Security-Policy` ଓ `image/svg+xml` ପ୍ରତିକ୍ରିୟା), ହାଲୁକା ଓ ଗାଢ଼ ଫ୍ରେମ୍ ଧରେ ଏବଂ ପୃଷ୍ଠାର ବାହ୍ୟ ଫଣ୍ଟ୍ ଅନୁରୋଧ ଜଣାଏ; ସେଗୁଡ଼ିକର ସଂଖ୍ୟା 0 ହେବା ଦରକାର।
+
+- **ଆକାର ସୀମା।** ପ୍ରତ୍ୟେକ ଫାଇଲ୍ 200 KB ରୁ କମ୍, ଯାହା ପ୍ରତ୍ୟେକ ପୁରୁଣା ହେବା ଯାଞ୍ଚ ନିଶ୍ଚିତ କରେ; ଯେକୌଣସି README ଛବିର କଠୋର ସର୍ବାଧିକ ସୀମା 500 KB (SVG studio ଭାଲିଡେଟର୍‌ର ନିୟମ)।
+
+- **ସାଧାରଣ ଲେଖା, ଗଣନା gate ରୁ।** ପ୍ରତ୍ୟେକ ଜେନେରେଟର୍ ତାହାର ଚିତ୍ରର ଲେଖା `*_COPY` ସ୍ଥିରାଙ୍କରେ ରଖେ କିମ୍ବା ବର୍ତ୍ତମାନ କ୍ୟାଟାଲଗ୍‌ରୁ ତିଆରି କରେ। ସେହି ଲେଖା ଅଙ୍କାଯାଏ ଓ ଫଣ୍ଟ୍ ଉପସମୂହର ଇନପୁଟ୍ ମଧ୍ୟ ହୁଏ। ପ୍ରାମାଣିକ ସଂଖ୍ୟା `<text>` ନୋଡ୍‌ରେ ରହେ, ଯାହା `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) ପଢ଼େ। gate ପଢ଼ୁଥିବା ଚିତ୍ରର ପୁରୁଣା ହେବା ଯାଞ୍ଚଗୁଡ଼ିକ ଜେନେରେଟ୍ ହୋଇଥିବା ଫାଇଲ୍‌ରେ ତାହାର ଭାଲିଡେଟର୍ ମଧ୍ୟ ଚଲାନ୍ତି। କୋଡ୍‌ଠାରୁ ଭିନ୍ନ ସଂଖ୍ୟା ଯାଞ୍ଚକୁ ବିଫଳ କରେ: gate ପଢ଼ୁଥିବା ଉତ୍ସ ସୁଧାରନ୍ତୁ, ଜେନେରେଟର୍‌ର ସଂଖ୍ୟା କେବେ ନୁହେଁ।
+
+## 7. ସନ୍ଦର୍ଭ ସୂଚୀ
 
 - `src/app/globals.css` — token bridge, `.dark` override, OmniRoute `@layer components` extension
 - `packages/ui-kit/UPSTREAM.md` — pin କରାଯାଇଥିବା upstream commit ଏବଂ license ଅନୁମୋଦନ; `packages/ui-kit/PATCHES.md`

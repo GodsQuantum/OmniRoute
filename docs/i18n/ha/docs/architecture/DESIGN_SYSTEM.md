@@ -146,7 +146,23 @@ relative imports). Sannan: duba `git diff packages/ui-kit`, gudanar da duban gan
 usage da endpoint a themes biyu, gudanar da `npm run check:ui-kit-snapshot` da `npm run test:vitest:ui`, sannan
 buɗe PR tare da changelog na upstream.
 
-## 6. Fihirisar manazarta
+## 6. Zane-zanen README
+
+Zane-zane goma sha biyu da aka saka a `README.md` na tushe (`docs/diagrams/*.svg`) suna amfani da kit a hotuna marasa motsi. Ana samar da su, ba zana su da hannu ba: fayilolin janareta 13 a `scripts/docs/gen-readme-*.mjs` (zane-zane goma sha biyu da mai sarrafawa `gen-readme-diagrams.mjs`) da gwaje-gwajen tsufa 12 a `tests/unit/docs/readme-*-svg.test.ts`, ɗaya ga kowane zane. Kowane gwaji yana kwatanta fayil ɗin da aka commit da fitowar janaretansa byte bayan byte (aiki `test-unit`).
+
+- **Token.** `scripts/docs/readme-diagram-theme.mjs` yana kwafin palet daga `packages/ui-kit/src/ci-tokens.css` (gwajin `tests/unit/docs/readme-diagram-theme.test.ts` yana tabbatar da dacewa da wannan fayil) kuma yana bayyana ayyukan rubutu da font ɗin kit: Instrument Serif don rubutun nuni, Inter don rubutun mu'amala, IBM Plex Mono don lambobi da lamba ta shiri. Waɗannan su ne fakitin `@fontsource` da `src/app/globals.css` yake ɗorawa don dashboard. Ƙimomin haske suna kan `:root`, na duhu suna ƙarƙashin `prefers-color-scheme: dark` cikin fayil, don haka kowane hoto yana bin tsarin launin mai karatu a GitHub.
+
+- **Font.** `scripts/docs/readme-fonts.mjs` yana rage waɗannan fayilolin woff2 zuwa glyph ɗin da kowane zane ke zana, sannan ya saka su ta `@font-face` a matsayin URI na `data:`. Hakan yana ajiye font na kit a cikin SVG. Gwajin hoton README na gida yana tabbatar da cewa nuna hoton ba ya aika buƙatun font zuwa waje. Ƙananan rukunin suna da haruffan Latin kawai; glyph na alamomi da suka koma ga font na tsarin kwamfuta a matsayin madadi ana ba su izini ɗaya bayan ɗaya a `SYMBOL_FALLBACKS`. Duk wani glyph da ba a rufe ba yana haifar da kuskure.
+
+- **Sake samarwa.** `npm run docs:readme-diagrams` yana sake rubuta duk zane-zane goma sha biyu bisa tsarin README kuma ya fitar da layi ɗaya ga kowane fayil da girmansa. Janareta yana iya aiki shi kaɗai (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` yana buƙatar `node --import tsx/esm` domin lambobinsa suna fitowa daga mai ɗora kundin yanzu a `open-sse/config/freeModelCatalog.ts`; tasirin sauyin kundin ga CI yana a `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Yi commit na janareta da SVG tare.
+
+- **Shaida.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` yana nuna fayil a gwajin gida (tag `<img>`, `Content-Security-Policy` mai takura da amsar `image/svg+xml`), ya ɗauki hoton haske da na duhu, kuma ya bayar da rahoton buƙatun font na waje da shafin ya yi; dole adadinsu ya zama 0.
+
+- **Iyaka.** Ƙasa da 200 KB ga kowane fayil, abin da kowane gwajin tsufa yake tabbatarwa; 500 KB shi ne iyakar dole ga kowane hoton README (ƙa'idar mai tantance SVG studio).
+
+- **Rubutu na bai ɗaya, adadi daga gate.** Kowane janareta yana riƙe rubutun zanensa a constant `*_COPY` ko ya gina shi daga kundin yanzu. Wannan rubutu ake zanawa kuma ake amfani da shi wajen zaɓar ƙaramin rukunin font. Lambobin hukuma suna nan a node `<text>` da `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) yake karantawa. Gwaje-gwajen tsufa na zane-zanen da gate yake karantawa suna gudanar da masu tantancewarsa a fayil ɗin da aka samar ma. Idan lamba ta bambanta da lambar shiri, gwajin ya gaza: gyara tushen da gate yake karantawa, kada a gyara lambar cikin janareta.
+
+## 7. Fihirisar manazarta
 
 - `src/app/globals.css` — gadar token, overrides na `.dark`, ƙarin faɗaɗawar OmniRoute na `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit na upstream da aka kulle da izinin lasisi; `packages/ui-kit/PATCHES.md`

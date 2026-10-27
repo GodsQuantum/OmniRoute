@@ -132,7 +132,23 @@
 שימוש ונקודת קצה בשתי ערכות הנושא, הריצו את `npm run check:ui-kit-snapshot` ואת `npm run test:vitest:ui`, ופתחו
 את ה-PR עם יומן השינויים של ה-upstream.
 
-## 6. אינדקס עזר
+## 6. תרשימי README
+
+שנים־עשר התרשימים המוטמעים ב־`README.md` שבשורש (`docs/diagrams/*.svg`) מיישמים את הערכה בתמונות סטטיות. הם נוצרים באמצעות מחוללים, ואינם מצוירים ביד: 13 קובצי מחוללים תחת `scripts/docs/gen-readme-*.mjs` (שנים־עשר תרשימים ותוכנית ההפעלה `gen-readme-diagrams.mjs`), ו־12 בדיקות התיישנות תחת `tests/unit/docs/readme-*-svg.test.ts`, אחת לכל תרשים. כל בדיקה משווה בית אחר בית את הקובץ שב־commit לפלט המחולל שלו (המשימה `test-unit`).
+
+- **טוקנים.** `scripts/docs/readme-diagram-theme.mjs` מעתיק את פלטת הצבעים מ־`packages/ui-kit/src/ci-tokens.css` (ההתאמה לקובץ הזה מעוגנת באמצעות `tests/unit/docs/readme-diagram-theme.test.ts`) ומגדיר את תפקידי הטקסט בגופני הערכה: Instrument Serif לטקסט תצוגה מודגש, Inter לטקסט ממשק ו־IBM Plex Mono למספרים ולקוד. אלה אותן חבילות `@fontsource` ש־`src/app/globals.css` טוען עבור לוח הבקרה. הערכים הבהירים נמצאים ב־`:root` והכהים תחת התנאי `prefers-color-scheme: dark` בתוך הקובץ, כך שכל תמונה עוקבת אחר ערכת הצבעים של הקורא ב־GitHub.
+
+- **גופנים.** `scripts/docs/readme-fonts.mjs` מצמצם את קובצי ה־woff2 האלה לגליפים שכל תרשים מצייר, ומטמיע אותם באמצעות `@font-face` ככתובות URI מסוג `data:`. כך גופני הערכה נשארים בתוך ה־SVG. בדיקת תמונות README המקומית בודקת שהרינדור אינו שולח בקשות לגופנים חיצוניים. תתי־הקבוצות כוללות תווים לטיניים בלבד; גליפים של סמלים שנעזרים בגופני המערכת כחלופה מותרים אחד־אחד ב־`SYMBOL_FALLBACKS`. כל גליף אחר שאינו מכוסה גורם לשגיאה.
+
+- **יצירה מחדש.** `npm run docs:readme-diagrams` כותב מחדש את כל שנים־עשר התרשימים בסדר ה־README ומדפיס שורה לכל קובץ עם גודלו. אפשר להריץ גם מחולל יחיד (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` דורש `node --import tsx/esm` משום שהמספרים שלו מגיעים מטוען הקטלוג הנוכחי ב־`open-sse/config/freeModelCatalog.ts`; ההשלכה של שינוי קטלוג על CI מתוארת ב־`docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). שמרו את המחולל ואת ה־SVG באותו commit.
+
+- **הוכחה.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` מרנדר קובץ בבדיקה המקומית (תגית `<img>`, מדיניות `Content-Security-Policy` מגבילה ותגובת `image/svg+xml`), מצלם פריים בהיר ופריים כהה ומדווח על בקשות הגופנים החיצוניות של הדף; מספרן חייב להיות 0.
+
+- **תקציב גודל.** פחות מ־200 KB לכל קובץ, כפי שבודקת כל בדיקת התיישנות; 500 KB הוא הגבול הקשיח לכל תמונת README (הכלל של מאמת SVG studio).
+
+- **טקסט משותף, המספרים מה־gate.** כל מחולל מחזיק את טקסט התרשים בקבוע `*_COPY` או בונה אותו מהקטלוג הנוכחי. זהו גם הטקסט המצויר וגם הקלט לתת־קבוצת הגופן. המספרים הקנוניים נשארים בצומתי `<text>` שנקראים בידי `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). בדיקות ההתיישנות של התרשימים שה־gate קורא מריצות גם את המאמתים שלו על הקובץ שנוצר. לכן מספר שסוטה מהקוד מכשיל את הבדיקה: תקנו את המקור שה־gate קורא, לעולם לא את המספר במחולל.
+
+## 7. אינדקס עזר
 
 - `src/app/globals.css` — גשר אסימונים, דריסות `.dark`, הרחבות OmniRoute בתוך `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit ה-upstream המקובע והרשאת הרישיון; `packages/ui-kit/PATCHES.md`

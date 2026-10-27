@@ -143,7 +143,23 @@
 usage اور endpoint کا بصری معائنہ کریں، `npm run check:ui-kit-snapshot` اور `npm run test:vitest:ui` چلائیں، اور
 upstream changelog کے ساتھ PR کھولیں۔
 
-## 6. حوالہ جاتی اشاریہ
+## 6. README کے خاکے
+
+روٹ `README.md` میں شامل بارہ خاکے (`docs/diagrams/*.svg`) کِٹ کو ساکن تصویروں پر لاگو کرتے ہیں۔ یہ خودکار طور پر بنائے جاتے ہیں، ہاتھ سے نہیں کھینچے جاتے: `scripts/docs/gen-readme-*.mjs` میں 13 جنریٹر فائلیں (بارہ خاکے اور ڈرائیور `gen-readme-diagrams.mjs`)، اور `tests/unit/docs/readme-*-svg.test.ts` میں 12 پرانا ہونے کی جانچیں، ہر خاکے کے لیے ایک، موجود ہیں۔ ہر جانچ commit میں محفوظ فائل کو اس کے جنریٹر کے نتیجے سے بائٹ بہ بائٹ ملاتی ہے (جاب `test-unit`)۔
+
+- **ٹوکن۔** `scripts/docs/readme-diagram-theme.mjs` رنگوں کی پیلیٹ `packages/ui-kit/src/ci-tokens.css` سے نقل کرتا ہے (اس فائل سے مطابقت `tests/unit/docs/readme-diagram-theme.test.ts` کے ذریعے طے رہتی ہے) اور کِٹ کے فونٹس سے متن کے کردار متعین کرتا ہے: نمایاں متن کے لیے Instrument Serif، انٹرفیس کے لیے Inter، اور اعداد و کوڈ کے لیے IBM Plex Mono۔ یہ وہی `@fontsource` پیکیج ہیں جو `src/app/globals.css` ڈیش بورڈ کے لیے لوڈ کرتا ہے۔ فائل کے اندر روشن قدریں `:root` پر اور تاریک قدریں `prefers-color-scheme: dark` کی شرط کے تحت ہوتی ہیں، لہٰذا ہر تصویر GitHub پر قاری کی رنگوں کی ترتیب کے مطابق ہوتی ہے۔
+
+- **فونٹس۔** `scripts/docs/readme-fonts.mjs` ان woff2 فائلوں کو ہر خاکے میں بننے والے گلفس تک محدود کرتا ہے اور انہیں `@font-face` کے ذریعے `data:` URI کی شکل میں شامل کرتا ہے۔ اس طرح کِٹ کے فونٹس SVG کے اندر رہتے ہیں۔ README تصویر کا مقامی پروب جانچتا ہے کہ رینڈرنگ کوئی بیرونی فونٹ درخواست نہ کرے۔ ذیلی مجموعوں میں صرف لاطینی حروف ہوتے ہیں؛ علامتوں کے وہ گلفس جو متبادل کے طور پر سسٹم فونٹس استعمال کرتے ہیں، `SYMBOL_FALLBACKS` میں ایک ایک کرکے منظور ہوتے ہیں۔ اس کے علاوہ کوئی بھی غیر محیط گلف خرابی پیدا کرتا ہے۔
+
+- **دوبارہ بنانا۔** `npm run docs:readme-diagrams` تمام بارہ خاکے README کی ترتیب میں دوبارہ لکھتا ہے اور ہر فائل کے حجم کے ساتھ ایک سطر دکھاتا ہے۔ ہر جنریٹر الگ بھی چلتا ہے (`node scripts/docs/gen-readme-<name>.mjs`؛ `free-tier-budget` کو `node --import tsx/esm` چاہیے کیونکہ اس کے اعداد `open-sse/config/freeModelCatalog.ts` میں موجودہ کیٹلاگ کے لوڈر سے آتے ہیں؛ کیٹلاگ کی تبدیلی کا CI پر اثر `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` میں ہے)۔ جنریٹر اور SVG کو ایک ہی commit میں محفوظ کریں۔
+
+- **ثبوت۔** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` فائل کو مقامی پروب میں رینڈر کرتا ہے (`<img>` ٹیگ، پابندی والی `Content-Security-Policy`، اور `image/svg+xml` جواب)، روشن اور تاریک فریم لیتا ہے اور صفحے کی بیرونی فونٹ درخواستیں بتاتا ہے؛ ان کی تعداد 0 ہونی چاہیے۔
+
+- **حجم کی حد۔** ہر فائل 200 KB سے کم ہو، جس کی تصدیق ہر پرانا ہونے کی جانچ کرتی ہے؛ کسی بھی README تصویر کے لیے سخت بالائی حد 500 KB ہے (SVG studio ویلیڈیٹر کا اصول)۔
+
+- **مشترکہ متن، اعداد gate سے۔** ہر جنریٹر اپنے خاکے کا متن `*_COPY` مستقل میں رکھتا ہے یا موجودہ کیٹلاگ سے بناتا ہے۔ یہی متن دکھایا جاتا ہے اور فونٹ کے ذیلی مجموعے کی ان پٹ بھی ہوتا ہے۔ مستند اعداد `<text>` نوڈز میں رہتے ہیں، جنہیں `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) پڑھتا ہے۔ gate کے پڑھے جانے والے خاکوں کی پرانا ہونے کی جانچیں تیار شدہ فائل پر اس کے ویلیڈیٹر بھی چلاتی ہیں۔ کوڈ سے مختلف عدد جانچ کو ناکام کرتا ہے: gate کے پڑھے جانے والے ماخذ کو درست کریں، جنریٹر میں عدد کو کبھی نہیں۔
+
+## 7. حوالہ جاتی اشاریہ
 
 - `src/app/globals.css` — token bridge، `.dark` overrides، OmniRoute کی `@layer components` extensions
 - `packages/ui-kit/UPSTREAM.md` — pin شدہ upstream commit اور license authorization؛ `packages/ui-kit/PATCHES.md`

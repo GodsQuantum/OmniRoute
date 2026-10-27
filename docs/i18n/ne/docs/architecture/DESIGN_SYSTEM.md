@@ -148,7 +148,23 @@ relative imports बाट `.js` suffix हटाउँछ)। त्यसप�
 usage र endpoint को visual pass गर्नुहोस्, `npm run check:ui-kit-snapshot` र `npm run test:vitest:ui` चलाउनुहोस्, र
 upstream changelog सहित PR खोल्नुहोस्।
 
-## 6. सन्दर्भ अनुक्रमणिका
+## 6. README का रेखाचित्रहरू
+
+मूल `README.md` मा राखिएका बाह्र रेखाचित्रहरू (`docs/diagrams/*.svg`) ले किटलाई स्थिर चित्रमा लागू गर्छन्। तिनलाई हातले कोरिँदैन, जनरेट गरिन्छ: `scripts/docs/gen-readme-*.mjs` मा 13 जनरेटर फाइलहरू (बाह्र रेखाचित्र र सञ्चालक `gen-readme-diagrams.mjs`), अनि `tests/unit/docs/readme-*-svg.test.ts` मा प्रत्येक रेखाचित्रका लागि एउटा गरी 12 पुरानो भएको जाँच्ने परीक्षणहरू छन्। हरेक परीक्षणले commit गरिएको फाइललाई त्यसको जनरेटरको आउटपुटसँग बाइट-बाइट तुलना गर्छ (कार्य `test-unit`)।
+
+- **टोकनहरू।** `scripts/docs/readme-diagram-theme.mjs` ले रङ-प्यालेट `packages/ui-kit/src/ci-tokens.css` बाट प्रतिलिपि गर्छ (त्यो फाइलसँगको मेल `tests/unit/docs/readme-diagram-theme.test.ts` ले सुनिश्चित गर्छ) र किटका फन्टबाट पाठका भूमिका निर्धारण गर्छ: प्रमुख प्रदर्शन पाठका लागि Instrument Serif, इन्टरफेसका लागि Inter, सङ्ख्या र कोडका लागि IBM Plex Mono। यी `src/app/globals.css` ले ड्यासबोर्डका लागि लोड गर्ने उही `@fontsource` प्याकेजहरू हुन्। फाइलभित्र उज्याला मान `:root` मा र गाढा मान `prefers-color-scheme: dark` सर्तअन्तर्गत छन्, त्यसैले हरेक चित्रले GitHub मा पाठकको रङ-योजना पछ्याउँछ।
+
+- **फन्टहरू।** `scripts/docs/readme-fonts.mjs` ले ती woff2 फाइलहरूलाई प्रत्येक रेखाचित्रले कोर्ने ग्लिफमा सीमित गर्छ र `@font-face` मार्फत `data:` URI का रूपमा समावेश गर्छ। यसले किटका फन्टहरू SVG भित्रै राख्छ। README चित्रको स्थानीय परीक्षणले रेन्डर गर्दा बाहिरी फन्ट अनुरोध नहुने जाँच गर्छ। उपसमूहहरूमा ल्याटिन अक्षर मात्र हुन्छन्; प्रणालीका फन्टमा फर्किने प्रतीक-ग्लिफहरू `SYMBOL_FALLBACKS` मा एक-एक गरी अनुमति दिइन्छन्। अरू कुनै नसमेटिएको ग्लिफले त्रुटि उत्पन्न गर्छ।
+
+- **पुनः जनरेट।** `npm run docs:readme-diagrams` ले सबै बाह्र रेखाचित्र README को क्रममा फेरि लेख्छ र हरेक फाइलको आकारसहित एक पङ्क्ति छाप्छ। जनरेटर छुट्टै पनि चल्छ (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` लाई `node --import tsx/esm` चाहिन्छ, किनकि सङ्ख्याहरू `open-sse/config/freeModelCatalog.ts` को हालको क्याटलग लोडरबाट आउँछन्; क्याटलग परिवर्तनको CI प्रभाव `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` मा छ)। जनरेटर र SVG सँगै commit गर्नुहोस्।
+
+- **प्रमाण।** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` ले स्थानीय परीक्षणमा फाइल रेन्डर गर्छ (`<img>` ट्याग, प्रतिबन्धात्मक `Content-Security-Policy` र `image/svg+xml` प्रतिक्रिया), उज्यालो र गाढा फ्रेम लिन्छ र पृष्ठका बाहिरी फन्ट अनुरोधहरू रिपोर्ट गर्छ; तिनको सङ्ख्या 0 हुनुपर्छ।
+
+- **आकार सीमा।** हरेक फाइल 200 KB भन्दा सानो, जसलाई हरेक पुरानोपन परीक्षणले जाँच्छ; कुनै पनि README चित्रको कडा अधिकतम सीमा 500 KB हो (SVG studio भ्यालिडेटरको नियम)।
+
+- **साझा पाठ, गणना gate बाट।** हरेक जनरेटरले रेखाचित्रको पाठ `*_COPY` स्थिराङ्कमा राख्छ वा हालको क्याटलगबाट बनाउँछ। यही पाठ कोरिन्छ र फन्ट उपसमूहको इनपुट पनि हुन्छ। प्रामाणिक सङ्ख्याहरू `<text>` नोडमा रहन्छन्, जसलाई `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) ले पढ्छ। gate ले पढ्ने रेखाचित्रका पुरानोपन परीक्षणले जनरेट गरिएको फाइलमा त्यसका भ्यालिडेटर पनि चलाउँछन्। कोडसँग फरक सङ्ख्याले परीक्षण असफल बनाउँछ: gate ले पढ्ने स्रोत सच्याउनुहोस्, जनरेटरको सङ्ख्या कहिल्यै नसच्याउनुहोस्।
+
+## 7. सन्दर्भ अनुक्रमणिका
 
 - `src/app/globals.css` — token bridge, `.dark` overrides, OmniRoute `@layer components` extensions
 - `packages/ui-kit/UPSTREAM.md` — pin गरिएको upstream commit र license authorization; `packages/ui-kit/PATCHES.md`

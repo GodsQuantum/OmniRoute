@@ -143,7 +143,23 @@ Shundan soʻng: `git diff packages/ui-kit` natijasini tekshiring, har ikkala mav
 foydalanish va endpointni vizual tekshiruvdan oʻtkazing, `npm run check:ui-kit-snapshot` va `npm run test:vitest:ui` buyruqlarini
 ishga tushiring hamda yuqori oqimdagi oʻzgarishlar jurnali bilan PR oching.
 
-## 6. Maʼlumotnoma indeksi
+## 6. README diagrammalari
+
+Ildizdagi `README.md` fayliga joylangan o'n ikkita diagramma (`docs/diagrams/*.svg`) to'plamni statik rasmlarga qo'llaydi. Ular qo'lda chizilmaydi, generatsiya qilinadi: `scripts/docs/gen-readme-*.mjs` ichida 13 ta generator fayli (o'n ikkita diagramma va `gen-readme-diagrams.mjs` boshqaruvchisi), `tests/unit/docs/readme-*-svg.test.ts` ichida esa har diagramma uchun bittadan 12 ta eskirish testi bor. Har bir test commit qilingan faylni generator chiqishi bilan baytma-bayt solishtiradi (`test-unit` vazifasi).
+
+- **Tokenlar.** `scripts/docs/readme-diagram-theme.mjs` palitrani `packages/ui-kit/src/ci-tokens.css` faylidan nusxalaydi (shu faylga moslikni `tests/unit/docs/readme-diagram-theme.test.ts` ta'minlaydi) va to'plam shriftlari bilan matn rollarini belgilaydi: ajratilgan matn uchun Instrument Serif, interfeys uchun Inter, raqamlar va kod uchun IBM Plex Mono. Bular `src/app/globals.css` boshqaruv paneli uchun yuklaydigan ayni `@fontsource` paketlaridir. Ochiq qiymatlar faylda `:root` ichida, to'q qiymatlar `prefers-color-scheme: dark` sharti ostida turadi; har rasm GitHub o'quvchisining rang sxemasiga moslashadi.
+
+- **Shriftlar.** `scripts/docs/readme-fonts.mjs` shu woff2 fayllarini har diagramma chizadigan gliflargacha qisqartiradi va `@font-face` orqali `data:` URI ko'rinishida joylaydi. Shunday qilib, to'plam shriftlari SVG ichida qoladi. Mahalliy README rasm sinovi renderlash tashqi shrift so'rovlarini yubormasligini tekshiradi. Qism to'plamlar faqat lotin belgilarini qamraydi; tizim shriftlariga qaytadigan ramz gliflariga `SYMBOL_FALLBACKS` da bittalab ruxsat beriladi. Qamralmagan boshqa har qanday glif xatoga sabab bo'ladi.
+
+- **Qayta generatsiya.** `npm run docs:readme-diagrams` barcha o'n ikkita diagrammani README tartibida qayta yozadi va har fayl uchun hajmi ko'rsatilgan bitta satr chiqaradi. Generator alohida ham ishlaydi (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` uchun `node --import tsx/esm` kerak, chunki raqamlar `open-sse/config/freeModelCatalog.ts` dagi joriy katalog yuklovchisidan olinadi; katalog o'zgarishining CI oqibati `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` da). Generator va SVG-ni birga commit qiling.
+
+- **Isbot.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` faylni mahalliy sinovda render qiladi (`<img>` tegi, cheklovchi `Content-Security-Policy` va `image/svg+xml` javobi), ochiq va to'q kadr oladi hamda sahifaning tashqi shrift so'rovlarini ko'rsatadi; ular 0 ta bo'lishi kerak.
+
+- **Hajm chegarasi.** Har fayl 200 KB dan kichik bo'lishi kerak; buni har eskirish testi tekshiradi. Har qanday README rasmi uchun qat'iy chegara 500 KB (SVG studio validatorining qoidasi).
+
+- **Umumiy matn, sonlar gate-dan.** Har generator diagramma matnini `*_COPY` konstantasida saqlaydi yoki joriy katalogdan tuzadi. Shu matn ham chiziladi, ham shrift qism to'plamiga kirish bo'ladi. Kanonik raqamlar `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) o'qiydigan `<text>` tugunlarida qoladi. Gate o'qiydigan diagrammalarning eskirish testlari yaratilgan faylda uning validatorlarini ham ishga tushiradi. Koddan farqlangan raqam testni yiqitadi: generatordagi raqamni emas, gate o'qiydigan manbani tuzating.
+
+## 7. Maʼlumotnoma indeksi
 
 - `src/app/globals.css` — token koʻprigi, `.dark` qayta belgilashlari, OmniRoute `@layer components` kengaytmalari
 - `packages/ui-kit/UPSTREAM.md` — biriktirilgan yuqori oqim commiti va litsenziya ruxsati; `packages/ui-kit/PATCHES.md`

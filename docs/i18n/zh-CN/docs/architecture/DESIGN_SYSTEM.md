@@ -114,7 +114,23 @@
 
 `scripts/dev/sync-ui-kit.sh <commit> [clone]` 会将在该提交处的上游 `src/` 复制到 `packages/ui-kit/src`，并应用唯一允许的转换（从相对导入中移除 `.js` 后缀）。然后：审查 `git diff packages/ui-kit`，在两种主题下对提供程序、设置、组合、用量和端点进行视觉检查，运行 `npm run check:ui-kit-snapshot` 和 `npm run test:vitest:ui`，并在创建 PR 时附上上游变更日志。
 
-## 6. 参考索引
+## 6. README 图示
+
+根目录 `README.md` 中嵌入的十二张图（`docs/diagrams/*.svg`）将套件应用于静态图像。这些图由程序生成，而非手工绘制：`scripts/docs/gen-readme-*.mjs` 下有 13 个生成器文件（十二张图加上驱动程序 `gen-readme-diagrams.mjs`），`tests/unit/docs/readme-*-svg.test.ts` 下有 12 项时效性测试，每张图一项，逐字节比较已提交文件与生成器输出（任务 `test-unit`）。
+
+- **令牌。** `scripts/docs/readme-diagram-theme.mjs` 从 `packages/ui-kit/src/ci-tokens.css` 复制调色板（由 `tests/unit/docs/readme-diagram-theme.test.ts` 锁定与该文件的一致性），并使用套件字体定义文本角色：Instrument Serif 用于展示文字，Inter 用于界面文字，IBM Plex Mono 用于数字和代码。这些是 `src/app/globals.css` 为仪表盘加载的同一组 `@fontsource` 包。文件内的亮色值位于 `:root`，暗色值位于 `prefers-color-scheme: dark` 条件下，因此每张图都会跟随 GitHub 阅读者的配色设置。
+
+- **字体。** `scripts/docs/readme-fonts.mjs` 将这些 woff2 文件裁剪为各图实际绘制的字形，并通过 `@font-face` 以 `data:` URI 嵌入。 这样可将套件字体保留在 SVG 内。README 图像的本地探测会检查渲染过程不发出外部字体请求。 子集仅包含拉丁字符；回退到系统字体栈的符号字形会在 `SYMBOL_FALLBACKS` 中逐一获准，任何其他未覆盖字形都会抛出错误。
+
+- **重新生成。** `npm run docs:readme-diagrams` 按 README 顺序重写全部十二张图，并为每个文件输出一行大小信息。单个生成器也可独立运行（`node scripts/docs/gen-readme-<name>.mjs`；`free-tier-budget` 需要 `node --import tsx/esm`，因为其数字来自 `open-sse/config/freeModelCatalog.ts` 中的当前目录加载器；目录变更对 CI 的影响见 `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`）。请将生成器与 SVG 一起提交。
+
+- **证据。** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` 在本地探测中渲染文件（`<img>` 标签、限制性的 `Content-Security-Policy` 和 `image/svg+xml` 响应），捕获亮色和暗色画面，并报告页面发出的外部字体请求，数量必须为 0。
+
+- **体积预算。** 每个文件须小于 200 KB，由各项时效性测试断言；任何 README 图像的硬上限为 500 KB（SVG studio 验证器的规则）。
+
+- **共享文案，计数来自 gate。** 每个生成器将图中的文案保存在 `*_COPY` 常量中，或从当前目录构造；同一份文案既是绘制的文字，也是字体子集的输入。规范数字保留在 `<text>` 节点中，由 `check:docs-counts`（`scripts/check/check-docs-counts-sync.mjs`）读取。对于 gate 会读取的图，其时效性测试还会对生成文件运行 gate 的验证器；数字一旦偏离代码，测试便会失败。应修复 gate 读取的源，而不要修改生成器中的数字。
+
+## 7. 参考索引
 
 - `src/app/globals.css` — 令牌桥接、`.dark` 覆盖、OmniRoute `@layer components` 扩展
 - `packages/ui-kit/UPSTREAM.md` — 固定的上游提交和许可证授权；`packages/ui-kit/PATCHES.md`

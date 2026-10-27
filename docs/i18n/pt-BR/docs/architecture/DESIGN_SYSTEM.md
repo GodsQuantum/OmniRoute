@@ -139,7 +139,23 @@ importações relativas). Em seguida: revise `git diff packages/ui-kit`, faça u
 uso e endpoint em ambos os temas, execute `npm run check:ui-kit-snapshot` e `npm run test:vitest:ui` e
 abra o PR com o changelog upstream.
 
-## 6. Índice de referência
+## 6. Diagramas do README
+
+Os doze diagramas incorporados no `README.md` da raiz (`docs/diagrams/*.svg`) aplicam o kit a uma imagem estática. São gerados, não desenhados à mão: há 13 arquivos geradores em `scripts/docs/gen-readme-*.mjs` (doze diagramas mais o controlador `gen-readme-diagrams.mjs`) e 12 testes de desatualização em `tests/unit/docs/readme-*-svg.test.ts`, um por diagrama. Cada teste compara, byte a byte, o arquivo commitado com a saída do gerador (job `test-unit`).
+
+- **Tokens.** `scripts/docs/readme-diagram-theme.mjs` copia a paleta de `packages/ui-kit/src/ci-tokens.css` (a correspondência com esse arquivo é garantida por `tests/unit/docs/readme-diagram-theme.test.ts`) e define os papéis de texto com as fontes do kit: Instrument Serif para destaque, Inter para texto de interface e IBM Plex Mono para números e código. São os mesmos pacotes `@fontsource` que `src/app/globals.css` carrega para o dashboard. Os valores claros ficam em `:root` e os escuros em `prefers-color-scheme: dark`, dentro do arquivo; assim, cada imagem acompanha o esquema do leitor no GitHub.
+
+- **Fontes.** `scripts/docs/readme-fonts.mjs` extrai desses arquivos woff2 subconjuntos com os glifos usados por cada diagrama e os incorpora como URIs `data:` em `@font-face`. Isso mantém as fontes do kit dentro do SVG. O probe local de imagens do README verifica que a renderização não faz solicitações externas de fontes. Os subconjuntos contêm apenas caracteres latinos; os glifos de símbolos que recorrem à pilha de fontes do sistema são permitidos individualmente em `SYMBOL_FALLBACKS`. Qualquer outro glifo sem cobertura gera erro.
+
+- **Regeneração.** `npm run docs:readme-diagrams` reescreve os doze diagramas na ordem do README e imprime uma linha por arquivo com seu tamanho. Cada gerador também pode rodar sozinho (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` exige `node --import tsx/esm` porque seus números vêm do carregador do catálogo atual em `open-sse/config/freeModelCatalog.ts`; a consequência de uma mudança no catálogo para a CI está em `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commite o gerador e o SVG juntos.
+
+- **Prova.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderiza um arquivo no probe local (tag `<img>`, uma `Content-Security-Policy` restritiva e uma resposta `image/svg+xml`), captura uma imagem clara e uma escura e informa as solicitações externas de fontes feitas pela página, que devem ser 0.
+
+- **Orçamento.** Menos de 200 KB por arquivo, conforme verificado em cada teste de desatualização; 500 KB é o limite máximo para qualquer imagem do README (regra do validador SVG studio).
+
+- **Texto compartilhado, contagens vindas do gate.** Cada gerador mantém o texto do diagrama em uma constante `*_COPY`, ou o constrói a partir do catálogo atual. Esse texto é tanto o conteúdo desenhado quanto a entrada para o subconjunto de fontes. Os números canônicos permanecem em nós `<text>`, lidos por `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Os testes de desatualização dos diagramas lidos pelo gate também executam seus validadores sobre o arquivo gerado; assim, um número que diverge do código faz o teste falhar. Corrija a fonte que o gate lê, nunca o número no gerador.
+
+## 7. Índice de referência
 
 - `src/app/globals.css` — ponte de tokens, substituições de `.dark`, extensões do OmniRoute em `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit upstream fixado e autorização de licença; `packages/ui-kit/PATCHES.md`

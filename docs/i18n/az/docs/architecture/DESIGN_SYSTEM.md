@@ -148,7 +148,23 @@
 parametrlər, kombinasiyalar, istifadə və son nöqtə üçün vizual yoxlama aparın, `npm run check:ui-kit-snapshot` və
 `npm run test:vitest:ui` əmrlərini işə salın və PR-ı yuxarı axının dəyişiklik jurnalı ilə birlikdə açın.
 
-## 6. İstinad indeksi
+## 6. README diaqramları
+
+Kökdəki `README.md` faylına daxil edilən on iki diaqram (`docs/diagrams/*.svg`) dəsti statik şəkillərə tətbiq edir. Onlar əl ilə çəkilmir, yaradılır: `scripts/docs/gen-readme-*.mjs` daxilində 13 generator faylı (on iki diaqram və `gen-readme-diagrams.mjs` idarəedicisi), `tests/unit/docs/readme-*-svg.test.ts` daxilində isə hər diaqrama bir olmaqla 12 aktuallıq testi var. Hər test commit edilmiş faylı generatorun çıxışı ilə bayt-bayt müqayisə edir (`test-unit` işi).
+
+- **Tokenlər.** `scripts/docs/readme-diagram-theme.mjs` palitranı `packages/ui-kit/src/ci-tokens.css` faylından köçürür (bu faylla uyğunluğu `tests/unit/docs/readme-diagram-theme.test.ts` təmin edir) və dəstin şriftləri ilə mətn rollarını müəyyənləşdirir: vurğulu mətn üçün Instrument Serif, interfeys üçün Inter, rəqəmlər və kod üçün IBM Plex Mono. Bunlar `src/app/globals.css` faylının idarəetmə paneli üçün yüklədiyi eyni `@fontsource` paketləridir. Açıq dəyərlər faylda `:root` daxilində, tünd dəyərlər `prefers-color-scheme: dark` şərti altında yerləşir; hər şəkil GitHub oxucusunun rəng sxeminə uyğunlaşır.
+
+- **Şriftlər.** `scripts/docs/readme-fonts.mjs` həmin woff2 fayllarını hər diaqramın çəkdiyi qliflərlə məhdudlaşdırır və onları `@font-face` vasitəsilə `data:` URI-ləri kimi yerləşdirir. Beləliklə, dəstin şriftləri SVG daxilində qalır. Yerli README şəkil sınağı təsvir zamanı xarici şrift sorğularının olmadığını yoxlayır. Alt çoxluqlar yalnız latın simvollarını əhatə edir; sistem şriftlərinə keçən simvol qliflərinə `SYMBOL_FALLBACKS` daxilində ayrı-ayrılıqda icazə verilir. Əhatə olunmayan hər başqa qlif xəta yaradır.
+
+- **Yenidən yaratma.** `npm run docs:readme-diagrams` bütün on iki diaqramı README ardıcıllığı ilə yenidən yazır və hər fayl üçün ölçüsü ilə bir sətir çıxarır. Generator ayrıca da işləyir (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` üçün `node --import tsx/esm` lazımdır, çünki rəqəmlər `open-sse/config/freeModelCatalog.ts` daxilindəki cari kataloq yükləyicisindən gəlir; kataloq dəyişikliyinin CI nəticəsi `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` bölməsindədir). Generatoru və SVG-ni birlikdə commit edin.
+
+- **Sübut.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` faylı yerli sınaqda təsvir edir (`<img>` teqi, məhdudlaşdırıcı `Content-Security-Policy` və `image/svg+xml` cavabı), açıq və tünd bir kadr çəkir və səhifənin xarici şrift sorğularını bildirir; onların sayı 0 olmalıdır.
+
+- **Büdcə.** Hər fayl 200 KB-dan kiçik olmalıdır; bunu hər aktuallıq testi yoxlayır. İstənilən README şəkli üçün mütləq hədd 500 KB-dır (SVG studio validatorunun qaydası).
+
+- **Ortaq mətn, saylar gate-dən.** Hər generator diaqram mətnini `*_COPY` sabitində saxlayır və ya cari kataloqdan qurur. Eyni mətn həm çəkilir, həm də şrift alt çoxluğuna giriş olur. Kanonik rəqəmlər `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) tərəfindən oxunan `<text>` düyünlərində qalır. Gate-in oxuduğu diaqramların aktuallıq testləri yaradılmış faylda onun validatorlarını da işlədir. Koddan fərqlənən rəqəm testi uğursuz edir: generatorun rəqəmini deyil, gate-in oxuduğu mənbəni düzəldin.
+
+## 7. İstinad indeksi
 
 - `src/app/globals.css` — token körpüsü, `.dark` əvəzləmələri, OmniRoute `@layer components` genişləndirmələri
 - `packages/ui-kit/UPSTREAM.md` — sabitlənmiş yuxarı axın commit-i və lisenziya icazəsi; `packages/ui-kit/PATCHES.md`

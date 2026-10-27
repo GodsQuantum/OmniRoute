@@ -149,7 +149,23 @@
 usage এবং endpoint দৃশ্যত যাচাই করুন, `npm run check:ui-kit-snapshot` ও `npm run test:vitest:ui` চালান এবং
 upstream changelog-সহ PR খুলুন।
 
-## 6. রেফারেন্স সূচি
+## 6. README-এর চিত্র
+
+মূল `README.md`-তে যুক্ত বারোটি চিত্র (`docs/diagrams/*.svg`) স্থির ছবিতে কিটটি প্রয়োগ করে। এগুলো জেনারেট করা হয়, হাতে আঁকা হয় না: `scripts/docs/gen-readme-*.mjs`-তে 13টি জেনারেটর ফাইল (বারোটি চিত্র ও নিয়ন্ত্রক `gen-readme-diagrams.mjs`), এবং `tests/unit/docs/readme-*-svg.test.ts`-তে 12টি পুরোনো হয়ে যাওয়া যাচাইয়ের টেস্ট আছে, প্রতিটি চিত্রের জন্য একটি। প্রতিটি টেস্ট commit করা ফাইলকে তার জেনারেটরের আউটপুটের সঙ্গে বাইট ধরে তুলনা করে (জব `test-unit`)।
+
+- **টোকেন।** `scripts/docs/readme-diagram-theme.mjs` প্যালেটটি `packages/ui-kit/src/ci-tokens.css` থেকে কপি করে (সেই ফাইলের সঙ্গে মিল `tests/unit/docs/readme-diagram-theme.test.ts` নিশ্চিত করে) এবং কিটের ফন্ট দিয়ে লেখার ভূমিকা নির্ধারণ করে: প্রদর্শনমূলক লেখায় Instrument Serif, ইন্টারফেসে Inter, সংখ্যা ও কোডে IBM Plex Mono। এগুলো সেই একই `@fontsource` প্যাকেজ, যা `src/app/globals.css` ড্যাশবোর্ডের জন্য লোড করে। ফাইলের মধ্যে হালকা মান `:root`-এ এবং গাঢ় মান `prefers-color-scheme: dark` শর্তের অধীনে থাকে, তাই প্রতিটি ছবি GitHub পাঠকের রঙের ধরন অনুসরণ করে।
+
+- **ফন্ট।** `scripts/docs/readme-fonts.mjs` ওই woff2 ফাইলগুলোকে প্রতিটি চিত্রে আঁকা গ্লিফের উপসেটে সীমিত করে এবং `@font-face` দিয়ে `data:` URI হিসেবে যুক্ত করে। এতে কিটের ফন্টগুলো SVG-এর ভেতরেই থাকে। README ছবির স্থানীয় পরীক্ষা যাচাই করে যে রেন্ডারিং কোনো বাইরের ফন্টের অনুরোধ করে না। উপসেটগুলোতে শুধু লাতিন অক্ষর থাকে; সিস্টেম ফন্টে ফিরে যাওয়া প্রতীকের গ্লিফগুলো `SYMBOL_FALLBACKS`-এ একে একে অনুমোদিত হয়। অন্য কোনো অসমর্থিত গ্লিফ ত্রুটি ঘটায়।
+
+- **আবার তৈরি।** `npm run docs:readme-diagrams` সব বারোটি চিত্র README-এর ক্রমে আবার লেখে এবং প্রতিটি ফাইলের আকারসহ একটি লাইন ছাপে। একটি জেনারেটর আলাদাভাবেও চলে (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget`-এর জন্য `node --import tsx/esm` দরকার, কারণ তার সংখ্যাগুলো `open-sse/config/freeModelCatalog.ts`-এর বর্তমান ক্যাটালগ লোডার থেকে আসে; ক্যাটালগ বদলের CI প্রভাব `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`-এ আছে)। জেনারেটর ও SVG একসঙ্গে commit করুন।
+
+- **প্রমাণ।** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` স্থানীয় পরীক্ষায় ফাইল রেন্ডার করে (`<img>` ট্যাগ, সীমাবদ্ধ `Content-Security-Policy` এবং `image/svg+xml` প্রতিক্রিয়া), একটি হালকা ও একটি গাঢ় ফ্রেম ধারণ করে এবং পৃষ্ঠার বাইরের ফন্টের অনুরোধ জানায়; সেগুলোর সংখ্যা অবশ্যই 0 হতে হবে।
+
+- **আকারসীমা।** প্রতিটি ফাইল 200 KB-এর নিচে, যা প্রতিটি পুরোনো হওয়ার টেস্ট যাচাই করে; যেকোনো README ছবির কঠোর সর্বোচ্চ সীমা 500 KB (SVG studio ভ্যালিডেটরের নিয়ম)।
+
+- **ভাগ করা লেখা, সংখ্যা gate থেকে।** প্রতিটি জেনারেটর চিত্রের লেখা `*_COPY` ধ্রুবকে রাখে অথবা বর্তমান ক্যাটালগ থেকে তৈরি করে। সেই লেখাই আঁকা হয় এবং ফন্টের উপসেটের ইনপুট হিসেবেও ব্যবহৃত হয়। প্রামাণ্য সংখ্যাগুলো `<text>` নোডে থাকে, যা `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) পড়ে। gate যে চিত্রগুলো পড়ে, সেগুলোর পুরোনো হওয়ার টেস্ট জেনারেট করা ফাইলে তার ভ্যালিডেটরও চালায়। কোডের সঙ্গে অমিল সংখ্যা টেস্ট ব্যর্থ করে: gate যে উৎস পড়ে সেটি সংশোধন করুন, জেনারেটরের সংখ্যাটি কখনো নয়।
+
+## 7. রেফারেন্স সূচি
 
 - `src/app/globals.css` — token bridge, `.dark` override, OmniRoute `@layer components` extension
 - `packages/ui-kit/UPSTREAM.md` — pin করা upstream commit এবং license authorization; `packages/ui-kit/PATCHES.md`

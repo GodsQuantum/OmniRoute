@@ -148,7 +148,23 @@ Pēc tam: pārskatiet `git diff packages/ui-kit`, vizuāli pārbaudiet nodrošin
 lietojumu un galapunktu abos motīvos, palaidiet `npm run check:ui-kit-snapshot` un `npm run test:vitest:ui` un
 atveriet PR, pievienojot augšupstraumes izmaiņu žurnālu.
 
-## 6. Atsauču rādītājs
+## 6. README diagrammas
+
+Divpadsmit diagrammas, kas iekļautas saknes `README.md` (`docs/diagrams/*.svg`), pielieto komplektu statiskiem attēliem. Tās tiek ģenerētas, nevis zīmētas ar roku: `scripts/docs/gen-readme-*.mjs` ir 13 ģeneratoru faili (divpadsmit diagrammas un vadītājs `gen-readme-diagrams.mjs`), bet `tests/unit/docs/readme-*-svg.test.ts` ir 12 novecošanas testi, pa vienam katrai diagrammai. Katrs tests pa baitam salīdzina komitā saglabāto failu ar ģeneratora izvadi (darbs `test-unit`).
+
+- **Tokeni.** `scripts/docs/readme-diagram-theme.mjs` kopē paleti no `packages/ui-kit/src/ci-tokens.css` (atbilstību šim failam nodrošina `tests/unit/docs/readme-diagram-theme.test.ts`) un nosaka teksta lomas ar komplekta fontiem: Instrument Serif izceltam tekstam, Inter saskarnes tekstam, IBM Plex Mono skaitļiem un kodam. Tās ir tās pašas `@fontsource` pakotnes, kuras `src/app/globals.css` ielādē panelim. Gaišās vērtības atrodas faila `:root` daļā, tumšās – aiz `prefers-color-scheme: dark` nosacījuma, tāpēc katrs attēls seko GitHub lasītāja krāsu shēmai.
+
+- **Fonti.** `scripts/docs/readme-fonts.mjs` samazina šos woff2 failus līdz katras diagrammas izmantotajiem glifiem un iegulst tos ar `@font-face` kā `data:` URI. Tādējādi komplekta fonti paliek SVG iekšienē. Vietējā README attēlu pārbaude pārliecinās, ka renderēšana neveic ārējus fontu pieprasījumus. Apakškopās ir tikai latīņu rakstzīmes; simbolu glifi, kuri izmanto sistēmas fontus kā rezerves variantu, tiek atļauti atsevišķi `SYMBOL_FALLBACKS` sarakstā. Jebkurš cits neaptverts glifs izraisa kļūdu.
+
+- **Atkārtota ģenerēšana.** `npm run docs:readme-diagrams` pārraksta visas divpadsmit diagrammas README secībā un izvada rindu ar katra faila lielumu. Ģenerators darbojas arī atsevišķi (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` prasa `node --import tsx/esm`, jo tā skaitļi nāk no pašreizējā kataloga ielādētāja `open-sse/config/freeModelCatalog.ts`; kataloga izmaiņu ietekme uz CI ir aprakstīta `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Ģeneratoru un SVG saglabājiet vienā komitā.
+
+- **Pierādījums.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderē failu vietējā pārbaudē (`<img>` tags, ierobežojoša `Content-Security-Policy` un `image/svg+xml` atbilde), uzņem gaišu un tumšu attēlu un ziņo par lapas ārējiem fontu pieprasījumiem; to skaitam jābūt 0.
+
+- **Apjoma ierobežojums.** Mazāk par 200 KB failā, ko pārbauda katrs novecošanas tests; 500 KB ir jebkura README attēla absolūtais limits (SVG studio validatora noteikums).
+
+- **Kopīgs teksts, skaitļi no gate.** Katrs ģenerators saglabā diagrammas tekstu `*_COPY` konstantē vai veido to no pašreizējā kataloga. Tas pats teksts tiek zīmēts un izmantots fontu apakškopai. Kanoniskie skaitļi paliek `<text>` mezglos, kurus lasa `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Gate nolasīto diagrammu novecošanas testi palaiž arī tā validatorus ģenerētajam failam. Skaitlis, kas atšķiras no koda, izraisa testa kļūmi: labojiet avotu, kuru lasa gate, nekad skaitli ģeneratorā.
+
+## 7. Atsauču rādītājs
 
 - `src/app/globals.css` — pilnvaru tilts, `.dark` pārrakstījumi, OmniRoute `@layer components` paplašinājumi
 - `packages/ui-kit/UPSTREAM.md` — piesaistītais augšupstraumes komits un licences pilnvarojums; `packages/ui-kit/PATCHES.md`

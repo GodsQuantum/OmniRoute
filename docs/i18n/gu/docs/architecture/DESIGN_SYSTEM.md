@@ -80,7 +80,23 @@
 usage અને endpoint નું visual નિરીક્ષણ કરો, `npm run check:ui-kit-snapshot` અને `npm run test:vitest:ui` ચલાવો, અને
 upstream changelog સાથે PR ખોલો.
 
-## 6. સંદર્ભ અનુક્રમણિકા
+## 6. README ના આલેખો
+
+મૂળ `README.md` માં સમાવાયેલા બાર આલેખો (`docs/diagrams/*.svg`) કિટને સ્થિર ચિત્રો પર લાગુ કરે છે. તેઓ જનરેટ થાય છે, હાથથી દોરાતા નથી: `scripts/docs/gen-readme-*.mjs` માં 13 જનરેટર ફાઇલો (બાર આલેખો અને નિયંત્રક `gen-readme-diagrams.mjs`), અને `tests/unit/docs/readme-*-svg.test.ts` માં 12 જૂનાપણાની કસોટીઓ છે, દરેક આલેખ માટે એક. દરેક કસોટી commit કરેલી ફાઇલને તેના જનરેટરના આઉટપુટ સાથે બાઇટ પ્રમાણે સરખાવે છે (જોબ `test-unit`).
+
+- **ટોકન.** `scripts/docs/readme-diagram-theme.mjs` રંગપટ્ટી `packages/ui-kit/src/ci-tokens.css` માંથી નકલ કરે છે (તે ફાઇલ સાથેની સમાનતા `tests/unit/docs/readme-diagram-theme.test.ts` સુનિશ્ચિત કરે છે) અને કિટના ફોન્ટ વડે લખાણની ભૂમિકાઓ નક્કી કરે છે: મુખ્ય પ્રદર્શન લખાણ માટે Instrument Serif, ઇન્ટરફેસ માટે Inter, આંકડા અને કોડ માટે IBM Plex Mono. આ એ જ `@fontsource` પેકેજ છે જે `src/app/globals.css` ડેશબોર્ડ માટે લોડ કરે છે. ફાઇલમાં હળવા મૂલ્યો `:root` પર અને ઘેરા મૂલ્યો `prefers-color-scheme: dark` શરત હેઠળ છે, જેથી દરેક ચિત્ર GitHub વાચકની રંગયોજના અનુસરે છે.
+
+- **ફોન્ટ.** `scripts/docs/readme-fonts.mjs` તે woff2 ફાઇલોને દરેક આલેખમાં દોરાતા ગ્લિફ સુધી મર્યાદિત કરે છે અને તેમને `@font-face` દ્વારા `data:` URI તરીકે સમાવે છે. આથી કિટના ફોન્ટ SVGની અંદર જ રહે છે. README ચિત્રની સ્થાનિક તપાસ ચકાસે છે કે રેન્ડરિંગ કોઈ બાહ્ય ફોન્ટ વિનંતી કરતું નથી. ઉપસમૂહોમાં માત્ર લેટિન અક્ષરો છે; સિસ્ટમના ફોન્ટ પર પાછા જતાં પ્રતીક-ગ્લિફને `SYMBOL_FALLBACKS` માં એક-એક કરીને મંજૂરી મળે છે. બીજા કોઈ પણ ન આવરાયેલા ગ્લિફથી ભૂલ થાય છે.
+
+- **ફરી જનરેટ કરો.** `npm run docs:readme-diagrams` બધા બાર આલેખો README ક્રમમાં ફરી લખે છે અને દરેક ફાઇલના કદ સાથે એક લીટી છાપે છે. જનરેટર અલગથી પણ ચાલી શકે છે (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` માટે `node --import tsx/esm` જરૂરી છે, કારણ કે તેના આંકડા `open-sse/config/freeModelCatalog.ts` ના વર્તમાન કેટલોગ લોડરમાંથી આવે છે; કેટલોગ ફેરફારની CI પર અસર `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` માં છે). જનરેટર અને SVG સાથે commit કરો.
+
+- **પુરાવો.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` સ્થાનિક તપાસમાં ફાઇલ રેન્ડર કરે છે (`<img>` ટૅગ, નિયંત્રણવાળી `Content-Security-Policy` અને `image/svg+xml` પ્રતિસાદ), હળવી અને ઘેરી ફ્રેમ લે છે અને પૃષ્ઠની બાહ્ય ફોન્ટ વિનંતીઓ દર્શાવે છે; તેમની સંખ્યા 0 હોવી જ જોઈએ.
+
+- **કદમર્યાદા.** દરેક ફાઇલ 200 KB કરતાં નાની હોવી જોઈએ, જે દરેક જૂનાપણાની કસોટી ચકાસે છે; કોઈપણ README ચિત્રની કડક મહત્તમ મર્યાદા 500 KB છે (SVG studio વેલિડેટરનો નિયમ).
+
+- **સહિયારું લખાણ, ગણતરી gate માંથી.** દરેક જનરેટર તેના આલેખનું લખાણ `*_COPY` અચળમાં રાખે છે અથવા વર્તમાન કેટલોગમાંથી બનાવે છે. આ જ લખાણ દોરાય છે અને ફોન્ટ ઉપસમૂહનું ઇનપુટ પણ છે. પ્રમાણભૂત આંકડા `<text>` નોડમાં રહે છે, જેને `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) વાંચે છે. gate વાંચે છે તે આલેખોની જૂનાપણાની કસોટીઓ જનરેટ કરેલી ફાઇલ પર તેના વેલિડેટર પણ ચલાવે છે. કોડથી અલગ આંકડો કસોટી નિષ્ફળ કરે છે: gate વાંચે છે તે સ્રોત સુધારો, જનરેટરનો આંકડો ક્યારેય નહીં.
+
+## 7. સંદર્ભ અનુક્રમણિકા
 
 - `src/app/globals.css` — token bridge, `.dark` overrides, OmniRoute `@layer components` extensions
 - `packages/ui-kit/UPSTREAM.md` — નિશ્ચિત કરેલ upstream commit અને license authorization; `packages/ui-kit/PATCHES.md`

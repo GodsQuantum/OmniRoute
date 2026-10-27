@@ -153,7 +153,23 @@ relativnih uvoza). Zatim: pregledajte `git diff packages/ui-kit`, vizualno provj
 upotrebu i krajnju točku u objema temama, pokrenite `npm run check:ui-kit-snapshot` i `npm run test:vitest:ui` te
 otvorite PR s dnevnikom promjena nadređenog projekta.
 
-## 6. Kazalo referenci
+## 6. Dijagrami README
+
+Dvanaest dijagrama ugrađenih u korijenski `README.md` (`docs/diagrams/*.svg`) primjenjuje komplet na statične slike. Generirani su, a ne ručno nacrtani: 13 generatorskih datoteka u `scripts/docs/gen-readme-*.mjs` (dvanaest dijagrama i upravljački program `gen-readme-diagrams.mjs`) te 12 testova zastarjelosti u `tests/unit/docs/readme-*-svg.test.ts`, po jedan za svaki dijagram. Svaki test uspoređuje datoteku spremljenu u commitu s izlazom generatora bajt po bajt (posao `test-unit`).
+
+- **Tokeni.** `scripts/docs/readme-diagram-theme.mjs` kopira paletu iz `packages/ui-kit/src/ci-tokens.css` (usklađenost s tom datotekom osigurava `tests/unit/docs/readme-diagram-theme.test.ts`) i određuje uloge teksta fontovima kompleta: Instrument Serif za istaknuti tekst, Inter za tekst sučelja i IBM Plex Mono za brojke i kod. To su isti paketi `@fontsource` koje `src/app/globals.css` učitava za nadzornu ploču. Svijetle vrijednosti su u `:root`, a tamne iza uvjeta `prefers-color-scheme: dark` unutar datoteke, pa svaka slika prati shemu čitatelja na GitHubu.
+
+- **Fontovi.** `scripts/docs/readme-fonts.mjs` sužava te woff2 datoteke na glifove koje crta pojedini dijagram i ugrađuje ih putem `@font-face` kao URI-je `data:`. Time fontovi kompleta ostaju unutar SVG-a. Lokalna provjera slika README provjerava da renderiranje ne šalje vanjske zahtjeve za fontovima. Podskupovi sadrže samo latinične znakove; glifovi simbola koji koriste sistemske fontove kao zamjenu dopuštaju se pojedinačno u `SYMBOL_FALLBACKS`. Svaki drugi nepokriveni glif izaziva pogrešku.
+
+- **Ponovno generiranje.** `npm run docs:readme-diagrams` prepisuje svih dvanaest dijagrama redoslijedom iz README-a i ispisuje po redak s veličinom datoteke. Svaki generator radi i samostalno (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` zahtijeva `node --import tsx/esm` jer brojke dolaze iz učitavača aktualnog kataloga u `open-sse/config/freeModelCatalog.ts`; utjecaj promjene kataloga na CI opisan je u `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Generator i SVG spremite u isti commit.
+
+- **Dokaz.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderira datoteku u lokalnoj provjeri (oznaka `<img>`, ograničavajući `Content-Security-Policy` i odgovor `image/svg+xml`), snima svijetli i tamni prikaz te prijavljuje vanjske zahtjeve stranice za fontovima; mora ih biti 0.
+
+- **Ograničenje.** Manje od 200 KB po datoteci, što provjerava svaki test zastarjelosti; 500 KB je čvrsta granica za svaku sliku README (pravilo validatora SVG studio).
+
+- **Zajednički tekst, brojke iz gatea.** Svaki generator čuva tekst dijagrama u konstanti `*_COPY` ili ga sastavlja iz aktualnog kataloga. Isti se tekst crta i koristi kao ulaz za podskup fonta. Kanonske brojke ostaju u čvorovima `<text>`, koje čita `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Testovi zastarjelosti dijagrama koje gate čita pokreću i njegove validatore nad generiranom datotekom. Brojka koja odstupa od koda ruši test: ispravite izvor koji gate čita, nikada brojku u generatoru.
+
+## 7. Kazalo referenci
 
 - `src/app/globals.css` — most tokena, nadjačavanja za `.dark`, proširenja OmniRoutea u `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — prikvačeni commit nadređenog projekta i odobrenje licence; `packages/ui-kit/PATCHES.md`

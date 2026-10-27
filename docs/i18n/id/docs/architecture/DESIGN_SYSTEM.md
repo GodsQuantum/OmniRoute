@@ -125,7 +125,23 @@ impor relatif). Kemudian: tinjau `git diff packages/ui-kit`, lakukan pemeriksaan
 penggunaan, dan endpoint dalam kedua tema, jalankan `npm run check:ui-kit-snapshot` dan `npm run test:vitest:ui`, lalu
 buka PR dengan changelog upstream.
 
-## 6. Indeks referensi
+## 6. Diagram README
+
+Dua belas diagram yang disematkan dalam `README.md` akar (`docs/diagrams/*.svg`) menerapkan kit pada gambar statis. Diagram dihasilkan, bukan digambar manual: 13 berkas generator di `scripts/docs/gen-readme-*.mjs` (dua belas diagram dan pengendali `gen-readme-diagrams.mjs`) serta 12 pengujian keusangan di `tests/unit/docs/readme-*-svg.test.ts`, satu per diagram. Setiap pengujian membandingkan berkas yang di-commit dengan keluaran generatornya byte demi byte (job `test-unit`).
+
+- **Token.** `scripts/docs/readme-diagram-theme.mjs` menyalin palet dari `packages/ui-kit/src/ci-tokens.css` (kesesuaian dengan berkas itu dikunci oleh `tests/unit/docs/readme-diagram-theme.test.ts`) dan menetapkan peran teks memakai font kit: Instrument Serif untuk teks tampilan, Inter untuk antarmuka, IBM Plex Mono untuk angka dan kode. Ini paket `@fontsource` yang sama dengan yang dimuat `src/app/globals.css` untuk dasbor. Nilai terang berada pada `:root` dan nilai gelap di bawah `prefers-color-scheme: dark` dalam berkas, sehingga setiap gambar mengikuti skema pembaca di GitHub.
+
+- **Font.** `scripts/docs/readme-fonts.mjs` membatasi berkas woff2 tersebut pada glif yang digambar setiap diagram dan menyematkannya melalui `@font-face` sebagai URI `data:`. Dengan begitu, font kit tetap berada di dalam SVG. Probe gambar README lokal memeriksa bahwa perenderan tidak membuat permintaan font eksternal. Subset hanya berisi karakter Latin; glif simbol yang beralih ke font sistem sebagai cadangan diizinkan satu per satu dalam `SYMBOL_FALLBACKS`. Glif lain yang tidak tercakup menimbulkan galat.
+
+- **Buat ulang.** `npm run docs:readme-diagrams` menulis ulang kedua belas diagram menurut urutan README dan mencetak satu baris per berkas beserta ukurannya. Generator juga dapat dijalankan sendiri (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` memerlukan `node --import tsx/esm` karena angkanya berasal dari pemuat katalog terkini di `open-sse/config/freeModelCatalog.ts`; dampak perubahan katalog pada CI ada di `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commit generator dan SVG bersama.
+
+- **Bukti.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` merender berkas dalam probe lokal (tag `<img>`, `Content-Security-Policy` yang membatasi, dan respons `image/svg+xml`), mengambil bingkai terang serta gelap, dan melaporkan permintaan font eksternal dari halaman; jumlahnya harus 0.
+
+- **Anggaran.** Di bawah 200 KB per berkas, diperiksa oleh setiap pengujian keusangan; 500 KB merupakan batas mutlak untuk gambar README apa pun (aturan validator SVG studio).
+
+- **Teks bersama, angka dari gate.** Setiap generator menyimpan teks diagram dalam konstanta `*_COPY` atau menyusunnya dari katalog terkini. Teks tersebut sekaligus digambar dan menjadi masukan subset font. Angka kanonis tetap berada dalam node `<text>` yang dibaca oleh `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Pengujian keusangan diagram yang dibaca gate juga menjalankan validatornya pada berkas hasil generasi. Angka yang menyimpang dari kode menggagalkan pengujian: perbaiki sumber yang dibaca gate, jangan pernah angka dalam generator.
+
+## 7. Indeks referensi
 
 - `src/app/globals.css` — penghubung token, override `.dark`, ekstensi OmniRoute dalam `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commit upstream yang ditetapkan dan otorisasi lisensi; `packages/ui-kit/PATCHES.md`

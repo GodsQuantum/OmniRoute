@@ -94,7 +94,23 @@ kaldırır). Ardından: `git diff packages/ui-kit` çıktısını inceleyin; sa�
 kullanım ve uç nokta üzerinde her iki temada da görsel kontrol yapın; `npm run check:ui-kit-snapshot` ve
 `npm run test:vitest:ui` komutlarını çalıştırın ve PR'ı yukarı akış değişiklik günlüğüyle açın.
 
-## 6. Referans dizini
+## 6. README diyagramları
+
+Kökteki `README.md` dosyasına gömülen on iki diyagram (`docs/diagrams/*.svg`), kiti statik görsellere uygular. Elle çizilmez, üretilirler: `scripts/docs/gen-readme-*.mjs` altında 13 üretici dosyası (on iki diyagram ve `gen-readme-diagrams.mjs` sürücüsü), `tests/unit/docs/readme-*-svg.test.ts` altında da diyagram başına bir tane olmak üzere 12 güncellik testi vardır. Her test, commit edilmiş dosyayı üreticisinin çıktısıyla bayt bayt karşılaştırır (`test-unit` işi).
+
+- **Tokenlar.** `scripts/docs/readme-diagram-theme.mjs`, paleti `packages/ui-kit/src/ci-tokens.css` dosyasından kopyalar (bu dosyayla eşleşme `tests/unit/docs/readme-diagram-theme.test.ts` ile sabitlenir) ve kitin yazı tipleriyle metin rollerini tanımlar: vurgu metni için Instrument Serif, arayüz için Inter, sayılar ve kod için IBM Plex Mono. Bunlar `src/app/globals.css` dosyasının pano için yüklediği aynı `@fontsource` paketleridir. Açık değerler dosyada `:root` üzerinde, koyu değerler `prefers-color-scheme: dark` koşulu altında bulunur; böylece her görsel GitHub okuyucusunun renk düzenini izler.
+
+- **Yazı tipleri.** `scripts/docs/readme-fonts.mjs`, bu woff2 dosyalarını her diyagramın çizdiği gliflerle sınırlar ve `@font-face` aracılığıyla `data:` URI'leri olarak gömer. Böylece kitin yazı tipleri SVG içinde kalır. Yerel README görsel denemesi, işlemenin dış yazı tipi isteği yapmadığını kontrol eder. Alt kümeler yalnızca Latin karakterlerini içerir; sistem yazı tiplerine geri düşen simge gliflerine `SYMBOL_FALLBACKS` içinde tek tek izin verilir. Kapsanmayan diğer tüm glifler hata üretir.
+
+- **Yeniden üretim.** `npm run docs:readme-diagrams` on iki diyagramı README sırasıyla yeniden yazar ve her dosyanın boyutuyla bir satır yazdırır. Her üretici tek başına da çalışır (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` için `node --import tsx/esm` gerekir, çünkü sayılar `open-sse/config/freeModelCatalog.ts` içindeki güncel katalog yükleyicisinden gelir; katalog değişikliğinin CI etkisi `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` bölümündedir). Üretici ve SVG'yi birlikte commit edin.
+
+- **Kanıt.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` dosyayı yerel denemede işler (`<img>` etiketi, kısıtlayıcı bir `Content-Security-Policy` ve bir `image/svg+xml` yanıtı), açık ve koyu birer kare yakalar ve sayfanın dış yazı tipi isteklerini bildirir; sayı 0 olmalıdır.
+
+- **Bütçe.** Dosya başına 200 KB altında olmalıdır; her güncellik testi bunu doğrular. Her README görseli için kesin üst sınır 500 KB'tır (SVG studio doğrulayıcısının kuralı).
+
+- **Ortak metin, sayılar gate'ten.** Her üretici diyagram metnini bir `*_COPY` sabitinde tutar ya da güncel katalogdan oluşturur. Aynı metin hem çizilir hem yazı tipi alt kümesinin girdisi olur. Kanonik sayılar, `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) tarafından okunan `<text>` düğümlerinde kalır. Gate'in okuduğu diyagramların güncellik testleri, üretilen dosyada onun doğrulayıcılarını da çalıştırır. Koddan sapan bir sayı testi başarısız kılar: üreticideki sayıyı değil, gate'in okuduğu kaynağı düzeltin.
+
+## 7. Referans dizini
 
 - `src/app/globals.css` — token köprüsü, `.dark` geçersiz kılmaları, OmniRoute `@layer components` uzantıları
 - `packages/ui-kit/UPSTREAM.md` — sabitlenmiş yukarı akış commit'i ve lisans yetkilendirmesi; `packages/ui-kit/PATCHES.md`

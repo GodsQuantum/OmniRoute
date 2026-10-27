@@ -148,7 +148,23 @@ importurile relative). Apoi: examinați `git diff packages/ui-kit`, efectuați o
 utilizării și endpointului în ambele teme, rulați `npm run check:ui-kit-snapshot` și `npm run test:vitest:ui`, apoi
 deschideți PR-ul împreună cu jurnalul de modificări upstream.
 
-## 6. Index de referință
+## 6. Diagrame README
+
+Cele douăsprezece diagrame incluse în `README.md` din rădăcină (`docs/diagrams/*.svg`) aplică kitul unor imagini statice. Sunt generate, nu desenate manual: 13 fișiere generatoare în `scripts/docs/gen-readme-*.mjs` (douăsprezece diagrame și coordonatorul `gen-readme-diagrams.mjs`) și 12 teste de actualitate în `tests/unit/docs/readme-*-svg.test.ts`, câte unul pentru fiecare diagramă. Fiecare compară octet cu octet fișierul din commit cu ieșirea generatorului său (job `test-unit`).
+
+- **Tokenuri.** `scripts/docs/readme-diagram-theme.mjs` copiază paleta din `packages/ui-kit/src/ci-tokens.css` (corespondența cu acel fișier este fixată prin `tests/unit/docs/readme-diagram-theme.test.ts`) și definește rolurile textului folosind fonturile kitului: Instrument Serif pentru text de prezentare, Inter pentru interfață și IBM Plex Mono pentru numere și cod. Sunt aceleași pachete `@fontsource` pe care `src/app/globals.css` le încarcă pentru panou. Valorile deschise sunt în `:root`, cele închise sub condiția `prefers-color-scheme: dark` în fișier, astfel încât fiecare imagine urmează schema cititorului pe GitHub.
+
+- **Fonturi.** `scripts/docs/readme-fonts.mjs` restrânge aceste fișiere woff2 la glifele desenate de fiecare diagramă și le încorporează prin `@font-face` ca URI-uri `data:`. Astfel, fonturile kitului rămân în interiorul SVG-ului. Proba locală a imaginilor README verifică faptul că redarea nu efectuează solicitări externe de fonturi. Subseturile conțin numai caractere latine; glifele simbolurilor care folosesc fonturile sistemului ca rezervă sunt permise individual în `SYMBOL_FALLBACKS`. Orice altă glifă neacoperită produce o eroare.
+
+- **Regenerare.** `npm run docs:readme-diagrams` rescrie toate cele douăsprezece diagrame în ordinea README și afișează o linie pentru fiecare fișier, cu dimensiunea sa. Fiecare generator rulează și separat (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` necesită `node --import tsx/esm` deoarece cifrele provin din încărcătorul catalogului curent din `open-sse/config/freeModelCatalog.ts`; efectul unei schimbări de catalog asupra CI este descris în `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Includeți generatorul și SVG-ul în același commit.
+
+- **Dovadă.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` redă un fișier în proba locală (eticheta `<img>`, o `Content-Security-Policy` restrictivă și un răspuns `image/svg+xml`), capturează un cadru luminos și unul întunecat și raportează solicitările externe de fonturi ale paginii; acestea trebuie să fie 0.
+
+- **Buget.** Sub 200 KB pe fișier, verificat de fiecare test de actualitate; 500 KB este limita absolută pentru orice imagine README (regula validatorului SVG studio).
+
+- **Text comun, numere din gate.** Fiecare generator păstrează textul diagramei într-o constantă `*_COPY` sau îl construiește din catalogul curent. Același text este desenat și folosit la selectarea subsetului de fonturi. Numerele canonice rămân în noduri `<text>`, citite de `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Testele de actualitate ale diagramelor citite de gate rulează și validatorii săi pe fișierul generat. Un număr diferit de cod face testul să eșueze: corectați sursa citită de gate, niciodată numărul din generator.
+
+## 7. Index de referință
 
 - `src/app/globals.css` — puntea pentru tokenuri, suprascrierile `.dark`, extensiile OmniRoute pentru `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — commitul upstream fixat și autorizarea licenței; `packages/ui-kit/PATCHES.md`

@@ -143,7 +143,23 @@
 usage 및 endpoint를 시각적으로 점검한 후 `npm run check:ui-kit-snapshot`과 `npm run test:vitest:ui`를 실행하고,
 upstream changelog와 함께 PR을 엽니다.
 
-## 6. 참조 인덱스
+## 6. README 다이어그램
+
+루트 `README.md`에 포함된 열두 다이어그램(`docs/diagrams/*.svg`)은 키트를 정적 이미지에 적용한 것입니다. 손으로 그리지 않고 생성합니다. `scripts/docs/gen-readme-*.mjs`에 13개 생성기 파일(열두 다이어그램과 드라이버 `gen-readme-diagrams.mjs`), `tests/unit/docs/readme-*-svg.test.ts`에 다이어그램당 하나씩 12개 최신성 테스트가 있으며, 각 테스트는 커밋된 파일과 생성기 출력을 바이트 단위로 비교합니다(작업 `test-unit`).
+
+- **토큰.** `scripts/docs/readme-diagram-theme.mjs`는 `packages/ui-kit/src/ci-tokens.css`에서 팔레트를 복사하고(`tests/unit/docs/readme-diagram-theme.test.ts`로 해당 파일과의 일치를 고정), 키트의 서체로 텍스트 역할을 정의합니다. 강조 표시용으로 Instrument Serif, UI 텍스트에 Inter, 숫자와 코드에 IBM Plex Mono를 사용합니다. 이는 `src/app/globals.css`가 대시보드에 로드하는 것과 동일한 `@fontsource` 패키지입니다. 파일 내부의 `:root`에 밝은 값이, `prefers-color-scheme: dark` 조건 아래에 어두운 값이 있어 각 이미지가 GitHub 독자의 색상 설정을 따릅니다.
+
+- **글꼴.** `scripts/docs/readme-fonts.mjs`는 각 다이어그램이 그리는 글리프만 남도록 해당 woff2 파일을 부분 집합으로 만들고, `@font-face`의 `data:` URI로 삽입합니다. 이렇게 키트의 글꼴을 SVG 안에 유지합니다. 로컬 README 이미지 프로브는 렌더링이 외부 글꼴 요청을 보내지 않는지 확인합니다. 부분 집합에는 라틴 문자만 있으며, 시스템 글꼴 스택으로 대체되는 기호 글리프는 `SYMBOL_FALLBACKS`에서 하나씩 허용됩니다. 그 밖의 지원되지 않는 글리프는 오류를 발생시킵니다.
+
+- **재생성.** `npm run docs:readme-diagrams`는 열두 다이어그램을 README 순서로 다시 쓰고, 파일마다 크기를 한 줄씩 출력합니다. 각 생성기는 단독으로도 실행할 수 있습니다(`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget`는 숫자를 `open-sse/config/freeModelCatalog.ts`의 현재 카탈로그 로더에서 가져오므로 `node --import tsx/esm`가 필요합니다. 카탈로그 변경이 CI에 미치는 영향은 `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`에 설명되어 있습니다). 생성기와 SVG를 함께 커밋하세요.
+
+- **증거.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>`는 로컬 프로브에서 파일을 렌더링하고(`<img>` 태그, 제한적인 `Content-Security-Policy`, `image/svg+xml` 응답), 밝은 프레임과 어두운 프레임을 캡처하며 페이지의 외부 글꼴 요청을 보고합니다. 요청 수는 0이어야 합니다.
+
+- **용량.** 파일당 200 KB 미만인지 각 최신성 테스트가 확인합니다. 모든 README 이미지의 절대 상한은 500 KB입니다(SVG studio 검증기의 규칙).
+
+- **공유 문구, 수치는 gate에서.** 각 생성기는 다이어그램의 문구를 `*_COPY` 상수에 보관하거나 현재 카탈로그에서 구성합니다. 같은 문구가 그려지고 글꼴 부분 집합의 입력으로도 쓰입니다. 기준 수치는 `<text>` 노드에 남아 `check:docs-counts`(`scripts/check/check-docs-counts-sync.mjs`)가 읽습니다. gate가 읽는 다이어그램의 최신성 테스트는 생성된 파일에 대해 해당 검증기도 실행합니다. 코드와 다른 수치가 있으면 테스트가 실패하므로 생성기의 숫자가 아니라 gate가 읽는 소스를 수정하세요.
+
+## 7. 참조 인덱스
 
 - `src/app/globals.css` — token bridge, `.dark` override, OmniRoute `@layer components` 확장
 - `packages/ui-kit/UPSTREAM.md` — 고정된 upstream commit 및 license authorization; `packages/ui-kit/PATCHES.md`

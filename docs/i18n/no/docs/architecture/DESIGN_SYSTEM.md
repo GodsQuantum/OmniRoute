@@ -149,7 +149,23 @@ relative importer). Deretter: gjennomgå `git diff packages/ui-kit`, utfør en v
 bruk og endepunkt i begge temaer, kjør `npm run check:ui-kit-snapshot` og `npm run test:vitest:ui`, og
 åpne PR-en med oppstrøms endringslogg.
 
-## 6. Referanseindeks
+## 6. README-diagrammer
+
+De tolv diagrammene i rotens `README.md` (`docs/diagrams/*.svg`) bruker kittet i statiske bilder. De genereres, ikke tegnes for hånd: 13 generatorfiler under `scripts/docs/gen-readme-*.mjs` (tolv diagrammer pluss driveren `gen-readme-diagrams.mjs`) og 12 tester for utdaterte filer under `tests/unit/docs/readme-*-svg.test.ts`, én per diagram. Hver test sammenligner den committede filen byte for byte med generatorens utdata (jobb `test-unit`).
+
+- **Tokens.** `scripts/docs/readme-diagram-theme.mjs` kopierer paletten fra `packages/ui-kit/src/ci-tokens.css` (samsvaret med denne filen sikres av `tests/unit/docs/readme-diagram-theme.test.ts`) og definerer tekstrollene med kittets skrifter: Instrument Serif til fremhevet displaytekst, Inter til grensesnittekst og IBM Plex Mono til tall og kode. Dette er de samme `@fontsource`-pakkene som `src/app/globals.css` laster for dashbordet. Lyse verdier ligger på `:root` og mørke under `prefers-color-scheme: dark` inne i filen, slik at hvert bilde følger leserens fargeskjema på GitHub.
+
+- **Skrifter.** `scripts/docs/readme-fonts.mjs` begrenser disse woff2-filene til glyffene hvert diagram tegner, og bygger dem inn via `@font-face` som `data:`-URI-er. Dermed forblir kittets skrifter inne i SVG-filen. Den lokale README-bildetesten kontrollerer at rendering ikke sender eksterne skriftforespørsler. Delmengdene inneholder bare latinske tegn; symbolglyffer som faller tilbake til systemskriftene, tillates enkeltvis i `SYMBOL_FALLBACKS`. Enhver annen glyff som ikke dekkes, utløser en feil.
+
+- **Generer på nytt.** `npm run docs:readme-diagrams` skriver alle tolv diagrammene på nytt i README-rekkefølge og skriver ut én linje per fil med størrelsen. En generator kan også kjøre alene (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` krever `node --import tsx/esm` fordi tallene kommer fra den gjeldende kataloglasteren i `open-sse/config/freeModelCatalog.ts`; CI-konsekvensen av en katalogendring står i `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Commit generatoren og SVG-filen sammen.
+
+- **Bevis.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` renderer en fil i den lokale testen (en `<img>`-tagg, en restriktiv `Content-Security-Policy` og et `image/svg+xml`-svar), tar et lyst og et mørkt bilde og rapporterer sidens eksterne skriftforespørsler; antallet skal være 0.
+
+- **Budsjett.** Under 200 KB per fil, kontrollert av hver test for utdaterte filer; 500 KB er den absolutte grensen for alle README-bilder (regelen til SVG studio-validatoren).
+
+- **Felles tekst, tall fra gaten.** Hver generator lagrer diagramteksten i en `*_COPY`-konstant eller bygger den fra den gjeldende katalogen. Teksten brukes både i bildet og som inndata for skriftdelmengden. Kanoniske tall forblir i `<text>`-noder, lest av `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`). Testene for utdaterte diagrammer som gaten leser, kjører også dens validatorer på den genererte filen. Et tall som avviker fra koden, får testen til å feile: rett kilden gaten leser, aldri tallet i generatoren.
+
+## 7. Referanseindeks
 
 - `src/app/globals.css` — tokenbro, `.dark`-overstyringer, OmniRoute-utvidelser i `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — festet oppstrøms commit og lisensgodkjenning; `packages/ui-kit/PATCHES.md`

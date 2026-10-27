@@ -145,7 +145,23 @@
 usage ਅਤੇ endpoint ਦੀ visual ਜਾਂਚ ਕਰੋ, `npm run check:ui-kit-snapshot` ਅਤੇ `npm run test:vitest:ui` ਚਲਾਓ, ਅਤੇ
 upstream changelog ਨਾਲ PR ਖੋਲ੍ਹੋ।
 
-## 6. ਹਵਾਲਾ ਸੂਚਕਾਂਕ
+## 6. README ਦੇ ਚਿੱਤਰ
+
+ਮੂਲ `README.md` ਵਿੱਚ ਸ਼ਾਮਲ ਬਾਰਾਂ ਚਿੱਤਰ (`docs/diagrams/*.svg`) ਕਿੱਟ ਨੂੰ ਸਥਿਰ ਤਸਵੀਰਾਂ ਉੱਤੇ ਲਾਗੂ ਕਰਦੇ ਹਨ। ਇਹ ਜਨਰੇਟ ਹੁੰਦੇ ਹਨ, ਹੱਥ ਨਾਲ ਨਹੀਂ ਬਣਾਏ ਜਾਂਦੇ: `scripts/docs/gen-readme-*.mjs` ਵਿੱਚ 13 ਜਨਰੇਟਰ ਫਾਈਲਾਂ (ਬਾਰਾਂ ਚਿੱਤਰ ਅਤੇ ਕੰਟਰੋਲਰ `gen-readme-diagrams.mjs`), ਅਤੇ `tests/unit/docs/readme-*-svg.test.ts` ਵਿੱਚ ਪੁਰਾਣੇ ਹੋਣ ਦੀਆਂ 12 ਜਾਂਚਾਂ ਹਨ, ਹਰੇਕ ਚਿੱਤਰ ਲਈ ਇੱਕ। ਹਰ ਜਾਂਚ commit ਕੀਤੀ ਫਾਈਲ ਨੂੰ ਉਸ ਦੇ ਜਨਰੇਟਰ ਦੇ ਆਉਟਪੁੱਟ ਨਾਲ ਬਾਈਟ-ਦਰ-ਬਾਈਟ ਮਿਲਾਉਂਦੀ ਹੈ (ਜੌਬ `test-unit`)।
+
+- **ਟੋਕਨ।** `scripts/docs/readme-diagram-theme.mjs` ਰੰਗ-ਪੈਲਟ `packages/ui-kit/src/ci-tokens.css` ਤੋਂ ਨਕਲ ਕਰਦਾ ਹੈ (ਉਸ ਫਾਈਲ ਨਾਲ ਮੇਲ `tests/unit/docs/readme-diagram-theme.test.ts` ਯਕੀਨੀ ਬਣਾਉਂਦਾ ਹੈ) ਅਤੇ ਕਿੱਟ ਦੇ ਫੌਂਟਾਂ ਨਾਲ ਲਿਖਤ ਦੀਆਂ ਭੂਮਿਕਾਵਾਂ ਨਿਰਧਾਰਤ ਕਰਦਾ ਹੈ: ਉਭਰੀ ਪ੍ਰਦਰਸ਼ਨੀ ਲਿਖਤ ਲਈ Instrument Serif, ਇੰਟਰਫੇਸ ਲਈ Inter, ਅੰਕਾਂ ਅਤੇ ਕੋਡ ਲਈ IBM Plex Mono। ਇਹ ਉਹੀ `@fontsource` ਪੈਕੇਜ ਹਨ ਜੋ `src/app/globals.css` ਡੈਸ਼ਬੋਰਡ ਲਈ ਲੋਡ ਕਰਦਾ ਹੈ। ਫਾਈਲ ਵਿੱਚ ਹਲਕੇ ਮੁੱਲ `:root` ਉੱਤੇ ਅਤੇ ਗੂੜ੍ਹੇ ਮੁੱਲ `prefers-color-scheme: dark` ਦੀ ਸ਼ਰਤ ਹੇਠ ਹਨ, ਇਸ ਲਈ ਹਰ ਤਸਵੀਰ GitHub ਪਾਠਕ ਦੀ ਰੰਗ-ਯੋਜਨਾ ਦੀ ਪਾਲਣਾ ਕਰਦੀ ਹੈ।
+
+- **ਫੌਂਟ।** `scripts/docs/readme-fonts.mjs` ਉਹਨਾਂ woff2 ਫਾਈਲਾਂ ਨੂੰ ਹਰ ਚਿੱਤਰ ਵਿੱਚ ਬਣਨ ਵਾਲੇ ਗਲਿਫਾਂ ਤੱਕ ਸੀਮਿਤ ਕਰਦਾ ਹੈ ਅਤੇ `@font-face` ਰਾਹੀਂ `data:` URI ਵਜੋਂ ਸ਼ਾਮਲ ਕਰਦਾ ਹੈ। ਇਸ ਨਾਲ ਕਿੱਟ ਦੇ ਫੌਂਟ SVG ਦੇ ਅੰਦਰ ਰਹਿੰਦੇ ਹਨ। README ਤਸਵੀਰ ਦੀ ਸਥਾਨਕ ਜਾਂਚ ਵੇਖਦੀ ਹੈ ਕਿ ਰੈਂਡਰਿੰਗ ਕੋਈ ਬਾਹਰੀ ਫੌਂਟ ਬੇਨਤੀ ਨਾ ਕਰੇ। ਉਪਸਮੂਹਾਂ ਵਿੱਚ ਸਿਰਫ਼ ਲਾਤੀਨੀ ਅੱਖਰ ਹਨ; ਸਿਸਟਮ ਫੌਂਟਾਂ ਵੱਲ ਮੁੜਦੇ ਚਿੰਨ੍ਹ-ਗਲਿਫਾਂ ਨੂੰ `SYMBOL_FALLBACKS` ਵਿੱਚ ਇੱਕ-ਇੱਕ ਕਰਕੇ ਮਨਜ਼ੂਰੀ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ। ਹੋਰ ਕੋਈ ਅਣਕਵਰ ਕੀਤਾ ਗਲਿਫ ਗਲਤੀ ਪੈਦਾ ਕਰਦਾ ਹੈ।
+
+- **ਮੁੜ ਬਣਾਉਣਾ।** `npm run docs:readme-diagrams` ਸਾਰੇ ਬਾਰਾਂ ਚਿੱਤਰ README ਦੇ ਕ੍ਰਮ ਵਿੱਚ ਮੁੜ ਲਿਖਦਾ ਹੈ ਅਤੇ ਹਰ ਫਾਈਲ ਦੇ ਆਕਾਰ ਨਾਲ ਇੱਕ ਲਾਈਨ ਛਾਪਦਾ ਹੈ। ਜਨਰੇਟਰ ਵੱਖਰਾ ਵੀ ਚੱਲ ਸਕਦਾ ਹੈ (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` ਨੂੰ `node --import tsx/esm` ਚਾਹੀਦਾ ਹੈ, ਕਿਉਂਕਿ ਇਸ ਦੇ ਅੰਕ `open-sse/config/freeModelCatalog.ts` ਦੇ ਮੌਜੂਦਾ ਕੈਟਾਲਾਗ ਲੋਡਰ ਤੋਂ ਆਉਂਦੇ ਹਨ; ਕੈਟਾਲਾਗ ਬਦਲਣ ਦਾ CI ਉੱਤੇ ਅਸਰ `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict` ਵਿੱਚ ਹੈ)। ਜਨਰੇਟਰ ਅਤੇ SVG ਨੂੰ ਇਕੱਠੇ commit ਕਰੋ।
+
+- **ਸਬੂਤ।** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` ਸਥਾਨਕ ਜਾਂਚ ਵਿੱਚ ਫਾਈਲ ਰੈਂਡਰ ਕਰਦਾ ਹੈ (`<img>` ਟੈਗ, ਪਾਬੰਦੀ ਵਾਲੀ `Content-Security-Policy` ਅਤੇ `image/svg+xml` ਜਵਾਬ), ਇੱਕ ਹਲਕਾ ਅਤੇ ਇੱਕ ਗੂੜ੍ਹਾ ਫਰੇਮ ਲੈਂਦਾ ਹੈ ਅਤੇ ਸਫ਼ੇ ਦੀਆਂ ਬਾਹਰੀ ਫੌਂਟ ਬੇਨਤੀਆਂ ਦੱਸਦਾ ਹੈ; ਉਹਨਾਂ ਦੀ ਗਿਣਤੀ 0 ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ।
+
+- **ਆਕਾਰ ਦੀ ਹੱਦ।** ਹਰ ਫਾਈਲ 200 KB ਤੋਂ ਛੋਟੀ, ਜਿਸ ਦੀ ਹਰ ਪੁਰਾਣੇਪਣ ਵਾਲੀ ਜਾਂਚ ਪੁਸ਼ਟੀ ਕਰਦੀ ਹੈ; ਕਿਸੇ ਵੀ README ਤਸਵੀਰ ਦੀ ਸਖ਼ਤ ਉੱਪਰਲੀ ਹੱਦ 500 KB ਹੈ (SVG studio ਵੈਲੀਡੇਟਰ ਦਾ ਨਿਯਮ)।
+
+- **ਸਾਂਝੀ ਲਿਖਤ, ਗਿਣਤੀਆਂ gate ਤੋਂ।** ਹਰ ਜਨਰੇਟਰ ਆਪਣੇ ਚਿੱਤਰ ਦੀ ਲਿਖਤ `*_COPY` ਕਾਂਸਟੈਂਟ ਵਿੱਚ ਰੱਖਦਾ ਹੈ ਜਾਂ ਮੌਜੂਦਾ ਕੈਟਾਲਾਗ ਤੋਂ ਬਣਾਉਂਦਾ ਹੈ। ਉਹੀ ਲਿਖਤ ਖਿੱਚੀ ਜਾਂਦੀ ਹੈ ਅਤੇ ਫੌਂਟ ਉਪਸਮੂਹ ਦੀ ਇਨਪੁੱਟ ਵੀ ਹੁੰਦੀ ਹੈ। ਮਿਆਰੀ ਅੰਕ `<text>` ਨੋਡਾਂ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ, ਜਿਨ੍ਹਾਂ ਨੂੰ `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) ਪੜ੍ਹਦਾ ਹੈ। gate ਵੱਲੋਂ ਪੜ੍ਹੇ ਜਾਣ ਵਾਲੇ ਚਿੱਤਰਾਂ ਦੀਆਂ ਪੁਰਾਣੇਪਣ ਦੀਆਂ ਜਾਂਚਾਂ ਬਣੀ ਫਾਈਲ ਉੱਤੇ ਉਸ ਦੇ ਵੈਲੀਡੇਟਰ ਵੀ ਚਲਾਉਂਦੀਆਂ ਹਨ। ਕੋਡ ਤੋਂ ਵੱਖਰਾ ਅੰਕ ਜਾਂਚ ਫੇਲ੍ਹ ਕਰਦਾ ਹੈ: gate ਦੇ ਪੜ੍ਹੇ ਜਾਂਦੇ ਸਰੋਤ ਨੂੰ ਠੀਕ ਕਰੋ, ਜਨਰੇਟਰ ਦੇ ਅੰਕ ਨੂੰ ਕਦੇ ਨਹੀਂ।
+
+## 7. ਹਵਾਲਾ ਸੂਚਕਾਂਕ
 
 - `src/app/globals.css` — ਟੋਕਨ ਬ੍ਰਿਜ, `.dark` ਓਵਰਰਾਈਡ, OmniRoute `@layer components` ਐਕਸਟੈਂਸ਼ਨ
 - `packages/ui-kit/UPSTREAM.md` — ਪਿੰਨ ਕੀਤਾ ਅੱਪਸਟ੍ਰੀਮ ਕਮਿਟ ਅਤੇ ਲਾਇਸੈਂਸ ਅਧਿਕਾਰ; `packages/ui-kit/PATCHES.md`

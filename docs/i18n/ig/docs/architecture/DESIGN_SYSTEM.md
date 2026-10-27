@@ -148,7 +148,23 @@ relative imports). Mgbe ahụ: nyochaa `git diff packages/ui-kit`, jiri anya nyo
 usage na endpoint n'ime themes abụọ ahụ, mee `npm run check:ui-kit-snapshot` na `npm run test:vitest:ui`, ma
 mepee PR tinyere upstream changelog.
 
-## 6. Ndepụta ntụaka
+## 6. Eserese README
+
+Eserese iri na abụọ etinyere na `README.md` dị na mgbọrọgwụ (`docs/diagrams/*.svg`) na-etinye kit n'ihe oyiyi na-adịghị agagharị. A na-emepụta ha, a naghị eji aka ese ha: faịlụ generator 13 na `scripts/docs/gen-readme-*.mjs` (eserese iri na abụọ na onye njikwa `gen-readme-diagrams.mjs`) na ule 12 maka faịlụ ochie na `tests/unit/docs/readme-*-svg.test.ts`, otu maka eserese ọ bụla. Ule ọ bụla na-atụnyere faịlụ e debere na commit na mmepụta generator ya byte n'otu byte (ọrụ `test-unit`).
+
+- **Token.** `scripts/docs/readme-diagram-theme.mjs` na-edepụta palette si na `packages/ui-kit/src/ci-tokens.css` (ule `tests/unit/docs/readme-diagram-theme.test.ts` na-eme ka ọ kwekọọ na faịlụ ahụ) ma kọwaa ọrụ ederede site na font kit: Instrument Serif maka ederede ngosi, Inter maka ederede interface, IBM Plex Mono maka ọnụọgụ na koodu. Ha bụ otu ngwugwu `@fontsource` nke `src/app/globals.css` na-ebunye maka dashboard. Uru ọkụ dị na `:root`, nke gbara ọchịchịrị nọ n'okpuru `prefers-color-scheme: dark` n'ime faịlụ, ka ihe oyiyi ọ bụla soro atụmatụ agba onye na-agụ na GitHub.
+
+- **Font.** `scripts/docs/readme-fonts.mjs` na-ebelata faịlụ woff2 ndị ahụ ka ha nwee naanị glyph eserese ọ bụla na-ese, wee tinye ha site na `@font-face` dịka URI `data:`. Nke a na-edobe font kit n'ime SVG. Nnwale ihe oyiyi README nke mpaghara na-enyocha na igosi ihe oyiyi anaghị eziga arịrịọ font n'èzí. Obere nchịkọta ndị ahụ nwere naanị mkpụrụedemede Latin; glyph akara ndị na-eji font sistemụ dịka ndabere ka a na-ekwe otu otu na `SYMBOL_FALLBACKS`. Glyph ọ bụla ọzọ a na-ekpuchighị na-ebute njehie.
+
+- **Mmegharị mmepụta.** `npm run docs:readme-diagrams` na-edeghachi eserese iri na abụọ niile n'usoro README ma bipụta otu ahịrị maka faịlụ ọ bụla na nha ya. Generator nwekwara ike ịrụ naanị ya (`node scripts/docs/gen-readme-<name>.mjs`; `free-tier-budget` chọrọ `node --import tsx/esm` n'ihi na ọnụọgụ ya si na onye na-ebunye katalọgụ ugbu a na `open-sse/config/freeModelCatalog.ts`; mmetụta mgbanwe katalọgụ na CI dị na `docs/architecture/QUALITY_GATES.md` → `docs-sync-strict`). Tinye generator na SVG n'otu commit.
+
+- **Ihe akaebe.** `scripts/docs/readme-svg-shots.mjs <file.svg> <outdir>` na-egosi faịlụ na nnwale mpaghara (tag `<img>`, `Content-Security-Policy` na-egbochi ohere na nzaghachi `image/svg+xml`), na-ewere foto ọkụ na nke gbara ọchịchịrị, ma kọwaa arịrịọ font si n'èzí ibe ahụ mere; ha ga-abụrịrị 0.
+
+- **Oke nha.** N'okpuru 200 KB maka faịlụ ọ bụla, nke ule faịlụ ochie ọ bụla na-enyocha; 500 KB bụ oke siri ike maka ihe oyiyi README ọ bụla (iwu onye nkwado SVG studio).
+
+- **Ederede a na-ekekọrịta, ọnụọgụ si na gate.** Generator ọ bụla na-edobe ederede eserese ya na constant `*_COPY` ma ọ bụ na-ewu ya site na katalọgụ ugbu a. Otu ederede ahụ bụ ihe a na-ese na ntinye maka obere nchịkọta font. Ọnụọgụ ziri ezi na-anọ na node `<text>` nke `check:docs-counts` (`scripts/check/check-docs-counts-sync.mjs`) na-agụ. Ule faịlụ ochie nke eserese gate na-agụ na-ejikwa ndị nkwado ya enyocha faịlụ e mepụtara. Ọnụọgụ na-ekwekọghị na koodu na-eme ka ule daa: dozie isi iyi gate na-agụ, ọ bụghị ọnụọgụ dị na generator.
+
+## 7. Ndepụta ntụaka
 
 - `src/app/globals.css` — njikọ token, overrides nke `.dark`, mgbakwunye OmniRoute `@layer components`
 - `packages/ui-kit/UPSTREAM.md` — upstream commit a kpọgidere na ikike license; `packages/ui-kit/PATCHES.md`
