@@ -25,7 +25,7 @@
 import { RateLimitReason } from "../config/constants.ts";
 import { COOLDOWN_MS } from "../config/errorConfig.ts";
 import { getProviderRateLimitCooldownOverrideMs } from "./providerDefaultRateLimit.ts";
-import { resolveProviderId } from "../../src/shared/constants/providers";
+import { resolveProviderAlias } from "./providerAlias.ts";
 
 export interface RotationErrorClassConfig {
   enabled: boolean;
@@ -394,7 +394,8 @@ export function getProviderRateLimitCooldownMs(provider?: string | null): number
   if (!provider) return null;
   const direct = getProviderRateLimitCooldownOverrideMs(provider);
   if (direct !== null) return direct;
-  const canonical = resolveProviderId(provider);
+  // Engine-local alias map (no src/ import — the open-sse → src boundary ratchet).
+  const canonical = resolveProviderAlias(provider);
   return canonical && canonical !== provider
     ? getProviderRateLimitCooldownOverrideMs(canonical)
     : null;

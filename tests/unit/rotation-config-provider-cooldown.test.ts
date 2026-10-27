@@ -81,6 +81,18 @@ test("per-provider cooldown wins over the global env override", () => {
   assert.equal(rc.overrideFor("rate_limit_exceeded", null, "openai")?.cooldownMs, 10_000);
 });
 
+test("a provider alias reads the override stored under its canonical id", () => {
+  reset();
+  setProviderQuotaOverrides({
+    claude: { rateLimitCooldownSeconds: 90 },
+    antigravity: { rateLimitCooldownSeconds: 45 },
+  });
+  assert.equal(rc.getProviderRateLimitCooldownMs("cc"), 90_000);
+  assert.equal(rc.getProviderRateLimitCooldownMs("agy"), 45_000);
+  // An unknown id has no canonical form to fall back to.
+  assert.equal(rc.getProviderRateLimitCooldownMs("not-a-provider"), null);
+});
+
 test("per-provider cooldown only applies to the rate-limit reason", () => {
   reset();
   setProviderQuotaOverrides({ nvidia: { rateLimitCooldownSeconds: 120 } });

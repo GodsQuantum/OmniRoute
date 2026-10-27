@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/shared/components";
 import Icon from "@/shared/components/Icon";
+import Select from "@/shared/components/Select";
 import { useNotificationStore } from "@/store/notificationStore";
 import { providerText } from "../providerPageHelpers";
 
@@ -165,20 +166,21 @@ export default function ProviderRetryDelaySelect({ providerId }: ProviderRetryDe
             )}
           </p>
         </div>
-        <select
+        <Select
           aria-label={title}
+          compact
+          className="shrink-0"
           value={selected}
           disabled={!loaded || saving}
+          options={[
+            { value: RETRY_DELAY_AUTO, label: providerText(t, "retryDelayAuto", "Auto") },
+            ...optionSeconds.map((seconds) => ({
+              value: String(seconds),
+              label: formatSeconds(seconds),
+            })),
+          ]}
           onChange={(event) => void handleChange(event.target.value)}
-          className="shrink-0 rounded-md border border-border bg-background px-2 py-1 text-xs focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <option value={RETRY_DELAY_AUTO}>{providerText(t, "retryDelayAuto", "Auto")}</option>
-          {optionSeconds.map((seconds) => (
-            <option key={seconds} value={String(seconds)}>
-              {formatSeconds(seconds)}
-            </option>
-          ))}
-        </select>
+        />
       </div>
     </Card>
   );
