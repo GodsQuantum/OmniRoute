@@ -20,7 +20,10 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # The fail-closed admission Gate uses always() to reject failed or cancelled dependencies.
+  # Cancelling the running workflow can strand that Gate while it retains this group. Let the
+  # running candidate finish; GitHub's single pending slot keeps only the latest waiter.
+  cancel-in-progress: false
 
 permissions:
   contents: read
