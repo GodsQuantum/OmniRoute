@@ -1,0 +1,1 @@
+- **fix(i18n):** Add a versioned structural auditor that compares source and translated body heading levels, detecting duplicate titles and missing or promoted sections while preserving the diagnostic JSON and existing fence and table-row policies.
