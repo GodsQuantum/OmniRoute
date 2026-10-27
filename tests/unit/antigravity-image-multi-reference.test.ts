@@ -128,7 +128,9 @@ test("Antigravity accepts images[] data URLs and raw base64 references", async (
   assert.match(String(parts[2].text), /Use all 2 attached reference images/);
 });
 
-test("Antigravity resolves HTTP(S) references through the guarded remote fetch", async () => {
+test("Antigravity rejects an HTTP(S) reference among inline ones without fetching it", async () => {
+  // Remote URLs are never fetched for Gemini image models (#18148 / 9router #5190): the whole
+  // multi-reference request fails instead of being built from fewer images than were sent.
   const calls = captureFetch();
   const remoteCalls: string[] = [];
   setPinnedFetchTestOverride((async (url: string | URL | Request) => {
@@ -139,17 +141,20 @@ test("Antigravity resolves HTTP(S) references through the guarded remote fetch",
     });
   }) as typeof fetch);
 
-  const result = await generate({ image: "https://cdn.example.com/reference.jpg" });
-
-  assert.equal(result.success, true);
-  assert.deepEqual(remoteCalls, ["https://cdn.example.com/reference.jpg"]);
-  const parts = calls[0].body.request.contents[0].parts;
-  assert.equal(parts.length, 2);
-  assert.deepEqual(parts[0].inlineData, {
-    mimeType: "image/jpeg",
-    data: JPEG_BYTES.toString("base64"),
+  const result = await generate({
+    images: [
+      `data:image/png;base64,${PNG_BYTES.toString("base64")}`,
+      "https://cdn.example.com/reference.jpg",
+    ],
   });
-  assert.match(String(parts[1].text), /Use all 1 attached reference image in the result\./);
+
+  assert.equal(result.success, false);
+  assert.equal(result.status, 400);
+  assert.equal(result.retryable, false);
+  assert.match(String(result.error), /Remote reference image URLs are not supported/);
+  assert.match(String(result.error), /base64 data URI/);
+  assert.deepEqual(remoteCalls, []);
+  assert.equal(calls.length, 0);
 });
 
 test("Antigravity rejects an invalid reference with a non-retryable 400 before dispatch", async () => {

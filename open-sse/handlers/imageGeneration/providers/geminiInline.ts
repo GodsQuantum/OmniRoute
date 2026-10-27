@@ -1,4 +1,19 @@
-import { fetchUntrustedRemoteImage } from "@/shared/network/remoteImageFetch";
+/** First string reference image the client sent, across the accepted field aliases. */
+function referenceImageCandidate(record: Record<string, unknown>): string | null {
+  return (
+    (typeof record.image_url === "string" && record.image_url) ||
+    (typeof record.image === "string" && record.image) ||
+    (typeof record.imageUrl === "string" && record.imageUrl) ||
+    (Array.isArray(record.image_urls) &&
+      typeof record.image_urls[0] === "string" &&
+      record.image_urls[0]) ||
+    (Array.isArray(record.imageUrls) &&
+      typeof record.imageUrls[0] === "string" &&
+      record.imageUrls[0]) ||
+    (Array.isArray(record.images) && typeof record.images[0] === "string" && record.images[0]) ||
+    null
+  );
+}
 
 /**
  * Inline image part for Gemini-format image generation.
@@ -17,18 +32,7 @@ export function geminiInlineImagePart(
   if (typeof record.imageBytes === "string" && record.imageBytes.length > 0) {
     return { inlineData: { mimeType, data: record.imageBytes } };
   }
-  const rawCandidate =
-    (typeof record.image_url === "string" && record.image_url) ||
-    (typeof record.image === "string" && record.image) ||
-    (typeof record.imageUrl === "string" && record.imageUrl) ||
-    (Array.isArray(record.image_urls) &&
-      typeof record.image_urls[0] === "string" &&
-      record.image_urls[0]) ||
-    (Array.isArray(record.imageUrls) &&
-      typeof record.imageUrls[0] === "string" &&
-      record.imageUrls[0]) ||
-    (Array.isArray(record.images) && typeof record.images[0] === "string" && record.images[0]) ||
-    null;
+  const rawCandidate = referenceImageCandidate(record);
 
   if (rawCandidate) {
     if (rawCandidate.startsWith("data:")) {
@@ -60,10 +64,30 @@ export function geminiInlineImagePart(
   return null;
 }
 
+const REMOTE_URL_RE = /^https?:\/\//i;
+const INLINE_REFERENCE_HINT =
+  "Send it inline as a base64 data URI (data:image/png;base64,...) or raw base64," +
+  " or upload the file to /v1/images/edits.";
+const REMOTE_REFERENCE_URL_ERROR = `Remote reference image URLs are not supported for this image model. ${INLINE_REFERENCE_HINT}`;
+
+/**
+ * Error message when the request carries a reference image that cannot be inlined (9router #5190).
+ * Gemini image models only take inline bytes, and remote URLs are deliberately not fetched
+ * (SSRF surface), so an http(s) URL would otherwise be dropped and the model would answer a
+ * text-only prompt. Returns null when there is no reference or it inlines cleanly.
+ */
+export function geminiReferenceImageError(body: unknown): string | null {
+  if (!body || typeof body !== "object") return null;
+  const candidate = referenceImageCandidate(body as Record<string, unknown>);
+  if (!candidate || geminiInlineImagePart(body)) return null;
+  return REMOTE_URL_RE.test(candidate.trim())
+    ? REMOTE_REFERENCE_URL_ERROR
+    : `The reference image could not be read. ${INLINE_REFERENCE_HINT}`;
+}
+
 // ── Multi-reference support (Antigravity image edits) ─────────────────────────
 
 type GeminiInlineDataPart = { inlineData: { mimeType: string; data: string } };
-type RemoteImageFetcher = (url: string) => Promise<{ buffer: Buffer; contentType: string }>;
 
 /**
  * Gemini 3 image models accept up to 14 reference images per request; anything beyond that
@@ -85,24 +109,13 @@ function collectStringReferences(record: Record<string, unknown>): unknown[] {
   return refs.filter((ref, index) => typeof ref !== "string" || refs.indexOf(ref) === index);
 }
 
-async function resolveStringReference(
-  ref: unknown,
-  fallbackMime: string,
-  fetchRemote: RemoteImageFetcher
-): Promise<GeminiInlineDataPart | null> {
+function resolveStringReference(ref: unknown, fallbackMime: string): GeminiInlineDataPart | null {
   if (typeof ref !== "string") return null;
   const value = ref.trim();
   const dataUrl = DATA_URL_RE.exec(value);
   if (dataUrl) {
     if (!dataUrl[1].toLowerCase().startsWith("image/")) return null;
     return { inlineData: { mimeType: dataUrl[1], data: dataUrl[2].replace(/\s+/g, "") } };
-  }
-  if (/^https?:\/\//i.test(value)) {
-    // Caller-supplied URL: public-only + DNS-pinned policy lives in fetchUntrustedRemoteImage.
-    const remote = await fetchRemote(value).catch(() => null);
-    const mimeType = remote?.contentType?.split(";")[0].trim().toLowerCase() || "";
-    if (!remote || remote.buffer.length === 0 || !mimeType.startsWith("image/")) return null;
-    return { inlineData: { mimeType, data: remote.buffer.toString("base64") } };
   }
   if (value.length > 100 && RAW_BASE64_RE.test(value)) {
     return { inlineData: { mimeType: fallbackMime, data: value } };
@@ -114,13 +127,13 @@ async function resolveStringReference(
  * Resolve all reference images of a Gemini-format image request into `inlineData` parts.
  * Sources, first non-empty wins: `referenceImages` ({bytes,mime}[] from /v1/images/edits),
  * `imageBytes` (single legacy edit), then string refs (`image`/`images[]`/`image_url`…) as
- * data URLs, HTTP(S) URLs or raw base64. Any unusable reference fails the whole request so a
- * caller never silently gets an edit built from fewer images than it sent.
+ * data URLs or raw base64. Remote HTTP(S) URLs are rejected, never fetched (same policy as
+ * `geminiReferenceImageError`, 9router #5190). Any unusable reference fails the whole request
+ * so a caller never silently gets an edit built from fewer images than it sent.
  */
-export async function resolveGeminiReferenceParts(
-  body: unknown,
-  fetchRemote: RemoteImageFetcher = fetchUntrustedRemoteImage
-): Promise<{ parts: GeminiInlineDataPart[] } | { error: string }> {
+export function resolveGeminiReferenceParts(
+  body: unknown
+): { parts: GeminiInlineDataPart[] } | { error: string } {
   if (!body || typeof body !== "object") return { parts: [] };
   const record = body as Record<string, unknown>;
   const fallbackMime =
@@ -146,12 +159,13 @@ export async function resolveGeminiReferenceParts(
     const mimeType = typeof entry.mime === "string" && entry.mime ? entry.mime : fallbackMime;
     parts.push({ inlineData: { mimeType, data: entry.bytes.toString("base64") } });
   }
+  if (stringRefs.some((ref) => typeof ref === "string" && REMOTE_URL_RE.test(ref.trim()))) {
+    return { error: REMOTE_REFERENCE_URL_ERROR };
+  }
   for (const ref of stringRefs) {
-    const part = await resolveStringReference(ref, fallbackMime, fetchRemote);
+    const part = resolveStringReference(ref, fallbackMime);
     if (!part) {
-      return {
-        error: `Invalid reference image ${parts.length + 1}. Use a data URL, a public HTTP(S) URL, or raw base64 image data.`,
-      };
+      return { error: `Invalid reference image ${parts.length + 1}. ${INLINE_REFERENCE_HINT}` };
     }
     parts.push(part);
   }
@@ -169,15 +183,13 @@ export function buildGeminiImagePrompt(prompt: string, referenceCount: number): 
  * Build the user `parts` for a Gemini image request: every reference image as `inlineData`,
  * followed by the (reference-aware) prompt text.
  */
-export async function buildGeminiImageUserParts(
+export function buildGeminiImageUserParts(
   body: unknown,
-  promptText: string,
-  fetchRemote?: RemoteImageFetcher
-): Promise<
+  promptText: string
+):
   | { parts: Array<GeminiInlineDataPart | { text: string }>; referenceCount: number }
-  | { error: string }
-> {
-  const refs = await resolveGeminiReferenceParts(body, fetchRemote);
+  | { error: string } {
+  const refs = resolveGeminiReferenceParts(body);
   if ("error" in refs) return refs;
   const referenceCount = refs.parts.length;
   const text = buildGeminiImagePrompt(promptText, referenceCount);
