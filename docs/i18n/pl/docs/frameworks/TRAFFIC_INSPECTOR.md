@@ -88,17 +88,17 @@ export HTTPS_PROXY=http://127.0.0.1:8080
 **Mechanizm:** Używa interfejsów API systemu operacyjnego do przekierowywania całego ruchu HTTP/HTTPS przez odbiornik HTTP_PROXY:
 
 - **macOS:** `networksetup -setwebproxy / -setsecurewebproxy`
-- **Linux:** `gsettings set org.gnome.system.proxy` + `/etc/environment`
+- **Linux (GNOME):** `gsettings set org.gnome.system.proxy` oraz ustawienia hosta/portu HTTP/HTTPS
 - **Windows:** `netsh winhttp set proxy 127.0.0.1:8080`
   **Zasięg:** Każda aplikacja na komputerze, która respektuje systemowe ustawienia serwera proxy
   **Uwaga:** `source` = `"system-proxy"`
 
 **Mechanizmy bezpieczeństwa:**
 
-- Zegar automatycznego wyłączenia (domyślnie 30 min, konfigurowalny za pomocą `INSPECTOR_SYSTEM_PROXY_GUARD_MINUTES`)
-- Poprzedni stan systemowego serwera proxy jest zapisywany w bazie danych i przywracany podczas wycofywania zmian
-- Jeśli użytkownik spróbuje opuścić stronę przy aktywnym ustawieniu, pulpit nawigacyjny wyświetla komunikat „Przywracanie systemowego serwera proxy”
-- Interfejs użytkownika wyświetla etykietę `⚠ Advanced` oraz pole wyboru wymagające wyraźnego potwierdzenia
+- Zastosowanie proxy uruchamia lokalny dla procesu licznik, który próbuje cofnąć zmianę bez gwarancji powodzenia (domyślnie 30 min, konfigurowane przez `INSPECTOR_SYSTEM_PROXY_GUARD_MINUTES`). Licznik nie przetrwa zakończenia procesu serwera.
+- Poprzedni stan proxy pozostaje w pamięci procesu; ten magazyn stanu przechwytywania nie zapisuje go trwale w bazie danych. Cofnięcie przywraca zapisane ustawienia macOS/GNOME; w Windows resetuje proxy WinHTTP zamiast przywracać poprzednią konfigurację.
+- Dopóki proxy jest zgłaszane jako zastosowane, zwolnienie strony wysyła żądanie keepalive próbujące cofnąć zmianę i żąda natywnego potwierdzenia, którego treść ustala przeglądarka. Odmontowanie inspektora podczas nawigacji SPA również próbuje cofnąć zmianę, bez tego monitu przeglądarki.
+- Pasek przechwytywania pokazuje przetłumaczony element `System-wide` z ikoną ostrzeżenia. Kliknięcie zmienia obecnie tylko lokalny stan interfejsu; nie wyświetla pola potwierdzenia ani nie stosuje lub cofa systemowego proxy.
 
 ### Tryb 5 — Przezroczyste odszyfrowywanie TPROXY (Linux, root, opcjonalne)
 
@@ -113,13 +113,13 @@ Jest to rozbudowany podsystem mający własny, dedykowany podręcznik operatora 
 
 ### Porównanie trybów przechwytywania
 
-| Tryb                      | Konfiguracja                          |           Sudo?            | Zasięg                                      | Uwagi                                                                                                                                  |
-| ------------------------- | ------------------------------------- | :------------------------: | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. AgentBridge            | Automatyczna                          |   Raz (certyfikat+hosts)   | 9 agentów IDE                               | Domyślnie włączony                                                                                                                     |
-| 2. Własne hosty           | Dane dla każdego hosta                |      Tak (plik hosts)      | Każda aplikacja używająca tego hosta        | Utrwalone w bazie danych                                                                                                               |
-| 3. HTTP_PROXY             | `export HTTPS_PROXY=...`              |            Nie             | Aplikacje respektujące zmienne środowiskowe | Port 8080; HTTPS jest tunelowany przez CONNECT (tylko metadane, nigdy nie jest odszyfrowywany)                                         |
-| 4. Ogólnosystemowy        | Przełącznik + potwierdzenie           |            Tak             | Wszystkie aplikacje na komputerze           | Automatyczne wyłączenie po 30 min                                                                                                      |
-| 5. Odszyfrowywanie TPROXY | Przełącznik (Linux + natywny dodatek) | Tak (root + instalacja CA) | Dowolny host na porcie docelowym            | Odszyfrowuje dowolne hosty; domyślnie wyłączone — zobacz `docs/security/MITM-TPROXY-DECRYPT.md` (git; nie jest kompilowany do `/docs`) |
+| Tryb                      | Konfiguracja                                                   |           Sudo?            | Zasięg                                      | Uwagi                                                                                                                                  |
+| ------------------------- | -------------------------------------------------------------- | :------------------------: | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. AgentBridge            | Automatyczna                                                   |   Raz (certyfikat+hosts)   | 9 agentów IDE                               | Domyślnie włączony                                                                                                                     |
+| 2. Własne hosty           | Dane dla każdego hosta                                         |      Tak (plik hosts)      | Każda aplikacja używająca tego hosta        | Utrwalone w bazie danych                                                                                                               |
+| 3. HTTP_PROXY             | `export HTTPS_PROXY=...`                                       |            Nie             | Aplikacje respektujące zmienne środowiskowe | Port 8080; HTTPS jest tunelowany przez CONNECT (tylko metadane, nigdy nie jest odszyfrowywany)                                         |
+| 4. Ogólnosystemowy        | `POST /api/tools/traffic-inspector/capture-modes/system-proxy` |            Tak             | Wszystkie aplikacje na komputerze           | Licznik próbujący cofnąć zmianę bez gwarancji (domyślnie 30 min)                                                                       |
+| 5. Odszyfrowywanie TPROXY | Przełącznik (Linux + natywny dodatek)                          | Tak (root + instalacja CA) | Dowolny host na porcie docelowym            | Odszyfrowuje dowolne hosty; domyślnie wyłączone — zobacz `docs/security/MITM-TPROXY-DECRYPT.md` (git; nie jest kompilowany do `/docs`) |
 
 ---
 
@@ -307,7 +307,7 @@ to follow-up).
 ### 5.1 Nagrywanie sesji
 
 1. Kliknij **„● Record session”** na toolbarze → podaj nazwę (opcjonalnie)
-2. Live tail działa normalnie; czerwony pulsujący wskaźnik pokazuje `◉ REC · <name> · 00:42 · 23 reqs`
+2. Podgląd na żywo działa normalnie; pasek nagrywania pokazuje pulsującą czerwoną kropkę, czas, który upłynął, nazwę sesji, jeśli jest dostępna, oraz przetłumaczony element zatrzymania.
 3. Kliknij **„⏹ Stop”** → snapshot sesji trafia do `inspector_sessions` + `inspector_session_requests`
 
 ### 5.2 Podgląd nagranej sesji
@@ -315,7 +315,7 @@ to follow-up).
 Dropdown **Sessions** na toolbarze listuje zapisane sesje. Wybór jednej:
 
 - Ładuje snapshot sesji (zamrożony stan)
-- Banner pokazuje: `Viewing recorded session "<name>" — [Back to live]`
+- Baner pokazuje przetłumaczoną etykietę nagranej sesji i nazwę sesji (lub przetłumaczony tekst zastępczy dla sesji bez tytułu), obok przetłumaczonego przycisku powrotu do podglądu na żywo.
 - Zakładka Stats staje się dostępna z agregatami Recharts
 
 ### 5.3 Formaty eksportu
@@ -407,7 +407,7 @@ gsettings set org.gnome.system.proxy mode 'none'
 netsh winhttp reset proxy
 ```
 
-Dashboard przy następnym załadowaniu zaproponuje też „Revert system proxy”, jeśli wykryje w stanie DB, że proxy było aktywne.
+Zapisany stan proxy istnieje tylko w procesie serwera. Po awarii lub ponownym uruchomieniu obecny magazyn stanu przechwytywania nie może odtworzyć tej migawki z bazy danych; gdy potrzebne jest ręczne odzyskanie, użyj powyższych poleceń dla danej platformy.
 
 ### Pełny bufor
 
