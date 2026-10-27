@@ -46,6 +46,9 @@ import { normalizeLocaleText } from "./glossary-normalize.mjs";
 import { buildMirrorBar } from "./lib/language-bar.mjs";
 import { adoptState, mergeAdoptedState, refreshTargetHashes } from "./lib/translation-state.mjs";
 import { applyNumericSectionDelta } from "./lib/numeric-section-delta.mjs";
+import { linesOutsideFencedCode, looksUntranslated } from "./lib/untranslated-guard.mjs";
+
+export { looksUntranslated };
 
 // ----- .env loader --------------------------------------------------------
 // Loads variables from a local `.env` (gitignored) into process.env without
@@ -502,24 +505,7 @@ function unwrapTranslationFence(source, text) {
 // string; shorter or mixed fences inside an example are still code.
 function headingLevels(markdown) {
   const levels = [];
-  let fence = null;
-  for (const line of markdown.split(/\r?\n/)) {
-    const delimiter = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
-    if (fence) {
-      if (
-        delimiter &&
-        delimiter[1][0] === fence[0] &&
-        delimiter[1].length >= fence.length &&
-        /^[ \t]*$/.test(delimiter[2])
-      ) {
-        fence = null;
-      }
-      continue;
-    }
-    if (delimiter && (delimiter[1][0] === "~" || !delimiter[2].includes("`"))) {
-      fence = delimiter[1];
-      continue;
-    }
+  for (const line of linesOutsideFencedCode(markdown)) {
     const heading = line.match(/^ {0,3}(#{1,6})(?:[ \t]+|$)/);
     if (heading) levels.push(heading[1].length);
   }
@@ -820,27 +806,6 @@ export function planSectionReuse({
  * locales were plain English copies adopted as translated. Both are invisible to the hash
  * comparison, so the task loop asks this before skipping an up-to-date pair.
  */
-/** Long prose lines (> 20 chars, not table/code/list scaffolding) of a markdown fragment. */
-function proseLines(text) {
-  return text
-    .split("\n")
-    .map((l) => l.trim())
-    .filter((l) => l.length > 20 && !/^[`|#\-*\d\s]+$/.test(l));
-}
-
-/**
- * True when a mirror fragment is still (mostly) the English source: byte-equal, or ≥ 80 % of
- * its prose lines appear verbatim in the source. Fragments with < 3 prose lines fall back to
- * byte equality (code-only sections are legitimately identical).
- */
-export function looksUntranslated(mirrorFragment, sourceFragment) {
-  if (mirrorFragment.trim() === sourceFragment.trim()) return /[A-Za-z]{3,}/.test(sourceFragment);
-  const mir = proseLines(mirrorFragment);
-  if (mir.length < 3) return false;
-  const src = new Set(proseLines(sourceFragment));
-  return mir.filter((l) => src.has(l)).length / mir.length >= 0.8;
-}
-
 export function mirrorNeedsRebuild(mirrorText, sourceText) {
   const body = extractMirrorBody(mirrorText);
   if (/^---\s*\n[\s\S]{0,600}?\n---\s*\n/.test(body)) return true; // leaked frontmatter
