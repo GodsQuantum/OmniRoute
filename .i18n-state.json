@@ -88106,17 +88106,17 @@
           "updated_at": "2026-10-27T03:36:31.608Z"
         },
         "pt": {
-          "source_hash": "8c6696e999442cf8833a4cc418740b116c7f4cbccbbf81ff38ac100b65295764",
-          "target_hash": "5082f391b53b57afbe1ea5dc892d7997648371e2e64e9b5efb79ede4f15f388b",
+          "source_hash": "b22339ba0ea4cab2c0b21fc39c510a31a73dbe893b8a8772ae2a772c6fbc8823",
+          "target_hash": "79ff343b0a5dea5f25945f97fc9d448226da6fae51a3c8b4932e064a2b3dab7e",
           "section_hashes": [
             "c7914887e077",
             "93c63cd7c00b",
             "a3b05abae5b3",
             "0ceeab50cf25",
-            "5d6e2e2bb145",
+            "7343e07ec726",
             "06ea53631a21",
             "11f6045331b1",
-            "8fdecd0251bf",
+            "fe1aa9211b66",
             "576e40d93b73",
             "210823abcce1",
             "9ba9eb1a2d94",
@@ -88148,7 +88148,7 @@
             "d39016889d36",
             "10eef854ef66"
           ],
-          "updated_at": "2026-10-25T22:30:30.608Z"
+          "updated_at": "2026-10-27T04:45:18.187Z"
         },
         "pt-BR": {
           "source_hash": "b22339ba0ea4cab2c0b21fc39c510a31a73dbe893b8a8772ae2a772c6fbc8823",
@@ -89591,17 +89591,17 @@
           "updated_at": "2026-10-27T03:13:06.697Z"
         },
         "pl": {
-          "source_hash": "8c6696e999442cf8833a4cc418740b116c7f4cbccbbf81ff38ac100b65295764",
-          "target_hash": "9c8850c8ec74d3bfd350ff88783f50a8eaa227f219e8cf80b7cd40f7b72eb6cc",
+          "source_hash": "b22339ba0ea4cab2c0b21fc39c510a31a73dbe893b8a8772ae2a772c6fbc8823",
+          "target_hash": "b93e9741706cdca870a343fddb2acb38bb622fe4d505ebd58da3c1babd85addd",
           "section_hashes": [
             "c7914887e077",
             "93c63cd7c00b",
             "a3b05abae5b3",
             "0ceeab50cf25",
-            "5d6e2e2bb145",
+            "7343e07ec726",
             "06ea53631a21",
             "11f6045331b1",
-            "8fdecd0251bf",
+            "fe1aa9211b66",
             "576e40d93b73",
             "210823abcce1",
             "9ba9eb1a2d94",
@@ -89633,7 +89633,7 @@
             "d39016889d36",
             "10eef854ef66"
           ],
-          "updated_at": "2026-10-25T22:28:28.815Z"
+          "updated_at": "2026-10-27T04:43:57.130Z"
         },
         "pa": {
           "source_hash": "b22339ba0ea4cab2c0b21fc39c510a31a73dbe893b8a8772ae2a772c6fbc8823",
