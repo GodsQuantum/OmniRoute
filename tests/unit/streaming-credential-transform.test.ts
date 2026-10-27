@@ -200,6 +200,10 @@ test("fan-out beyond the choice cap fails closed without mixing buffered choices
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       controller.enqueue(
+        new TextEncoder().encode(sseContent(`safe ${OPENAI_KEY} ${"safe ".repeat(100)}`))
+      );
+      controller.enqueue(new TextEncoder().encode(sseContent("safe ".repeat(100))));
+      controller.enqueue(
         new TextEncoder().encode(
           `data: {"choices":[{"index":0,"delta":{"content":"a ${OPENAI_KEY}"}},{"index":1,"delta":{"content":"b"}},{"index":2,"delta":{"content":"c"}}]}\n\n`
         )
@@ -207,10 +211,20 @@ test("fan-out beyond the choice cap fails closed without mixing buffered choices
       controller.close();
     },
   }).pipeThrough(createCredentialSseTransform({ maxBufferedChoices: 2 }));
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let output = "";
   await assert.rejects(
-    new Response(stream).text(),
-    /\[PII\] Credential stream choice limit exceeded/
+    async () => {
+      for (let chunk = await reader.read(); !chunk.done; chunk = await reader.read()) {
+        output += decoder.decode(chunk.value, { stream: true });
+      }
+    },
+    { name: "Error", message: "[PII] Credential stream choice limit exceeded" }
   );
+  output += decoder.decode();
+  assert.match(output, /\[REDACTED:openai\]/, "a sanitized frame must arrive before rejection");
+  assert.ok(!output.includes(OPENAI_KEY), "frames emitted before rejection must not leak the key");
 });
 
 test("unclosed key header followed by a long gap never leaks in clear", async () => {
