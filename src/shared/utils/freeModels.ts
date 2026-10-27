@@ -1,5 +1,11 @@
 import { FREE_MODEL_BUDGETS, grantsFreeAccess } from "@omniroute/open-sse/config/freeModelCatalog";
-import { getProviderById, resolveProviderId } from "@/shared/constants/providers";
+import {
+  getProviderById,
+  isAnthropicCompatibleProvider,
+  isClaudeCodeCompatibleProvider,
+  isOpenAICompatibleProvider,
+  resolveProviderId,
+} from "@/shared/constants/providers";
 import { globToRegex } from "@/shared/utils/globPattern";
 import { hasPayloadFreeEvidence, hasPayloadPaidEvidence } from "@/shared/utils/payloadFreeEvidence";
 import { AI_MODELS } from "@/shared/constants/models";
@@ -86,6 +92,8 @@ export interface FreeModelCandidate {
   is_free?: unknown;
   free?: unknown;
   tags?: unknown;
+  /** Some aggregators label a model with `tier: "free" | "paid"`; only `paid` is read (a veto). */
+  tier?: unknown;
 }
 
 /** Shipped-catalog entry for this provider (id or alias): trusted on its own. */
@@ -209,8 +217,45 @@ export function sortModelsFreeFirst<T>(
 }
 
 /**
+ * OpenAI-/Anthropic-compatible custom nodes have no documented free tier, but the
+ * endpoint behind them (an OpenRouter-like aggregator) may list free models in its own
+ * `/models` payload. Claude Code-compatible nodes are excluded: they expose no listing.
+ */
+export function isCompatibleFreeImportProvider(provider: string | undefined | null): boolean {
+  return (
+    (isOpenAICompatibleProvider(provider) || isAnthropicCompatibleProvider(provider)) &&
+    !isClaudeCodeCompatibleProvider(provider)
+  );
+}
+
+/** Whether the "import only free models" connection option applies to this provider. */
+export function providerSupportsFreeOnlyImport(provider: string | undefined | null): boolean {
+  return providerHasFreeModels(provider) || isCompatibleFreeImportProvider(provider);
+}
+
+/** `providers.*` i18n key for the toggle hint: compatible nodes explain the payload rule. */
+export function freeOnlyImportHintKey(
+  provider: string | undefined | null
+): "importFreeModelsOnlyHint" | "importFreeModelsOnlyCompatibleHint" {
+  return isCompatibleFreeImportProvider(provider)
+    ? "importFreeModelsOnlyCompatibleHint"
+    : "importFreeModelsOnlyHint";
+}
+
+/**
+ * Import-time free verdict for a compatible node, read from the payload alone. Conservative
+ * on purpose: free evidence is required AND any paid signal (positive price, explicit
+ * `free: false`, `tier: "paid"`) vetoes it, so unknown pricing is never imported as free.
+ */
+function isFreeForCompatibleImport(model: FreeModelCandidate): boolean {
+  if (typeof model.tier === "string" && model.tier.trim().toLowerCase() === "paid") return false;
+  return hasPayloadFreeEvidence(model) && !hasPayloadPaidEvidence(model);
+}
+
+/**
  * Decide which fetched models to import. When `importFreeOnly` is false the list
- * passes through unchanged. When true, only free models are kept.
+ * passes through unchanged. When true, only free models are kept. Compatible nodes are
+ * judged by their payload evidence only; `isFreeModel` (routing, badges) is unchanged.
  */
 export function selectModelsForImport<T extends FreeModelCandidate>(
   provider: string,
@@ -220,7 +265,10 @@ export function selectModelsForImport<T extends FreeModelCandidate>(
   if (!importFreeOnly) {
     return { models: fetchedModels, freeFilterEmpty: false };
   }
-  const models = fetchedModels.filter((m) => isFreeModel(provider, m));
+  const isFree = isCompatibleFreeImportProvider(provider)
+    ? isFreeForCompatibleImport
+    : (m: T) => isFreeModel(provider, m);
+  const models = fetchedModels.filter((m) => isFree(m));
   const freeFilterEmpty = fetchedModels.length > 0 && models.length === 0;
   return { models, freeFilterEmpty };
 }

@@ -165,6 +165,78 @@ describe("EditConnectionModal — import only free models", () => {
   });
 });
 
+describe("EditConnectionModal — free-only import on compatible nodes", () => {
+  const OPENAI_NODE = "openai-compatible-12345678-1234-1234-1234-123456789abc";
+  const ANTHROPIC_NODE = "anthropic-compatible-12345678-1234-1234-1234-123456789abc";
+  const CC_NODE = "anthropic-compatible-cc-12345678-1234-1234-1234-123456789abc";
+
+  it("shows the toggle with the payload-evidence hint on an OpenAI-compatible node", () => {
+    const el = render({
+      providerId: OPENAI_NODE,
+      connection: { id: "conn-oc", provider: OPENAI_NODE, providerSpecificData: {} },
+    });
+    expect(el.querySelector(FREE_TOGGLE)).toBeTruthy();
+    expect(el.textContent).toContain("importFreeModelsOnlyCompatibleHint");
+  });
+
+  it("shows the toggle on an Anthropic-compatible node", () => {
+    const el = render({
+      providerId: ANTHROPIC_NODE,
+      connection: { id: "conn-ac", provider: ANTHROPIC_NODE, providerSpecificData: {} },
+    });
+    expect(el.querySelector(FREE_TOGGLE)).toBeTruthy();
+  });
+
+  it("hides the toggle on a Claude Code-compatible node (no /models listing)", () => {
+    const el = render({
+      providerId: CC_NODE,
+      connection: { id: "conn-cc", provider: CC_NODE, providerSpecificData: {} },
+    });
+    expect(el.querySelector(FREE_TOGGLE)).toBeNull();
+  });
+
+  it("keeps the generic hint for a provider with a documented free tier", () => {
+    const el = render({
+      connection: { id: "conn-or", provider: "openrouter", providerSpecificData: {} },
+    });
+    expect(el.textContent).toContain("importFreeModelsOnlyHint");
+    expect(el.textContent).not.toContain("importFreeModelsOnlyCompatibleHint");
+  });
+
+  it("saves the flag and re-syncs a compatible node when toggled on", async () => {
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    const onResyncModels = vi.fn().mockResolvedValue(undefined);
+    const el = render({
+      providerId: OPENAI_NODE,
+      connection: {
+        id: "conn-oc-save",
+        provider: OPENAI_NODE,
+        name: "Aggregator",
+        authType: "apikey",
+        providerSpecificData: {},
+      },
+      onSave,
+      onResyncModels,
+    });
+
+    const toggle = el.querySelector<HTMLButtonElement>(FREE_TOGGLE)!;
+    act(() => {
+      toggle.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const saveBtn = Array.from(el.querySelectorAll("button")).find(
+      (b) => b.textContent?.trim() === "save"
+    )!;
+    act(() => {
+      saveBtn.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    await waitFor(() => onSave.mock.calls.length > 0);
+    expect(onSave.mock.calls[0][0].providerSpecificData?.importFreeModelsOnly).toBe(true);
+    await waitFor(() => onResyncModels.mock.calls.length > 0);
+    expect(onResyncModels).toHaveBeenCalledWith("conn-oc-save");
+  });
+});
+
 describe("EditConnectionModal — encrypted Responses reasoning", () => {
   const PRESERVE_TOGGLE = '[role="switch"][aria-label="Preserve encrypted reasoning"]';
 
