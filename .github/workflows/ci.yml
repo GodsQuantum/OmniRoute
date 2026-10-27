@@ -839,7 +839,11 @@ jobs:
   package-artifact:
     name: Package Artifact
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, changes]
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || needs.changes.outputs.queueCandidate == 'true' }}
     env:
       JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation
     steps:
@@ -926,7 +930,11 @@ jobs:
     name: Electron Package Smoke (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    needs: build
+    needs: [build, changes]
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || needs.changes.outputs.queueCandidate == 'true' }}
     # WS1.5 (v3.8.49 plan): the Electron native-module path previously executed for
     # the FIRST time on the release tag — the v3.8.48 Windows bug (npx.cmd spawned
     # without shell, CVE-2024-27980 behavior change) could only surface at release.
@@ -1076,7 +1084,10 @@ jobs:
     continue-on-error: ${{ matrix.os == 'windows-latest' }}
     timeout-minutes: 10
     needs: changes
-    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && (github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true')) }}
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && needs.changes.outputs.queueCandidate == 'true') }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -1415,7 +1426,10 @@ jobs:
     needs: [build, changes]
     # Tests-only diffs outside tests/e2e/ cannot change the served app. A hotfix
     # label is not evidence for this candidate and cannot waive required tests.
-    if: ${{ needs.changes.outputs.testsOnly != 'true' }}
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ needs.changes.outputs.testsOnly != 'true' && (github.event_name != 'pull_request' || needs.changes.outputs.queueCandidate == 'true') }}
     strategy:
       fail-fast: false
       matrix:
@@ -1493,7 +1507,10 @@ jobs:
     timeout-minutes: 15
     # needs: changes (not build) — no artifact consumed; see test-unit note.
     needs: changes
-    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && (github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true')) }}
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && needs.changes.outputs.queueCandidate == 'true') }}
     strategy:
       fail-fast: false
       matrix:
@@ -1558,7 +1575,10 @@ jobs:
     timeout-minutes: 20
     # needs: changes (not build) — the runner boots its own dev server.
     needs: changes
-    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && (github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true')) }}
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && needs.changes.outputs.queueCandidate == 'true') }}
     env:
       JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-test-api-key-secret-long
@@ -1583,7 +1603,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: changes
-    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && (github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true')) }}
+    # Full-matrix lane (2026-10-27): ordinary PRs skip it; push, dispatch, merge_group and the
+    # Mergify queue candidate run it (admission condition full-code). Before a manual merge:
+    # gh workflow run ci.yml --ref <branch>.
+    if: ${{ github.event_name != 'pull_request' || (needs.changes.outputs.code == 'true' && needs.changes.outputs.queueCandidate == 'true') }}
     # ADVISORY until #10049 is resolved. Restoring this suite immediately surfaced a
     # real discrepancy that had been invisible while it could not run: GET
     # /api/mcp/audit answers 403 over loopback where the suite expects 200|401. That
