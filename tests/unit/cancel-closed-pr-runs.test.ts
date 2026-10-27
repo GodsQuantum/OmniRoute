@@ -5,7 +5,8 @@ import { once } from "node:events";
 import fs from "node:fs";
 import { createServer } from "node:http";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { Readable } from "node:stream";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import * as yaml from "js-yaml";
 
 const { selectRunsToCancel } = await import("../../scripts/ci/cancel-closed-pr-runs.mjs");
@@ -13,6 +14,9 @@ const { selectRunsToCancel } = await import("../../scripts/ci/cancel-closed-pr-r
 const REPO = "cheaper-inference/OmniRoute";
 const SCRIPT = fileURLToPath(
   new URL("../../scripts/ci/cancel-closed-pr-runs.mjs", import.meta.url)
+);
+const SHARED_GRACE_PRELOAD = fileURLToPath(
+  new URL("../fixtures/cancel-closed-pr-runs-shared-grace-preload.mjs", import.meta.url)
 );
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const ctx = {
@@ -110,6 +114,77 @@ async function runCli(
         server.close((error) => (error ? reject(error) : resolve()));
       });
     }
+  }
+}
+
+type SharedGraceFixtureReceipt = {
+  logicalNowMs: number;
+  sleepsMs: number[];
+  normalCancelIds: number[];
+  forceCancelIds: number[];
+  cancelOperationOrder: string[];
+  requestTrace: string[];
+  queuedReadIds: number[];
+  terminalReadIds: number[];
+};
+
+async function runSharedGraceCli(ids: number[]): Promise<{
+  code: number;
+  stdout: string;
+  stderr: string;
+  receipt: SharedGraceFixtureReceipt;
+}> {
+  const child = spawn(
+    process.execPath,
+    ["--import", pathToFileURL(SHARED_GRACE_PRELOAD).href, SCRIPT],
+    {
+      env: {
+        GH_TOKEN: "test-token",
+        GITHUB_API_URL: "https://fixture.invalid",
+        REPO,
+        PR_NUMBER: "42",
+        HEAD_REF: "fix/thing",
+        HEAD_REPO: REPO,
+        HEAD_SHA: "head-current",
+        SELF_RUN_ID: "999",
+        CANCEL_POLL_INTERVAL_MS: "20",
+        CANCEL_NORMAL_GRACE_MS: "400",
+        CANCEL_DEADLINE_MS: "1200",
+        OMNIROUTE_CANCEL_TEST_SCENARIO: "shared-grace",
+        OMNIROUTE_CANCEL_TEST_IDS: ids.join(","),
+      },
+      stdio: ["ignore", "pipe", "pipe", "pipe"],
+    }
+  );
+  let stdout = "";
+  let stderr = "";
+  let receiptJson = "";
+  const childStdout = child.stdout;
+  const childStderr = child.stderr;
+  const receiptStream = child.stdio[3];
+  assert.ok(childStdout && childStderr && receiptStream instanceof Readable);
+  childStdout.setEncoding("utf8").on("data", (chunk: string) => (stdout += chunk));
+  childStderr.setEncoding("utf8").on("data", (chunk: string) => (stderr += chunk));
+  receiptStream.setEncoding("utf8").on("data", (chunk: string) => (receiptJson += chunk));
+  const timeout = setTimeout(() => child.kill("SIGKILL"), 8_000);
+  timeout.unref();
+  try {
+    const [code, signal] = (await once(child, "close")) as [number | null, NodeJS.Signals | null];
+    if (code === null) {
+      throw new Error(
+        `cancel CLI terminated by ${signal ?? "an unknown signal"}\nstdout:\n${stdout}\nstderr:\n${stderr}`
+      );
+    }
+    assert.notEqual(receiptJson.trim(), "", "the deterministic fixture must emit its receipt");
+    return {
+      code,
+      stdout,
+      stderr,
+      receipt: JSON.parse(receiptJson) as SharedGraceFixtureReceipt,
+    };
+  } finally {
+    clearTimeout(timeout);
+    if (child.exitCode === null && child.signalCode === null) child.kill("SIGKILL");
   }
 }
 
@@ -550,55 +625,32 @@ test("a run still queued after normal 202 is force-cancelled only after revalida
 
 test("multiple resistant runs share one normal-cancel grace window", async () => {
   const ids = [331, 332, 333, 334];
-  const forced = new Set<number>();
-  const result = await runCli(
-    ({ method, path }) => {
-      if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
-        return { body: pullRequest() };
-      }
-      if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) return { body: [] };
-      if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
-        return {
-          body: {
-            workflow_runs: ids.map((id) => run({ id, pull_requests: [{ number: 42 }] })),
-          },
-        };
-      }
-      const match = path.match(/\/actions\/runs\/(\d+)(?:\/(force-cancel|cancel))?$/);
-      const id = Number(match?.[1]);
-      const operation = match?.[2];
-      if (method === "POST" && operation === "cancel") return { status: 202 };
-      if (method === "POST" && operation === "force-cancel") {
-        forced.add(id);
-        return { status: 202 };
-      }
-      if (method === "GET" && ids.includes(id)) {
-        const status = forced.has(id) ? "completed" : "queued";
-        return {
-          body: run({
-            id,
-            status,
-            conclusion: status === "completed" ? "cancelled" : null,
-            pull_requests: [{ number: 42 }],
-          }),
-        };
-      }
-      return { status: 404 };
-    },
-    {
-      CANCEL_DEADLINE_MS: "1200",
-      CANCEL_NORMAL_GRACE_MS: "400",
-      CANCEL_POLL_INTERVAL_MS: "20",
-    }
-  );
+  const result = await runSharedGraceCli(ids);
 
   assert.equal(result.code, 0, result.stderr);
-  assert.deepEqual(
-    result.requests
-      .filter((request) => request.method === "POST" && request.path.endsWith("/force-cancel"))
-      .map((request) => Number(request.path.match(/\/runs\/(\d+)/)?.[1])),
-    ids
+  assert.deepEqual(result.receipt.normalCancelIds, ids);
+  assert.deepEqual(result.receipt.forceCancelIds, ids);
+  assert.deepEqual(result.receipt.cancelOperationOrder, [
+    ...ids.map((id) => `normal:${id}`),
+    ...ids.map((id) => `force:${id}`),
+  ]);
+  assert.deepEqual([...new Set(result.receipt.queuedReadIds)], ids);
+  assert.deepEqual(result.receipt.terminalReadIds, ids);
+  for (const [index, entry] of result.receipt.requestTrace.entries()) {
+    if (!entry.startsWith("POST ")) continue;
+    assert.equal(
+      result.receipt.requestTrace[index - 1],
+      `GET /repos/${REPO}/pulls/42`,
+      `PR state must be revalidated immediately before ${entry}`
+    );
+  }
+  assert.equal(result.receipt.logicalNowMs, 400);
+  assert.ok(result.receipt.logicalNowMs < 1200);
+  assert.equal(
+    result.receipt.sleepsMs.reduce((total, delay) => total + delay, 0),
+    400
   );
+  for (const id of ids) assert.match(result.stdout, new RegExp(`terminal-confirmed ${id} `));
   assert.match(result.stdout, /4\/4 run\(s\) terminal-confirmed/i);
 });
 

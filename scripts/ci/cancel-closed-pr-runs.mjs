@@ -5,6 +5,8 @@
 // creates no successor, so this API-only cleanup handles work that would otherwise remain
 // active after the PR can no longer merge. No npm dependencies are required.
 
+import { pathToFileURL } from "node:url";
+
 const ACTIVE = new Set(["queued", "in_progress", "waiting", "pending", "requested"]);
 const PR_EVENTS = new Set(["pull_request", "pull_request_target"]);
 
@@ -421,7 +423,7 @@ async function main() {
   );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
   main().catch((err) => {
     console.error(`cancel-closed-pr-runs: ${err?.message ?? err}`);
     process.exit(1);
