@@ -5,6 +5,8 @@ import {
   type BufferedField,
   type TextBuffers,
 } from "./sseTextBuffers";
+import { CredentialOverflow } from "./credentialOverflow";
+import { credentialSafeCut } from "./credentialStreamBoundary";
 import { redactCredentials } from "./guardrails/credentialMasker";
 
 export interface CredentialTransformOptions {
@@ -245,15 +247,14 @@ type ChoiceBufferStore = {
   clearAll: () => void;
 };
 
-function createChoiceBufferStore(
-  maxBufferedChoices: number,
-  onEvict: (evicted: TextBuffers, into: TextBuffers) => void
-): ChoiceBufferStore {
+function createChoiceBufferStore(maxBufferedChoices: number): ChoiceBufferStore {
   const buffers = new Map<string, TextBuffers>();
   const get = (index: string | number): TextBuffers => {
     const key = String(index);
     const existing = buffers.get(key);
     if (existing) return existing;
+    if (buffers.size >= maxBufferedChoices)
+      throw new Error("[PII] Credential stream choice limit exceeded");
     const buf: TextBuffers = {
       content: "",
       reasoning: "",
@@ -262,14 +263,6 @@ function createChoiceBufferStore(
       partialJson: "",
     };
     buffers.set(key, buf);
-    if (buffers.size > maxBufferedChoices) {
-      const oldest = buffers.keys().next().value as string | undefined;
-      if (oldest !== undefined && oldest !== key) {
-        const victim = buffers.get(oldest);
-        if (victim) onEvict(victim, buf);
-        buffers.delete(oldest);
-      }
-    }
     return buf;
   };
   return {
@@ -470,6 +463,7 @@ function populateRemainingBuffers(
 }
 
 type DrainState = {
+  overflow: CredentialOverflow;
   windowSize: number;
   maxBufferedBytes: number;
   bufferedBytes: () => number;
@@ -485,8 +479,6 @@ function backOffSurrogate(text: string, cut: number): number {
   return cut;
 }
 
-const UNCLOSED_BEGIN = /-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----[\s\S]*$/;
-const CLOSED_END = /-----END (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----/;
 const BEGIN_HEAD = "-----BEGIN";
 const BEGIN_HEADER_PATTERN = /-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----/;
 const END_MARKER_PATTERN = /-----END (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----/;
@@ -512,43 +504,33 @@ function findUnclosedBeginIndex(text: string): number | undefined {
 }
 
 /**
- * Stamp an unclosed key header at flush time, keeping the already-marked
- * tail. Mirrors the cap path (drainOverflowHead): a header that never
- * closes is never emitted in clear.
+ * Redact an unclosed private-key block in full at flush time.
+ * Its body may contain incomplete credentials that cannot be safely emitted,
+ * so the marker replaces both the header and the remaining body.
  */
 function markUnclosedBeginHead(text: string): string {
   const at = findUnclosedBeginIndex(text);
   if (at === undefined) return text;
   const head = BEGIN_HEADER_PATTERN.exec(text.slice(at, at + BEGIN_HEADER_SLICE));
   if (!head) return text;
-  return `${text.slice(0, at)}[REDACTED:private_key]${text.slice(at + head[0].length)}`;
-}
-
-function drainOverflowHead(
-  state: DrainState,
-  buffers: TextBuffers,
-  field: BufferedField,
-  sanitized: string
-): string | null {
-  const unclosedBegin = sanitized.match(UNCLOSED_BEGIN);
-  if (unclosedBegin && !CLOSED_END.test(sanitized)) {
-    state.replace(buffers, field, sanitized.slice(unclosedBegin.index! + unclosedBegin[0].length));
-    return "[REDACTED:private_key]";
-  }
-  return null;
+  return `${text.slice(0, at)}[REDACTED:private_key]`;
 }
 
 function drainOverflow(state: DrainState, buffers: TextBuffers, field: BufferedField): string {
-  const sanitized = redactOutsideDataUrls(buffers[field]);
-  const marked = drainOverflowHead(state, buffers, field, sanitized);
-  if (marked !== null) return marked;
-  const overflow = state.bufferedBytes() - state.maxBufferedBytes;
-  let cut = Math.min(sanitized.length, Math.max(1, overflow));
-  const partial = findCredentialPartialTailIndex(sanitized.slice(0, cut));
-  if (partial !== undefined && partial < cut) cut = partial;
-  const head = sanitized.slice(0, backOffSurrogate(sanitized, cut));
-  state.replace(buffers, field, sanitized.slice(head.length));
-  return head;
+  const raw = buffers[field];
+  const desired = Math.max(0, raw.length - Math.min(state.windowSize, state.maxBufferedBytes));
+  const unclosed = findUnclosedBeginIndex(raw) ?? raw.length;
+  const cut = backOffSurrogate(raw, Math.min(credentialSafeCut(raw, desired), unclosed));
+  const head = redactOutsideDataUrls(raw.slice(0, cut));
+  const rest = raw.slice(cut);
+  const otherBytes = state.bufferedBytes() - raw.length;
+  if (otherBytes + rest.length <= state.maxBufferedBytes) {
+    state.replace(buffers, field, rest);
+    return head;
+  }
+  const drained = state.overflow.drain(buffers, field, rest, redactOutsideDataUrls);
+  state.replace(buffers, field, drained.remaining);
+  return head + drained.emitted;
 }
 
 function drainWindow(
@@ -557,25 +539,24 @@ function drainWindow(
   field: BufferedField,
   isStopSignal: boolean
 ): string {
-  const sanitized = redactOutsideDataUrls(buffers[field]);
+  const raw = buffers[field];
   if (isStopSignal) {
     // The flush event is emitted before the chunk carrying finish_reason, so a
     // tail held back from that chunk would reach the client out of order. Drain
     // it whole here; key headers are stamped as in onFlush.
     state.replace(buffers, field, "");
-    return markUnclosedBeginHead(sanitized);
+    return markUnclosedBeginHead(redactOutsideDataUrls(raw));
   }
-  let emitLength = Math.max(0, sanitized.length - state.windowSize);
-  const partial = findCredentialPartialTailIndex(sanitized);
+  let emitLength = credentialSafeCut(raw, Math.max(0, raw.length - state.windowSize));
+  const partial = findCredentialPartialTailIndex(raw);
   if (partial !== undefined && emitLength > partial) emitLength = partial;
   // A key header without a closing marker anywhere after it is never
   // emitted in clear, however far past the tail probe it already sits.
-  const unclosedBegin = findUnclosedBeginIndex(sanitized);
+  const unclosedBegin = findUnclosedBeginIndex(raw);
   if (unclosedBegin !== undefined && emitLength > unclosedBegin) emitLength = unclosedBegin;
-  emitLength = backOffSurrogate(sanitized, emitLength);
-  const toEmit = sanitized.slice(0, emitLength);
-  state.replace(buffers, field, sanitized.slice(emitLength));
-  return toEmit;
+  emitLength = backOffSurrogate(raw, emitLength);
+  state.replace(buffers, field, raw.slice(emitLength));
+  return redactOutsideDataUrls(raw.slice(0, emitLength));
 }
 
 function appendAndDrain(
@@ -587,10 +568,15 @@ function appendAndDrain(
   isStopSignal: boolean
 ): string {
   const buffers = store.get(index);
-  state.append(buffers, field, ownText);
-  if (!isStopSignal && state.bufferedBytes() > state.maxBufferedBytes)
-    return drainOverflow(state, buffers, field);
-  return drainWindow(state, buffers, field, isStopSignal);
+  const continuation = state.overflow.consume(buffers, field, ownText);
+  state.append(buffers, field, continuation.remaining);
+  const emitted =
+    !isStopSignal && state.bufferedBytes() > state.maxBufferedBytes
+      ? drainOverflow(state, buffers, field)
+      : drainWindow(state, buffers, field, isStopSignal);
+  if (state.bufferedBytes() > state.maxBufferedBytes)
+    throw new Error("[PII] Credential stream buffer limit exceeded");
+  return continuation.emitted + emitted;
 }
 
 function flushRemainingByShape(
@@ -631,21 +617,9 @@ export function createCredentialSseTransform(
   const track = (before: string, after: string) => {
     bufferedBytes += after.length - before.length;
   };
-  const store = createChoiceBufferStore(maxBufferedChoices, (evicted, into) => {
-    for (const field of [
-      "content",
-      "reasoning",
-      "reasoning_content",
-      "toolArgs",
-      "partialJson",
-    ] as const) {
-      if (evicted[field]) {
-        track(evicted[field], "");
-        into[field] += evicted[field];
-      }
-    }
-  });
+  const store = createChoiceBufferStore(maxBufferedChoices);
   const state: DrainState = {
+    overflow: new CredentialOverflow(),
     windowSize,
     maxBufferedBytes,
     bufferedBytes: () => bufferedBytes,
@@ -687,7 +661,7 @@ export function createCredentialSseTransform(
   ): string => {
     const field = bufferField(category, fieldName);
     if (isSnapshot) return redactOutsideDataUrls(text);
-    return appendAndDrain(state, store, field, index, redactOutsideDataUrls(text), isStopSignal);
+    return appendAndDrain(state, store, field, index, text, isStopSignal);
   };
 
   return createSseTextTransform(processor, onFlush, undefined, { processToolArgs: true });

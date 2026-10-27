@@ -43,9 +43,11 @@ async function exerciseChain(tag: string) {
   const key = "sk-" + "ABCD".repeat(12);
   const a = `request ${tag} key ${key} end`;
   const b = `request ${tag} email fixture@example.com end`;
-  const keyCut = a.indexOf(key) + 2;
+  const keyCut = a.indexOf(key) + 25;
   const emailCut = b.indexOf("fixture@") + "fixture@".length;
-  const args = JSON.stringify({ command: "echo safe 🦜 ".repeat(400) });
+  const args = JSON.stringify({ command: "echo safe 🦜 ".repeat(400), credential: key });
+  const argsCut = args.indexOf(key) + 25;
+  const expectedArgs = args.replace(key, "[REDACTED:openai]");
   const chunks = [
     frame({
       choices: [
@@ -60,7 +62,7 @@ async function exerciseChain(tag: string) {
               {
                 index: 0,
                 id: "call-fixture",
-                function: { name: "terminal", arguments: args.slice(0, 1300) },
+                function: { name: "terminal", arguments: args.slice(0, argsCut) },
               },
             ],
           },
@@ -74,7 +76,7 @@ async function exerciseChain(tag: string) {
           delta: {
             reasoning: a.slice(keyCut),
             reasoning_content: b.slice(emailCut),
-            tool_calls: [{ index: 0, function: { arguments: args.slice(1300) } }],
+            tool_calls: [{ index: 0, function: { arguments: args.slice(argsCut) } }],
           },
         },
       ],
@@ -138,8 +140,11 @@ async function exerciseChain(tag: string) {
   );
   assert.equal(deltas.map((d) => d.content ?? "").join(""), "ready");
   const calls = deltas.flatMap((d) => d.tool_calls ?? []);
-  assert.equal(calls.map((c) => c.function.arguments).join(""), args);
-  assert.deepEqual(JSON.parse(calls.map((c) => c.function.arguments).join("")), JSON.parse(args));
+  assert.equal(calls.map((c) => c.function.arguments).join(""), expectedArgs);
+  assert.deepEqual(
+    JSON.parse(calls.map((c) => c.function.arguments).join("")),
+    JSON.parse(expectedArgs)
+  );
   assert.equal(calls.filter((c) => c.id).length, 1);
   assert.equal(calls.filter((c) => c.function.name).length, 1);
   assert.equal(deltas.filter((d) => d.role).length, 1);
