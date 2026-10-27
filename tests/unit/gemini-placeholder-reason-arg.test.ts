@@ -167,3 +167,25 @@ test("non-streaming gemini -> claude gives the tool_use an empty input", () => {
   assert.equal(toolUse.name, "TaskList");
   assert.deepEqual(toolUse.input, {});
 });
+
+test("strips the synthetic reason inside array items and keeps an unchanged array by identity", () => {
+  const tools = [
+    {
+      name: "Batch",
+      description: "Array of free-form objects",
+      input_schema: {
+        type: "object",
+        properties: { jobs: { type: "array", items: { type: "object", properties: {} } } },
+        required: ["jobs"],
+      },
+    },
+  ];
+  const args = { jobs: [{ reason: "a" }, {}, { reason: "b" }] };
+  assert.deepEqual(stripGeminiPlaceholderArgs("Batch", args, tools), { jobs: [{}, {}, {}] });
+  assert.deepEqual(args.jobs, [{ reason: "a" }, {}, { reason: "b" }]);
+
+  const untouched = { jobs: [{}, {}] };
+  const result = stripGeminiPlaceholderArgs("Batch", untouched, tools) as typeof untouched;
+  assert.equal(result, untouched);
+  assert.equal(result.jobs, untouched.jobs);
+});

@@ -76,19 +76,22 @@ function isPlaceholderProperties(properties: JsonRecord): boolean {
   );
 }
 
+/** Array arm of stripAt(): each item against `items`; a copy only when an item changed. */
+function stripArrayItems(itemsSchema: unknown, value: unknown[]): unknown[] {
+  if (!isRecord(itemsSchema)) return value;
+  let changed = false;
+  const next = value.map((item) => {
+    const stripped = stripAt(itemsSchema, item);
+    if (stripped !== item) changed = true;
+    return stripped;
+  });
+  return changed ? next : value;
+}
+
 /** Walk `value` alongside the sent schema; returns a copy only where something was removed. */
 function stripAt(schema: unknown, value: unknown): unknown {
   if (!isRecord(schema)) return value;
-  if (Array.isArray(value)) {
-    if (!isRecord(schema.items)) return value;
-    let changed = false;
-    const next = value.map((item) => {
-      const stripped = stripAt(schema.items, item);
-      if (stripped !== item) changed = true;
-      return stripped;
-    });
-    return changed ? next : value;
-  }
+  if (Array.isArray(value)) return stripArrayItems(schema.items, value);
   if (!isRecord(value) || !isRecord(schema.properties)) return value;
 
   const properties = schema.properties;
