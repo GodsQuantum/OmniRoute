@@ -33,3 +33,10 @@ export async function fetchDashboardConnections<T = Record<string, unknown>>(
   const data = await response.json();
   return (data?.connections || []) as T[];
 }
+
+/** i18n keys (usage namespace) for the empty quota card: auth-required vs. truly no connections. */
+export function emptyQuotaCardKeys(authRequired: boolean) {
+  return authRequired
+    ? { title: "quotaAuthRequired", hint: "quotaAuthRequiredHint" }
+    : { title: "noProviders", hint: "connectProvidersForQuota" };
+}

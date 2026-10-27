@@ -39,7 +39,11 @@ import { formatAutoRefreshCountdown } from "./formatters";
 import { translateUsageOrFallback, type UsageTranslationValues } from "./i18nFallback";
 import { compareTr } from "@/shared/utils/turkishText";
 import { fetchWithTimeout } from "@/shared/utils/fetchTimeout";
-import { ConnectionsAuthError, fetchDashboardConnections } from "./fetchConnections";
+import {
+  ConnectionsAuthError,
+  emptyQuotaCardKeys,
+  fetchDashboardConnections,
+} from "./fetchConnections";
 
 // Bound the two first-paint requests so a stalled connection cannot wedge
 // `initialLoading` on `true` and freeze the quota page on its skeleton forever
@@ -849,16 +853,13 @@ export default function ProviderLimits({
   }
 
   if (sortedConnections.length === 0) {
+    const emptyCard = emptyQuotaCardKeys(authRequired);
     return (
       <Card padding="lg">
         <div className="text-center py-12">
           <Icon name="cloud_off" size={64} className="opacity-15" />
-          <h3 className="mt-4 text-lg font-semibold text-text-main">
-            {authRequired ? t("quotaAuthRequired") : t("noProviders")}
-          </h3>
-          <p className="mt-2 text-sm text-text-muted max-w-[400px] mx-auto">
-            {authRequired ? t("quotaAuthRequiredHint") : t("connectProvidersForQuota")}
-          </p>
+          <h3 className="mt-4 text-lg font-semibold text-text-main">{t(emptyCard.title)}</h3>
+          <p className="mt-2 text-sm text-text-muted max-w-[400px] mx-auto">{t(emptyCard.hint)}</p>
         </div>
       </Card>
     );
