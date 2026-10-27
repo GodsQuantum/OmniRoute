@@ -747,6 +747,68 @@ test("an unlinked run is preserved if another open PR reuses its head before can
   assert.match(result.stderr, /run 343 became ambiguous.*open PR #77/i);
 });
 
+test("an unlinked run is preserved if the closed PR reopens before cancellation", async () => {
+  let openPrReads = 0;
+  const result = await runCli(({ method, path }) => {
+    if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
+      return { body: pullRequest() };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) {
+      openPrReads++;
+      return { body: openPrReads === 1 ? [] : [pullRequest({ state: "open" })] };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
+      return { body: { workflow_runs: [run({ id: 344 })] } };
+    }
+    if (method === "POST") return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/344")) {
+      return { body: run({ id: 344, status: "completed", conclusion: "cancelled" }) };
+    }
+    return { status: 404 };
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.equal(
+    result.requests.some((request) => request.method === "POST"),
+    false
+  );
+  assert.match(result.stderr, /run 344 became ambiguous.*open PR #42/i);
+});
+
+test("an unlinked run is preserved when an open PR lacks repository identity", async () => {
+  const result = await runCli(({ method, path }) => {
+    if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
+      return { body: pullRequest() };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) {
+      return {
+        body: [
+          pullRequest({
+            number: 77,
+            state: "open",
+            head: { ref: "fix/thing", sha: "new-head" },
+          }),
+        ],
+      };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
+      return { body: { workflow_runs: [run({ id: 345 })] } };
+    }
+    if (method === "POST") return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/345")) {
+      return { body: run({ id: 345, status: "completed", conclusion: "cancelled" }) };
+    }
+    return { status: 404 };
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.equal(
+    result.requests.some((request) => request.method === "POST"),
+    false
+  );
+  assert.match(result.stderr, /checking open PRs returned ambiguous PR metadata/i);
+});
+
 test("a PR reopened after normal 202 is preserved without force-cancel", async () => {
   let prReads = 0;
   const result = await runCli(({ method, path }) => {
@@ -814,6 +876,35 @@ test("unlinked ownership is rechecked before force-cancel", async () => {
   assert.match(result.stderr, /run 36 became ambiguous.*open PR #77/i);
 });
 
+test("the closed PR reopening during force ownership recheck preserves the run", async () => {
+  let openPrReads = 0;
+  const result = await runCli(({ method, path }) => {
+    if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
+      return { body: pullRequest() };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) {
+      openPrReads++;
+      return { body: openPrReads < 3 ? [] : [pullRequest({ state: "open" })] };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
+      return { body: { workflow_runs: [run({ id: 347 })] } };
+    }
+    if (method === "POST" && path.endsWith("/347/cancel")) return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/347")) {
+      return { body: run({ id: 347, status: "queued" }) };
+    }
+    if (method === "POST" && path.endsWith("/347/force-cancel")) return { status: 202 };
+    return { status: 404 };
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.equal(
+    result.requests.some((request) => request.path.endsWith("/347/force-cancel")),
+    false
+  );
+  assert.match(result.stderr, /run 347 became ambiguous.*open PR #42/i);
+});
+
 test("changed run metadata is rejected before force-cancel", async () => {
   const result = await runCli(({ method, path }) => {
     if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
@@ -839,6 +930,73 @@ test("changed run metadata is rejected before force-cancel", async () => {
     false
   );
   assert.match(result.stderr, /run 37 ownership became ambiguous/i);
+});
+
+test("a terminal readback with a different run ID cannot satisfy the target", async () => {
+  const result = await runCli(({ method, path }) => {
+    if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
+      return { body: pullRequest() };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) return { body: [] };
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
+      return { body: { workflow_runs: [run({ id: 346, pull_requests: [{ number: 42 }] })] } };
+    }
+    if (method === "POST" && path.endsWith("/346/cancel")) return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/346")) {
+      return {
+        body: run({
+          id: 777,
+          status: "completed",
+          conclusion: "cancelled",
+          pull_requests: [{ number: 42 }],
+        }),
+      };
+    }
+    return { status: 404 };
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.doesNotMatch(result.stdout, /terminal-confirmed/);
+  assert.equal(
+    result.requests.some((request) => request.path.endsWith("/force-cancel")),
+    false
+  );
+  assert.match(result.stderr, /run 346 readback returned mismatched id 777/i);
+});
+
+test("an active readback with a different run ID cannot redirect force-cancel", async () => {
+  const result = await runCli(({ method, path }) => {
+    if (method === "GET" && path === `/repos/${REPO}/pulls/42`) {
+      return { body: pullRequest() };
+    }
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/pulls?`)) return { body: [] };
+    if (method === "GET" && path.startsWith(`/repos/${REPO}/actions/runs?`)) {
+      return { body: { workflow_runs: [run({ id: 348, pull_requests: [{ number: 42 }] })] } };
+    }
+    if (method === "POST" && path.endsWith("/348/cancel")) return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/348")) {
+      return { body: run({ id: 777, status: "queued", pull_requests: [{ number: 42 }] }) };
+    }
+    if (method === "POST" && path.endsWith("/777/force-cancel")) return { status: 202 };
+    if (method === "GET" && path.endsWith("/actions/runs/777")) {
+      return {
+        body: run({
+          id: 777,
+          status: "completed",
+          conclusion: "cancelled",
+          pull_requests: [{ number: 42 }],
+        }),
+      };
+    }
+    return { status: 404 };
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.equal(
+    result.requests.some((request) => request.path.endsWith("/force-cancel")),
+    false
+  );
+  assert.match(result.stderr, /run 348 readback returned mismatched id 777/i);
 });
 
 for (const status of [403, 500]) {
