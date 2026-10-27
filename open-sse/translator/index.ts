@@ -11,6 +11,7 @@ import {
 import { filterToOpenAIFormat } from "./helpers/openaiHelper.ts";
 import {
   providerHonorsOpenAIFormatCacheControl,
+  providerAcceptsPromptCacheBreakpoint,
   resolveConnectionCacheOverride,
 } from "../utils/cacheControlPolicy.ts";
 import {
@@ -543,9 +544,13 @@ export function translateRequest(
           const preserveCacheControl =
             options?.preserveCacheControl === true &&
             providerHonorsOpenAIFormatCacheControl(provider, connectionCacheOverride);
+          // Routed provider id lets claudeToOpenAIRequest keep service_tier only for
+          // targets that accept it.
+          const hasStep1Provider = provider != null;
           const step1Credentials =
             options?.copilotClient ||
             hasTargetHint ||
+            hasStep1Provider ||
             preserveCacheControl ||
             preserveResponsesReasoning ||
             isGlmFamilyUpstream
@@ -553,6 +558,7 @@ export function translateRequest(
                   ...(credentials && typeof credentials === "object" ? credentials : {}),
                   ...(options?.copilotClient ? { _copilotClient: true } : {}),
                   ...(hasTargetHint ? { _targetFormat: targetFormat } : {}),
+                  ...(hasStep1Provider ? { _provider: provider } : {}),
                   ...(preserveCacheControl ? { _preserveCacheControl: true } : {}),
                   ...(preserveResponsesReasoning ? { _preserveReasoningContent: true } : {}),
                   ...(isGlmFamilyUpstream ? { _ensureUserTurn: true } : {}),
@@ -661,6 +667,7 @@ export function translateRequest(
       preserveCacheControl:
         options?.preserveCacheControl === true &&
         providerHonorsOpenAIFormatCacheControl(provider, connectionCacheOverride),
+      preservePromptCacheBreakpoint: providerAcceptsPromptCacheBreakpoint(provider),
       // #4849 regression guard: keep client reasoning_content for replay providers.
       preserveReasoningContent: isReasoner,
       // Per-provider/model preserveVideoUrl flag from compat overrides.
