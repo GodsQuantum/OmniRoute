@@ -52,7 +52,7 @@ brez ranljivosti.
 
 Korenska zaklepna datoteka po nadgradnji pripetega razvojnega orodja promptfoo ne vključuje več paketa `extract-zip` ali povezave odvisnosti do njega. S tem je opuščena predhodno sprejeta veriga `promptfoo` → `@openai/codex-security` → `extract-zip`, spremljana v #14482. Regresijska preverjanja v `tests/unit/extract-zip-14482-exposure.test.ts` preprečujejo njeno ponovno uvedbo in ohranjajo prepoved uvozov iz produkcijske kode.
 
-Trenutni popravek odvisnosti omejuje tudi preglasitve združljivosti na odjemalca MSAL storitve Azure Identity, odjemalca FTP paketa get-uri in odvisnost Zod kompleta OpenCode v1 SDK. Pridobivanje žetonov Azure in pridobivanje prek FTP sta preizkušena z nadzorovanimi prenosi; oba paketa OpenCode izvajata lastne zbirke za gradnjo in preizkušanje. Števila varnostnih opozoril v registru so meritve v določenem trenutku in se lahko po potrditvi zaklepne datoteke spremenijo.
+Trenutno popravilo odvisnosti vključuje preglasitve združljivosti za odjemalca MSAL storitve Azure identity, odjemalca FTP paketa get-uri in Zod v obeh paketih vtičnika OpenCode. Pridobivanje žetonov Azure in prenos prek FTP sta preizkušena z nadzorovanimi transportnimi mehanizmi; oba paketa OpenCode izvajata lastna sklopa za gradnjo in preizkušanje. Števila varnostnih opozoril registra so meritve v določenem trenutku in se lahko po potrditvi datoteke zaklepa spremenijo.
 
 ## Zaostanek: Opozorilo Scorecard → blokiranje
 

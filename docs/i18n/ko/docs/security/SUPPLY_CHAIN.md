@@ -35,7 +35,7 @@ osv와 Trivy는 **지속적으로 증가하는** CVE 데이터베이스를 기�
 
 고정된 promptfoo 개발 도구를 업그레이드한 후 루트 잠금 파일에는 더 이상 `extract-zip` 또는 이를 가리키는 종속성 연결이 포함되지 않습니다. 이로써 #14482에서 추적된, 이전에 허용되었던 `promptfoo` → `@openai/codex-security` → `extract-zip` 체인이 폐기되었습니다. `tests/unit/extract-zip-14482-exposure.test.ts`의 회귀 검사는 이 체인이 다시 도입되는 것을 차단하며, 프로덕션 코드에서의 가져오기에 대한 금지를 유지합니다.
 
-현재 종속성 수정에서는 호환성 재정의의 범위도 Azure identity의 MSAL 클라이언트, get-uri의 FTP 클라이언트, OpenCode v1 SDK의 Zod 종속성으로 제한합니다. Azure 토큰 획득 및 FTP 가져오기는 제어된 전송 계층을 사용하여 테스트되며, 두 OpenCode 패키지는 각각 자체 빌드 및 테스트 스위트를 실행합니다. 레지스트리 보안 권고 수는 특정 시점의 측정값이며, 잠금 파일이 커밋된 후 변경될 수 있습니다.
+현재 종속성 수정에는 Azure ID의 MSAL 클라이언트, get-uri의 FTP 클라이언트, 그리고 두 OpenCode 플러그인 패키지의 Zod에 대한 호환성 오버라이드가 포함되어 있습니다. Azure 토큰 획득과 FTP 검색은 제어된 전송 방식으로 테스트되며, 두 OpenCode 패키지는 각각 자체 빌드 및 테스트 스위트를 실행합니다. 레지스트리 보안 권고 수는 특정 시점의 측정값이며 lockfile이 커밋된 후 변경될 수 있습니다.
 
 ## 백로그: Scorecard 권고 → 차단
 

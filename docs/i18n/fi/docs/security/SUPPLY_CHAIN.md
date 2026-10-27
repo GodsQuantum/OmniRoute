@@ -49,7 +49,7 @@ ja puuttuva näyttö kuvasta eivät voi vahvistaa kuvaa puhtaaksi.
 
 Juuritason lockfile ei enää sisällä `extract-zip`-riippuvuutta tai siihen johtavaa riippuvuussuhdetta kiinnitetyn promptfoo-kehitystyökalun päivittämisen jälkeen. Tämä poistaa käytöstä aiemmin hyväksytyn ketjun `promptfoo` → `@openai/codex-security` → `extract-zip`, jota seurattiin ongelmassa #14482. Regressiotarkistukset tiedostossa `tests/unit/extract-zip-14482-exposure.test.ts` estävät sen palauttamisen ja säilyttävät kiellon tuoda sitä tuotantokoodiin.
 
-Nykyinen riippuvuuksien korjaus rajaa yhteensopivuuden ohitukset myös Azure Identityn MSAL-asiakasohjelmaan, get-urin FTP-asiakasohjelmaan ja OpenCode v1 SDK:n Zod-riippuvuuteen. Azure-tunnuksen hankinta ja FTP-nouto testataan hallituilla siirtokerroksilla; molemmat OpenCode-paketit suorittavat omat koonti- ja testikokonaisuutensa. Rekisterin tietoturvailmoitusten lukumäärät ovat tiettynä ajankohtana tehtyjä mittauksia, ja ne voivat muuttua lockfilen committaamisen jälkeen.
+Nykyinen riippuvuuksien korjaus sisältää yhteensopivuusohitukset Azure Identityn MSAL-asiakasohjelmalle, get-urin FTP-asiakasohjelmalle sekä Zodille molemmissa OpenCode-laajennuspaketeissa. Azure-tunnusten hankinta ja FTP-nouto testataan hallituilla siirtomekanismeilla, ja molemmat OpenCode-paketit suorittavat omat koonti- ja testisarjansa. Rekisterin tietoturvailmoitusten määrät ovat tiettynä ajankohtana tehtyjä mittauksia, ja ne voivat muuttua lukitustiedoston committaamisen jälkeen.
 
 ## Jatkokehitys: Scorecard-neuvonta → estävä
 

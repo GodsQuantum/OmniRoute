@@ -41,7 +41,7 @@ Zorunlu OSV yürütmeleri (`check:vuln-ratchet -- --ratchet`), tarayıcı, rapor
 
 Sabitlenmiş promptfoo geliştirme aracının yükseltilmesinin ardından kök kilit dosyası artık `extract-zip` paketini veya ona yönelik bir bağımlılık bağlantısını içermiyor. Bu değişiklik, #14482 kapsamında izlenen ve daha önce kabul edilmiş olan `promptfoo` → `@openai/codex-security` → `extract-zip` zincirini kullanımdan kaldırıyor. `tests/unit/extract-zip-14482-exposure.test.ts` içindeki regresyon kontrolleri, bu zincirin yeniden eklenmesini engelliyor ve üretim kodundan içe aktarma yasağını sürdürüyor.
 
-Mevcut bağımlılık düzeltmesi ayrıca uyumluluk geçersiz kılmalarını Azure identity'nin MSAL istemcisi, get-uri'nin FTP istemcisi ve OpenCode v1 SDK'sının Zod bağımlılığıyla sınırlandırıyor. Azure belirteci edinimi ve FTP üzerinden veri alma, kontrollü aktarımlarla test ediliyor; her iki OpenCode paketi de kendi derleme ve test paketlerini çalıştırıyor. Kayıt defteri güvenlik bildirimi sayıları, belirli bir zamandaki ölçümlerdir ve kilit dosyası kaydedildikten sonra değişebilir.
+Mevcut bağımlılık düzeltmesi, Azure identity'nin MSAL istemcisi, get-uri'nin FTP istemcisi ve her iki OpenCode eklenti paketindeki Zod için uyumluluk geçersiz kılmaları içerir. Azure belirteci edinimi ve FTP üzerinden alma işlemi, kontrollü taşıma mekanizmalarıyla test edilir; her iki OpenCode paketi de kendi derleme ve test paketlerini çalıştırır. Kayıt defteri güvenlik uyarılarının sayısı, belirli bir andaki ölçümleri temsil eder ve kilit dosyası commit edildikten sonra değişebilir.
 
 ## Bekleyenler: Scorecard danışmanlığı → engelleme
 

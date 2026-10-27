@@ -49,7 +49,7 @@ en ontbrekend bewijs voor de image kunnen niet certificeren dat een image schoon
 
 Het hoofdlockbestand bevat niet langer `extract-zip` of een afhankelijkheidsrelatie ernaartoe na het upgraden van de vastgezette promptfoo-ontwikkelingstool. Hiermee wordt de eerder geaccepteerde keten `promptfoo` → `@openai/codex-security` → `extract-zip`, die in #14482 werd bijgehouden, buiten gebruik gesteld. De regressiecontroles in `tests/unit/extract-zip-14482-exposure.test.ts` wijzen de herintroductie ervan af en handhaven het verbod op imports vanuit productiecode.
 
-De huidige reparatie van afhankelijkheden beperkt compatibiliteitsoverschrijvingen ook tot de MSAL-client van Azure Identity, de FTP-client van get-uri en de Zod-afhankelijkheid van de OpenCode v1-SDK. Het verkrijgen van Azure-tokens en ophalen via FTP worden getest met gecontroleerde transportmechanismen; beide OpenCode-pakketten voeren hun eigen build- en testsuites uit. Aantallen adviezen uit het register zijn momentopnamen en kunnen veranderen nadat het lockbestand is vastgelegd.
+De huidige reparatie van afhankelijkheden omvat compatibiliteitsoverschrijvingen voor de MSAL-client van Azure Identity, de FTP-client van get-uri en Zod in beide OpenCode-pluginpakketten. Het verkrijgen van Azure-tokens en het ophalen via FTP worden getest met gecontroleerde transportmechanismen; beide OpenCode-pakketten voeren hun eigen build- en testsuites uit. De aantallen beveiligingsadviezen in het register zijn momentopnamen en kunnen veranderen nadat het lockbestand is vastgelegd.
 
 ## Backlog: Scorecard-advies → blokkerend
 

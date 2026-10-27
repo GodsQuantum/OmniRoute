@@ -49,7 +49,7 @@ na ushahidi unaokosekana wa taswira haviwezi kuthibitisha kuwa taswira haina udh
 
 Faili kuu ya kufunga matoleo haijumuishi tena `extract-zip` wala kiungo cha utegemezi kinachoielekeza baada ya kusasisha zana ya usanidi ya promptfoo yenye toleo lililobainishwa. Hatua hii inastaafisha mnyororo uliokubaliwa awali wa `promptfoo` → `@openai/codex-security` → `extract-zip` unaofuatiliwa katika #14482. Ukaguzi wa urejeshi katika `tests/unit/extract-zip-14482-exposure.test.ts` unakataa kurejeshwa kwake na unaendeleza marufuku ya uingizaji kutoka kwenye msimbo wa uzalishaji.
 
-Marekebisho ya sasa ya utegemezi pia yanaweka mabadiliko ya uoanifu ndani ya mteja wa MSAL wa Azure identity, mteja wa FTP wa get-uri, na utegemezi wa Zod wa SDK ya OpenCode v1. Upatikanaji wa tokeni za Azure na urejeshaji kupitia FTP hujaribiwa kwa usafirishaji unaodhibitiwa; vifurushi vyote viwili vya OpenCode huendesha taratibu vyake vya uundaji na majaribio. Idadi za tahadhari za sajili ni vipimo vya wakati fulani na zinaweza kubadilika baada ya faili ya kufunga matoleo kuwasilishwa.
+Urekebishaji wa sasa wa vitegemezi unajumuisha ubatilishaji wa uoanifu kwa kiteja cha MSAL cha Azure identity, kiteja cha FTP cha get-uri, na Zod katika vifurushi vyote viwili vya programu-jalizi vya OpenCode. Upatikanaji wa tokeni ya Azure na urejeshaji wa FTP hujaribiwa kwa kutumia njia za usafirishaji zinazodhibitiwa; vifurushi vyote viwili vya OpenCode huendesha mchakato wao wenyewe wa ujenzi na majaribio. Idadi za tahadhari za rejista ni vipimo vya wakati fulani na zinaweza kubadilika baada ya lockfile kuwasilishwa.
 
 ## Backlog: Ushauri wa Scorecard → kuzuia
 

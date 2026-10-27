@@ -53,11 +53,7 @@ actualizarea instrumentului de dezvoltare promptfoo fixat la o anumită versiune
 Verificările de regresie din `tests/unit/extract-zip-14482-exposure.test.ts` resping
 reintroducerea acestuia și mențin interdicția importurilor din codul de producție.
 
-Remedierea actuală a dependențelor limitează, de asemenea, suprascrierile de compatibilitate la clientul
-MSAL al Azure Identity, clientul FTP al get-uri și dependența Zod a SDK-ului OpenCode v1. Obținerea
-tokenurilor Azure și preluarea prin FTP sunt testate cu mecanisme de transport controlate; ambele pachete OpenCode
-rulează propriile suite de compilare și testare. Numărul avertismentelor din registru reprezintă măsurători
-la un anumit moment și se poate modifica după comiterea fișierului de blocare.
+Remedierea actuală a dependențelor include suprascrieri de compatibilitate pentru clientul MSAL al Azure Identity, clientul FTP al get-uri și Zod în ambele pachete de pluginuri OpenCode. Obținerea tokenurilor Azure și preluarea prin FTP sunt testate cu mecanisme de transport controlate; ambele pachete OpenCode rulează propriile suite de compilare și testare. Numărul avertismentelor din registru reprezintă măsurători la un moment dat și se poate modifica după includerea fișierului lockfile într-un commit.
 
 ## Restanțe: Avertisment Scorecard → blocare
 

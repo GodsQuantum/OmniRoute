@@ -41,7 +41,7 @@ Trivy ደረጃም የተሳካ ልኬትን ይፈልጋል፦ የማይገኙ 
 
 የተወሰነውን promptfoo የልማት መሣሪያ ካሻሻልን በኋላ፣ ዋናው lockfile ከእንግዲህ `extract-zip`ን ወይም ወደ እሱ የሚያመራ የጥገኝነት ግንኙነትን አያካትትም። ይህም ከዚህ ቀደም ተቀባይነት ያገኘውን እና በ#14482 የተከታተለውን `promptfoo` → `@openai/codex-security` → `extract-zip` ሰንሰለት ከአገልግሎት ያወጣል። በ`tests/unit/extract-zip-14482-exposure.test.ts` ውስጥ ያሉት የድጋሚ ስህተት ማረጋገጫዎች ይህ ሰንሰለት እንደገና እንዳይገባ ይከለክላሉ፣ እንዲሁም ከምርት ኮድ ማስመጣት ላይ ያለውን ክልከላ ያስቀጥላሉ።
 
-የአሁኑ የጥገኝነት ማስተካከያ የተኳኋኝነት ማለፊያዎችን በAzure identity የMSAL ደንበኛ፣ በget-uri የFTP ደንበኛ እና በOpenCode v1 SDK የZod ጥገኝነት ብቻ ላይ ይገድባል። የAzure token ማግኘት እና የFTP ሰርስሮ ማውጣት ቁጥጥር በተደረገባቸው የማጓጓዣ ዘዴዎች ይፈተናሉ፤ ሁለቱም የOpenCode ጥቅሎች የራሳቸውን የግንባታ እና የሙከራ ስብስቦች ያስኬዳሉ። የregistry የማስጠንቀቂያ ብዛቶች በአንድ የጊዜ ነጥብ ላይ የተወሰዱ መለኪያዎች ሲሆኑ፣ lockfile ከተመዘገበ በኋላ ሊለወጡ ይችላሉ።
+የአሁኑ የጥገኝነት ጥገና ለAzure identity MSAL ደንበኛ፣ ለget-uri FTP ደንበኛ እና በሁለቱም OpenCode plugin ፓኬጆች ውስጥ ላለው Zod የተኳኋኝነት override-ዎችን ያካትታል። የAzure token ማግኘት እና የFTP ሰርስሮ ማውጣት ቁጥጥር በሚደረግባቸው ማጓጓዣዎች ተፈትነዋል፤ ሁለቱም OpenCode ፓኬጆች የየራሳቸውን build እና test suites ያስኬዳሉ። የRegistry advisory ብዛቶች በአንድ የጊዜ ነጥብ ላይ የተደረጉ መለኪያዎች ሲሆኑ፣ lockfile ከተመዘገበ በኋላ ሊለወጡ ይችላሉ።
 
 ## የኋላ መዝገብ: የስኮርካርድ ማስጠንቀቂያ → አጋጅ
 

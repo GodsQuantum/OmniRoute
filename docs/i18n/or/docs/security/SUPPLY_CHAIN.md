@@ -54,11 +54,7 @@ Trivy ପଦକ୍ଷେପ ପାଇଁ ମଧ୍ୟ ଏକ ସଫଳ ମାପ
 `tests/unit/extract-zip-14482-exposure.test.ts`ରେ ଥିବା ରିଗ୍ରେସନ୍ ଯାଞ୍ଚଗୁଡ଼ିକ ଏହାର
 ପୁନଃପ୍ରବେଶକୁ ପ୍ରତ୍ୟାଖ୍ୟାନ କରେ ଏବଂ ପ୍ରୋଡକ୍ସନ୍ କୋଡ୍ରୁ ଇମ୍ପୋର୍ଟ ଉପରେ ନିଷେଧକୁ ବଜାୟ ରଖେ।
 
-ବର୍ତ୍ତମାନର ନିର୍ଭରଶୀଳତା ମରାମତି, ସୁସଙ୍ଗତତା ଓଭରରାଇଡ୍ଗୁଡ଼ିକୁ Azure identityର
-MSAL client, get-uriର FTP client ଏବଂ OpenCode v1 SDKର Zod ନିର୍ଭରଶୀଳତା ପର୍ଯ୍ୟନ୍ତ ସୀମିତ କରେ। Azure token
-ଅଧିଗ୍ରହଣ ଏବଂ FTP ପୁନରୁଦ୍ଧାରକୁ ନିୟନ୍ତ୍ରିତ transport ସହିତ ପରୀକ୍ଷା କରାଯାଏ; ଉଭୟ OpenCode
-package ନିଜ ନିଜ build ଏବଂ test suite ଚଲାନ୍ତି। Registry advisory ସଂଖ୍ୟାଗୁଡ଼ିକ ଏକ ନିର୍ଦ୍ଦିଷ୍ଟ
-ସମୟର ମାପ ଏବଂ lockfile commit ହେବା ପରେ ପରିବର୍ତ୍ତିତ ହୋଇପାରେ।
+ବର୍ତ୍ତମାନର ନିର୍ଭରଶୀଳତା ମରାମତିରେ Azure identityର MSAL client, get-uriର FTP client ଏବଂ ଉଭୟ OpenCode plugin packageରେ Zod ପାଇଁ ସୁସଙ୍ଗତତା override ଅନ୍ତର୍ଭୁକ୍ତ। Azure token ଅଧିଗ୍ରହଣ ଏବଂ FTP ପୁନରୁଦ୍ଧାରକୁ ନିୟନ୍ତ୍ରିତ transport ସହିତ ପରୀକ୍ଷା କରାଯାଇଛି; ଉଭୟ OpenCode package ନିଜ ନିଜ build ଏବଂ test suite ଚଳାନ୍ତି। Registry advisory ସଂଖ୍ୟାଗୁଡ଼ିକ ଏକ ନିର୍ଦ୍ଦିଷ୍ଟ ସମୟର ମାପ ଏବଂ lockfile commit ହେବା ପରେ ପରିବର୍ତ୍ତିତ ହୋଇପାରେ।
 
 ## ବ୍ୟାକଲଗ୍: ସ୍କୋରକାର୍ଡ ପରାମର୍ଶ → ଅବରୋଧ
 

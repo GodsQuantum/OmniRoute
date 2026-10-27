@@ -45,7 +45,7 @@ Trivy အဆင့်သည်လည်း အောင်မြင်သော 
 
 ပင်မ lockfile တွင် သတ်မှတ်ထားသော promptfoo development tool ကို အဆင့်မြှင့်တင်ပြီးနောက် `extract-zip` သို့မဟုတ် ၎င်းထံသို့ ချိတ်ဆက်ထားသော dependency edge မပါဝင်တော့ပါ။ ဤပြောင်းလဲမှုသည် #14482 တွင် ခြေရာခံထားပြီး ယခင်က လက်ခံထားသော `promptfoo` → `@openai/codex-security` → `extract-zip` ချိတ်ဆက်မှုကွင်းဆက်ကို ရပ်ဆိုင်းလိုက်ခြင်းဖြစ်သည်။ `tests/unit/extract-zip-14482-exposure.test.ts` ရှိ regression စစ်ဆေးမှုများသည် ၎င်းကို ပြန်လည်ထည့်သွင်းခြင်းအား တားဆီးပြီး production code မှ import ပြုလုပ်ခြင်းကို ပိတ်ပင်ထားမှုအား ဆက်လက်ထိန်းသိမ်းထားသည်။
 
-လက်ရှိ dependency ပြင်ဆင်မှုသည် compatibility override များကို Azure identity ၏ MSAL client၊ get-uri ၏ FTP client နှင့် OpenCode v1 SDK ၏ Zod dependency တို့အတွက်သာ ကန့်သတ်ထားသည်။ Azure token ရယူခြင်းနှင့် FTP retrieval ကို ထိန်းချုပ်ထားသော transport များဖြင့် စမ်းသပ်ထားပြီး OpenCode package နှစ်ခုစလုံးသည် ၎င်းတို့၏ကိုယ်ပိုင် build နှင့် test suite များကို လုပ်ဆောင်ကြသည်။ Registry advisory အရေအတွက်များသည် အချိန်ကာလတစ်ခုရှိ တိုင်းတာချက်များသာဖြစ်ပြီး lockfile ကို commit ပြုလုပ်ပြီးနောက် ပြောင်းလဲနိုင်သည်။
+လက်ရှိ dependency ပြုပြင်မှုတွင် Azure identity ၏ MSAL client၊ get-uri ၏ FTP client နှင့် OpenCode plugin package နှစ်ခုလုံးရှိ Zod တို့အတွက် လိုက်ဖက်ညီမှုဆိုင်ရာ override များ ပါဝင်သည်။ Azure token ရယူမှုနှင့် FTP မှ ပြန်လည်ရယူမှုတို့ကို ထိန်းချုပ်ထားသော transport များဖြင့် စမ်းသပ်ထားပြီး OpenCode package နှစ်ခုလုံးသည် ၎င်းတို့၏ ကိုယ်ပိုင် build နှင့် test suite များကို လုပ်ဆောင်သည်။ Registry advisory အရေအတွက်များသည် သတ်မှတ်ထားသော အချိန်တစ်ခုရှိ တိုင်းတာချက်များဖြစ်ပြီး lockfile ကို commit လုပ်ပြီးနောက် ပြောင်းလဲနိုင်သည်။
 
 ## Backlog: Scorecard အကြံပြုချက် → ပိတ်ဆို့ခြင်း
 

@@ -54,11 +54,7 @@ Fáìlì ìtìpa gbòǹgbò kò ní `extract-zip` mọ́ tàbí ọ̀nà ìgbẹ
 Àwọn àyẹ̀wò ìpadàsẹ́yìn nínú `tests/unit/extract-zip-14482-exposure.test.ts` kọ
 àtúnmú un wọlé, wọ́n sì pa ìfòfin sí àwọn ìgbéwọlé láti inú kóòdù ìṣelọpọ mọ́.
 
-Àtúnṣe ìgbẹ́kẹ̀lé lọ́wọ́lọ́wọ́ tún fi ààlà àwọn ìkọjá ìbámu sí oníbàárà MSAL ti Azure identity,
-oníbàárà FTP ti get-uri, àti ìgbẹ́kẹ̀lé Zod ti OpenCode v1 SDK. A dán gbígba token Azure
-àti gbígba ohun nípasẹ̀ FTP wò pẹ̀lú àwọn ohun èlò ìgbékalẹ̀ tí a ṣàkóso; àwọn package OpenCode
-méjèèjì ń ṣiṣẹ́ àkójọpọ̀ àti àwọn àkójọpọ̀ ìdánwò tiwọn. Àwọn iye ìkìlọ̀ registry jẹ́ òṣùwọ̀n
-ní àkókò kan pàtó, wọ́n sì lè yí padà lẹ́yìn tí a bá ti commit fáìlì ìtìpa náà.
+Àtúnṣe àwọn ìgbẹ́kẹ̀lé lọ́wọ́lọ́wọ́ ní àwọn override fún ìbámu fún oníbàárà MSAL ti Azure identity, oníbàárà FTP ti get-uri, àti Zod nínú àwọn package plugin OpenCode méjèèjì. A dán gbígba token Azure àti ìgbàpadà FTP wò pẹ̀lú àwọn transport tí a ṣàkóso; àwọn package OpenCode méjèèjì sì ń ṣiṣẹ́ àwọn ètò build àti test tiwọn. Àwọn iye ìkìlọ̀ registry jẹ́ ìwọ̀n ní àkókò kan pàtó, wọ́n sì lè yí padà lẹ́yìn tí a bá ti commit lockfile náà.
 
 ## Àtòjọ Iṣẹ́ Tó Kù: Ìkìlọ̀ Scorecard → dídènà
 

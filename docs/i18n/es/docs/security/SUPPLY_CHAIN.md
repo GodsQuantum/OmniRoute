@@ -54,11 +54,7 @@ actualizar la herramienta de desarrollo promptfoo fijada. Esto retira la cadena 
 Las comprobaciones de regresión en `tests/unit/extract-zip-14482-exposure.test.ts` rechazan su
 reintroducción y mantienen la prohibición de importaciones desde el código de producción.
 
-La reparación actual de dependencias también limita las sobrescrituras de compatibilidad al
-cliente MSAL de Azure Identity, al cliente FTP de get-uri y a la dependencia Zod del SDK v1 de OpenCode. La
-adquisición de tokens de Azure y la recuperación mediante FTP se prueban con transportes controlados; ambos paquetes de OpenCode
-ejecutan sus propios conjuntos de compilación y pruebas. Los recuentos de avisos del registro son mediciones
-en un momento concreto y pueden cambiar después de confirmar el archivo de bloqueo.
+La reparación actual de dependencias incluye anulaciones de compatibilidad para el cliente MSAL de Azure Identity, el cliente FTP de get-uri y Zod en ambos paquetes de complementos de OpenCode. La adquisición de tokens de Azure y la recuperación mediante FTP se prueban con transportes controlados; ambos paquetes de OpenCode ejecutan sus propios conjuntos de compilación y pruebas. Los recuentos de avisos de seguridad del registro son mediciones realizadas en un momento concreto y pueden cambiar después de confirmar el archivo de bloqueo.
 
 ## Pendiente: Aviso de Scorecard → bloqueo
 

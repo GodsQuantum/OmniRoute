@@ -49,7 +49,7 @@ ná fianaise íomhá atá in easnamh a dheimhniú go bhfuil íomhá glan.
 
 Ní áirítear `extract-zip` ná ciumhais spleáchais chuige sa bhfréamhchomhad glasála a thuilleadh tar éis uasghrádú a dhéanamh ar an uirlis forbartha promptfoo atá feannáilte. Leis seo, cuirtear deireadh leis an slabhra `promptfoo` → `@openai/codex-security` → `extract-zip` a glacadh roimhe seo agus a rianaítear in #14482. Diúltaíonn na seiceálacha aischéimnithe in `tests/unit/extract-zip-14482-exposure.test.ts` dá athabhairt isteach agus coinníonn siad an toirmeasc ar iompórtálacha ó chód táirgthe.
 
-Cuireann an deisiú spleáchais reatha teorainn freisin le sáruithe comhoiriúnachta ionas nach mbaineann siad ach le cliant MSAL d’aitheantas Azure, cliant FTP get-uri, agus spleáchas Zod de chuid OpenCode v1 SDK. Déantar sealbhú chomharthaí Azure agus aisghabháil FTP a thástáil le hiompróirí rialaithe; ritheann an dá phacáiste OpenCode a gcuid sraitheanna tógála agus tástála féin. Is tomhais ag pointe áirithe ama iad comhairimh fógraí comhairleacha na clárlainne agus d’fhéadfaidís athrú tar éis an comhad glasála a chur i dtaisce.
+Áirítear sa deisiú spleáchais reatha sáruithe comhoiriúnachta do chliant MSAL Azure identity, do chliant FTP get-uri, agus do Zod sa dá phacáiste breiseáin OpenCode. Déantar sealbhú comharthaí Azure agus aisghabháil FTP a thástáil le hiompróirí rialaithe; ritheann an dá phacáiste OpenCode a gcuid sraitheanna tógála agus tástála féin. Is tomhais ag pointe áirithe ama iad comhairimh na bhfógraí slándála sa chlárlann agus is féidir leo athrú tar éis an lockfile a chur faoi bhainistiú leaganacha.
 
 ## Cúlra: Comhairle Scorecard → blocáil
 

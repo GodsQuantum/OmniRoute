@@ -60,11 +60,7 @@ kedjan `promptfoo` → `@openai/codex-security` → `extract-zip` som spåras i 
 Regressionstesterna i `tests/unit/extract-zip-14482-exposure.test.ts` förhindrar att det
 återinförs och bibehåller förbudet mot importer från produktionskod.
 
-Den aktuella beroendekorrigeringen begränsar även kompatibilitetsåsidosättningar till Azure identity:s
-MSAL-klient, get-uri:s FTP-klient och OpenCode v1 SDK:s Zod-beroende. Hämtning av Azure-token
-och FTP-hämtning testas med kontrollerade transportmekanismer; båda OpenCode-paketen
-kör sina egna bygg- och testsviter. Antalet säkerhetsrekommendationer i registret är mätvärden
-vid en viss tidpunkt och kan ändras efter att låsfilen har checkats in.
+Den aktuella beroendereparationen inkluderar kompatibilitetsåsidosättningar för Azure Identitys MSAL-klient, get-uris FTP-klient och Zod i båda OpenCode-pluginpaketen. Hämtning av Azure-token och FTP-data testas med kontrollerade transporter. Båda OpenCode-paketen kör sina egna bygg- och testsviter. Antalet säkerhetsrekommendationer i registret är mätvärden från en viss tidpunkt och kan ändras efter att låsfilen har checkats in.
 
 ## Eftersläpning: Scorecard-rådgivning → blockering
 

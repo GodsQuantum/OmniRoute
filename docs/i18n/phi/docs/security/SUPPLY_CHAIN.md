@@ -40,11 +40,7 @@ i-upgrade ang naka-pin na promptfoo development tool. Inireretiro nito ang dati 
 Tinatanggihan ng mga regression check sa `tests/unit/extract-zip-14482-exposure.test.ts` ang
 muling pagpapakilala nito at pinananatili ang pagbabawal sa mga import mula sa production code.
 
-Nililimitahan din ng kasalukuyang pagkukumpuni ng dependency ang mga compatibility override sa
-MSAL client ng Azure identity, FTP client ng get-uri, at Zod dependency ng OpenCode v1 SDK. Sinusubukan
-ang pagkuha ng Azure token at FTP retrieval gamit ang mga kontroladong transport; parehong
-OpenCode package ang nagpapatakbo ng sarili nilang mga build at test suite. Ang mga bilang ng registry
-advisory ay mga pagsukat sa isang partikular na punto ng panahon at maaaring magbago matapos i-commit ang lockfile.
+Kasama sa kasalukuyang pag-aayos ng dependency ang mga compatibility override para sa MSAL client ng Azure identity, FTP client ng get-uri, at Zod sa parehong OpenCode plugin package. Sinusubukan ang pagkuha ng Azure token at pagkuha sa pamamagitan ng FTP gamit ang mga kontroladong transport; parehong nagpapatakbo ang dalawang OpenCode package ng sarili nilang build at test suite. Ang mga bilang ng advisory sa registry ay mga sukat sa isang partikular na sandali at maaaring magbago pagkatapos ma-commit ang lockfile.
 
 ## Backlog: Scorecard advisory → pagharang
 

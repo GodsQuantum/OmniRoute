@@ -56,7 +56,7 @@ ir trūkstami atvaizdo patikros duomenys negali patvirtinti, kad atvaizdas yra �
 
 Atnaujinus fiksuotą „promptfoo“ kūrimo įrankį, šakniniame priklausomybių užrakto faile nebėra `extract-zip` ar į ją vedančio priklausomybės ryšio. Taip pašalinama anksčiau priimta `promptfoo` → `@openai/codex-security` → `extract-zip` grandinė, stebėta #14482. Regresijos patikros faile `tests/unit/extract-zip-14482-exposure.test.ts` neleidžia jos vėl įtraukti ir išlaiko draudimą importuoti ją iš produkcinio kodo.
 
-Dabartinis priklausomybių pataisymas taip pat apriboja suderinamumo perrašymus iki „Azure Identity“ MSAL kliento, „get-uri“ FTP kliento ir „OpenCode v1 SDK“ priklausomybės „Zod“. „Azure“ prieigos raktų gavimas ir duomenų gavimas per FTP tikrinami naudojant kontroliuojamus transportus; abu „OpenCode“ paketai vykdo savo komponavimo ir testavimo rinkinius. Registro saugos įspėjimų skaičiai yra konkretaus laiko momento matavimai ir gali pasikeisti po to, kai priklausomybių užrakto failas įtraukiamas į repozitoriją.
+Dabartinis priklausomybių taisymas apima „Azure Identity“ MSAL kliento, „get-uri“ FTP kliento ir „Zod“ suderinamumo perrašymus abiejuose „OpenCode“ papildinių paketuose. „Azure“ prieigos raktų gavimas ir FTP duomenų gavimas išbandyti naudojant valdomus perdavimo mechanizmus; abu „OpenCode“ paketai vykdo atskirus kūrimo ir testavimo rinkinius. Registro saugos įspėjimų skaičiai yra konkrečiu laiko momentu atlikti matavimai ir gali pasikeisti po užrakto failo patvirtinimo versijų valdymo sistemoje.
 
 ## Atsilikimas: „Scorecard“ patarimas → blokavimas
 

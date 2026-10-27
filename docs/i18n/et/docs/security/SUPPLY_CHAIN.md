@@ -49,7 +49,7 @@ ja puuduvad tõmmise tõendid ei võimalda tõendada, et tõmmis on puhas.
 
 Juur-lukufail ei sisalda pärast fikseeritud versiooniga promptfoo arendustööriista uuendamist enam paketti `extract-zip` ega selleni viivat sõltuvusseost. Sellega kõrvaldatakse varem aktsepteeritud ahel `promptfoo` → `@openai/codex-security` → `extract-zip`, mida jälgiti juhtumis #14482. Regressioonikontrollid failis `tests/unit/extract-zip-14482-exposure.test.ts` takistavad selle uuesti lisamist ja säilitavad keelu importida seda tootmiskoodist.
 
-Praegune sõltuvuste parandus piirab ka ühilduvuse ülekirjutused Azure identity MSAL-kliendi, get-uri FTP-kliendi ja OpenCode v1 SDK Zod-sõltuvusega. Azure'i pääsuloa hankimist ja FTP kaudu allalaadimist testitakse kontrollitud transportidega; mõlemad OpenCode'i paketid käitavad omaenda koostamis- ja testikomplekte. Registri turvanõuannete arvud on konkreetse ajahetke mõõtmistulemused ja võivad pärast lukufaili kinnitamist muutuda.
+Praegune sõltuvuste parandus sisaldab ühilduvuse ülekirjutusi Azure Identity MSAL-i kliendi, get-uri FTP-kliendi ja Zodi jaoks mõlemas OpenCode'i pistikprogrammi paketis. Azure'i tõendi hankimist ja FTP kaudu andmete toomist testitakse kontrollitud transpordikihtidega; mõlemad OpenCode'i paketid käitavad omaenda kooste- ja testikomplekte. Registri turvanõuannete arvud on kindla ajahetke mõõtmistulemused ja võivad pärast lukufaili kinnitamist muutuda.
 
 ## Tööjärjekord: Scorecard'i nõuanne → blokeerimine
 

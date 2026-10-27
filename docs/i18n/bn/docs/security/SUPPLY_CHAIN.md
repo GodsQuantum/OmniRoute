@@ -36,7 +36,7 @@ osv এবং Trivy নির্ভরতাগুলোকে এমন CVE ড
 
 পিন করা promptfoo ডেভেলপমেন্ট টুল আপগ্রেড করার পর root lockfile-এ আর `extract-zip` বা এটির প্রতি কোনো dependency edge অন্তর্ভুক্ত নেই। এর ফলে #14482-এ ট্র্যাক করা পূর্বে গৃহীত `promptfoo` → `@openai/codex-security` → `extract-zip` চেইনটি অবসরপ্রাপ্ত হয়েছে। `tests/unit/extract-zip-14482-exposure.test.ts`-এর regression check-গুলো এটিকে পুনরায় অন্তর্ভুক্ত করা প্রত্যাখ্যান করে এবং production code থেকে import করার ওপর নিষেধাজ্ঞা বজায় রাখে।
 
-বর্তমান dependency মেরামত compatibility override-গুলোকে Azure identity-এর MSAL client, get-uri-এর FTP client এবং OpenCode v1 SDK-এর Zod dependency-এর মধ্যেও সীমাবদ্ধ রাখে। Azure token acquisition এবং FTP retrieval নিয়ন্ত্রিত transport দিয়ে পরীক্ষা করা হয়; OpenCode-এর উভয় package তাদের নিজস্ব build ও test suite চালায়। Registry advisory-এর সংখ্যা একটি নির্দিষ্ট সময়ের পরিমাপ এবং lockfile commit করার পরে পরিবর্তিত হতে পারে।
+বর্তমান ডিপেন্ডেন্সি মেরামতে Azure identity-এর MSAL client, get-uri-এর FTP client এবং উভয় OpenCode plugin প্যাকেজে Zod-এর জন্য সামঞ্জস্যতা ওভাররাইড অন্তর্ভুক্ত রয়েছে। নিয়ন্ত্রিত ট্রান্সপোর্ট ব্যবহার করে Azure token অধিগ্রহণ এবং FTP পুনরুদ্ধার পরীক্ষা করা হয়েছে; উভয় OpenCode প্যাকেজ তাদের নিজস্ব build ও test suite চালায়। রেজিস্ট্রি অ্যাডভাইজরির সংখ্যা একটি নির্দিষ্ট সময়ের পরিমাপ এবং lockfile commit করার পরে পরিবর্তিত হতে পারে।
 
 ## ব্যাকলগ: স্কোরকার্ড অ্যাডভাইজরি → ব্লকিং
 

@@ -60,11 +60,7 @@ haɓaka kayan aikin ci gaba na promptfoo da aka tsayar da sigarsa. Wannan ya kaw
 Gwaje-gwajen hana komawar matsalar da ke cikin `tests/unit/extract-zip-14482-exposure.test.ts` suna ƙin
 sake shigar da shi kuma suna ci gaba da hana shigo da shi daga lambar samarwa.
 
-Gyaran dogaro na yanzu kuma yana taƙaita sauye-sauyen dacewa zuwa abokin cinikin MSAL na Azure identity,
-abokin cinikin FTP na get-uri, da dogaron Zod na OpenCode v1 SDK. Ana gwada
-samun token na Azure da dawo da bayanai ta FTP ta amfani da hanyoyin sufuri masu sarrafawa; duka kunshin OpenCode
-suna gudanar da nasu tsarin ginawa da tarin gwaje-gwaje. Ƙididdigar sanarwar tsaro ta registry ma'aunai ne
-na wani takamaiman lokaci kuma za su iya canzawa bayan an commit lockfile ɗin.
+Gyaran dogaro na yanzu ya haɗa da tilasta daidaituwa ga abokin cinikin MSAL na Azure identity, abokin cinikin FTP na get-uri, da kuma Zod a cikin fakitin plugin na OpenCode guda biyu. An gwada samun token na Azure da karɓo bayanai ta FTP ta amfani da hanyoyin sufuri da ake sarrafawa; duk fakitin OpenCode biyun suna gudanar da nasu tsarin ginawa da jerin gwaje-gwaje. Ƙididdigar shawarwarin tsaro na registry ma'aunai ne na wani lokaci takamaimai, kuma suna iya canzawa bayan an commit ɗin lockfile.
 
 ## Baya: Shawarwarin Scorecard → toshewa
 

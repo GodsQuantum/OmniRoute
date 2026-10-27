@@ -53,11 +53,7 @@ l-aġġornament tal-għodda tal-iżvilupp promptfoo bil-verżjoni ffissata. Dan 
 Il-kontrolli ta’ rigressjoni f’`tests/unit/extract-zip-14482-exposure.test.ts` jirrifjutaw
 l-introduzzjoni mill-ġdid tagħha u jżommu l-projbizzjoni fuq importazzjonijiet mill-kodiċi tal-produzzjoni.
 
-It-tiswija attwali tad-dipendenzi tillimita wkoll l-override tal-kompatibbiltà għall-klijent
-MSAL tal-identità Azure, għall-klijent FTP ta’ get-uri, u għad-dipendenza Zod tal-SDK OpenCode v1. Il-kisba
-tat-token ta’ Azure u l-irkupru permezz tal-FTP jiġu ttestjati bi trasporti kkontrollati; iż-żewġ pakketti OpenCode
-iħaddmu s-settijiet ta’ bini u testijiet tagħhom stess. L-għadd ta’ avviżi tar-reġistru huwa kejl
-f’mument partikolari u jista’ jinbidel wara li jiġi kkommitjat il-lockfile.
+It-tiswija attwali tad-dipendenzi tinkludi sostituzzjonijiet ta’ kompatibbiltà għall-klijent MSAL tal-identità Azure, għall-klijent FTP ta’ get-uri, u għal Zod fiż-żewġ pakketti tal-plugin OpenCode. Il-kisba tat-token ta’ Azure u l-irkupru permezz tal-FTP jiġu ttestjati bi trasporti kkontrollati; iż-żewġ pakketti OpenCode iħaddmu s-settijiet tagħhom stess ta’ testijiet u tal-bini. L-għadd ta’ avviżi fir-reġistru huwa kejl f’mument partikolari u jista’ jinbidel wara li jiġi kkommitjat il-lockfile.
 
 ## Backlog: Parir ta' Scorecard → imblukkar
 

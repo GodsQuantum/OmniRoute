@@ -35,7 +35,7 @@ Majburiy OSV ishga tushirishlari (`check:vuln-ratchet -- --ratchet`) skaner, his
 
 Biriktirilgan promptfoo ishlab chiqish vositasi yangilangach, ildiz lockfile endi `extract-zip` yoki unga olib boruvchi bogʻliqlik aloqasini oʻz ichiga olmaydi. Shu tariqa, #14482 da kuzatilgan va avval qabul qilingan `promptfoo` → `@openai/codex-security` → `extract-zip` zanjiri foydalanishdan chiqarildi. `tests/unit/extract-zip-14482-exposure.test.ts` ichidagi regressiya tekshiruvlari uning qayta kiritilishini rad etadi va ishlab chiqarish kodidan import qilish taqiqini saqlab qoladi.
 
-Joriy bogʻliqlik tuzatishi, shuningdek, moslik uchun qayta belgilashlarni Azure identifikatsiya tizimining MSAL mijoziga, get-uri vositasining FTP mijoziga va OpenCode v1 SDK vositasining Zod bogʻliqligiga cheklaydi. Azure tokenini olish va FTP orqali yuklab olish boshqariladigan transportlar yordamida sinovdan oʻtkaziladi; ikkala OpenCode paketi ham oʻzining build va test toʻplamlarini ishga tushiradi. Registry xavfsizlik ogohlantirishlari soni muayyan vaqtdagi oʻlchov boʻlib, lockfile commit qilinganidan keyin oʻzgarishi mumkin.
+Joriy bogʻliqliklarni tuzatish Azure Identity’ning MSAL mijozi, get-uri’ning FTP mijozi va ikkala OpenCode plagin paketidagi Zod uchun moslikni qayta belgilashlarni oʻz ichiga oladi. Azure tokenini olish va FTP orqali maʼlumot olish boshqariladigan transportlar yordamida sinovdan oʻtkaziladi; har ikkala OpenCode paketi oʻzining qurish va sinov toʻplamlarini ishga tushiradi. Reestrdagi xavfsizlik ogohlantirishlari soni muayyan vaqtdagi oʻlchovlar boʻlib, lockfile commit qilinganidan keyin oʻzgarishi mumkin.
 
 ## Qoldiq: Scorecard maslahati → blokirovka qilish
 

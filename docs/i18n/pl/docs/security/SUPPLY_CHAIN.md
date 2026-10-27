@@ -57,7 +57,7 @@ i brak dowodów dotyczących obrazu nie pozwalają poświadczyć, że obraz jest
 
 Po zaktualizowaniu przypiętej wersji narzędzia deweloperskiego promptfoo główny plik blokady nie zawiera już `extract-zip` ani prowadzącej do niego krawędzi zależności. Tym samym wycofano wcześniej zaakceptowany łańcuch `promptfoo` → `@openai/codex-security` → `extract-zip`, śledzony w #14482. Testy regresji w `tests/unit/extract-zip-14482-exposure.test.ts` zapobiegają jego ponownemu wprowadzeniu i nadal zabraniają importowania tej zależności przez kod produkcyjny.
 
-Bieżąca korekta zależności ogranicza również nadpisania zgodności do klienta MSAL usługi Azure Identity, klienta FTP pakietu get-uri oraz zależności Zod zestawu SDK OpenCode v1. Pozyskiwanie tokenów Azure i pobieranie danych przez FTP są testowane przy użyciu kontrolowanych warstw transportowych; oba pakiety OpenCode uruchamiają własne zestawy kompilacji i testów. Liczby alertów bezpieczeństwa w rejestrze są pomiarami wykonanymi w określonym momencie i mogą ulec zmianie po zatwierdzeniu pliku blokady w repozytorium.
+Bieżąca naprawa zależności obejmuje nadpisania zgodności dla klienta MSAL usługi Azure Identity, klienta FTP pakietu get-uri oraz biblioteki Zod w obu pakietach wtyczek OpenCode. Pozyskiwanie tokenów Azure i pobieranie danych przez FTP są testowane przy użyciu kontrolowanych warstw transportowych; oba pakiety OpenCode uruchamiają własne zestawy kompilacji i testów. Liczba ostrzeżeń w rejestrze jest pomiarem wykonanym w określonym momencie i może ulec zmianie po zatwierdzeniu pliku blokady.
 
 ## Backlog: Zalecenie Scorecard → blokowanie
 

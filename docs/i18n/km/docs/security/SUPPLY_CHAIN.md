@@ -49,7 +49,7 @@ exit 0 ដែលមិនបានបញ្ជាក់ថា dependencies ប�
 
 root lockfile លែងរួមបញ្ចូល `extract-zip` ឬ dependency edge ដែលភ្ជាប់ទៅវាទៀតហើយ បន្ទាប់ពីបានដំឡើងកំណែឧបករណ៍អភិវឌ្ឍន៍ promptfoo ដែលបានកំណត់កំណែជាក់លាក់។ ការផ្លាស់ប្តូរនេះបញ្ចប់ការប្រើប្រាស់ខ្សែ dependency `promptfoo` → `@openai/codex-security` → `extract-zip` ដែលធ្លាប់បានទទួលយកពីមុន និងត្រូវបានតាមដានក្នុង #14482។ ការត្រួតពិនិត្យ regression នៅក្នុង `tests/unit/extract-zip-14482-exposure.test.ts` បដិសេធការដាក់បញ្ចូលវាឡើងវិញ ហើយរក្សាការហាមឃាត់លើការនាំចូលពីកូដ production។
 
-ការជួសជុល dependency បច្ចុប្បន្នក៏កំណត់វិសាលភាព compatibility overrides ត្រឹមតែ MSAL client របស់ Azure identity, FTP client របស់ get-uri និង Zod dependency របស់ OpenCode v1 SDK ប៉ុណ្ណោះ។ ការទទួលបាន Azure token និងការទាញយកតាម FTP ត្រូវបានសាកល្បងជាមួយ transport ដែលអាចគ្រប់គ្រងបាន ខណៈដែល package OpenCode ទាំងពីរដំណើរការ build និង test suite ផ្ទាល់របស់ពួកវា។ ចំនួន advisory របស់ registry គឺជារង្វាស់នៅពេលណាមួយ ហើយអាចផ្លាស់ប្តូរបន្ទាប់ពី lockfile ត្រូវបាន commit។
+ការជួសជុលភាពអាស្រ័យបច្ចុប្បន្ន រួមមានការកំណត់ជាន់លើសម្រាប់ភាពឆបគ្នានៃម៉ាស៊ីនភ្ញៀវ MSAL របស់ Azure identity ម៉ាស៊ីនភ្ញៀវ FTP របស់ get-uri និង Zod នៅក្នុងកញ្ចប់កម្មវិធីជំនួយ OpenCode ទាំងពីរ។ ការទទួលបានថូខឹន Azure និងការទាញយកតាម FTP ត្រូវបានសាកល្បងដោយប្រើស្រទាប់ដឹកជញ្ជូនដែលបានគ្រប់គ្រង ខណៈកញ្ចប់ OpenCode ទាំងពីរដំណើរការឈុត build និង test រៀងៗខ្លួន។ ចំនួនសេចក្តីជូនដំណឹងពី registry គឺជារង្វាស់នៅចំណុចពេលវេលាជាក់លាក់មួយ ហើយអាចផ្លាស់ប្តូរបន្ទាប់ពី lockfile ត្រូវបាន commit។
 
 ## ការងារដែលត្រូវធ្វើ៖ ការណែនាំអំពី Scorecard → ការទប់ស្កាត់
 

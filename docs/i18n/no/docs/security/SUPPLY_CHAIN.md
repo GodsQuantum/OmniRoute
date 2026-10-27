@@ -53,11 +53,7 @@ oppgraderingen av det versjonsfestede utviklingsverktøyet promptfoo. Dette fjer
 Regresjonskontrollene i `tests/unit/extract-zip-14482-exposure.test.ts` avviser at den
 gjeninnføres, og opprettholder forbudet mot importer fra produksjonskode.
 
-Den gjeldende avhengighetsreparasjonen avgrenser også kompatibilitetsoverstyringer til Azure Identity sin
-MSAL-klient, get-uri sin FTP-klient og Zod-avhengigheten til OpenCode v1 SDK. Innhenting av Azure-tokener
-og FTP-henting testes med kontrollerte transporter. Begge OpenCode-pakkene
-kjører sine egne bygg- og testserier. Antall sikkerhetsvarsler i registeret er målinger
-på et gitt tidspunkt og kan endres etter at låsfilen er bekreftet.
+Den nåværende avhengighetsreparasjonen inkluderer kompatibilitetsoverstyringer for Azure Identitys MSAL-klient, get-uris FTP-klient og Zod i begge OpenCode-pluginpakkene. Innhenting av Azure-tokener og FTP-henting testes med kontrollerte transporter. Begge OpenCode-pakkene kjører sine egne bygg- og testserier. Antall sikkerhetsvarsler i pakkeregisteret er øyeblikksmålinger og kan endres etter at låsefilen er innlemmet.
 
 ## Restanse: Scorecard-rådgivning → blokkering
 

@@ -49,7 +49,7 @@ og manglende image-evidens kan ikke certificere et image som rent.
 
 Rodprojektets lockfil indeholder ikke længere `extract-zip` eller en afhængighedsrelation til den efter opgraderingen af det fastlåste promptfoo-udviklingsværktøj. Dette udfaser den tidligere accepterede kæde `promptfoo` → `@openai/codex-security` → `extract-zip`, som spores i #14482. Regressionstestene i `tests/unit/extract-zip-14482-exposure.test.ts` afviser, at den genindføres, og fastholder forbuddet mod import fra produktionskode.
 
-Den aktuelle rettelse af afhængigheder afgrænser også kompatibilitetstilsidesættelser til Azure identity's MSAL-klient, get-uri's FTP-klient og OpenCode v1 SDK'ets Zod-afhængighed. Hentning af Azure-tokens og FTP-overførsel testes med kontrollerede transporter; begge OpenCode-pakker kører deres egne build- og testsuiter. Antallet af sikkerhedsadvarsler i registreringsdatabasen er øjebliksbilleder og kan ændre sig, efter at lockfilen er committet.
+Den aktuelle afhængighedsreparation omfatter kompatibilitetstilsidesættelser for Azure Identitys MSAL-klient, get-uris FTP-klient og Zod i begge OpenCode-pluginpakker. Hentning af Azure-tokens og FTP-data er testet med kontrollerede transporter; begge OpenCode-pakker kører deres egne build- og testsuiter. Antallet af sikkerhedsmeddelelser i registreringsdatabasen er øjebliksbilleder og kan ændre sig, efter at lockfilen er blevet committed.
 
 ## Restance: Scorecard-rådgivning → blokerende
 

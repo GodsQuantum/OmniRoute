@@ -40,7 +40,7 @@ osv 和 Trivy 会将依赖项与**持续增长**的 CVE 数据库进行比较。
 
 升级已固定版本的 promptfoo 开发工具后，根锁文件不再包含 `extract-zip`，也不再包含指向它的依赖关系。这消除了 #14482 中记录的、此前已接受的 `promptfoo` → `@openai/codex-security` → `extract-zip` 依赖链风险。`tests/unit/extract-zip-14482-exposure.test.ts` 中的回归检查会拒绝重新引入该依赖项，并继续禁止生产代码导入它。
 
-当前的依赖项修复还将兼容性覆盖限定于 Azure identity 的 MSAL 客户端、get-uri 的 FTP 客户端，以及 OpenCode v1 SDK 的 Zod 依赖项。Azure 令牌获取和 FTP 检索均使用受控传输进行测试；两个 OpenCode 包都会运行各自的构建和测试套件。注册表安全公告数量是特定时间点的测量结果，在提交锁文件后可能发生变化。
+当前的依赖修复包括对 Azure identity 的 MSAL 客户端、get-uri 的 FTP 客户端，以及两个 OpenCode 插件包中的 Zod 进行兼容性覆盖。Azure 令牌获取和 FTP 检索均使用受控传输进行测试；两个 OpenCode 包也分别运行各自的构建和测试套件。注册表中的安全公告数量是特定时间点的测量值，在锁文件提交后可能会发生变化。
 
 ## 待办事项：记分卡建议 → 阻塞
 

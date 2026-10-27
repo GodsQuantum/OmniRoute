@@ -60,11 +60,7 @@ l'aggiornamento dello strumento di sviluppo promptfoo con versione fissata. Ques
 e tracciata in #14482. I controlli di regressione in `tests/unit/extract-zip-14482-exposure.test.ts`
 ne impediscono la reintroduzione e mantengono il divieto di importazione dal codice di produzione.
 
-L'attuale correzione delle dipendenze limita inoltre gli override di compatibilità al client
-MSAL di Azure Identity, al client FTP di get-uri e alla dipendenza Zod dell'SDK OpenCode v1.
-L'acquisizione dei token Azure e il recupero tramite FTP vengono testati con trasporti controllati;
-entrambi i pacchetti OpenCode eseguono le proprie suite di build e test. I conteggi degli avvisi
-del registro sono rilevazioni riferite a un preciso momento e possono cambiare dopo il commit del lockfile.
+L'attuale correzione delle dipendenze include override di compatibilità per il client MSAL di Azure Identity, il client FTP di get-uri e Zod in entrambi i pacchetti plugin OpenCode. L'acquisizione dei token Azure e il recupero tramite FTP vengono testati con trasporti controllati; entrambi i pacchetti OpenCode eseguono le proprie suite di compilazione e test. I conteggi degli avvisi del registro sono rilevazioni effettuate in un determinato momento e possono cambiare dopo il commit del lockfile.
 
 ## Backlog: Avviso Scorecard → bloccante
 

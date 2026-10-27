@@ -35,7 +35,7 @@ osv และ Trivy เปรียบเทียบ dependencies กับฐ�
 
 lockfile ระดับรากไม่มี `extract-zip` หรือขอบเขต dependency ที่เชื่อมโยงไปยังแพ็กเกจดังกล่าวอีกต่อไป หลังจากอัปเกรดเครื่องมือพัฒนา promptfoo ที่ตรึงเวอร์ชันไว้ การดำเนินการนี้ยุติสายโซ่ `promptfoo` → `@openai/codex-security` → `extract-zip` ที่เคยยอมรับไว้ก่อนหน้านี้และติดตามใน #14482 การตรวจสอบ regression ใน `tests/unit/extract-zip-14482-exposure.test.ts` จะปฏิเสธการนำ dependency นี้กลับมาใช้อีกครั้ง และยังคงข้อห้ามไม่ให้โค้ด production นำเข้าแพ็กเกจดังกล่าว
 
-การแก้ไข dependency ในปัจจุบันยังจำกัดขอบเขตของ compatibility override ไว้เฉพาะไคลเอนต์ MSAL ของ Azure identity, ไคลเอนต์ FTP ของ get-uri และ dependency Zod ของ OpenCode v1 SDK การขอโทเค็น Azure และการดึงข้อมูลผ่าน FTP ได้รับการทดสอบด้วย transport ที่มีการควบคุม ส่วนแพ็กเกจ OpenCode ทั้งสองแพ็กเกจรันชุดการ build และการทดสอบของตนเอง จำนวน advisory ของ registry เป็นค่าที่วัด ณ เวลาใดเวลาหนึ่ง และอาจเปลี่ยนแปลงได้หลังจาก commit lockfile แล้ว
+การซ่อมแซม dependency ในปัจจุบันมีการ override ความเข้ากันได้สำหรับไคลเอนต์ MSAL ของ Azure identity, ไคลเอนต์ FTP ของ get-uri และ Zod ในแพ็กเกจปลั๊กอิน OpenCode ทั้งสองแพ็กเกจ การรับโทเค็น Azure และการดึงข้อมูลผ่าน FTP ได้รับการทดสอบด้วย transport ที่ควบคุมไว้ ส่วนแพ็กเกจ OpenCode ทั้งสองจะเรียกใช้ชุดการ build และการทดสอบของตนเอง จำนวน advisory จาก registry เป็นค่าที่วัด ณ เวลาใดเวลาหนึ่ง และอาจเปลี่ยนแปลงได้หลังจาก commit lockfile แล้ว
 
 ## Backlog: คำแนะนำ Scorecard → การบล็อก
 

@@ -60,11 +60,7 @@ alat pembangunan promptfoo yang ditetapkan versinya dinaik taraf. Ini menamatkan
 Semakan regresi dalam `tests/unit/extract-zip-14482-exposure.test.ts` menolak pengenalannya
 semula dan mengekalkan larangan import daripada kod pengeluaran.
 
-Pembaikan kebergantungan semasa juga mengehadkan penggantian keserasian kepada klien MSAL
-Azure identity, klien FTP get-uri dan kebergantungan Zod bagi SDK OpenCode v1. Pemerolehan
-token Azure dan pengambilan melalui FTP diuji menggunakan pengangkutan terkawal; kedua-dua pakej
-OpenCode menjalankan suit binaan dan ujian masing-masing. Bilangan nasihat keselamatan pendaftar
-ialah ukuran pada sesuatu titik masa dan boleh berubah selepas fail kunci dikomitkan.
+Pembaikan kebergantungan semasa merangkumi penggantian keserasian untuk klien MSAL Azure identity, klien FTP get-uri dan Zod dalam kedua-dua pakej pemalam OpenCode. Pemerolehan token Azure dan pengambilan melalui FTP diuji menggunakan pengangkutan terkawal; kedua-dua pakej OpenCode menjalankan suite binaan dan ujian masing-masing. Bilangan advisori registri ialah ukuran pada sesuatu masa dan boleh berubah selepas fail kunci dikomit.
 
 ## Tunggakan: nasihat Scorecard → penyekatan
 

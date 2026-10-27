@@ -53,11 +53,12 @@ a atualização da ferramenta de desenvolvimento promptfoo para a versão fixada
 As verificações de regressão em `tests/unit/extract-zip-14482-exposure.test.ts` impedem a sua
 reintrodução e mantêm a proibição de importações a partir de código de produção.
 
-A atual correção de dependências também limita as substituições de compatibilidade ao
-cliente MSAL da identidade do Azure, ao cliente FTP do get-uri e à dependência Zod do SDK v1 do OpenCode. A obtenção
-de tokens do Azure e a transferência por FTP são testadas com transportes controlados; ambos os pacotes OpenCode
-executam os seus próprios conjuntos de compilação e testes. As contagens de avisos de segurança do registo são medições
-num determinado momento e podem mudar após a confirmação do ficheiro de bloqueio.
+A reparação atual de dependências inclui substituições de compatibilidade para o cliente
+MSAL do Azure Identity, o cliente FTP do get-uri e o Zod em ambos os pacotes de plug-in
+OpenCode. A obtenção de tokens do Azure e a recuperação por FTP são testadas com transportes
+controlados; ambos os pacotes OpenCode executam os seus próprios conjuntos de compilação e
+testes. As contagens de avisos de segurança do registo são medições efetuadas num determinado
+momento e podem mudar após o lockfile ser submetido.
 
 ## Backlog: Aviso do Scorecard → bloqueio
 

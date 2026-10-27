@@ -60,11 +60,7 @@ la mise à niveau de l’outil de développement promptfoo épinglé. Cela suppr
 Les contrôles de régression dans `tests/unit/extract-zip-14482-exposure.test.ts` empêchent sa
 réintroduction et maintiennent l’interdiction des importations depuis le code de production.
 
-La correction actuelle des dépendances limite également les substitutions de compatibilité au
-client MSAL d’Azure Identity, au client FTP de get-uri et à la dépendance Zod du SDK OpenCode v1. L’acquisition
-de jetons Azure et la récupération FTP sont testées avec des transports contrôlés ; les deux packages OpenCode
-exécutent leurs propres suites de compilation et de tests. Le nombre d’avis de sécurité du registre constitue
-une mesure à un instant donné et peut évoluer après la validation du fichier de verrouillage.
+La réparation actuelle des dépendances inclut des substitutions de compatibilité pour le client MSAL d’Azure Identity, le client FTP de get-uri et Zod dans les deux packages de plugins OpenCode. L’acquisition de jetons Azure et la récupération via FTP sont testées avec des transports contrôlés ; les deux packages OpenCode exécutent leurs propres suites de compilation et de tests. Le nombre d’avis de sécurité du registre correspond à des mesures effectuées à un instant donné et peut changer après la validation du fichier de verrouillage.
 
 ## Backlog : avis Scorecard → blocage
 

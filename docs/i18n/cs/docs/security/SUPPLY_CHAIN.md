@@ -49,7 +49,7 @@ a chybějící důkazy o obrazu nemohou potvrdit, že obraz neobsahuje zraniteln
 
 Kořenový lockfile již po upgradu nástroje promptfoo připnutého pro vývoj neobsahuje `extract-zip` ani hranu závislosti, která by k němu vedla. Tím se vyřazuje dříve akceptovaný řetězec `promptfoo` → `@openai/codex-security` → `extract-zip` sledovaný v #14482. Regresní kontroly v `tests/unit/extract-zip-14482-exposure.test.ts` odmítají jeho opětovné zavedení a nadále zakazují importy z produkčního kódu.
 
-Aktuální oprava závislostí také omezuje přepsání kvůli kompatibilitě na klienta MSAL služby Azure Identity, klienta FTP balíčku get-uri a závislost Zod sady OpenCode v1 SDK. Získávání tokenů Azure a načítání přes FTP se testují pomocí řízených transportů; oba balíčky OpenCode spouštějí vlastní sestavovací a testovací sady. Počty upozornění registru představují měření v konkrétním okamžiku a po potvrzení lockfilu do repozitáře se mohou změnit.
+Aktuální oprava závislostí zahrnuje přepsání kvůli kompatibilitě pro klienta MSAL služby Azure identity, klienta FTP balíčku get-uri a knihovnu Zod v obou balíčcích pluginu OpenCode. Získávání tokenů Azure a načítání přes FTP jsou testovány pomocí řízených přenosových vrstev; oba balíčky OpenCode spouštějí vlastní sady sestavení a testů. Počty upozornění registru jsou měření k určitému časovému okamžiku a po potvrzení souboru lockfile se mohou změnit.
 
 ## Backlog: Doporučení Scorecard → blokování
 

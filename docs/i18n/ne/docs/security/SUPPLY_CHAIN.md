@@ -39,7 +39,7 @@ osv र Trivy ले निर्भरताहरूलाई **निरन�
 
 पिन गरिएको promptfoo विकास उपकरण अपग्रेड गरेपछि रुट lockfile मा अब `extract-zip` वा त्यसतर्फ जाने निर्भरता किनारा समावेश छैन। यसले #14482 मा ट्र्याक गरिएको, पहिले स्वीकार गरिएको `promptfoo` → `@openai/codex-security` → `extract-zip` शृङ्खलालाई हटाउँछ। `tests/unit/extract-zip-14482-exposure.test.ts` मा भएका रिग्रेसन जाँचहरूले यसको पुनःप्रवेश अस्वीकार गर्छन् र उत्पादन कोडबाट गरिने import माथिको निषेध कायम राख्छन्।
 
-हालको निर्भरता मर्मतले अनुकूलता override हरूलाई Azure identity को MSAL client, get-uri को FTP client, र OpenCode v1 SDK को Zod निर्भरतामा पनि सीमित गर्छ। Azure token प्राप्ति र FTP retrieval लाई नियन्त्रित transport हरूसँग परीक्षण गरिएको छ; दुवै OpenCode package ले आफ्नै build र test suite चलाउँछन्। Registry advisory को सङ्ख्या कुनै निश्चित समयबिन्दुका मापन हुन् र lockfile commit गरिसकेपछि परिवर्तन हुन सक्छन्।
+हालको dependency मर्मतमा Azure identity को MSAL client, get-uri को FTP client, र दुवै OpenCode plugin package मा Zod का लागि compatibility override हरू समावेश छन्। Azure token acquisition र FTP retrieval लाई नियन्त्रित transport हरूमार्फत परीक्षण गरिएको छ; दुवै OpenCode package ले आफ्नै build र test suite चलाउँछन्। Registry advisory का गणनाहरू कुनै निश्चित समयका मापन हुन् र lockfile commit गरिसकेपछि परिवर्तन हुन सक्छन्।
 
 ## ब्याकलॉग: स्कोरकार्ड सल्लाह → अवरुद्ध
 

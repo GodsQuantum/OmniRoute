@@ -60,8 +60,8 @@ upgrading the pinned promptfoo development tool. This retires the previously acc
 The regression checks in `tests/unit/extract-zip-14482-exposure.test.ts` reject its
 reintroduction and retain the prohibition on imports from production code.
 
-The current dependency repair also scopes compatibility overrides to Azure identity's
-MSAL client, get-uri's FTP client, and the OpenCode v1 SDK's Zod dependency. Azure token
+The current dependency repair includes compatibility overrides for Azure identity's
+MSAL client, get-uri's FTP client, and Zod in both OpenCode plugin packages. Azure token
 acquisition and FTP retrieval are tested with controlled transports; both OpenCode
 packages run their own build and test suites. Registry advisory counts are measurements
 at a point in time and can change after the lockfile is committed.

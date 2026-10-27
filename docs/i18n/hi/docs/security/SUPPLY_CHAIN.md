@@ -49,7 +49,7 @@ Trivy चरण के लिए भी सफल मापन आवश्य�
 
 पिन किए गए promptfoo विकास टूल को अपग्रेड करने के बाद रूट लॉकफ़ाइल में अब `extract-zip` या उसकी ओर जाने वाला कोई निर्भरता एज शामिल नहीं है। इससे #14482 में ट्रैक की गई, पहले स्वीकार की गई `promptfoo` → `@openai/codex-security` → `extract-zip` श्रृंखला सेवानिवृत्त हो जाती है। `tests/unit/extract-zip-14482-exposure.test.ts` में मौजूद रिग्रेशन जाँचें इसे दोबारा शामिल किए जाने को अस्वीकार करती हैं और प्रोडक्शन कोड से इसके आयात पर प्रतिबंध बनाए रखती हैं।
 
-वर्तमान निर्भरता सुधार, संगतता ओवरराइड को Azure identity के MSAL क्लाइंट, get-uri के FTP क्लाइंट और OpenCode v1 SDK की Zod निर्भरता तक भी सीमित करता है। Azure टोकन प्राप्ति और FTP पुनर्प्राप्ति का नियंत्रित ट्रांसपोर्ट के साथ परीक्षण किया जाता है; दोनों OpenCode पैकेज अपने स्वयं के बिल्ड और परीक्षण सुइट चलाते हैं। रजिस्ट्री एडवाइज़री की संख्याएँ किसी विशिष्ट समय-बिंदु के मापन हैं और लॉकफ़ाइल कमिट किए जाने के बाद बदल सकती हैं।
+वर्तमान dependency repair में Azure identity के MSAL client, get-uri के FTP client और दोनों OpenCode plugin packages में Zod के लिए compatibility overrides शामिल हैं। Azure token acquisition और FTP retrieval का परीक्षण नियंत्रित transports के साथ किया गया है; दोनों OpenCode packages अपने-अपने build और test suites चलाते हैं। Registry advisory की संख्याएँ किसी विशिष्ट समय पर किए गए मापन हैं और lockfile commit होने के बाद बदल सकती हैं।
 
 ## बैकलॉग: स्कोरकार्ड एडवाइजरी → ब्लॉकिंग
 

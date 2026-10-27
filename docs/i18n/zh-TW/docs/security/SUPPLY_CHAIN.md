@@ -48,7 +48,7 @@ Trivy 步驟同樣要求成功完成測量：工具無法使用、工作失敗
 
 升級固定版本的 promptfoo 開發工具後，根目錄鎖定檔不再包含 `extract-zip`，也不再包含指向它的相依關係邊。這淘汰了先前在 #14482 中追蹤並接受的 `promptfoo` → `@openai/codex-security` → `extract-zip` 鏈結。`tests/unit/extract-zip-14482-exposure.test.ts` 中的迴歸檢查會阻止重新引入此鏈結，並持續禁止正式環境程式碼匯入該套件。
 
-目前的相依套件修復也將相容性覆寫範圍限定於 Azure identity 的 MSAL 用戶端、get-uri 的 FTP 用戶端，以及 OpenCode v1 SDK 的 Zod 相依套件。Azure 權杖取得與 FTP 擷取皆使用受控傳輸進行測試；兩個 OpenCode 套件也各自執行其建置與測試套件。登錄檔中的安全公告數量是在特定時間點的測量結果，可能會在鎖定檔提交後發生變化。
+目前的相依套件修復包含針對 Azure identity 的 MSAL 用戶端、get-uri 的 FTP 用戶端，以及兩個 OpenCode 外掛套件中的 Zod 所做的相容性覆寫。Azure 權杖取得與 FTP 擷取皆透過受控傳輸進行測試；兩個 OpenCode 套件也各自執行其建置與測試套件。套件庫安全公告數量是特定時間點的測量結果，可能會在鎖定檔提交後發生變化。
 
 ## 待辦事項：記分卡諮詢 → 阻擋
 

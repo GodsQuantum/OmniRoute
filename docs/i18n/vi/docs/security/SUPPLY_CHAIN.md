@@ -49,7 +49,7 @@ và thiếu bằng chứng về image không thể chứng nhận một image l�
 
 Lockfile gốc không còn bao gồm `extract-zip` hoặc cạnh dependency dẫn đến nó sau khi nâng cấp công cụ phát triển promptfoo được ghim phiên bản. Thay đổi này loại bỏ chuỗi `promptfoo` → `@openai/codex-security` → `extract-zip` đã được chấp nhận trước đây và được theo dõi trong #14482. Các kiểm tra hồi quy trong `tests/unit/extract-zip-14482-exposure.test.ts` ngăn việc đưa dependency này trở lại, đồng thời duy trì lệnh cấm import nó từ mã production.
 
-Bản sửa dependency hiện tại cũng giới hạn các ghi đè về khả năng tương thích cho client MSAL của Azure identity, client FTP của get-uri và dependency Zod của OpenCode v1 SDK. Việc lấy token Azure và truy xuất qua FTP được kiểm thử bằng các transport có kiểm soát; cả hai package OpenCode đều chạy các bộ build và kiểm thử riêng. Số lượng cảnh báo từ registry là số liệu đo tại một thời điểm và có thể thay đổi sau khi lockfile được commit.
+Việc sửa chữa các phần phụ thuộc hiện tại bao gồm các cơ chế ghi đè tương thích cho ứng dụng khách MSAL của Azure identity, ứng dụng khách FTP của get-uri và Zod trong cả hai gói plugin OpenCode. Quá trình lấy token Azure và truy xuất qua FTP được kiểm thử bằng các phương thức truyền tải có kiểm soát; cả hai gói OpenCode đều chạy bộ quy trình build và kiểm thử riêng. Số lượng cảnh báo từ registry là các phép đo tại một thời điểm và có thể thay đổi sau khi lockfile được commit.
 
 ## Backlog: Cảnh báo Scorecard → chặn
 

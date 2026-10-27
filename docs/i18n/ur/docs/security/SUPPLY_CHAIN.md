@@ -49,7 +49,7 @@ Trivy مرحلے کے لیے بھی کامیاب پیمائش ضروری ہے: �
 
 پن کیے گئے promptfoo ترقیاتی ٹول کو اپ گریڈ کرنے کے بعد روٹ لاک فائل میں اب `extract-zip` یا اس تک جانے والا کوئی انحصاری کنارہ شامل نہیں ہے۔ اس طرح #14482 میں ٹریک کی گئی، پہلے قبول شدہ `promptfoo` → `@openai/codex-security` → `extract-zip` زنجیر سبک دوش ہو گئی ہے۔ `tests/unit/extract-zip-14482-exposure.test.ts` میں موجود ریگریشن جانچیں اس کے دوبارہ شامل کیے جانے کو مسترد کرتی ہیں اور پروڈکشن کوڈ سے درآمدات پر پابندی برقرار رکھتی ہیں۔
 
-موجودہ انحصاری اصلاح مطابقتی اوور رائیڈز کو Azure identity کے MSAL کلائنٹ، get-uri کے FTP کلائنٹ، اور OpenCode v1 SDK کے Zod انحصار تک بھی محدود کرتی ہے۔ Azure ٹوکن کا حصول اور FTP بازیافت کنٹرول شدہ ٹرانسپورٹس کے ساتھ آزمائے جاتے ہیں؛ OpenCode کے دونوں پیکیجز اپنی اپنی بلڈ اور ٹیسٹ سویٹس چلاتے ہیں۔ رجسٹری ایڈوائزری کی تعداد کسی مخصوص وقت کی پیمائش ہوتی ہے اور لاک فائل کمٹ ہونے کے بعد تبدیل ہو سکتی ہے۔
+موجودہ dependency repair میں Azure identity کے MSAL client، get-uri کے FTP client، اور دونوں OpenCode plugin packages میں Zod کے لیے compatibility overrides شامل ہیں۔ Azure token acquisition اور FTP retrieval کو controlled transports کے ساتھ ٹیسٹ کیا گیا ہے؛ دونوں OpenCode packages اپنی اپنی build اور test suites چلاتے ہیں۔ Registry advisory counts کسی خاص وقت کی پیمائشیں ہیں اور lockfile commit ہونے کے بعد تبدیل ہو سکتی ہیں۔
 
 ## بیک لاگ (Backlog): سکور کارڈ ایڈوائزری (Scorecard advisory) → بلاکنگ (blocking)
 

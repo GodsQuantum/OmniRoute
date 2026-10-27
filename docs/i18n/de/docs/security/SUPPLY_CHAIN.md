@@ -54,7 +54,7 @@ und fehlende Image-Nachweise können nicht bestätigen, dass ein Image frei von 
 
 Das Root-Lockfile enthält nach dem Upgrade des festgeschriebenen promptfoo-Entwicklungswerkzeugs weder `extract-zip` noch eine Abhängigkeitskante dorthin. Dadurch wird die zuvor akzeptierte, in #14482 nachverfolgte Kette `promptfoo` → `@openai/codex-security` → `extract-zip` entfernt. Die Regressionstests in `tests/unit/extract-zip-14482-exposure.test.ts` verhindern deren erneute Einführung und behalten das Verbot von Importen aus Produktionscode bei.
 
-Die aktuelle Korrektur der Abhängigkeiten beschränkt Kompatibilitätsüberschreibungen außerdem auf den MSAL-Client von Azure Identity, den FTP-Client von get-uri und die Zod-Abhängigkeit des OpenCode-v1-SDK. Der Abruf von Azure-Token und FTP-Daten wird mit kontrollierten Transporten getestet; beide OpenCode-Pakete führen ihre eigenen Build- und Testsuiten aus. Die Anzahl der Registry-Sicherheitshinweise stellt eine Momentaufnahme dar und kann sich nach dem Commit des Lockfiles ändern.
+Die aktuelle Reparatur der Abhängigkeiten umfasst Kompatibilitätsüberschreibungen für den MSAL-Client von Azure Identity, den FTP-Client von get-uri und Zod in beiden OpenCode-Plugin-Paketen. Der Abruf von Azure-Token und der FTP-Abruf werden mit kontrollierten Transporten getestet; beide OpenCode-Pakete führen ihre eigenen Build- und Testsuiten aus. Die Anzahl der Sicherheitshinweise in der Registry ist eine Momentaufnahme und kann sich nach dem Commit der Lockdatei ändern.
 
 ## Backlog: Scorecard-Hinweis → blockierend
 

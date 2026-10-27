@@ -35,7 +35,7 @@ Tələb olunan OSV icraları (`check:vuln-ratchet -- --ratchet`) skaner, hesabat
 
 Sabitlənmiş promptfoo inkişaf aləti yeniləndikdən sonra kök kilid faylı artıq `extract-zip` paketini və ya ona aparan asılılıq əlaqəsini ehtiva etmir. Bununla, #14482-də izlənilən və əvvəllər qəbul edilmiş `promptfoo` → `@openai/codex-security` → `extract-zip` zənciri istifadədən çıxarılır. `tests/unit/extract-zip-14482-exposure.test.ts` daxilindəki reqressiya yoxlamaları onun yenidən əlavə edilməsini rədd edir və istehsal kodundan import edilməsinə qoyulan qadağanı saxlayır.
 
-Cari asılılıq düzəlişi həmçinin uyğunluq əvəzləmələrini Azure identity-nin MSAL müştərisi, get-uri-nin FTP müştərisi və OpenCode v1 SDK-nın Zod asılılığı ilə məhdudlaşdırır. Azure tokeninin əldə edilməsi və FTP vasitəsilə məlumatların götürülməsi idarə olunan nəqliyyat mexanizmləri ilə sınaqdan keçirilir; hər iki OpenCode paketi öz yığım və sınaq dəstlərini işə salır. Reyestrdəki təhlükəsizlik bildirişlərinin sayı müəyyən bir andakı ölçümlərdir və kilid faylı repozitoriyaya daxil edildikdən sonra dəyişə bilər.
+Cari asılılıq düzəlişinə Azure identity-nin MSAL müştərisi, get-uri-nin FTP müştərisi və hər iki OpenCode plagin paketindəki Zod üçün uyğunluq əvəzləmələri daxildir. Azure tokeninin əldə edilməsi və FTP vasitəsilə məlumatların götürülməsi nəzarət olunan ötürmə mexanizmləri ilə sınaqdan keçirilir; hər iki OpenCode paketi öz yığma və sınaq dəstlərini işə salır. Reyestrdəki təhlükəsizlik bildirişlərinin sayı müəyyən bir andakı ölçümlərdir və lockfile commit edildikdən sonra dəyişə bilər.
 
 ## Backlog: Scorecard məsləhəti → bloklama
 

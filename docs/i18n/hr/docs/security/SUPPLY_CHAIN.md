@@ -56,11 +56,7 @@ lanac `promptfoo` → `@openai/codex-security` → `extract-zip` praćen u #1448
 Provjere regresije u `tests/unit/extract-zip-14482-exposure.test.ts` odbijaju njegovo
 ponovno uvođenje i zadržavaju zabranu uvoza iz produkcijskog koda.
 
-Trenutačni popravak ovisnosti također ograničava nadjačavanja kompatibilnosti na MSAL klijent
-Azure Identityja, FTP klijent get-uri-ja i ovisnost o Zodu u OpenCode v1 SDK-u. Dohvaćanje Azure tokena
-i preuzimanje putem FTP-a testiraju se s kontroliranim prijenosnim slojevima; oba OpenCode
-paketa pokreću vlastite postupke izgradnje i skupove testova. Brojevi upozorenja registra predstavljaju mjerenja
-u određenom trenutku i mogu se promijeniti nakon što se datoteka za zaključavanje zabilježi u repozitorij.
+Trenutačni popravak ovisnosti uključuje prilagodbe kompatibilnosti za MSAL klijent servisa Azure identity, FTP klijent paketa get-uri i Zod u oba paketa dodataka OpenCode. Dohvaćanje Azure tokena i FTP resursa testirano je kontroliranim prijenosima; oba paketa OpenCode pokreću vlastite skupove testova i postupke izgradnje. Broj upozorenja registra predstavlja mjerenje u određenom trenutku i može se promijeniti nakon što se datoteka zaključavanja potvrdi u repozitorij.
 
 ## Zaostatak: Scorecard savjet → blokiranje
 

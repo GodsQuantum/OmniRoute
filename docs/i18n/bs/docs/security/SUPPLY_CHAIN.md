@@ -53,11 +53,7 @@ nadogradnje prikvačenog razvojnog alata promptfoo. Time se ukida prethodno prih
 Regresijske provjere u `tests/unit/extract-zip-14482-exposure.test.ts` odbijaju njegovo
 ponovno uvođenje i zadržavaju zabranu uvoza iz produkcijskog koda.
 
-Trenutna popravka zavisnosti također ograničava zaobilaženja radi kompatibilnosti na MSAL klijent
-Azure identiteta, FTP klijent paketa get-uri i Zod zavisnost OpenCode v1 SDK-a. Dobavljanje Azure
-tokena i FTP preuzimanje testirani su pomoću kontrolisanih transporta; oba OpenCode
-paketa pokreću vlastite skupove za izgradnju i testiranje. Broj upozorenja registra predstavlja mjerenje
-u određenom trenutku i može se promijeniti nakon predaje datoteke zaključavanja.
+Trenutna korekcija zavisnosti uključuje zamjene radi kompatibilnosti (overrides) za MSAL klijent Azure Identityja, FTP klijent paketa get-uri i Zod u oba paketa dodatka OpenCode. Pribavljanje Azure tokena i preuzimanje putem FTP-a testirani su kontrolisanim transportima; oba OpenCode paketa pokreću vlastite skupove za izgradnju i testiranje. Broj sigurnosnih upozorenja registra predstavlja mjerenje u određenom trenutku i može se promijeniti nakon što se lockfile potvrdi u repozitoriju.
 
 ## Zaostatak: Scorecard savjet → blokiranje
 

@@ -53,11 +53,7 @@ peningkatan versi alat pengembangan promptfoo yang disematkan. Hal ini menghenti
 Pemeriksaan regresi dalam `tests/unit/extract-zip-14482-exposure.test.ts` menolak pengenalan
 ulangnya dan mempertahankan larangan impor dari kode produksi.
 
-Perbaikan dependensi saat ini juga membatasi override kompatibilitas pada klien MSAL milik Azure Identity,
-klien FTP milik get-uri, dan dependensi Zod milik SDK OpenCode v1. Akuisisi token Azure
-dan pengambilan melalui FTP diuji dengan transport terkontrol; kedua paket OpenCode
-menjalankan rangkaian build dan pengujiannya sendiri. Jumlah advisory registri merupakan pengukuran
-pada suatu titik waktu dan dapat berubah setelah lockfile di-commit.
+Perbaikan dependensi saat ini mencakup penggantian kompatibilitas untuk klien MSAL Azure Identity, klien FTP get-uri, dan Zod dalam kedua paket plugin OpenCode. Akuisisi token Azure dan pengambilan melalui FTP diuji dengan transportasi terkontrol; kedua paket OpenCode menjalankan rangkaian build dan pengujiannya masing-masing. Jumlah advisori registri merupakan hasil pengukuran pada suatu titik waktu dan dapat berubah setelah lockfile di-commit.
 
 ## Backlog: Saran Scorecard → pemblokiran
 

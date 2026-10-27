@@ -49,7 +49,7 @@ Trivy-lépéshez is sikeres mérés szükséges: a nem elérhető eszközök, a 
 
 A gyökérszintű lockfile a rögzített promptfoo fejlesztői eszköz frissítése után már nem tartalmazza az `extract-zip` csomagot, sem az arra mutató függőségi kapcsolatot. Ezzel kivezetésre került a #14482-ben nyomon követett, korábban elfogadott `promptfoo` → `@openai/codex-security` → `extract-zip` lánc. A `tests/unit/extract-zip-14482-exposure.test.ts` regressziós ellenőrzései megakadályozzák az újbóli bevezetését, és továbbra is tiltják a produkciós kódból történő importálását.
 
-A jelenlegi függőségjavítás a kompatibilitási felülírásokat az Azure Identity MSAL-kliensére, a get-uri FTP-kliensére és az OpenCode v1 SDK Zod-függőségére is korlátozza. Az Azure-tokenek lekérése és az FTP-n keresztüli letöltés ellenőrzött átviteli rétegekkel van tesztelve; mindkét OpenCode-csomag a saját build- és tesztcsomagját futtatja. A csomagregiszter biztonsági figyelmeztetéseinek száma egy adott időpontra vonatkozó mérés, és a lockfile véglegesítése után megváltozhat.
+A jelenlegi függőségjavítás kompatibilitási felülírásokat tartalmaz az Azure Identity MSAL-klienséhez, a get-uri FTP-klienséhez, valamint a Zodhoz mindkét OpenCode-bővítménycsomagban. Az Azure-tokenek lekérése és az FTP-n keresztüli letöltés ellenőrzött átviteli rétegekkel van tesztelve; mindkét OpenCode-csomag a saját buildelési és tesztelési folyamatait futtatja. A registry biztonsági figyelmeztetéseinek száma egy adott időpontban végzett mérés eredménye, és a lockfile véglegesítése után változhat.
 
 ## Hátralék: Scorecard tanács → blokkoló
 

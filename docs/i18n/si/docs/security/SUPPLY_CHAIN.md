@@ -48,7 +48,7 @@ Trivy පියවරටද සාර්ථක මිනුමක් අවශ�
 
 නිශ්චිතව සකසා ඇති promptfoo සංවර්ධන මෙවලම උත්ශ්රේණි කිරීමෙන් පසු, මූල lockfile එකෙහි තවදුරටත් `extract-zip` හෝ එයට යොමු වන පරායත්තතා සම්බන්ධයක් ඇතුළත් නොවේ. මෙය #14482 හි හඹා ගිය, පෙර පිළිගත් `promptfoo` → `@openai/codex-security` → `extract-zip` දාමය ඉවත් කරයි. `tests/unit/extract-zip-14482-exposure.test.ts` හි ඇති ප්රතිගමන පරීක්ෂණ එය නැවත හඳුන්වා දීම ප්රතික්ෂේප කරන අතර, නිෂ්පාදන කේතයෙන් සිදු කරන imports පිළිබඳ තහනමද පවත්වා ගනී.
 
-වත්මන් පරායත්තතා අලුත්වැඩියාව, ගැළපුම් overrides Azure identity හි MSAL client එකට, get-uri හි FTP client එකට සහ OpenCode v1 SDK හි Zod පරායත්තතාවට පමණක් සීමා කරයි. Azure token ලබා ගැනීම සහ FTP හරහා දත්ත ලබා ගැනීම පාලිත transports භාවිතයෙන් පරීක්ෂා කර ඇත; OpenCode packages දෙකම තමන්ගේම build සහ test suites ධාවනය කරයි. Registry advisory ගණන් යනු යම් නිශ්චිත මොහොතක ලබාගත් මිනුම් වන අතර, lockfile එක commit කිරීමෙන් පසුව ඒවා වෙනස් විය හැක.
+වත්මන් dependency අලුත්වැඩියාවට Azure identity හි MSAL client සඳහා, get-uri හි FTP client සඳහා සහ OpenCode plugin package දෙකෙහිම Zod සඳහා compatibility override ඇතුළත් වේ. Azure token ලබාගැනීම සහ FTP retrieval පාලිත transport භාවිතයෙන් පරීක්ෂා කර ඇත; OpenCode package දෙකම ඒවායේම build සහ test suite ක්රියාත්මක කරයි. Registry advisory සංඛ්යා යනු නිශ්චිත මොහොතක සිදු කළ මිනුම් වන අතර lockfile එක commit කිරීමෙන් පසුව ඒවා වෙනස් විය හැක.
 
 ## Backlog: Scorecard උපදේශනය → අවහිර කිරීම
 

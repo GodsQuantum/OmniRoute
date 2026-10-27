@@ -52,7 +52,7 @@ neobsahuje zraniteľnosti.
 
 Koreňový uzamykací súbor po aktualizácii pripnutého vývojového nástroja promptfoo už neobsahuje `extract-zip` ani hranu závislosti smerujúcu k nemu. Tým sa vyraďuje predtým akceptovaný reťazec `promptfoo` → `@openai/codex-security` → `extract-zip`, sledovaný v #14482. Regresné kontroly v `tests/unit/extract-zip-14482-exposure.test.ts` odmietajú jeho opätovné zavedenie a zachovávajú zákaz importov z produkčného kódu.
 
-Aktuálna oprava závislostí tiež obmedzuje prepísania kompatibility na klienta MSAL služby Azure identity, klienta FTP balíka get-uri a závislosť Zod súpravy SDK OpenCode v1. Získavanie tokenov Azure a načítavanie cez FTP sa testujú pomocou riadených transportov; oba balíky OpenCode spúšťajú vlastné zostavovacie a testovacie sady. Počty upozornení v registri sú merania v konkrétnom čase a po potvrdení uzamykacieho súboru do repozitára sa môžu zmeniť.
+Aktuálna oprava závislostí zahŕňa prepísania kompatibility pre klienta MSAL služby Azure Identity, klienta FTP balíka get-uri a Zod v oboch balíkoch doplnkov OpenCode. Získavanie tokenov Azure a načítavanie cez FTP sa testujú pomocou riadených transportov; oba balíky OpenCode spúšťajú vlastné zostavenia a testovacie súpravy. Počty upozornení registra predstavujú merania v konkrétnom čase a po odovzdaní súboru lockfile do repozitára sa môžu zmeniť.
 
 ## Backlog: Upozornenie Scorecard → blokovanie
 
