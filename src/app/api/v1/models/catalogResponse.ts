@@ -44,7 +44,7 @@ import {
   isCatalogMirrorRefinementsEnabled,
 } from "@/shared/utils/featureFlags";
 import { extractApiKey } from "@/sse/services/auth";
-import { maybeOmitCatalogModelName } from "./catalogHelpers";
+import { maybeOmitCatalogModelName, withCatalogDisplayName } from "./catalogHelpers";
 import { applyCatalogPage, catalogJsonResponse, parseCatalogPage } from "./catalogPagination";
 import { isCodexModelCatalogClient } from "./catalogRequest";
 import {
@@ -382,6 +382,7 @@ export async function finalizeCatalogResponse(
         ? { ...entry, context_length: fallbackContextLength }
         : entry;
       listedModel = normalizeCatalogEntryPricing(listedModel, enrichmentSnapshot);
+      listedModel = withCatalogDisplayName(listedModel);
       listedModel = maybeOmitCatalogModelName(listedModel, includeModelNames);
     }
     enriched.push(listedModel);
