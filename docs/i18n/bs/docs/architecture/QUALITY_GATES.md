@@ -4,8 +4,6 @@
 
 ---
 
-# Referenca za Quality Gates
-
 Ovaj dokument je mjerodavna referenca za sve CI quality gates u OmniRoute-u.
 Opisuje svaku kapiju, šta ona validira, u kojem CI poslu se izvršava, da li koristi
 ratchet osnovicu ili politiku prolaza/pada (pass/fail), te da li blokira build ili je samo savjetodavna.
