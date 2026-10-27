@@ -16,215 +16,244 @@
 
 ### 候选版本准入
 
-CI 和 Quality Gates 工作流各自生成一个稳定的判定结果：`Gate / CI` 和
-`Gate / Quality`。其版本化准入策略会将每个上游作业列为必需或建议。适用的
-必需作业必须成功：缺失、已取消、已跳过、待处理和未知结果均无法确立 PASS。
-有效的仅文档或仅目录分类可以使代码通道不适用；草稿 PR 不会被接受为候选版本。
-`hotfix` 标签不能免除证据要求。
+CI 和 Quality Gates 工作流各自都会生成一个稳定的判定结果：`Gate / CI` 和
+`Gate / Quality`。它们的版本化准入策略将每个上游作业列为必需或建议。
+适用的必需作业必须成功：缺失、已取消、已跳过、待处理和未知结果都无法确立
+PASS。有效的仅文档或仅目录分类可使代码通道不适用；草稿 PR 不属于可接受的
+候选版本。`hotfix` 标签不能免除证据要求。
 
-这两个工作流涵盖以 main/release 分支为目标的 PR、向 `main` 的推送、手动调度
-和合并组事件。推送、调度和合并组会运行完整选择。向 `release/**` 的推送不会
-启动这些工作流（2026-10-18）：每项更改都已在其 PR 上运行过矩阵，而合并后组合的
-验证是 Release-Green 的职责（`docs/ops/RUNNER_BOX.md` → 托管通道）。分叉仓库
-和合并组会为原本选择自托管运行器的作业使用托管运行器；在推出之前，必须验证是否
-具备足够的托管容量。
+这两个工作流均涵盖以 main/release 分支为目标的 PR、向 `main` 的推送、手动触发
+和合并组事件。推送、手动触发和合并组会运行完整选择。向 `release/**` 的推送
+不会启动这些工作流（2026-10-18）：每项变更都已在其 PR 上运行过矩阵，而合并后
+的组合由 Release-Green 负责（`docs/ops/RUNNER_BOX.md` → 托管通道）。对于原本会
+选择自托管运行器的作业，来自 fork 的 PR 和合并组会使用托管运行器；在推出前
+必须验证是否具备足够的托管容量。
 
-每份 JSON 回执都会标识检出的 SHA、工作流运行及尝试次数。
-CLI 会拒绝检出 SHA 与事件 SHA 不匹配的情况。工作流测试会将策略成员资格绑定到
-判定作业的 `needs` 列表，因此新增或移除的通道不会无声消失。
-这些回执涵盖其各自的工作流，但不涵盖发布、部署，也不涵盖现有建议型扫描器的内部行为。
-在分支规则中启用这两个检查名称是一项单独的管理变更；添加这些作业本身并不会保护分支。
+每份 JSON 收据都会标识检出的 SHA、工作流运行及尝试次数。
+CLI 会拒绝检出 SHA 与事件 SHA 不匹配的情况。工作流测试会将策略成员关系绑定到
+判定作业的 `needs` 列表，因此新增或移除的通道不会悄然消失。
+这些收据覆盖其所属工作流，而不覆盖发布、部署或现有建议性扫描器的内部执行。
+在分支规则中启用这两个检查名称是一项单独的管理变更；添加这些作业本身并不会
+保护分支。
+
+### 验收归并器中保留的证据
+
+`scripts/quality/validate-release-acceptance.mjs` 会归并所提供的计划及其
+清单；它并不能证明该计划覆盖了完整的发布流水线。即使该计划为
+`VERIFIED`，其报告仍会明确设置 `releaseAcceptance: false`。
+`release-acceptance.yml` 工作流仍使用影子固件，而非真实的构建、打包、启动或
+晋级收据。
+
+CLI 要求使用 `--evidence-root` 来验证保留的证据。文件按
+`<evidence-root>/<artifact_id>/<member>` 解析，并使用 SHA-256 进行哈希。
+没有证据的 PASS 记录、缺失或已更改的文件、不安全路径或符号链接都会阻止
+验证。缺失文件不等同于空的成功日志。现有的 SHA/运行/尝试检查仍彼此独立：
+字节匹配无法挽救过期的收据。文件完整性不能证明执行真实性或制品晋级。
 
 ### UI 执行容量
 
 CI 将完整的 UI 清单作为四个 `test-vitest` 矩阵分片运行，每个分片最多使用
-四个工作进程，并沿用现有的 15 分钟作业期限。第一个分片还会运行
-MCP/autoCombo Vitest 测试套件。必需作业的结果涵盖每个矩阵执行项；任一分片
-失败或被取消都无法确立候选版本准入。
+两个工作进程，并沿用现有的 15 分钟作业截止时间。第一个分片还会运行
+MCP/autoCombo Vitest 测试套件。必需作业的结果覆盖每个矩阵执行单元；任何一个
+分片失败或被取消，都无法确立候选版本准入。
 
-每夜观察器会为每个 UI 分片保留单独的精确候选版本回执，其中第一个回执包含
-MCP 执行。必须提供全部四份回执、日志以及匹配的执行标识。
-本地 `npm run test:vitest:ui` 仍会选择完整测试套件；单次 `--shard` 运行
-只能作为部分证据。
+每夜观察器会为每个 UI 分片保留一份单独的精确候选版本收据，其中第一份收据
+包含 MCP 执行。全部四份收据、日志和匹配的执行标识均为必需。本地
+`npm run test:vitest:ui` 仍会选择完整测试套件；单次 `--shard` 运行仅构成
+部分证据。
+
+### 单元测试覆盖率收集
+
+十二个单元测试分片会在现有测试执行期间收集 V8 覆盖率。成功的分片会运行
+`scripts/ci/compact-v8-coverage.mjs`，以压缩原始文件，而不生成中间
+Istanbul 报告。最终的 Coverage 作业会根据候选版本 SHA、运行时、源代码根目录
+和数据哈希验证全部十二份清单，然后运行 c8 的报告器和现有覆盖率阈值。输入会
+保留 c8 的全局文件名顺序；对于混合函数/代码块覆盖率，按分片预合并并不安全。
+缺失、格式错误或不兼容的分片会导致准入失败。测试失败的分片会单独保留原始的
+诊断覆盖率；这些数据不能进入最终合并。
 
 ### 静态扫描清单
 
-版本化的 npm 别名清单和静态扫描成员资格位于
+版本化的 npm 别名清单和静态扫描成员关系位于
 `config/quality/gate-manifest.json`。运行 `npm run check:gate-manifest`
-以根据 `package.json` 验证脚本名称和精确命令；新增、移除和命令漂移都会导致
-本地钩子及 CI 中的变更分类作业失败。别名并不是工作流作业、矩阵实例或测试用例：
-不得将这些计数视为可互换数据。
+可根据 `package.json` 验证脚本名称和精确命令；新增、移除和命令漂移都会导致
+本地钩子以及 CI 中的变更分类作业失败。别名并不是工作流作业、矩阵实例或测试
+用例：不得将这些计数表述为可互换的指标。
 
-使用 `npm run quality:scan -- --list` 或 `npm run quality:scan:fast -- --list`
-可在不执行所选别名的情况下检查它们。运行器调用 npm 入口点，因此其运行时
-（包括已配置情况下的 Bun）会被保留。清单会将在这些配置之外的别名记录为单独调用，
-并且只读扫描配置中禁止使用维护命令。
+使用 `npm run quality:scan -- --list` 或
+`npm run quality:scan:fast -- --list` 可在不执行所选别名的情况下检查它们。
+运行器会调用 npm 入口点，因此会保留其运行时（包括已配置情况下的 Bun）。
+清单会将在这些配置之外的别名记录为单独调用，并禁止在只读扫描配置中使用维护
+命令。
 
-这些配置仅涵盖静态扫描。它们不认证产品测试、覆盖率、打包、外部检查或候选版本的
-完整发布验收。工作流准入使用关联的 `config/quality/admission-policy.json`
-和 `scripts/quality/admission-verdict.mjs`。发布观察器配置仍然彼此独立；
-请单独检查其适用的检查项和回执。完整观察器的静态命令在
-`config/quality/release-green-static-profile.json` 中声明，其中包括
-`audit:deps`、变异测试选择和翻译检查。加载器会根据 package.json 以及建模的
+这些配置仅覆盖静态扫描。它们不认证产品测试、覆盖率、打包、外部检查或候选版本
+的完整发布验收。工作流准入使用关联的
+`config/quality/admission-policy.json` 和
+`scripts/quality/admission-verdict.mjs`。发布观察器配置仍保持独立；应单独
+检查其适用的检查项和收据。完整观察器的静态命令声明于
+`config/quality/release-green-static-profile.json`，其中包括
+`audit:deps`、变异测试选择和翻译检查。加载器会根据 package.json 和建模后的
 CI/Quality 声明验证 npm 命令；它会拒绝漂移，而不是将 shell 令牌作为参数执行。
 必需扫描器的 SKIP/INCOMPLETE 输出无法确立 PASS。该配置会记录其外部排除项，
-且不能取代托管覆盖率、测试矩阵、软件包或部署证据。下方的文字清单仅供参考，
+且不能替代托管覆盖率、测试矩阵、软件包或部署证据。下方的文字清单仅供参考，
 不能证明门禁实际运行过。
 
 脚本位于 `scripts/check/`（策略门禁）和 `scripts/quality/`（棘轮引擎）下。
 CI 的事实来源是 `.github/workflows/ci.yml`。
 
-### 发布 PR 快速路径（`quality.yml`）
+### Release PR 快速路径（`quality.yml`）
 
-`.github/workflows/quality.yml` 对面向 main/release 的 PR、向 `main` 的推送、
-调度和合并组中的 CI 形成补充。PR 使用按路径筛选的快速检查。已永久禁用的重复构建
-已被移除；真正的构建/打包/启动检查仍保留在 CI 中。
+`.github/workflows/quality.yml` 是主分支/发布 PR、推送到 `main`、
+手动触发和合并组 CI 的补充。PR 使用按路径筛选的快速检查。已移除长期
+禁用的重复构建；真正的构建/打包/启动检查仍保留在 CI 中。
 
-| 作业                                             | 范围                                                                                                                | 阻塞性        |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `Docs Gates (fast-path)`                         | 文档/代码 PR；API 文档引用和 docs-all                                                                               | 是            |
-| `Fast Quality Gates`                             | 代码 PR；静态检查、类型检查、仪表板类型检查、受影响的单元测试                                                       | 是            |
-| `Forgotten sibling tests`                        | 代码 PR；追踪已更改模块的静态使用方和候选同级测试；桶文件和动态导入路径作为建议性诊断报告，并包含引用的允许列表例外 | **建议性**    |
-| `Vitest (fast-path)`                             | 代码 PR；快速 vitest 测试套件                                                                                       | 是            |
-| `Unit Tests fast-path`                           | 代码 PR；4 分片单元测试套件                                                                                         | 是            |
-| `No new ESLint warnings`                         | 代码 PR；可感知抑制规则的 lint 防护检查                                                                             | 是，包括 fork |
-| `Merge integrity (changelog + generated skills)` | 非草稿 PR；变更日志和生成的 skill 同步                                                                              | 是，包括 fork |
+| 作业                                             | 范围                                                                                                              | 阻塞性        |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------- |
+| `Docs Gates (fast-path)`                         | 文档/代码 PR；API 文档引用和全部文档检查                                                                          | 是            |
+| `Fast Quality Gates`                             | 代码 PR；静态检查、类型检查、仪表板类型检查、受影响的单元测试                                                     | 是            |
+| `Forgotten sibling tests`                        | 代码 PR；追踪已更改模块的静态使用方和候选同级测试；桶文件和动态导入路径仅作为建议性诊断报告，并支持引用白名单例外 | **建议性**    |
+| `Vitest (fast-path)`                             | 代码 PR；快速 vitest 测试套件                                                                                     | 是            |
+| `Unit Tests fast-path`                           | 代码 PR；4 分片单元测试套件                                                                                       | 是            |
+| `No new ESLint warnings`                         | 代码 PR；可识别抑制项的 lint 防护                                                                                 | 是，包括 fork |
+| `Merge integrity (changelog + generated skills)` | 非草稿 PR；变更日志和生成的技能同步                                                                               | 是，包括 fork |
 
 #### 遗漏的同级测试报告
 
 `npm run check:forgotten-sibling-tests` 复用测试影响映射背后的导入解析器。
-对于每个已更改的生产模块，当候选测试未出现在拉取请求的差异中时，它会报告确定性的
+对于每个已更改的生产模块，如果候选测试未出现在拉取请求的差异中，它会报告确定性的
 `changed module/symbol -> static consumer -> candidate sibling test` 链。Markdown 摘要和 JSON 结果会作为
-`forgotten-sibling-tests` 工作流构件保留，以便在启用任何阻塞性规则之前进行校准。
+`forgotten-sibling-tests` 工作流制品保留，以便在任何阻塞性推广之前进行校准。
 
-桶式重新导出和动态导入仅作为解析诊断；它们绝不会产生阻塞性发现。经过审核的例外位于
-`config/quality/forgotten-sibling-allowlist.json` 中。每个条目都必须指定使用方和候选
-测试，提供具体理由，并链接到 GitHub issue 或拉取请求。格式错误的条目会以拒绝方式失败。
+桶式重新导出和动态导入仅属于解析诊断；它们绝不会产生
+阻塞性发现。已审核的例外位于
+`config/quality/forgotten-sibling-allowlist.json`。每个条目都必须指定使用方和候选
+测试，给出具体理由，并链接到 GitHub issue 或拉取请求。格式错误的条目将按失败处理。
 例外无法抑制已删除的候选测试，也无法抑制添加了 `.skip`/`.todo` 的差异；
-断言弱化和其他掩盖行为仍由独立的阻塞性
+断言弱化和其他掩盖行为仍由独立阻塞的
 `check:test-masking` 门禁负责。
 
 ### 作业：`lint`
 
 在每个以 `main` 为目标分支的 PR 上运行。失败时阻止合并。
 
-| 脚本 (`npm run ...`)              | 验证内容                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | 阻塞性                                  |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `check:node-runtime`              | Node.js 版本是否在支持的范围内                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | 是                                      |
-| `check:test-tla-order`            | `tests/unit` 下不存在这样的 `node:test` 文件：先注册一个测试，再执行顶层 `await`，然后继续注册更多测试（#18045；棘轮机制：`test-tla-order-allowlist.json` 只能缩减）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 是                                      |
-| `check:cycles`                    | 检查整个 `src/` + `open-sse/` 中的循环导入（基于 AST，并解析 tsconfig `paths`）。只要存在任何循环，基础命令就会以状态码 1 退出（自 #15281 起采用失败关闭策略），并列出 SCC。`check:cycles:ratchet`（CI 实际运行的命令）会在数量超过 `quality-baseline.json` 中的 `metrics.cycles` 上限时阻塞——目前为 14，`direction: down`，因此只能下降（#15159 G-01/G-02）                                                                                                                                                                                                                                                                                                           | 是（棘轮机制）                          |
-| `check:boundary`                  | `open-sse → src` 耦合：从引擎导入应用的唯一文件到文件导入（`scripts/quality/measure-boundary.mjs`；边列表是 v4 核心/模块拆分修复待办列表）。基础命令 = 建议性报告（与 `quality:boundary` 相同）。`check:boundary:ratchet`（CI 实际运行的命令，也位于 `quality.yml` 的 fast-gates 棘轮循环中）会在数量超过 `quality-baseline.json` 中的 `metrics.boundaryOpenSseToSrc` 上限时阻塞——初始值设为实测的 771，`direction: down`；`--update` 只能降低该值；在 PR 中相对于基础分支计算（`--base-ref`，见下文）                                                                                                                                                                 | 是（棘轮机制）                          |
-| `check:route-validation:t06`      | 所有路由上均存在 Zod schema（第 6 级策略）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
-| `check:any-budget:t11`            | `@ts-expect-error // any` 的数量不超过预算（第 11 级关卡）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
-| `check:provider-consistency`      | `providers.ts` 中的每个提供者在 `providerRegistry.ts` 中都有匹配条目（反之亦然，但仅限允许列表范围内）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 是                                      |
-| `check:model-lifecycle`           | 三个手动维护的路由表与已签入的生命周期快照（#11503）保持一致：`FITNESS_TABLE`（`taskFitness.ts`）不会为任何 `REGISTRY` 可路由的已停用 ID 评分；每个 `BUILT_IN_ALIASES` 目标都存在于 `REGISTRY` 中，且不存在于已停用 ID 快照中；`REGISTRY` 中仍存在的每个已停用 ID 都已被转发或列入 `allowedRetiredInCatalog`；并且任何 `DEFAULT_DEGRADATION_MAP` 源或目标都不会在该快照中显示为已停用。这并不能证明某个模型当前正由实时上游提供服务。离线——与 `config/quality/model-lifecycle.json` 比较；该文件通过 `npm run quality:refresh-model-lifecycle` 手动刷新（需要网络；未接入 CI）。`allowedRetiredInCatalog` 是一种逐步清零式棘轮机制：仅在有关联的跟踪议题时才添加条目。 | 是                                      |
-| `check:fetch-targets`             | 客户端 `src/` 中的每个 `fetch("/api/...")` 都会解析到实际存在的 `route.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
-| `check:deps`                      | 仓库中每个 `package.json` 内所有可通过 `npm install` 安装的依赖项都位于 `dependency-allowlist.json` 中；新增的未固定版本或疑似拼写劫持的软件包会被标记                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 是                                      |
-| `audit:deps`                      | 对所有五个独立锁文件（根目录、Electron、OpenCode 插件 v1/v2 和 provider）执行 npm audit。严重级别公告会阻止通过；高级别公告仍显示为警告。缺失/失败的审计标记为 INCOMPLETE 并阻止通过；保留各作用域的锁文件哈希和报告。                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 是                                      |
-| `check:lockfile`                  | `package-lock.json` 完整性 — 使用 https registry、包含完整性哈希、无主机覆盖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | 是                                      |
-| `check:licenses`                  | 生产依赖项的 SPDX 许可证允许列表                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 是                                      |
-| `check:tracked-artifacts`         | 不允许构建产物/已提交的 `node_modules` 符号链接（也在 husky pre-commit 中运行；pre-push 有意保持轻量 — #6716）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | 是                                      |
-| `check:ai-attribution`            | PR 提交、标题或正文中不得包含 AI/机器人 `Co-Authored-By` 尾注或 AI 生成页脚 — 硬性规则 #16（位于针对 PR→`release/**` 的 `quality.yml` 快速门禁循环中 — 读取事件载荷，非 PR 时不执行 — 以及 `ci.yml` lint 中针对 PR→`main` 的仅限 PR 步骤；也包含 husky `commit-msg` 钩子；允许人类共同作者；#14436）                                                                                                                                                                                                                                                                                                                                                                   |
-| `check:vitest-exclusions`         | 每个 Vitest 排除项都必须注明跟踪 issue，并出现在 `config/quality/vitest-exclusions.json` 中（#13204）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | 是                                      |
-| `check:file-size`                 | 源文件（`src/`、`open-sse/`、`electron/`、`bin/` 中的 `.ts`/`.tsx`）不得超过 `cap`，测试文件（`*.test.ts(x)`）不得超过 `testCap`；冻结在 `file-size-baseline.json` 中的文件（`frozen` / `testFrozen`）不得超过其记录的大小                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
-| `check:error-helper`              | 执行器/处理程序中的错误响应使用 `buildErrorBody()` / `sanitizeErrorMessage()`（硬性规则 #12）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
-| `check:migration-numbering`       | 迁移 SQL 文件按顺序编号，不得存在编号缺失或重复                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | 是                                      |
-| `check:public-creds`              | 除 `publicCreds.ts` 外，不得出现字面量 OAuth `client_id`/`client_secret` 或 Firebase Web 密钥（硬性规则 #11）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
-| `check:db-rules`                  | 除 `src/lib/db/` 模块外，不得使用原始 SQL；不得从 `localDb.ts` 进行桶式导入（硬性规则 #2/#5）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
-| `check:known-symbols`             | 在各自分派表中注册的提供者执行器、路由策略和转换器必须与磁盘上的文件匹配——不得存在孤立或未声明的符号                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 是                                      |
-| `check:route-guard-membership`    | 每个生成子进程的路由均由 `isLocalOnlyPath()` 分类（硬性规则 #15/#17）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | 是                                      |
-| `check:test-discovery`            | 仓库中的每个 `*.test.ts` / `*.spec.ts` 文件都由至少一个测试运行器收集（棘轮机制：`test-discovery-baseline.json` 中的孤立文件列表只能缩短）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
-| `check:agent-skills-sync`         | 生成的 agent-skills 构件与其源目录一致（无偏差）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `check:provider-asset-provenance` | Provider 徽标/资源均带有已记录的来源条目                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `lint:json`                       | JSON 配置文件可正常解析并符合仓库的 lint 规则                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `typecheck:core`                  | TypeScript 编译无错误（仅有提示性警告）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
-| `typecheck:noimplicit:core`       | 严格的 `noImplicitAny`——面向未来；许多已有调用点仍需添加类型注解                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | **提示性**（`continue-on-error: true`） |
-| `check:dashboard-typecheck`       | 范围限定为 `src/app/(dashboard)/**` 的 `tsc` (#7033) — `typecheck:core` 精选的 27 文件允许列表不包含任何仪表板 TSX，且 `next build` 也从不对其进行类型检查（`next.config.mjs` 设置了 `ignoreBuildErrors: true`），因此其中的孤立标识符回归 (#6625/#6909) 对 CI 不可见。与按文件/TypeScript 错误代码计数的冻结基线（`config/quality/dashboard-typecheck-baseline.json`，采用与 `check:known-symbols` 相同的过期强制执行模式）进行差异比较 — 只有超出基线计数的新增错误才会导致门禁失败；修复已有错误时，使用 `--update` 逐步下调基线。                                                                                                                                  | 是                                      |
+| 脚本 (`npm run ...`)              | 验证内容                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | 阻塞性                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `check:node-runtime`              | Node.js 版本是否位于支持的范围内                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
+| `check:cycles`                    | 检查整个 `src/` + `open-sse/` 中的循环导入（基于 AST，并解析 tsconfig `paths`）。只要存在任何循环，裸命令就会以状态码 1 退出（自 #15281 起采用故障关闭策略），并列出 SCC。`check:cycles:ratchet`（CI 实际运行的命令）会在数量超过 `quality-baseline.json` 中的 `metrics.cycles` 上限时阻塞——当前上限为 14，`direction: down`，因此只能降低（#15159 G-01/G-02）                                                                                                                                                                                                                                                                                                            | 是（棘轮机制）                          |
+| `check:boundary`                  | `open-sse → src` 耦合：从引擎到应用的唯一文件间导入（`scripts/quality/measure-boundary.mjs`；边列表是 v4 核心/模块拆分修复待办事项）。裸命令 = 建议性报告（与 `quality:boundary` 相同）。`check:boundary:ratchet`（CI 实际运行的命令，也位于 `quality.yml` 的快速门禁棘轮循环中）会在数量超过 `quality-baseline.json` 中的 `metrics.boundaryOpenSseToSrc` 上限时阻塞——上限初始设为实测值 771，`direction: down`；`--update` 只能降低该值；在 PR 中相对于基础分支计算（`--base-ref`，见下文）                                                                                                                                                                              | 是（棘轮机制）                          |
+| `check:route-validation:t06`      | 所有路由上均存在 Zod schema（第 6 层策略）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
+| `check:any-budget:t11`            | `@ts-expect-error // any` 的数量未超出预算（第 11 层 catraca）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | 是                                      |
+| `check:provider-consistency`      | `providers.ts` 中的每个提供者在 `providerRegistry.ts` 中都有对应条目，反之亦然（在允许列表范围内）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | 是                                      |
+| `check:model-lifecycle`           | 确保三个手动维护的路由表与检入的生命周期快照（#11503）保持一致：`FITNESS_TABLE`（`taskFitness.ts`）不会为 `REGISTRY` 可路由的任何已退役 ID 评分；每个 `BUILT_IN_ALIASES` 目标均存在于 `REGISTRY` 中，且不存在于已退役 ID 快照中；`REGISTRY` 中仍存在的每个已退役 ID 均已转发或列于 `allowedRetiredInCatalog` 中；并且 `DEFAULT_DEGRADATION_MAP` 的源或目标均未在该快照中标记为已退役。这并不能证明某个模型当前正由在线上游提供服务。离线检查——与 `config/quality/model-lifecycle.json` 进行比较；该文件通过 `npm run quality:refresh-model-lifecycle` 手动刷新（需要网络；未接入 CI）。`allowedRetiredInCatalog` 是一个逐步清零的棘轮机制：仅在有关联跟踪议题时添加条目。 | 是                                      |
+| `check:fetch-targets`             | 客户端 `src/` 中的每个 `fetch("/api/...")` 都解析到实际存在的 `route.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | 是                                      |
+| `check:deps`                      | 仓库中每个 `package.json` 内所有可通过 `npm install` 安装的依赖项均位于 `dependency-allowlist.json` 中；新增的未固定版本或仿冒名称包会被标记                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | 是                                      |
+| `audit:deps`                      | 对全部五个独立锁文件（根目录、Electron、OpenCode 插件 v1/v2 和提供者）执行 npm audit。严重级别的安全公告会阻止通过；高级别公告仍会以可见警告的形式保留。缺失或失败的审计会标记为 INCOMPLETE 并阻止通过；每个作用域的锁文件哈希和报告都会保留。                                                                                                                                                                                                                                                                                                                                                                                                                            | 是                                      |
+| `check:lockfile`                  | `package-lock.json` 完整性 — https 注册表、完整性哈希、无主机覆盖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | 是                                      |
+| `check:licenses`                  | 生产依赖项的 SPDX 许可证允许列表                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
+| `check:tracked-artifacts`         | 不存在构建产物或已提交的 `node_modules` 符号链接（也在 husky pre-commit 中运行；pre-push 有意保持轻量 — #6716）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | 是                                      |
+| `check:ai-attribution`            | PR 提交、标题或正文中不得包含 AI/机器人 `Co-Authored-By` 尾注或 AI 生成页脚 — 硬性规则 #16（在针对 PR→`release/**` 的 `quality.yml` 快速门禁循环中 — 读取事件载荷，非 PR 时不执行 — 以及针对 PR→`main` 的 `ci.yml` lint 中仅适用于 PR 的步骤；也包括 husky `commit-msg` 钩子；允许人类共同作者；#14436）                                                                                                                                                                                                                                                                                                                                                                  |
+| `check:vitest-exclusions`         | 每个 Vitest 排除项都必须注明跟踪 issue，并出现在 `config/quality/vitest-exclusions.json` 中（#13204）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | 是                                      |
+| `check:file-size`                 | 源文件（`src/`、`open-sse/`、`electron/`、`bin/` 中的 `.ts`/`.tsx`）不得超过 `cap`，测试文件（`*.test.ts(x)`）不得超过 `testCap`；在 `file-size-baseline.json` 中冻结的文件（`frozen` / `testFrozen`）不得增长至超过其记录的大小                                                                                                                                                                                                                                                                                                                                                                                                                                          | 是                                      |
+| `check:error-helper`              | 执行器/处理器中的错误响应使用 `buildErrorBody()` / `sanitizeErrorMessage()`（硬性规则 #12）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | 是                                      |
+| `check:migration-numbering`       | Migration SQL 文件按顺序编号，无缺号或重复编号                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | 是                                      |
+| `check:public-creds`              | 除 `publicCreds.ts` 外，不得出现字面量 OAuth `client_id`/`client_secret` 或 Firebase Web 密钥（硬性规则 #11）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 是                                      |
+| `check:db-rules`                  | `src/lib/db/` 模块之外不得包含原始 SQL；不得从 `localDb.ts` 进行桶式导入（硬性规则 #2/#5）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
+| `check:known-symbols`             | 在分发表中注册的提供者执行器、路由策略和转换器与磁盘上的文件一致——不存在孤立或未声明的符号                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
+| `check:route-guard-membership`    | 每个生成子进程的路由都由 `isLocalOnlyPath()` 进行分类（硬性规则 #15/#17）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 是                                      |
+| `check:test-discovery`            | 仓库中的每个 `*.test.ts` / `*.spec.ts` 文件都由至少一个测试运行器收集（棘轮机制：`test-discovery-baseline.json` 中的孤立文件列表只能缩短）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
+| `check:test-tla-order`            | `tests/unit` 下的任何 `node:test` 文件都不会先注册测试、遇到顶层 `await`，然后再注册更多测试（#18045；棘轮机制：`test-tla-order-allowlist.json` 只能缩短）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 是                                      |
+| `check:agent-skills-sync`         | 生成的智能体技能制品与其源目录匹配（无偏差）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `check:provider-asset-provenance` | 提供者徽标/资源均有已记录的来源条目                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `lint:json`                       | JSON 配置文件能够成功解析，并符合仓库的 lint 规则                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `typecheck:core`                  | TypeScript 编译无错误（仅有建议性警告）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 是                                      |
+| `typecheck:noimplicit:core`       | 严格执行 `noImplicitAny`——面向未来；许多预先存在的调用点仍需添加类型注解                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | **建议性**（`continue-on-error: true`） |
+| `check:dashboard-typecheck`       | 作用域限定为 `src/app/(dashboard)/**` 的 `tsc` (#7033) — `typecheck:core` 精选的 27 文件允许列表不包含任何仪表板 TSX，且 `next build` 也从不对其进行类型检查（`next.config.mjs` 设置了 `ignoreBuildErrors: true`），因此其中的孤立标识符回归 (#6625/#6909) 对 CI 不可见。与冻结的按文件/TypeScript 错误代码计数基线（`config/quality/dashboard-typecheck-baseline.json`，采用与 `check:known-symbols` 相同的过时项强制检查模式）进行差异比较 — 只有超出基线计数的新增错误才会导致门禁失败；修复已有错误后，使用 `--update` 下调基线。                                                                                                                                     | 是                                      |
 
 ### 作业：`quality-gate`
 
 在 `test-coverage` 之后运行。失败时阻止合并。
 
-| 脚本                         | 验证内容                                                                                                                    | 阻断性               |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `quality:collect`            | 生成 `quality-metrics.json`（ESLint 警告数、来自合并分片报告的覆盖率）                                                      | 是（棘轮检查的上游） |
-| `quality:ratchet`            | `quality-baseline.json` 中的各项指标均未回退（ESLint 警告数 ≤ 基线；覆盖率 ≥ 基线）                                         | 是                   |
-| `check:duplication`          | 代码重复度 (jscpd@4) 不超过 `quality-baseline.json` 中的基线                                                                | 是                   |
-| `check:complexity`           | 文件级圈复杂度不超过上限（核心 ESLint `complexity` + `max-lines-per-function`）                                             | 是                   |
-| `check:cognitive-complexity` | 认知复杂度棘轮检查 (`eslint-plugin-sonarjs`) — 单独执行 ESLint 检查；CI 将两者合并为单个 `check:complexity-ratchets` 步骤   | 是                   |
-| `check:dead-code`            | 未使用的导出/文件棘轮检查 (knip) 相较基线没有回退                                                                           | 是                   |
-| `check:compression-budget`   | 压缩基准预算 — 各引擎的令牌节省下限不得回退                                                                                 | 是                   |
-| `check:type-coverage`        | 类型覆盖率棘轮检查 (`type-coverage`) 不得回退；基本涵盖 `typecheck:noimplicit:core`                                         | 是                   |
-| `check:codeql-ratchet`       | 未解决的 CodeQL 警报数不得回退（通过 `gh api` 读取；无令牌时正常跳过）— 刷新频率和手动触发方式：参见下方的“CodeQL 棘轮检查” | 是                   |
+| 脚本                         | 验证内容                                                                                                                      | 阻断性                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `quality:collect`            | 生成 `quality-metrics.json`（ESLint 警告数、来自合并分片报告的覆盖率）                                                        | 是（棘轮检查的上游步骤） |
+| `quality:ratchet`            | `quality-baseline.json` 中的每项指标均未回退（ESLint 警告数 ≤ 基线；覆盖率 ≥ 基线）                                           | 是                       |
+| `check:duplication`          | 代码重复度 (jscpd@4) 不超过 `quality-baseline.json` 中的基线                                                                  | 是                       |
+| `check:complexity`           | 文件级圈复杂度不超过上限（核心 ESLint `complexity` + `max-lines-per-function`）                                               | 是                       |
+| `check:cognitive-complexity` | 认知复杂度棘轮检查 (`eslint-plugin-sonarjs`) — 单独执行 ESLint 检查；CI 将两者合并为单个 `check:complexity-ratchets` 步骤     | 是                       |
+| `check:dead-code`            | 未使用的导出/文件棘轮检查 (knip) 相较基线未发生回退                                                                           | 是                       |
+| `check:compression-budget`   | 压缩基准预算 — 各引擎的令牌节省下限不得回退                                                                                   | 是                       |
+| `check:type-coverage`        | 类型标注百分比棘轮检查 (`type-coverage`) 未发生回退；基本涵盖 `typecheck:noimplicit:core`                                     | 是                       |
+| `check:codeql-ratchet`       | 未解决的 CodeQL 警报数量未增加（通过 `gh api` 读取；无令牌时正常跳过）— 刷新频率和手动触发方式：请参阅下方的“CodeQL 棘轮检查” | 是                       |
 
 ### 作业：`quality-extended`
 
-该作业会阻止适用的候选版本。包大小、密钥发现结果、漏洞
-发现结果、工作流发现结果和 OpenAPI 变更均通过必需的棘轮检查进行检查。
-循环依赖诊断和扫描器安装属于建议性步骤；安装失败
-并不能免除后续必需的测量。工具缺失、
-报告无效或基线缺失会使必需的扫描器门禁保持“未完成”状态。
+该作业会阻止适用的候选项。包大小、敏感信息发现、
+漏洞发现、工作流发现和 OpenAPI 变更均通过必需的棘轮检查进行检查。
+循环依赖诊断仍为建议性检查。必须安装扫描器：
+`scripts/ci/install-quality-scanners.sh` 会配置固定版本并传播
+安装失败。缺少工具、报告无效或缺少基线时，
+必需的扫描器门禁将保持“未完成”状态。
 
-| 脚本                     | 验证内容                                                                                                                                            | 阻断规则                            |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `check:circular-deps`    | 不存在循环依赖（dpdm）                                                                                                                              | **建议性**                          |
-| `check:bundle-size`      | 打包体积不超过上限；无法进行测量时视为失败                                                                                                          | **使用 --ratchet 时阻断**           |
-| `check:secrets`          | Gitleaks 检测结果不得恶化；必需扫描会拒绝工具、源或基线缺失、扫描失败以及报告无效的情况                                                             | **使用 --ratchet 时阻断**           |
-| `check:vuln-ratchet`     | 依赖项漏洞不得恶化；必需扫描会拒绝工具缺失、报告无效或基线缺失的情况                                                                                | **使用 --ratchet 时阻断**           |
-| `check:workflows`        | 工作流检查（actionlint + zizmor）；扫描器缺失或损坏、报告无效或棘轮基线缺失时以 INCOMPLETE 状态失败。有效发现项遵循所选的严格/建议/棘轮策略         | 必须执行；zizmor 棘轮在 CI 中会阻断 |
-| `check:openapi-breaking` | 根据固定的事件提交检查公共 API 契约（PR 合并基点、推送前状态、合并队列基点；定时/手动运行时使用检出提交的第一父提交）；必需测量无法完成时按失败处理 | **使用 --ratchet 时阻断**           |
+| 脚本                     | 验证内容                                                                                                                                                | 阻断性                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `check:circular-deps`    | 不存在循环依赖（dpdm）                                                                                                                                  | **建议性**                              |
+| `check:bundle-size`      | 包大小不超过上限；无法获取测量结果时检查失败                                                                                                            | **使用 --ratchet 时阻断**               |
+| `check:secrets`          | Gitleaks 检测结果不得回退；必需的扫描会拒绝工具、源或基线缺失、扫描失败以及报告无效的情况                                                               | **使用 --ratchet 时阻断**               |
+| `check:vuln-ratchet`     | 依赖项漏洞不得回退；必需的扫描会拒绝工具缺失、报告无效或基线缺失的情况                                                                                  | **使用 --ratchet 时阻断**               |
+| `check:workflows`        | 工作流检查（actionlint + zizmor）；扫描器缺失/损坏、报告无效或棘轮基线缺失时，以 INCOMPLETE 状态失败。有效检测结果遵循所选的严格/建议性/棘轮策略        | 要求执行；zizmor 棘轮在 CI 中具有阻断性 |
+| `check:openapi-breaking` | 根据固定的事件提交检查公共 API 契约（PR 合并基准、推送前提交、合并组基准；定时/手动运行时使用检出提交的第一父提交）；必需的测量失败时采取封闭式失败策略 | **使用 --ratchet 时阻断**               |
 
 ### 作业：`docs-sync-strict`
 
-在每个提交到 `main` 的 PR 上运行。失败时阻止合并。
+在每个以 `main` 为目标分支的 PR 上运行。失败时阻止合并。
 
-| 脚本                           | 验证内容                                                                                                                   | 阻断规则                      |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `check:docs-all`               | 元门禁，按顺序运行以下 6 个子门禁                                                                                          | 是                            |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                   | 是                            |
-| ↳ `check:docs-counts`          | 文档正文中的数量（提供者数量、迁移数量等）处于实际数量的棘轮窗口内                                                         | 是                            |
-| ↳ `check:env-doc-sync`         | `.env.example` 中的每个环境变量都记录在文档表格中，反之亦然                                                                | 是                            |
-| ↳ `check:deprecated-versions`  | 文档中不存在已弃用的版本字符串                                                                                             | 是                            |
-| ↳ `check:doc-links`            | 文档中的内部 Markdown 链接能够解析到实际文件（`[text]`/`(path)` 形式）                                                     | 是                            |
-| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径均存在于代码库中。使用 `--strict` 时为硬门禁；不带该标志时软失败。 | 是（在 CI 中通过 `--strict`） |
-| `check:cli-i18n`               | 所有 i18n 语言区域文件中均存在 CLI 命令字符串                                                                              | 是                            |
-| `check:openapi-coverage`       | OpenAPI 规范至少覆盖采用棘轮机制设定下限的真实路由数量                                                                     | 是                            |
-| `check:openapi-security-tiers` | `openapi.yaml` 中的安全层级注解与 `routeGuard.ts` 中的分类保持一致                                                         | **建议性**                    |
-| `check:openapi-routes`         | `openapi.yaml` 中的每个路径都能够解析到真实的 `route.ts`（防止虚构）                                                       | 是                            |
-| `check:docs-symbols`           | `docs/**/*.md` 中的每个 `/api/...` 引用都能够解析到真实的 `route.ts`（防止虚构）                                           | 是                            |
-| `i18n translation drift`       | i18n 语言区域文件中未翻译的键——仅警告                                                                                      | **建议性**                    |
+| 脚本                           | 验证内容                                                                                                                       | 阻断性                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
+| `check:docs-all`               | 元门禁，按顺序运行以下 6 个子门禁                                                                                              | 是                            |
+| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                       | 是                            |
+| ↳ `check:docs-counts`          | 文档正文中的计数（提供者数量、迁移数量等）位于实际计数的棘轮窗口范围内                                                         | 是                            |
+| ↳ `check:env-doc-sync`         | `.env.example` 中的每个环境变量都记录在文档表格中，反之亦然                                                                    | 是                            |
+| ↳ `check:deprecated-versions`  | 文档中不存在已弃用的版本字符串                                                                                                 | 是                            |
+| ↳ `check:doc-links`            | 文档中的内部 markdown 链接可解析到真实文件（`[text]`/`(path)` 形式）                                                           | 是                            |
+| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径均存在于代码库中。通过 `--strict` 实施硬性门禁；不带此标志时为软失败。 | 是（通过 CI 中的 `--strict`） |
+| `check:cli-i18n`               | 所有 i18n 语言区域文件中都包含 CLI 命令字符串                                                                                  | 是                            |
+| `check:openapi-coverage`       | OpenAPI 规范覆盖真实路由的比例至少达到经棘轮调整的最低阈值                                                                     | 是                            |
+| `check:openapi-security-tiers` | `openapi.yaml` 中的安全层级注解与 `routeGuard.ts` 中的分类一致                                                                 | **建议性**                    |
+| `check:openapi-routes`         | `openapi.yaml` 中的每个路径都可解析到真实的 `route.ts`（防止虚构）                                                             | 是                            |
+| `check:docs-symbols`           | `docs/**/*.md` 中的每个 `/api/...` 引用都可解析到真实的 `route.ts`（防止虚构）                                                 | 是                            |
+| `i18n translation drift`       | i18n 语言区域文件中未翻译的键——仅警告                                                                                          | **建议性**                    |
 
 ### 作业：`i18n-ui-coverage`
 
-| 脚本                             | 验证内容                                                                                                                                  | 是否阻塞   |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `check-ui-keys-coverage`（内联） | UI i18n 键覆盖率 ≥ 65%                                                                                                                    | 是         |
-| `check-ui-value-drift`（内联）   | 重写后的英文**值**不会留下过时的翻译                                                                                                      | 是         |
-| `check-new-key-coverage`（内联） | **新增的**英文键已在每个语言区域中翻译——拒绝 `__MISSING__:` 标记                                                                          | 是         |
-| `check-translation-ratio`        | 每个语言区域的实际翻译比例（允许列表之外与英文相同的值、占位符或缺失项）不得超过 `config/quality/i18n-translation-baseline.json` + 宽限值 | **建议性** |
+| 脚本                             | 验证内容                                                                                                                                      | 是否阻断   |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `check-ui-keys-coverage`（内联） | UI i18n 键覆盖率 ≥ 65%                                                                                                                        | 是         |
+| `check-ui-value-drift`（内联）   | 重写后的英文**值**不会留下过时的翻译                                                                                                          | 是         |
+| `check-new-key-coverage`（内联） | **新增的**英文键已在每个语言区域中完成翻译——拒绝 `__MISSING__:` 标记                                                                          | 是         |
+| `check-translation-ratio`        | 每个语言区域的真实翻译比例（允许列表之外与英文相同、为占位符或缺失的叶节点）不得超过 `config/quality/i18n-translation-baseline.json` + 宽限值 | **建议性** |
 
 需要 `fetch-depth: 0`——值漂移门禁会将 `en.json` 与合并基准进行差异比较。
 
 #### `check-ui-value-drift`——过时翻译门禁
 
-捕获其他门禁在结构上无法发现的一类 i18n 回归：英文值被重写，但基于_先前_英文的翻译仍被保留，导致非英语用户继续读到措辞肯定却已不正确的文案。
+它能够捕获其他门禁在结构上无法发现的一类 i18n 回归：英文值被重写，但基于_旧版_英文生成的翻译仍然保留，导致非英语用户继续读到措辞笃定但现已错误的文案。
 
-这确实曾发布到生产环境。Antigravity 登录辅助功能上线（#5203）时，`oauthModal.googleOAuthWarning` 被重写；**43 个语言区域中有 39 个**仍保留着要求操作员“复制完整 URL 并粘贴到下方”的文本——对于该提供者，这一流程根本无法完成。这个问题直到 #8463 才被发现，原因如下：
+这确实曾发布到生产环境中。引入 Antigravity 登录辅助工具（#5203）时重写了 `oauthModal.googleOAuthWarning`；**43 个语言区域中有 39 个**仍保留着提示运维人员“复制完整 URL 并粘贴到下方”的文本——对于该提供者，这一流程根本无法完成。直到 #8463 才发现此问题，原因如下：
 
-- `sync-ui-keys` 只会补齐**缺失**的键，从不会处理**过时**的键；
-- `check-ui-keys-coverage` 统计键的_存在情况_，因此过时翻译也会被视为已覆盖；
+- `sync-ui-keys` 只会回填**不存在**的键，绝不会处理**过时**的键；
+- `check-ui-keys-coverage` 只统计键是否_存在_，因此过时翻译也会被计为已覆盖；
 - `check-translation-drift` 跟踪的是 `docs/i18n/<locale>/**.md` 文档镜像——
-  它从不读取 `src/i18n/messages/*.json`。自 2026-09 重新同步后，作业 `docs-sync-strict` 中的检查会阻塞合并：编辑核心文档 → `npm run i18n:run -- --files=<doc>`（按章节处理，成本低）。
+  它从不读取 `src/i18n/messages/*.json`。自 2026-09 重新同步以来，它在作业 `docs-sync-strict` 中作为阻断项：编辑核心文档 → `npm run i18n:run -- --files=<doc>`（按章节处理，成本较低）。
 
-**感知差异，而非基于基线。**它会比较合并基准中的 `en.json` 与工作树；对于英文值发生变化的每个键，如果某个语言区域仍保留未经修改的翻译，则该翻译已过时。这会有意**冻结已有债务**——差异无法揭示长期存在的翻译源自哪个旧英文，因此门禁只判断当前变更所触及的内容。另一种方案（每个键使用一个哈希基线）将需要一个约 600 KB 的生成文件，其大小是现有最大基线的 3 倍，并且每个 i18n PR 都会导致该文件频繁变动。
+**基于差异，而非基于基线。**它会将合并基准中的 `en.json` 与工作树进行比较；对于英文值发生变化的每个键，如果某个语言区域仍保留未修改的翻译，则该翻译即为过时翻译。这是有意**冻结既有债务**——差异无法揭示长期存在的翻译源自哪个旧英文版本，因此门禁只判断当前变更所触及的内容。另一种方案（按键维护哈希基线）会产生一个约 600 KB 的生成文件，大小是现有最大基线的 3 倍，并且每个 i18n PR 都会导致该文件频繁变动。
 
-有两种方式可以满足该门禁：
+有两种方式可以通过此门禁：
 
 1. 更新受影响的翻译，或
 2. 将其设置为 `__MISSING__:<new english>`——随后运行时会提供修正后的英文
-   （`src/i18n/request.ts::deepMergeFallback`，#7258），并将该键排入待翻译队列。
+   （`src/i18n/request.ts::deepMergeFallback`，#7258），并将该键加入待翻译队列。
 
-如果字符串的**含义**发生了变化，优先选择**重命名键**：新键无法继承过时翻译。#8463 使用的正是这种模式。
+如果字符串的**含义**发生了变化，优先考虑**重命名该键**：新键无法继承过时翻译。#8463 使用的就是这种模式。
 
 ```bash
 npm run i18n:check-value-drift          # 严格模式（CI 运行的模式）
@@ -232,25 +261,25 @@ npm run i18n:check-value-drift:warn     # 仅报告
 BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 ```
 
-当无法读取基础目录时（浅克隆中没有基础引用），以 `SKIP reason=base-unresolved` 和退出码 0 退出，与 `check-openapi-breaking` 的行为一致。
+当无法读取基准目录时（浅克隆中没有基准引用），以状态码 0 退出并输出 `SKIP reason=base-unresolved`，与 `check-openapi-breaking` 的行为一致。
 
 ### 作业：`i18n`
 
-完整的 i18n 验证矩阵（每个语言区域一个作业）。整个作业均为建议性检查。
+完整的 i18n 验证矩阵（每个语言区域对应一个作业）。整个作业均为建议性检查。
 
-| 脚本                            | 验证内容                 | 是否阻塞                                             |
-| ------------------------------- | ------------------------ | ---------------------------------------------------- |
-| `validate_translation.py quick` | 每个语言区域的翻译完整性 | **建议性**（整个作业设置 `continue-on-error: true`） |
+| 脚本                            | 验证内容                 | 是否阻断                                               |
+| ------------------------------- | ------------------------ | ------------------------------------------------------ |
+| `validate_translation.py quick` | 每个语言区域的翻译完整性 | **建议性**（整个作业设置了 `continue-on-error: true`） |
 
 ### 作业：`pr-test-policy`
 
 仅在拉取请求上运行。
 
-| 脚本                   | 验证内容                                                                                                 | 是否阻塞 |
-| ---------------------- | -------------------------------------------------------------------------------------------------------- | -------- |
-| `check:pr-test-policy` | 更改 `src/`、`open-sse/`、`electron/` 或 `bin/` 中生产代码的 PR 必须包含或更新测试（硬性规则 #8）        | 是       |
-| `check:test-masking`   | 发生变更的测试文件不会减少断言净数量，也不会添加 `assert.ok(true)` 这类恒真断言                          | 是       |
-| `check:pr-evidence`    | PR 正文引用了针对该变更的测试/VPS 证据（通过 grep PR 文本将硬性规则 #18 机制化——较为脆弱，参见待办事项） | 是       |
+| 脚本                   | 验证内容                                                                                              | 是否阻断 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- | -------- |
+| `check:pr-test-policy` | 修改 `src/`、`open-sse/`、`electron/` 或 `bin/` 中生产代码的 PR 必须包含或更新测试（硬性规则 #8）     | 是       |
+| `check:test-masking`   | 发生变更的测试文件不会减少断言净数量，也不会添加 `assert.ok(true)` 这类恒真断言                       | 是       |
+| `check:pr-evidence`    | PR 正文为变更提供测试/VPS 证据（通过搜索 PR 文本将硬性规则 #18 机制化——这种方式较脆弱，参见待办事项） | 是       |
 
 ### 作业：`test-vitest`
 
@@ -259,22 +288,22 @@ BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 | 测试套件         | 验证内容                                                  | 阻断性                                                                        |
 | ---------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | `test:vitest`    | MCP 服务器（110 个工具）、autoCombo、缓存 — vitest 运行器 | 是                                                                            |
-| `test:vitest:ui` | UI 组件测试 — vitest 运行器                               | **阻断** — 已有失败已在 `vitest.config.ts` 中明确排除；新增失败会导致作业失败 |
+| `test:vitest:ui` | UI 组件测试 — vitest 运行器                               | **阻断** — 已有失败已在 `vitest.config.ts` 中明确排除；新的失败会导致作业失败 |
 
-### 每夜工作流（定时执行，建议性）
+### 夜间工作流（定时运行，建议性）
 
-这些工作流按 cron 计划运行（也可通过 `workflow_dispatch` 触发），绝不会在 PR 上运行。它们均为建议性工作流。
+这些工作流按 cron 计划运行（也可通过 `workflow_dispatch` 运行），绝不会在 PR 上运行。它们均为建议性检查。
 
 | 工作流                 | 验证内容                                                                                                                          | 阻断性     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | `nightly-property`     | 使用随机种子和高运行次数的 fast-check 属性测试                                                                                    | **建议性** |
-| `nightly-resilience`   | 堆增长门控、混沌故障注入、k6 负载/浸泡测试                                                                                        | **建议性** |
-| `nightly-llm-security` | promptfoo 注入防护（阻止模式）+ garak 探测（未提供服务提供者密钥时跳过）                                                          | **建议性** |
-| `nightly-schemathesis` | 使用 `docs/openapi.yaml` 对实时 OmniRoute 执行 OpenAPI 契约模糊测试（schemathesis）— 揭示规范违规/未处理的 500 错误（阶段 8 B.4） | **建议性** |
-| `nightly-mutation`     | 针对快速单元测试通道的 Stryker 变异测试分数 — 存活的变异体会暴露薄弱的断言                                                        | **建议性** |
+| `nightly-resilience`   | 堆增长门禁、混沌故障注入、k6 负载/浸泡测试                                                                                        | **建议性** |
+| `nightly-llm-security` | promptfoo 注入防护（阻止模式）+ garak 探测（无提供者密钥时跳过）                                                                  | **建议性** |
+| `nightly-schemathesis` | 使用 `docs/openapi.yaml` 对实时 OmniRoute 进行 OpenAPI 契约模糊测试（schemathesis）— 揭示规范违规/未处理的 500 错误（阶段 8 B.4） | **建议性** |
+| `nightly-mutation`     | 针对快速单元测试通道的 Stryker 变异测试得分 — 存活的变异体可揭示薄弱的断言                                                        | **建议性** |
 | `nightly-compat`       | 覆盖受支持 `engines.node` 范围的 Node 引擎兼容性矩阵                                                                              | **建议性** |
 
-性能基线（堆、TTFB、构建时间）仅记录，不作为门控条件：请参阅 [`PERF_BASELINE.md`](../ops/PERF_BASELINE.md)（`npm run perf:lts-baseline`）。
+性能基线（堆、TTFB、构建时间）仅记录，不作为门禁：请参阅 [`PERF_BASELINE.md`](../ops/PERF_BASELINE.md)（`npm run perf:lts-baseline`）。
 
 ---
 
