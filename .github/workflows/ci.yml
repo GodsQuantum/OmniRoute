@@ -1119,7 +1119,7 @@ jobs:
     # 45, not 30 (2026-10-20): the budget was eaten by growth — on six PRs the job took
     # 28–31 min (download 4 min, merge+report+gate 18 min, Codecov ≤5 min) and two of six
     # died at exactly 30 min as job-timeout `cancelled` (jobs 118735970655, 118737111780),
-    # failing Quality Ratchet / PR Coverage Comment / Gate / CI until a re-run.
+    # failing Gate / CI until a re-run; missing-output consumers remained advisory.
     timeout-minutes: 45
     needs: test-unit
     if: ${{ !cancelled() && needs.test-unit.result == 'success' }}
@@ -1198,6 +1198,8 @@ jobs:
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: coverage/lcov.info
+          # `files` adds to auto-discovery; do not scan compact/raw shard payloads.
+          disable_search: true
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
       - name: Upload coverage artifacts
