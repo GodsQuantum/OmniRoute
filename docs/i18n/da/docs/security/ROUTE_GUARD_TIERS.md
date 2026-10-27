@@ -206,7 +206,7 @@ serverprocessen.
 | `/api/settings/obsidian`                  | Udsteder genanvendelige WebDAV-legitimationsoplysninger for enhver vault-rod |
 | `/api/relay/tokens`                       | Mints, lists, edits and revokes relay tokens                                 |
 
-**Svar ved overtrædelse:** `401 Godkendelse påkrævet`
+**Svar ved overtrædelse:** `401 Authentication required`
 
 `/api/settings/obsidian` dækker dens underordnede `/webdav`-rute: `POST` retter WebDAV-filtjenesten —
 som betjenes af det brugerdefinerede Node-lag før Next.js og uden for denne pipeline — mod en rod,

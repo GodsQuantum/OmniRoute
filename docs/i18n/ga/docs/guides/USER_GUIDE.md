@@ -656,7 +656,7 @@ Le haghaidh an tagarmharc iomlán athróga timpeallachta, féach an [README](../
 
 **Soláthraithe comhoiriúnacha eile** (roghnaithe): `cohere`, `databricks`, `snowflake`, `together`, `vertex`, `alibaba`, `alibaba-cn`, `bedrock` (tríd an `aws-bedrock`), `azure-ai`, `openrouter` (catalóg pas-tríd), `siliconflow`, `hyperbolic`, `huggingface`, `featherless-ai`, `cloudflare-ai`, `scaleway`, `deepinfra`, `vercel-ai-gateway`, `bazaarlink`, `friendliai`, `nous-research`, `reka`, `volcengine`, `ai21`, `gigachat`. Coinníonn gach ceann acu a liosta samhlacha féin i `providerRegistry.ts` agus is féidir é a shioncronú go huathoibríoch nuair a nochtlann an soláthraí pointe deiridh `/models`.
 
-**Nóta ar aitheantais samhlacha:** Úsáideann OmniRoute aitheantais nádúrtha soláthraí (`claude-opus-4-8`, `gpt-5.5`, `glm-5.1`, `MiniMax-M2.7`, `kimi-k2.5`, `grok-4.20-0309-reasoning`). Tá leaganacha ponctuála i roinnt aitheantais toisc go dteastaíonn siad mar sin ón API upstream. Mura bhfuil samhail ar an liosta thuas, rith `omniroute models --search <téarma>` nó glac `GET /api/models/catalog` chun infhaighteacht a dheimhniú.
+**Nóta ar aitheantais samhlacha:** Úsáideann OmniRoute aitheantais nádúrtha soláthraí (`claude-opus-4-8`, `gpt-5.5`, `glm-5.1`, `MiniMax-M2.7`, `kimi-k2.5`, `grok-4.20-0309-reasoning`). Tá leaganacha ponctuála i roinnt aitheantais toisc go dteastaíonn siad mar sin ón API upstream. Mura bhfuil samhail ar an liosta thuas, rith `omniroute models --search <term>` nó glac `GET /api/models/catalog` chun infhaighteacht a dheimhniú.
 
 </details>
 
@@ -1322,7 +1322,7 @@ Féach [API_REFERENCE.md](../reference/API_REFERENCE.md) le haghaidh an catalóg
 
 ## 💧 CLI Inmheánach
 
-Seolann OmniRoute CLI inmheánach (`omniroute …') le haghaidh socraithe, diagnóise agus rialaithe rith. Tá seo **leithleasc ón leathanach "Uirlisí CLI" sa deasc**, a chumraítear le haghaidh CLI tríú páirtí (Claude Code, Cursor, Codex, Cline, …) ionas gur féidir leo labhairt le OmniRoute.
+Seolann OmniRoute CLI inmheánach (`omniroute …`) le haghaidh socraithe, diagnóise agus rialaithe rith. Tá seo **leithleasc ón leathanach "Uirlisí CLI" sa deasc**, a chumraítear le haghaidh CLI tríú páirtí (Claude Code, Cursor, Codex, Cline, …) ionas gur féidir leo labhairt le OmniRoute.
 
 ```bash
 omniroute setup                    # Treoraí idirghníomhach (pasfhocal, soláthraithe, combos)

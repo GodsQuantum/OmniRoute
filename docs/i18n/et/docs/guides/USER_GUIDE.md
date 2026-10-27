@@ -917,7 +917,7 @@ Allpool on näidismustrid mitme teenusepakkuja kombineerimiseks ja nende vahel m
 
 Ideaalne programmeerimisagentidele (OpenCode, Claude Code, Cursor, Cline). Marsruudib algselt tipptasemel arutlusmudelitele ning limiidi ammendumisel või tõrgete korral kasutab varuvariandina kiireid programmeerimismudeleid.
 
-- **Töölaud**: Kombinatsioonid → Uus kombinatsioon → Nimi: `agent-coding` → Strateegia: `Prioriteet`
+- **Töölaud**: Kombinatsioonid → Uus kombinatsioon → Nimi: `agent-coding` → Strateegia: `Priority`
 - **Mudelid**:
   1. `claude/claude-sonnet-4-6` (Peamine programmeerimisagent)
   2. `openai/gpt-4o` (Teisene suure võimekusega varuvariant)

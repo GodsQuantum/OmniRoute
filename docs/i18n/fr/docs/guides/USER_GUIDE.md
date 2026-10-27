@@ -915,7 +915,7 @@ Voici des exemples de modèles permettant de combiner plusieurs fournisseurs et 
 
 Idéale pour les agents de programmation (OpenCode, Claude Code, Cursor, Cline). Achemine initialement les requêtes vers des modèles de raisonnement de pointe, puis se rabat sur des modèles de programmation rapides en cas d’épuisement du quota ou d’erreurs.
 
-- **Tableau de bord** : Combinaisons → Nouvelle combinaison → Nom : `agent-coding` → Stratégie : `Priorité`
+- **Tableau de bord** : Combinaisons → Nouvelle combinaison → Nom : `agent-coding` → Stratégie : `Priority`
 - **Modèles** :
   1. `claude/claude-sonnet-4-6` (Agent de programmation principal)
   2. `openai/gpt-4o` (Modèle de repli secondaire à grande capacité)

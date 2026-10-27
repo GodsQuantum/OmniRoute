@@ -915,7 +915,7 @@ Her er eksempelmønstre for å kombinere flere leverandører og rute mellom dem 
 
 Ideell for kodeagenter (OpenCode, Claude Code, Cursor, Cline). Ruter først til ledende resonneringsmodeller, med overgang til raske kodemodeller ved oppbrukt kvote eller feil.
 
-- **Kontrollpanel**: Kombinasjoner → Ny kombinasjon → Navn: `agent-coding` → Strategi: `Prioritet`
+- **Kontrollpanel**: Kombinasjoner → Ny kombinasjon → Navn: `agent-coding` → Strategi: `Priority`
 - **Modeller**:
   1. `claude/claude-sonnet-4-6` (Primær kodeagent)
   2. `openai/gpt-4o` (Sekundært reservealternativ med høy kapasitet)

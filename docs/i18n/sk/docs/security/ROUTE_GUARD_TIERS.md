@@ -205,7 +205,7 @@ ukončiť proces servera.
 | `/api/settings/obsidian`                  | Vytvorí opakovane použiteľné prihlasovacie údaje WebDAV pre ľubovoľný koreň trezora |
 | `/api/relay/tokens`                       | Mints, lists, edits and revokes relay tokens                                        |
 
-**Odpoveď pri porušení:** `401 Vyžaduje sa overenie totožnosti`
+**Odpoveď pri porušení:** `401 Authentication required`
 
 `/api/settings/obsidian` pokrýva aj svoju podradenú cestu `/webdav`: `POST` nasmeruje súborovú službu WebDAV —
 obsluhovanú vlastnou vrstvou Node pred Next.js, mimo tohto spracovateľského reťazca — na koreň zvolený volajúcim

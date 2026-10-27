@@ -806,7 +806,7 @@ curl http://localhost:20128/api/models/catalog
 - OmniRoute 或容器重新啟動後，不會自動還原 Quick Tunnel；需要時請從儀表板重新啟用
 - Tunnel URL 為暫時性，每次停止／啟動 Tunnel 時都會變更
 - 受管理的 Quick Tunnel 預設使用 HTTP/2 傳輸，以避免在資源受限的容器中出現大量 QUIC UDP 緩衝區警告
-- 若要覆寫受管理的傳輸方式，請將 `CLOUDFLARED_PROTOCOL` 設為 `quic` 或 `auto`
+- 若要覆寫受管理的傳輸方式，請將 `CLOUDFLARED_PROTOCOL` 設為 `quic` 或 `auto` (`CLOUDFLARED_PROTOCOL=quic`)
 - 若您偏好使用預先安裝的 `cloudflared` 執行檔，而非受管理的下載版本，請設定 `CLOUDFLARED_BIN`
 - Cloudflare Quick Tunnel、Tailscale Funnel 與 ngrok Tunnel 面板可在 **設定 → 外觀** 中顯示或隱藏。隱藏面板不會停止正在執行的 Tunnel。
 

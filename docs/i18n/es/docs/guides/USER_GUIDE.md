@@ -913,7 +913,7 @@ Estos son algunos patrones de ejemplo para combinar varios proveedores y enrutar
 
 Ideal para agentes de programación (OpenCode, Claude Code, Cursor, Cline). Enruta inicialmente a modelos de razonamiento de vanguardia y recurre a modelos de programación rápidos cuando se agota la cuota o se producen errores.
 
-- **Panel de control**: Combinaciones → Nueva combinación → Nombre: `agent-coding` → Estrategia: `Prioridad`
+- **Panel de control**: Combinaciones → Nueva combinación → Nombre: `agent-coding` → Estrategia: `Priority`
 - **Modelos**:
   1. `claude/claude-sonnet-4-6` (Agente de programación principal)
   2. `openai/gpt-4o` (Respaldo secundario de alta capacidad)

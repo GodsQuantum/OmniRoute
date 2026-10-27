@@ -202,7 +202,7 @@ Tunnel, Tailscale, Ngrok), проверка loopback-интерфейса по-�
 | `/api/settings/obsidian`                  | Выпускает повторно используемые учётные данные WebDAV для любого корня хранилища |
 | `/api/relay/tokens`                       | Mints, lists, edits and revokes relay tokens                                     |
 
-**Ответ при нарушении:** `401 Требуется аутентификация`
+**Ответ при нарушении:** `401 Authentication required`
 
 `/api/settings/obsidian` охватывает дочерний маршрут `/webdav`: `POST` направляет файловую службу WebDAV —
 обслуживаемую пользовательским слоем Node перед Next.js, вне этого конвейера, — на выбранный вызывающей
