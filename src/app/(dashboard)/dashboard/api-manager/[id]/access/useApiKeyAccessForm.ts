@@ -320,6 +320,19 @@ type BehaviourStateField =
   | "fiveHourUsageLimitUsd"
   | "chaosModeEnabled";
 
+function initialUsdLimitState(
+  apiKey: StoredApiKey
+): Pick<
+  ApiKeyAccessFormState,
+  "dailyUsageLimitUsd" | "weeklyUsageLimitUsd" | "fiveHourUsageLimitUsd"
+> {
+  return {
+    dailyUsageLimitUsd: positiveUsdLimitText(apiKey?.dailyUsageLimitUsd),
+    weeklyUsageLimitUsd: positiveUsdLimitText(apiKey?.weeklyUsageLimitUsd),
+    fiveHourUsageLimitUsd: positiveUsdLimitText(apiKey?.fiveHourUsageLimitUsd),
+  };
+}
+
 function initialBehaviourState(
   apiKey: StoredApiKey
 ): Pick<ApiKeyAccessFormState, BehaviourStateField> {
@@ -332,9 +345,7 @@ function initialBehaviourState(
     disableNonPublicModels: apiKey?.disableNonPublicModels === true,
     allowUsageCommand: apiKey?.allowUsageCommand === true,
     usageLimitEnabled: apiKey?.usageLimitEnabled === true,
-    dailyUsageLimitUsd: positiveUsdLimitText(apiKey?.dailyUsageLimitUsd),
-    weeklyUsageLimitUsd: positiveUsdLimitText(apiKey?.weeklyUsageLimitUsd),
-    fiveHourUsageLimitUsd: positiveUsdLimitText(apiKey?.fiveHourUsageLimitUsd),
+    ...initialUsdLimitState(apiKey),
     chaosModeEnabled: apiKey?.chaosModeEnabled === true,
   };
 }

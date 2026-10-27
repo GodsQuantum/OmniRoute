@@ -561,18 +561,47 @@ function getOldestApiKeySpendSince(apiKeyId: string, sinceIso: string): string |
 
 interface FiveHourWindow {
   windowStartIso: string;
-  resetAtIso: string;
+  resetAtIso: string | null;
   spend: ApiKeyUsdSpend;
 }
 
-async function getFiveHourWindow(apiKeyId: string, nowMs: number): Promise<FiveHourWindow> {
+async function getFiveHourWindow(
+  apiKeyId: string,
+  limitUsd: number | null,
+  nowMs: number
+): Promise<FiveHourWindow> {
   const windowStartIso = new Date(nowMs - FIVE_HOUR_WINDOW_MS).toISOString();
+  // Skipped without a 5 h limit: no extra usage_history scan per request.
+  if (limitUsd === null) {
+    return { windowStartIso, resetAtIso: null, spend: { totalUsd: 0, hasUnpricedUsage: false } };
+  }
   const spend = await getApiKeyUsdSpendSince(apiKeyId, windowStartIso);
   const oldestMs = Date.parse(getOldestApiKeySpendSince(apiKeyId, windowStartIso) ?? "");
   const resetMs = Number.isFinite(oldestMs)
     ? oldestMs + FIVE_HOUR_WINDOW_MS
     : nowMs + FIVE_HOUR_WINDOW_MS;
   return { windowStartIso, resetAtIso: new Date(resetMs).toISOString(), spend };
+}
+
+/** 5 h status fields, with the same fail-closed rule for unpriced usage as daily/weekly. */
+function fiveHourStatusFields(
+  window: FiveHourWindow,
+  limitUsd: number | null,
+  enabled: boolean,
+  failClosedOnUnpriced: boolean
+) {
+  const { totalUsd, hasUnpricedUsage } = window.spend;
+  return {
+    fiveHourLimitUsd: limitUsd,
+    fiveHourSpentUsd: totalUsd,
+    fiveHourWindowStartIso: window.windowStartIso,
+    fiveHourResetAtIso: window.resetAtIso,
+    fiveHourExceeded:
+      enabled &&
+      limitUsd !== null &&
+      (totalUsd >= limitUsd || (failClosedOnUnpriced && hasUnpricedUsage)),
+    fiveHourHasUnpricedUsage: hasUnpricedUsage,
+  };
 }
 
 export async function getApiKeyUsageLimitStatus(
@@ -602,8 +631,7 @@ export async function getApiKeyUsageLimitStatus(
   const [dailySpend, weeklySpend, fiveHour] = await Promise.all([
     getApiKeyUsdSpendSince(metadata.id, dailyWindowStartIso),
     getApiKeyUsdSpendSince(metadata.id, weeklyWindowStartIso),
-    // Skipped without a 5 h limit: no extra usage_history scan per request.
-    fiveHourLimitUsd === null ? null : getFiveHourWindow(metadata.id, now),
+    getFiveHourWindow(metadata.id, fiveHourLimitUsd, now),
   ]);
   const dailySpentUsd = dailySpend.totalUsd;
   const weeklySpentUsd = weeklySpend.totalUsd;
@@ -625,12 +653,6 @@ export async function getApiKeyUsageLimitStatus(
     enabled &&
     weeklyLimitUsd !== null &&
     (weeklySpentUsd >= weeklyLimitUsd || (failClosedOnUnpriced && weeklySpend.hasUnpricedUsage));
-  const fiveHourSpentUsd = fiveHour?.spend.totalUsd ?? 0;
-  const fiveHourHasUnpricedUsage = fiveHour?.spend.hasUnpricedUsage ?? false;
-  const fiveHourExceeded =
-    enabled &&
-    fiveHourLimitUsd !== null &&
-    (fiveHourSpentUsd >= fiveHourLimitUsd || (failClosedOnUnpriced && fiveHourHasUnpricedUsage));
 
   return {
     enabled,
@@ -646,13 +668,7 @@ export async function getApiKeyUsageLimitStatus(
     weeklyExceeded,
     dailyHasUnpricedUsage: dailySpend.hasUnpricedUsage,
     weeklyHasUnpricedUsage: weeklySpend.hasUnpricedUsage,
-    fiveHourLimitUsd,
-    fiveHourSpentUsd,
-    fiveHourWindowStartIso:
-      fiveHour?.windowStartIso ?? new Date(now - FIVE_HOUR_WINDOW_MS).toISOString(),
-    fiveHourResetAtIso: fiveHour?.resetAtIso ?? null,
-    fiveHourExceeded,
-    fiveHourHasUnpricedUsage,
+    ...fiveHourStatusFields(fiveHour, fiveHourLimitUsd, enabled, failClosedOnUnpriced),
   };
 }
 
@@ -727,6 +743,21 @@ export function buildApiKeyUsageLimitPercentText(
   ].join("\n");
 }
 
+function buildFiveHourExceededMessage(
+  status: ApiKeyUsageLimitStatus,
+  now: number,
+  showUsd: boolean
+): string {
+  const spentUsd = status.fiveHourSpentUsd ?? 0;
+  const limitUsd = status.fiveHourLimitUsd ?? null;
+  const percent = formatUsagePercent(getUsagePercent(spentUsd, limitUsd));
+  const resetIn = formatResetIn(status.fiveHourResetAtIso ?? null, now);
+  if (!showUsd) {
+    return `This API key reached its 5-hour usage quota (${percent}). Resets in ${resetIn}. Choose another allowed model after reset.`;
+  }
+  return `This API key reached its 5-hour USD usage quota (${formatUsd(spentUsd)} of ${formatUsd(limitUsd)}, ${percent}). Resets in ${resetIn}. Choose another allowed model after reset.`;
+}
+
 function buildUsageLimitExceededMessage(
   status: ApiKeyUsageLimitStatus,
   now = Date.now(),
@@ -750,14 +781,7 @@ function buildUsageLimitExceededMessage(
     return `This API key reached its weekly USD usage quota (${formatUsd(status.weeklySpentUsd)} of ${formatUsd(status.weeklyLimitUsd)}, ${percent}). Resets in ${formatResetIn(status.weeklyResetAtIso, now)}. Choose another allowed model after reset.`;
   }
   if (status.fiveHourExceeded && hasFiveHourLimit(status)) {
-    const spentUsd = status.fiveHourSpentUsd ?? 0;
-    const limitUsd = status.fiveHourLimitUsd ?? null;
-    const percent = formatUsagePercent(getUsagePercent(spentUsd, limitUsd));
-    const resetIn = formatResetIn(status.fiveHourResetAtIso ?? null, now);
-    if (!showUsd) {
-      return `This API key reached its 5-hour usage quota (${percent}). Resets in ${resetIn}. Choose another allowed model after reset.`;
-    }
-    return `This API key reached its 5-hour USD usage quota (${formatUsd(spentUsd)} of ${formatUsd(limitUsd)}, ${percent}). Resets in ${resetIn}. Choose another allowed model after reset.`;
+    return buildFiveHourExceededMessage(status, now, showUsd);
   }
   return showUsd
     ? "This API key reached its USD usage quota. Choose another allowed model or wait for quota reset."
