@@ -1131,7 +1131,7 @@ flowchart LR
 4. 클라우드 동작은 올바른 `NEXT_PUBLIC_BASE_URL`과 클라우드 엔드포인트의 연결 가능 여부에 따라 달라집니다.
 5. `open-sse/` 디렉터리는 `@omniroute/open-sse` **npm 워크스페이스 패키지**로 게시됩니다. 소스 코드는 `@omniroute/open-sse/...`를 통해 이를 가져옵니다(Next.js `transpilePackages`로 해석됨). 이 문서의 파일 경로는 일관성을 위해 계속 `open-sse/` 디렉터리 이름을 사용합니다.
 6. 대시보드의 차트는 접근성 높은 대화형 분석 시각화(모델 사용량 막대 차트, 성공률이 포함된 공급자 분석 표)를 위해 **Recharts**(SVG 기반)를 사용합니다.
-7. E2E 테스트는 **Playwright**(`tests/e2e/`)를 사용하며 `npm run test:e2e`를 통해 실행합니다. 단위 테스트는 **Node.js 테스트 러너**(`tests/unit/`)를 사용하며 `npm run test:unit`을 통해 실행합니다. `src/` 아래의 소스 코드는 **TypeScript**(`.ts`/`.tsx`)이며, `open-sse/` 워크스페이스는 JavaScript(`.js`)로 유지됩니다.
+7. E2E 테스트는 **Playwright**(`tests/e2e/`)를 사용하며 `npm run test:e2e`를 통해 실행합니다. 단위 테스트는 **Node.js 테스트 러너**(`tests/unit/`)를 사용하며 `npm run test:unit`을 통해 실행합니다. `src/` 아래의 소스 코드는 **TypeScript**(`.ts`/`.tsx`)이며, `open-sse/` 워크스페이스는 TypeScript(`.ts`)로 유지됩니다.
 8. 설정 페이지는 일반, 모양, AI, 보안, 라우팅, 복원력, 고급의 7개 탭으로 구성됩니다. 복원력 페이지에서는 요청 큐, 연결 쿨다운, 공급자 서킷 브레이커 및 쿨다운 대기 동작만 구성하며, 실시간 서킷 브레이커 런타임 상태는 상태 페이지에 표시됩니다.
 9. **Context Relay** 전략(`context-relay`)은 두 계층으로 나뉩니다. `combo.ts`는 핸드오프 생성 여부를 결정하고, `chat.ts`는 계정 확인 후 핸드오프를 삽입합니다. 핸드오프 데이터는 `context_handoffs` SQLite 테이블에 저장됩니다. 실제 계정이 변경되었는지는 `chat.ts`만 알 수 있으므로 이러한 분리는 의도된 것입니다.
 10. **프록시 적용**은 이제 포괄적으로 이루어집니다. `tokenHealthCheck.ts`는 연결별로 프록시를 확인하고, `/api/providers/validate`는 `runWithProxyContext`를 사용하며, `proxyFetch.ts`는 Node 22에서 디스패처 호환성을 유지하기 위해 `undici.fetch()`를 사용합니다.

@@ -4,14 +4,7 @@
 
 ---
 
-title: "Dokumentacja bazy kodu OmniRoute"
-version: 3.8.40
-lastUpdated: 2026-06-28
----
-
-# Dokumentacja bazy kodu OmniRoute
-
-> **Wersja:** v3.8.0
+> **Wersja:** v3.8.51
 > **Ostatnia aktualizacja:** 2026-06-28
 > **Odbiorcy:** Inżynierowie współtworzący OmniRoute lub budujący na nim integracje.
 >
@@ -789,7 +782,7 @@ Zob. [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) oraz dedykowaną sekcję w
    `open-sse/mcp-server/schemas/tools.ts`).
 2. Przypisz odpowiednie zakresy w `src/shared/constants/mcpScopes.ts`.
 3. Zarejestruj narzędzie w `open-sse/mcp-server/server.ts`.
-4. Dodaj testy w `open-sse/mcp-server/__tests__/`.
+4. Dodaj testy w `tests/unit/`.
 5. Zaktualizuj [MCP-SERVER.md](../frameworks/MCP-SERVER.md).
 
 ### Dodawanie nowej umiejętności A2A
@@ -807,7 +800,7 @@ Zobacz [A2A-SERVER.md § Dodawanie nowej umiejętności](../frameworks/A2A-SERVE
 - **Nazewnictwo**: pliki `camelCase` lub `kebab-case`, komponenty `PascalCase`,
   stałe `UPPER_SNAKE`.
 - **ESLint**: `no-eval`, `no-implied-eval`, `no-new-func` = `error` wszędzie;
-  `no-explicit-any` = `warn` w `open-sse/` i `tests/`, błąd w pozostałych miejscach.
+  `no-explicit-any` = `error` w `open-sse/**/*.ts` i `tests/**/*.ts`.
 - **TypeScript**: `strict: false` (podejście wynikające ze zgodności ze starszym kodem). Na granicach
   między modułami preferuj jawne typy zamiast wnioskowania.
 - **Baza danych**: nigdy nie zapisuj surowego SQL w trasach ani procedurach obsługi — zawsze korzystaj
@@ -837,8 +830,7 @@ Zobacz [A2A-SERVER.md § Dodawanie nowej umiejętności](../frameworks/A2A-SERVE
   `a2a`, `memory`, `skills`.
 - **Gałęzie**: prefiksy `feat/`, `fix/`, `refactor/`, `docs/`, `test/`,
   `chore/`. Nigdy nie commituj bezpośrednio do `main`.
-- **Husky**: przed commitem uruchamiane są `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11`; przed wypchnięciem zmian uruchamiane są `check:any-budget:t11` + `check:tracked-artifacts` (szybkie mechanizmy kontrolne; z wyłączeniem `test:unit`).
+- **Husky**: [`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

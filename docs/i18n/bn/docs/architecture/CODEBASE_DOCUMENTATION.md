@@ -783,7 +783,7 @@ bin/
    `open-sse/mcp-server/schemas/tools.ts` এক্সটেন্ড করুন)।
 2. `src/shared/constants/mcpScopes.ts`-এ উপযুক্ত scope নির্ধারণ করুন।
 3. `open-sse/mcp-server/server.ts`-এ tool-টি নিবন্ধন করুন।
-4. `open-sse/mcp-server/__tests__/`-এর অধীনে টেস্ট যোগ করুন।
+4. `tests/unit/`-এর অধীনে টেস্ট যোগ করুন।
 5. [MCP-SERVER.md](../frameworks/MCP-SERVER.md) আপডেট করুন।
 
 ### একটি নতুন A2A skill যোগ করুন
@@ -801,7 +801,7 @@ bin/
 - **নামকরণ**: file-এর জন্য `camelCase` বা `kebab-case`, component-এর জন্য `PascalCase`,
   constant-এর জন্য `UPPER_SNAKE`।
 - **ESLint**: `no-eval`, `no-implied-eval`, `no-new-func` = সর্বত্র `error`;
-  `no-explicit-any` = `open-sse/` এবং `tests/`-এ `warn`, অন্যত্র error।
+  `no-explicit-any` = `open-sse/**/*.ts` এবং `tests/**/*.ts`-এ `error`।
 - **TypeScript**: `strict: false` (legacy অবস্থান)। Cross-module boundary-তে
   inference-এর বদলে explicit type পছন্দ করুন।
 - **Database**: route বা handler-এ কখনো raw SQL লিখবেন না — সবসময়
@@ -831,8 +831,7 @@ bin/
   `a2a`, `memory`, `skills`।
 - **Branch**: prefix হিসেবে `feat/`, `fix/`, `refactor/`, `docs/`, `test/`,
   `chore/` ব্যবহার করুন। কখনো সরাসরি `main`-এ commit করবেন না।
-- **Husky**: pre-commit-এ `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11` চলে; pre-push-এ `check:any-budget:t11` + `check:tracked-artifacts` চলে (দ্রুত gate; `test:unit` বাদ দেয়)।
+- **Husky**: [`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

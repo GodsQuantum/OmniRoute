@@ -785,7 +785,7 @@ bin/
    `open-sse/mcp-server/schemas/tools.ts` را گسترش دهید).
 2. حوزه یا حوزههای مناسب را در `src/shared/constants/mcpScopes.ts` اختصاص دهید.
 3. ابزار را در `open-sse/mcp-server/server.ts` ثبت کنید.
-4. تستها را در `open-sse/mcp-server/__tests__/` اضافه کنید.
+4. تستها را در `tests/unit/` اضافه کنید.
 5. [MCP-SERVER.md](../frameworks/MCP-SERVER.md) را بهروزرسانی کنید.
 
 ### افزودن یک مهارت A2A جدید
@@ -803,7 +803,7 @@ bin/
 - **نامگذاری**: فایلها بهصورت `camelCase` یا `kebab-case`، مؤلفهها بهصورت `PascalCase`،
   ثابتها بهصورت `UPPER_SNAKE`.
 - **ESLint**: قوانین `no-eval`، `no-implied-eval` و `no-new-func` در همهجا برابر `error` هستند؛
-  `no-explicit-any` در `open-sse/` و `tests/` برابر `warn` و در سایر بخشها برابر `error` است.
+  `no-explicit-any` در `open-sse/**/*.ts` و `tests/**/*.ts` برابر `error` است.
 - **TypeScript**: مقدار `strict: false` است (رویکرد موروثی). برای مرزهای بین ماژولها،
   انواع صریح را بر استنتاج نوع ترجیح دهید.
 - **پایگاه داده**: هرگز SQL خام را در مسیرها یا کنترلکنندهها ننویسید — همیشه از
@@ -833,8 +833,7 @@ bin/
   `a2a`، `memory`، `skills`.
 - **شاخهها**: پیشوندهای `feat/`، `fix/`، `refactor/`، `docs/`، `test/`،
   `chore/`. هرگز مستقیماً روی `main` کامیت نکنید.
-- **Husky**: مرحله pre-commit دستورهای `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11` را اجرا میکند؛ مرحله pre-push نیز `check:any-budget:t11` + `check:tracked-artifacts` را اجرا میکند (گیتهای سریع؛ `test:unit` مستثنا است).
+- **Husky**: [`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

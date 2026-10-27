@@ -778,7 +778,7 @@ bin/
    `open-sse/mcp-server/schemas/tools.ts`）。
 2. 在 `src/shared/constants/mcpScopes.ts` 中分配适当的作用域。
 3. 在 `open-sse/mcp-server/server.ts` 中注册该工具。
-4. 在 `open-sse/mcp-server/__tests__/` 下添加测试。
+4. 在 `tests/unit/` 下添加测试。
 5. 更新 [MCP-SERVER.md](../frameworks/MCP-SERVER.md)。
 
 ### 添加新的 A2A 技能
@@ -796,7 +796,7 @@ bin/
 - **命名**：文件使用 `camelCase` 或 `kebab-case`，组件使用 `PascalCase`，
   常量使用 `UPPER_SNAKE`。
 - **ESLint**：`no-eval`、`no-implied-eval`、`no-new-func` 在所有位置均为 `error`；
-  `no-explicit-any` 在 `open-sse/` 和 `tests/` 中为 `warn`，在其他位置为错误。
+  `no-explicit-any` 在 `open-sse/**/*.ts` 和 `tests/**/*.ts` 中为 `error`。
 - **TypeScript**：`strict: false`（遗留模式）。跨模块边界时，优先使用显式类型而非
   类型推断。
 - **数据库**：绝不在路由或处理器中编写原始 SQL——始终通过
@@ -821,8 +821,7 @@ bin/
   `a2a`、`memory`、`skills`。
 - **分支**：使用前缀 `feat/`、`fix/`、`refactor/`、`docs/`、`test/`、
   `chore/`。绝不直接提交到 `main`。
-- **Husky**：提交前运行 `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11`；推送前运行 `check:any-budget:t11` + `check:tracked-artifacts`（快速门禁；不包括 `test:unit`）。
+- **Husky**：[`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

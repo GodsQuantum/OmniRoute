@@ -782,7 +782,7 @@ bin/
    `open-sse/mcp-server/schemas/tools.ts`를 확장).
 2. `src/shared/constants/mcpScopes.ts`에서 적절한 범위를 할당합니다.
 3. `open-sse/mcp-server/server.ts`에 도구를 등록합니다.
-4. `open-sse/mcp-server/__tests__/` 아래에 테스트를 추가합니다.
+4. `tests/unit/` 아래에 테스트를 추가합니다.
 5. [MCP-SERVER.md](../frameworks/MCP-SERVER.md)를 업데이트합니다.
 
 ### 새 A2A 스킬 추가
@@ -800,7 +800,7 @@ bin/
 - **명명**: 파일은 `camelCase` 또는 `kebab-case`, 컴포넌트는 `PascalCase`,
   상수는 `UPPER_SNAKE`를 사용합니다.
 - **ESLint**: 모든 곳에서 `no-eval`, `no-implied-eval`, `no-new-func` = `error`;
-  `open-sse/` 및 `tests/`에서는 `no-explicit-any` = `warn`, 그 외에서는 오류입니다.
+  `open-sse/**/*.ts` 및 `tests/**/*.ts`에서는 `no-explicit-any` = `error`.
 - **TypeScript**: `strict: false`(레거시 방침). 모듈 간 경계에서는 타입 추론보다
   명시적 타입을 선호합니다.
 - **데이터베이스**: 라우트나 핸들러에 원시 SQL을 절대 작성하지 말고, 항상
@@ -829,8 +829,7 @@ bin/
   `a2a`, `memory`, `skills`.
 - **브랜치**: 접두사 `feat/`, `fix/`, `refactor/`, `docs/`, `test/`,
   `chore/`를 사용합니다. `main`에 직접 커밋하지 않습니다.
-- **Husky**: pre-commit은 `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11`을 실행하고, pre-push는 `check:any-budget:t11` + `check:tracked-artifacts`를 실행합니다(빠른 게이트이며 `test:unit`은 제외).
+- **Husky**: [`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

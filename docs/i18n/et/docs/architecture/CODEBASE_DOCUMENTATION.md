@@ -783,7 +783,7 @@ Vaata [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) ja pühendatud jaotist
    `open-sse/mcp-server/schemas/tools.ts`).
 2. Määra vastav(at) ulatused `src/shared/constants/mcpScopes.ts`.
 3. Registreeri tööriist `open-sse/mcp-server/server.ts`.
-4. Lisa testid `open-sse/mcp-server/__tests__/` alla.
+4. Lisa testid `tests/unit/` alla.
 5. Uuenda [MCP-SERVER.md](../frameworks/MCP-SERVER.md).
 
 ### Uue A2A oskuse lisamine
@@ -801,7 +801,7 @@ Vaata [A2A-SERVER.md § Uue oskuse lisamine](../frameworks/A2A-SERVER.md). Oskus
 - **Nimetamine**: failid `camelCase` või `kebab-case`, komponendid `PascalCase`,
   konstandid `UPPER_SNAKE`.
 - **ESLint**: `no-eval`, `no-implied-eval`, `no-new-func` = `error` kõikjal;
-  `no-explicit-any` = `warn` kaustades `open-sse/` ja `tests/`, mujal `error`.
+  `no-explicit-any` = `error` kaustades `open-sse/**/*.ts` ja `tests/**/*.ts`.
 - **TypeScript**: `strict: false` (pärandkoodi käsitlus). Moodulitevahelistel piiridel eelista
   tüübijäreldusele eksplitsiitseid tüüpe.
 - **Andmebaas**: ära kunagi kirjuta marsruutides ega käitlejates toorest SQL-i — kasuta alati
@@ -831,8 +831,7 @@ Vaata [A2A-SERVER.md § Uue oskuse lisamine](../frameworks/A2A-SERVER.md). Oskus
   `a2a`, `memory`, `skills`.
 - **Harud**: prefiksid `feat/`, `fix/`, `refactor/`, `docs/`, `test/`,
   `chore/`. Ära kunagi kommiti otse harusse `main`.
-- **Husky**: pre-commit käivitab `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11`; pre-push käivitab `check:any-budget:t11` + `check:tracked-artifacts` (kiired kontrollväravad; ei hõlma `test:unit`).
+- **Husky**: [`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 

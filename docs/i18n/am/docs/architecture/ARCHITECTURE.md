@@ -1155,7 +1155,7 @@ flowchart LR
 4. የደመና ባህሪ በትክክለኛው `NEXT_PUBLIC_BASE_URL` እና የደመና መጨረሻ ነጥብ ተደራሽነት ላይ ይመረኮዛል።
 5. የ`open-sse/` ማውጫ እንደ `@omniroute/open-sse` **npm workspace package** ታትሟል። የምንጭ ኮዱ በ`@omniroute/open-sse/...` በኩል ያስመጣዋል (በNext.js `transpilePackages` የሚፈታ)። በዚህ ሰነድ ውስጥ ያሉ የፋይል ዱካዎች ለወጥነት አሁንም `open-sse/` የሚለውን የማውጫ ስም ይጠቀማሉ።
 6. በዳሽቦርዱ ውስጥ ያሉ ገበታዎች ተደራሽ እና መስተጋብራዊ የትንታኔ ምስላዊ ማሳያዎችን (የሞዴል አጠቃቀም የአሞሌ ገበታዎች፣ የስኬት መጠኖችን የያዙ የአቅራቢ ክፍፍል ሰንጠረዦች) ለማቅረብ **Recharts**ን (በSVG ላይ የተመሠረተ) ይጠቀማሉ።
-7. የE2E ሙከራዎች **Playwright**ን (`tests/e2e/`) ይጠቀማሉ፣ እና በ`npm run test:e2e` ይከናወናሉ። የአሃድ ሙከራዎች **Node.js test runner**ን (`tests/unit/`) ይጠቀማሉ፣ እና በ`npm run test:unit` ይከናወናሉ። በ`src/` ስር ያለው የምንጭ ኮድ **TypeScript** (`.ts`/`.tsx`) ነው፤ የ`open-sse/` workspace ግን JavaScript (`.js`) ሆኖ ይቆያል።
+7. የE2E ሙከራዎች **Playwright**ን (`tests/e2e/`) ይጠቀማሉ፣ እና በ`npm run test:e2e` ይከናወናሉ። የአሃድ ሙከራዎች **Node.js test runner**ን (`tests/unit/`) ይጠቀማሉ፣ እና በ`npm run test:unit` ይከናወናሉ። በ`src/` ስር ያለው የምንጭ ኮድ **TypeScript** (`.ts`/`.tsx`) ነው፤ የ`open-sse/` workspace ግን TypeScript (`.ts`) ሆኖ ይቆያል።
 8. የቅንብሮች ገጽ በ7 ትሮች ተደራጅቷል፦ አጠቃላይ፣ ገጽታ፣ AI፣ ደህንነት፣ መስመር ማስያዝ፣ የመቋቋም ችሎታ፣ የላቀ። የመቋቋም ችሎታ ገጹ የጥያቄ ወረፋን፣ የግንኙነት ማቀዝቀዣ ጊዜን፣ የአቅራቢ ወረዳ ቆራጭን እና ማቀዝቀዣውን-የመጠበቅ ባህሪን ብቻ ያዋቅራል፤ ቀጥታ የወረዳ ቆራጭ አሂድ-ጊዜ ሁኔታ በጤና ገጹ ላይ ይታያል።
 9. የ**Context Relay** ስትራቴጂ (`context-relay`) በሁለት ንብርብሮች የተከፈለ ነው፦ `combo.ts` ርክክብ መመንጨት እንዳለበት ይወስናል፣ `chat.ts` ደግሞ ከመለያ መፍታት በኋላ ርክክቡን ያስገባል። የርክክብ ውሂብ በ`context_handoffs` SQLite ሰንጠረዥ ውስጥ ይኖራል። ይህ ክፍፍል ሆን ተብሎ የተደረገ ነው፣ ምክንያቱም ትክክለኛው መለያ መቀየሩን የሚያውቀው `chat.ts` ብቻ ነው።
 10. **የፕሮክሲ ማስፈጸሚያ** አሁን ሁሉን አቀፍ ነው፦ `tokenHealthCheck.ts` ለእያንዳንዱ ግንኙነት ፕሮክሲን ይፈታል፣ `/api/providers/validate` `runWithProxyContext`ን ይጠቀማል፣ እና `proxyFetch.ts` በNode 22 ላይ የdispatcher ተኳኋኝነትን ለመጠበቅ `undici.fetch()`ን ይጠቀማል።

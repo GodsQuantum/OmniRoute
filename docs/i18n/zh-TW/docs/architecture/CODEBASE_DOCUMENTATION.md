@@ -4,14 +4,7 @@
 
 ---
 
-title: "OmniRoute 程式碼基礎文件"
-version: 3.8.40
-lastUpdated: 2026-06-28
----
-
-# OmniRoute 程式碼基礎文件
-
-> **版本：** v3.8.0
+> **版本：** v3.8.51
 > **最後更新：** 2026-06-28
 > **讀者對象：** 為 OmniRoute 貢獻程式碼或在其之上建立整合的工程師。
 >
@@ -781,7 +774,7 @@ bin/
    `open-sse/mcp-server/schemas/tools.ts`）。
 2. 在 `src/shared/constants/mcpScopes.ts` 中指派適當的範圍。
 3. 在 `open-sse/mcp-server/server.ts` 中註冊工具。
-4. 在 `open-sse/mcp-server/__tests__/` 下新增測試。
+4. 在 `tests/unit/` 下新增測試。
 5. 更新 [MCP-SERVER.md](../frameworks/MCP-SERVER.md)。
 
 ### 新增 A2A 技能
@@ -799,7 +792,7 @@ bin/
 - **命名**：檔案使用 `camelCase` 或 `kebab-case`，元件使用 `PascalCase`，
   常數使用 `UPPER_SNAKE`。
 - **ESLint**：所有位置的 `no-eval`、`no-implied-eval`、`no-new-func` = `error`；
-  `open-sse/` 與 `tests/` 中的 `no-explicit-any` = `warn`，其他位置則為錯誤。
+  `open-sse/**/*.ts` 與 `tests/**/*.ts` 中的 `no-explicit-any` = `error`。
 - **TypeScript**：`strict: false`（為相容舊程式碼的設定）。跨模組邊界時，應優先使用明確類型，
   而非類型推斷。
 - **資料庫**：絕不可在路由或處理常式中撰寫原始 SQL——一律透過
@@ -827,8 +820,7 @@ bin/
   `a2a`、`memory`、`skills`。
 - **分支**：使用前綴 `feat/`、`fix/`、`refactor/`、`docs/`、`test/`、
   `chore/`。絕不可直接提交至 `main`。
-- **Husky**：提交前會執行 `lint-staged` + `check:docs-sync` +
-  `check:any-budget:t11`；推送前會執行 `check:any-budget:t11` + `check:tracked-artifacts`（快速閘門；不包含 `test:unit`）。
+- **Husky**：[`pre-commit`](../../../../../.husky/pre-commit) · [`pre-push`](../../../../../.husky/pre-push).
 
 ---
 
