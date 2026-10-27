@@ -118,8 +118,12 @@ Estructura de la respuesta:
 
 El motor de sincronización de ELO de Arena (`src/lib/arenaEloSync.ts`) obtiene dos clasificaciones —`text`
 y `code`— de la API de clasificación de Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Cada entrada de la clasificación
-incluye un nombre de modelo, proveedor, `score` ELO, intervalo de confianza y número de votos.
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Cuando esa API no devuelve una
+clasificación utilizable, el motor recurre al conjunto de datos oficial `lmarena-ai/leaderboard-dataset` en el
+servidor de conjuntos de datos de Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` informa de `activeSource`, `lastError` y
+`lastFailedAt`. Cada entrada de la clasificación
+incluye el nombre del modelo, el proveedor, la `score` ELO, el intervalo de confianza y el número de votos.
 
 Las categorías de la clasificación se asignan a las categorías de tareas de OmniRoute:
 
@@ -130,13 +134,13 @@ Las categorías de la clasificación se asignan a las categorías de tareas de O
 
 ### Normalización (puntuación de adecuación a la tarea)
 
-Las puntuaciones ELO sin procesar se normalizan por clasificación como un **valor de adecuación a la tarea en `[0.4, 0.98]`**:
+Las puntuaciones ELO sin procesar se normalizan por clasificación para obtener un **valor de adecuación a la tarea en `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-La puntuación nunca alcanza `0` ni `1`, lo que deja margen para las modificaciones del usuario. Este es el
+La puntuación nunca alcanza `0` ni `1`, lo que deja margen para las anulaciones del usuario. Este es el
 campo `score` que aparece en la respuesta de la API y la etiqueta que se muestra en el panel.
 
 ### Confianza
@@ -153,15 +157,15 @@ Cada entrada recibe un nivel de confianza basado en el número de votos de Arena
 
 Las entradas normalizadas se escriben en la tabla `model_intelligence` de la base de datos con
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Las entradas **caducan después de
-7 días**, por lo que un proveedor que deja de sincronizarse acaba desapareciendo en lugar de proporcionar
+7 días**, por lo que un proveedor que deja de sincronizarse acaba desapareciendo en lugar de ofrecer
 datos obsoletos.
 
 La sincronización se ejecuta **de forma predeterminada**:
 
-- Se ejecuta una vez al iniciar el servidor y, posteriormente, mediante un temporizador periódico
+- Se ejecuta una vez al iniciar el servidor y, después, mediante un temporizador periódico
   (`src/lib/arenaEloSync.ts`, conectado desde `src/instrumentation-node.ts`).
-- Es **no bloqueante y nunca provoca un error fatal**: si falla la obtención de datos del servicio ascendente, OmniRoute sigue
-  ejecutándose y las clasificaciones simplemente muestran los últimos datos válidos (o un estado vacío).
+- Es **no bloqueante y nunca provoca un error fatal**: si falla la obtención de datos del servicio de origen, OmniRoute sigue
+  funcionando y las clasificaciones simplemente muestran los últimos datos válidos (o un estado vacío).
 
 Dos variables de entorno la controlan (documentadas en
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
@@ -177,24 +181,24 @@ Para los operadores, un endpoint de administración autenticado permite el contr
 (`src/app/api/intelligence/sync/route.ts` — requiere autenticación de administración):
 
 ```
-GET    /api/intelligence/sync          # estado actual de la sincronización (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # inicia una sincronización manual; cuerpo: { "dryRun": true } para obtener una vista previa sin escribir
+GET    /api/intelligence/sync          # estado actual de la sincronización (habilitada, última sincronización, próxima sincronización, intervalo en ms)
+POST   /api/intelligence/sync          # activa una sincronización manual; cuerpo: { "dryRun": true } para obtener una vista previa sin escribir
 DELETE /api/intelligence/sync          # borra todas las entradas de inteligencia arena_elo sincronizadas
 ```
 
 Si la página de clasificaciones está vacía, un `POST /api/intelligence/sync` manual (o simplemente
 reiniciar el servidor) vuelve a rellenarla.
 
-### Correspondencia de los modelos con la clasificación
+### Correspondencia de modelos con la clasificación
 
-Los ID de los modelos del registro y los nombres de los modelos de Arena no siempre coinciden exactamente. La clasificación utiliza
+Los ID de modelos del registro y los nombres de modelos de Arena no siempre coinciden exactamente. La clasificación utiliza
 una correspondencia flexible (`findMatchingIntelligence` en `src/lib/freeProviderRankings.ts`):
 
-1. Coincidencia exacta con el ID de modelo normalizado.
-2. Coincidencia tras eliminar un sufijo de versión final (p. ej., `kimi-k2.6` → `kimi-k2`).
+1. Coincidencia exacta con el ID normalizado del modelo.
+2. Coincidencia después de eliminar un sufijo de versión final (por ejemplo, `kimi-k2.6` → `kimi-k2`).
 3. Coincidencia por prefijo (el nombre de un modelo de la clasificación es un prefijo del ID del registro).
 
-En la sincronización, se eliminan los prefijos de proveedores conocidos (`anthropic/`, `openai/`, `google/`, …)
+En el lado de la sincronización, se eliminan los prefijos de proveedores conocidos (`anthropic/`, `openai/`, `google/`, …)
 y un pequeño mapa de alias amplía los nombres canónicos a las variantes que OmniRoute utiliza
 internamente, de modo que los modelos puedan encontrarse con cualquier nombre.
 
@@ -206,7 +210,7 @@ Para cada proveedor gratuito, el motor puntúa todos los modelos de su catálogo
 - **Puntuación media** = la puntuación media de todos los modelos puntuados de ese proveedor.
 - **Modelos** = cuántos modelos del proveedor tenían una puntuación de Arena.
 
-Los proveedores se ordenan primero por la **puntuación del mejor modelo** y, después, por la puntuación media. Esto recompensa a un
+Los proveedores se ordenan primero por la **puntuación del mejor modelo** y, después, por la puntuación media. Esto beneficia a un
 proveedor que ofrece al menos un modelo gratuito potente.
 
 ---

@@ -120,14 +120,19 @@ Struktura odpovědi:
 
 ---
 
-## Jak skóre fungují
+## Jak fungují skóre
 
 ### Zdroj: žebříček Arena AI
 
-Synchronizační modul Arena ELO (`src/lib/arenaEloSync.ts`) načítá z API žebříčku Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) dva žebříčky — `text`
-a `code`. Každá položka žebříčku obsahuje název modelu, dodavatele, ELO `score`,
-interval spolehlivosti a počet hlasů.
+Synchronizační modul Arena ELO (`src/lib/arenaEloSync.ts`) načítá dva žebříčky — `text`
+a `code` — z API žebříčku Arena AI
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Pokud toto API nevrátí
+žádný použitelný žebříček, modul použije jako záložní zdroj oficiální datovou sadu
+`lmarena-ai/leaderboard-dataset` ze služby Hugging Face datasets-server
+(`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` hlásí `activeSource`, `lastError` a
+`lastFailedAt`. Každá položka žebříčku
+obsahuje název modelu, dodavatele, ELO `score`, interval spolehlivosti a počet hlasů.
 
 Kategorie žebříčku se mapují na kategorie úloh OmniRoute:
 
@@ -138,14 +143,14 @@ Kategorie žebříčku se mapují na kategorie úloh OmniRoute:
 
 ### Normalizace (skóre vhodnosti pro úlohu)
 
-Nezpracovaná skóre ELO se pro každý žebříček normalizují na **hodnotu vhodnosti pro úlohu v rozsahu `[0.4, 0.98]`**:
+Nezpracovaná skóre ELO se v rámci každého žebříčku normalizují na **hodnotu vhodnosti pro úlohu v rozsahu `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Skóre nikdy nedosáhne hodnoty `0` ani `1`, čímž zůstává prostor pro uživatelská přepsání.
-Jde o pole `score`, které vidíte v odpovědi API, a o hodnotu zobrazenou na řídicím panelu.
+Skóre nikdy nedosáhne hodnoty `0` ani `1`, čímž zůstává prostor pro uživatelská přepsání. Jde o
+pole `score`, které vidíte v odpovědi API, a o popisek zobrazený na řídicím panelu.
 
 ### Spolehlivost
 
@@ -153,71 +158,69 @@ Každá položka získá úroveň spolehlivosti podle počtu hlasů v Arena:
 
 | Spolehlivost | Hlasy   |
 | ------------ | ------- |
-| `high`       | ≥ 5,000 |
-| `medium`     | ≥ 1,000 |
-| `low`        | < 1,000 |
+| `high`       | ≥ 5 000 |
+| `medium`     | ≥ 1 000 |
+| `low`        | < 1 000 |
 
 ### Ukládání a aktuálnost
 
 Normalizované položky se zapisují do databázové tabulky `model_intelligence` s
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Platnost položek **vyprší po
-7 dnech**, takže poskytovatel, který se přestane synchronizovat, nakonec z výsledků zmizí,
-místo aby poskytoval zastaralá data.
+7 dnech**, takže poskytovatel, který se přestane synchronizovat, z přehledu nakonec zmizí a nebudou se
+zobrazovat zastaralá data.
 
 Synchronizace je **ve výchozím nastavení zapnutá**:
 
-- Spustí se jednou při spuštění serveru a poté pravidelně podle časovače
-  (`src/lib/arenaEloSync.ts`, připojeno z `src/instrumentation-node.ts`).
-- Je **neblokující a nikdy nezpůsobí kritické selhání** — pokud načtení ze zdroje selže,
-  OmniRoute pokračuje v provozu a žebříčky jednoduše zobrazí poslední platná data
-  (nebo prázdný stav).
+- Spustí se jednou při startu serveru a poté pravidelně podle časovače
+  (`src/lib/arenaEloSync.ts`, zapojeno z `src/instrumentation-node.ts`).
+- Je **neblokující a nikdy nezpůsobí fatální chybu** — pokud načtení z externího zdroje selže, OmniRoute běží
+  dál a žebříčky jednoduše zobrazí poslední platná data (nebo prázdný stav).
 
 Řídí ji dvě proměnné prostředí (zdokumentované v
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Proměnná                  | Výchozí hodnota | Účel                                                 |
-| ------------------------- | --------------- | ---------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`          | Nastavením na `false` vypnete odchozí synchronizaci. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)   | Interval synchronizace v sekundách.                  |
+| Proměnná                  | Výchozí hodnota | Účel                                                  |
+| ------------------------- | --------------- | ----------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`          | Nastavením na `false` se odchozí synchronizace vypne. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)   | Interval synchronizace v sekundách.                   |
 
 ### Ruční synchronizace / stav / vymazání
 
-Operátorům poskytuje ověřovaný koncový bod pro správu možnost ručního ovládání
-(`src/app/api/intelligence/sync/route.ts` — vyžaduje ověření pro správu):
+Operátorům poskytuje ruční ovládání autentizovaný koncový bod pro správu
+(`src/app/api/intelligence/sync/route.ts` — vyžaduje autentizaci správce):
 
 ```
 GET    /api/intelligence/sync          # aktuální stav synchronizace (enabled, lastSync, nextSync, intervalMs)
 POST   /api/intelligence/sync          # spustí ruční synchronizaci; tělo: { "dryRun": true } pro náhled bez zápisu
-DELETE /api/intelligence/sync          # vymaže všechny synchronizované položky inteligence arena_elo
+DELETE /api/intelligence/sync          # vymaže všechny synchronizované položky informací arena_elo
 ```
 
-Pokud je stránka žebříčku prázdná, ruční `POST /api/intelligence/sync` (nebo jednoduše
+Pokud je stránka žebříčku prázdná, ruční požadavek `POST /api/intelligence/sync` (nebo pouhé
 restartování serveru) ji znovu naplní.
 
 ### Párování modelů s žebříčkem
 
-ID modelů v registru a názvy modelů Arena se ne vždy přesně shodují. Žebříček používá
+ID modelů v registru a názvy modelů v Arena se ne vždy přesně shodují. Žebříček používá
 flexibilní párování (`findMatchingIntelligence` v `src/lib/freeProviderRankings.ts`):
 
 1. Přesná shoda normalizovaného ID modelu.
 2. Shoda po odstranění koncové přípony verze (např. `kimi-k2.6` → `kimi-k2`).
 3. Shoda prefixu (název modelu v žebříčku je prefixem ID v registru).
 
-Na straně synchronizace se odstraňují známé prefixy dodavatelů (`anthropic/`, `openai/`,
-`google/`, …) a malá mapa aliasů rozšiřuje kanonické názvy o varianty, které OmniRoute
-používá interně, takže modely lze najít pod libovolným názvem.
+Na straně synchronizace se odstraňují známé prefixy dodavatelů (`anthropic/`, `openai/`, `google/`, …)
+a malá mapa aliasů rozšiřuje kanonické názvy o varianty, které OmniRoute používá
+interně, takže modely zůstávají dohledatelné pod libovolným názvem.
 
-### Jak se poskytovatelé řadí
+### Jak se hodnotí poskytovatel
 
-Pro každého bezplatného poskytovatele modul vyhodnotí každý model v jeho katalogu a poté:
+Pro každého bezplatného poskytovatele modul ohodnotí všechny modely v jeho katalogu a poté:
 
 - **Nejlepší model** = model poskytovatele s nejvyšším skóre.
-- **Průměrné skóre** = průměrné skóre všech hodnocených modelů daného poskytovatele.
+- **Průměrné skóre** = průměrné skóre všech ohodnocených modelů daného poskytovatele.
 - **Modely** = počet modelů poskytovatele, které měly skóre Arena.
 
-Poskytovatelé jsou řazeni nejprve podle **skóre nejlepšího modelu** a poté podle
-průměrného skóre. Tím je zvýhodněn poskytovatel, který nabízí alespoň jeden kvalitní
-bezplatný model.
+Poskytovatelé jsou seřazeni nejprve podle **skóre nejlepšího modelu** a poté podle průměrného skóre. Tím je zvýhodněn
+poskytovatel, který nabízí alespoň jeden kvalitní bezplatný model.
 
 ---
 

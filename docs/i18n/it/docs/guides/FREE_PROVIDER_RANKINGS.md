@@ -126,10 +126,14 @@ all'attività (vedi sotto). I provider privi di modelli con punteggio vengono om
 
 Il motore di sincronizzazione ELO di Arena (`src/lib/arenaEloSync.ts`) recupera due classifiche — `text`
 e `code` — dall'API della classifica Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Ogni voce della classifica
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Quando tale API non restituisce
+una classifica utilizzabile, il motore utilizza come fallback il dataset ufficiale `lmarena-ai/leaderboard-dataset` sul
+datasets-server di Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` riporta `activeSource`, `lastError` e
+`lastFailedAt`. Ogni voce della classifica
 include il nome del modello, il fornitore, il `score` ELO, l'intervallo di confidenza e il numero di voti.
 
-Le categorie della classifica sono associate alle categorie di attività di OmniRoute:
+Le categorie della classifica vengono associate alle categorie di attività di OmniRoute:
 
 | Classifica Arena | Categorie di attività OmniRoute                   |
 | ---------------- | ------------------------------------------------- |
@@ -138,18 +142,18 @@ Le categorie della classifica sono associate alle categorie di attività di Omni
 
 ### Normalizzazione (punteggio di idoneità all'attività)
 
-I punteggi ELO grezzi vengono normalizzati per ciascuna classifica in un **valore di idoneità all'attività nell'intervallo `[0.4, 0.98]`**:
+I punteggi ELO grezzi vengono normalizzati per ogni classifica in un **valore di idoneità all'attività compreso in `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Il punteggio non raggiunge mai `0` o `1`, lasciando margine per le personalizzazioni dell'utente. Questo è il
+Il punteggio non raggiunge mai `0` o `1`, lasciando margine per le sostituzioni definite dall'utente. Questo è il
 campo `score` visualizzato nella risposta dell'API e l'etichetta mostrata nella dashboard.
 
 ### Confidenza
 
-A ogni voce viene assegnato un livello di confidenza in base al numero di voti su Arena:
+A ogni voce viene assegnato un livello di confidenza basato sul numero di voti di Arena:
 
 | Confidenza | Voti    |
 | ---------- | ------- |
@@ -157,21 +161,21 @@ A ogni voce viene assegnato un livello di confidenza in base al numero di voti s
 | `medium`   | ≥ 1.000 |
 | `low`      | < 1.000 |
 
-### Archiviazione e aggiornamento dei dati
+### Archiviazione e aggiornamento
 
 Le voci normalizzate vengono scritte nella tabella DB `model_intelligence` con
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Le voci **scadono dopo
-7 giorni**, quindi un fornitore che interrompe la sincronizzazione viene infine rimosso anziché continuare a fornire
-dati obsoleti.
+7 giorni**, quindi un fornitore che interrompe la sincronizzazione viene infine rimosso anziché
+fornire dati obsoleti.
 
 La sincronizzazione è **attiva per impostazione predefinita**:
 
 - Viene eseguita una volta all'avvio del server e successivamente tramite un timer periodico
   (`src/lib/arenaEloSync.ts`, collegato da `src/instrumentation-node.ts`).
-- È **non bloccante e mai fatale**: se il recupero dei dati dal servizio upstream non riesce, OmniRoute continua
+- È **non bloccante e mai fatale**: se il recupero dalla fonte upstream non riesce, OmniRoute continua
   a funzionare e le classifiche mostrano semplicemente gli ultimi dati validi (oppure uno stato vuoto).
 
-Due variabili di ambiente ne controllano il funzionamento (documentate in
+È controllata da due variabili d'ambiente (documentate in
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
 | Variabile                 | Valore predefinito | Scopo                                                               |
@@ -185,7 +189,7 @@ Per gli operatori, un endpoint di gestione autenticato consente il controllo man
 (`src/app/api/intelligence/sync/route.ts` — richiede l'autenticazione di gestione):
 
 ```
-GET    /api/intelligence/sync          # stato corrente della sincronizzazione (enabled, lastSync, nextSync, intervalMs)
+GET    /api/intelligence/sync          # stato corrente della sincronizzazione (abilitata, ultima sincronizzazione, prossima sincronizzazione, intervallo in ms)
 POST   /api/intelligence/sync          # avvia una sincronizzazione manuale; corpo: { "dryRun": true } per visualizzare un'anteprima senza scrivere
 DELETE /api/intelligence/sync          # cancella tutte le voci di intelligence arena_elo sincronizzate
 ```
@@ -198,24 +202,24 @@ il riavvio del server) la ripopola.
 Gli ID dei modelli nel registro e i nomi dei modelli Arena non sempre corrispondono esattamente. La classifica utilizza
 un'associazione flessibile (`findMatchingIntelligence` in `src/lib/freeProviderRankings.ts`):
 
-1. Corrispondenza esatta con l'ID normalizzato del modello.
-2. Corrispondenza dopo la rimozione di un suffisso di versione finale (ad es. `kimi-k2.6` → `kimi-k2`).
-3. Corrispondenza per prefisso (il nome di un modello nella classifica è un prefisso dell'ID nel registro).
+1. Corrispondenza esatta sull'ID normalizzato del modello.
+2. Corrispondenza dopo la rimozione del suffisso di versione finale (ad es. `kimi-k2.6` → `kimi-k2`).
+3. Corrispondenza del prefisso (il nome di un modello nella classifica è un prefisso dell'ID nel registro).
 
-Durante la sincronizzazione, i prefissi dei fornitori noti (`anthropic/`, `openai/`, `google/`, …) vengono
+Sul lato della sincronizzazione, i prefissi noti dei fornitori (`anthropic/`, `openai/`, `google/`, …) vengono
 rimossi e una piccola mappa di alias espande i nomi canonici nelle varianti utilizzate internamente da OmniRoute,
-così i modelli restano individuabili con qualsiasi nome.
+in modo che i modelli rimangano individuabili con qualsiasi nome.
 
 ### Come viene classificato un fornitore
 
-Per ogni fornitore gratuito, il motore assegna un punteggio a ciascun modello del suo catalogo, quindi:
+Per ogni fornitore gratuito, il motore assegna un punteggio a ciascun modello nel relativo catalogo, quindi:
 
 - **Modello migliore** = il modello del fornitore con il punteggio più alto.
 - **Punteggio medio** = la media dei punteggi di tutti i modelli valutati del fornitore.
 - **Modelli** = il numero di modelli del fornitore che disponevano di un punteggio Arena.
 
-I fornitori vengono ordinati prima in base al **punteggio del modello migliore**, quindi in base al punteggio medio. Questo premia un
-fornitore che offre almeno un modello gratuito valido.
+I fornitori vengono ordinati innanzitutto in base al **punteggio del modello migliore**, quindi in base al punteggio medio. In questo modo viene premiato un
+fornitore che offre almeno un modello gratuito di alto livello.
 
 ---
 

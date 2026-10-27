@@ -125,8 +125,12 @@ opgaveegnethed (se nedenfor). Udbydere uden modeller med scorer udelades fra sva
 ### Kilde: Arena AI-ranglisten
 
 Arena ELO-synkroniseringsmotoren (`src/lib/arenaEloSync.ts`) henter to ranglister — `text`
-og `code` — fra API'et til Arena AI-ranglisten
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Hver post på ranglisten
+og `code` — fra Arena AI-ranglistens API
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Når dette API ikke returnerer
+en brugbar rangliste, falder motoren tilbage til det officielle `lmarena-ai/leaderboard-dataset` på
+Hugging Face datasets-serveren (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` rapporterer `activeSource`, `lastError` og
+`lastFailedAt`. Hver post på ranglisten
 indeholder et modelnavn, en leverandør, en ELO-`score`, et konfidensinterval og et antal stemmer.
 
 Ranglistekategorier knyttes til OmniRoute-opgavekategorier:
@@ -144,7 +148,7 @@ Rå ELO-scorer normaliseres pr. rangliste til en **værdi for opgaveegnethed i `
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Scoren når aldrig `0` eller `1`, hvilket giver plads til brugertilsidesættelser. Dette er
+Scoren når aldrig `0` eller `1`, hvilket giver spillerum til brugertilsidesættelser. Dette er
 feltet `score`, som du ser i API-svaret, og etiketten, der vises på kontrolpanelet.
 
 ### Konfidens
@@ -161,60 +165,60 @@ Hver post får et konfidensniveau baseret på antallet af Arena-stemmer:
 
 Normaliserede poster skrives til DB-tabellen `model_intelligence` med
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Poster **udløber efter
-7 dage**, så en leverandør, der holder op med at synkronisere, med tiden fjernes i stedet for at levere
+7 dage**, så en leverandør, der stopper med at synkronisere, med tiden forsvinder i stedet for at levere
 forældede data.
 
 Synkroniseringen kører **som standard**:
 
-- Den kører én gang ved serverens opstart og derefter via en periodisk timer
-  (`src/lib/arenaEloSync.ts`, forbundet fra `src/instrumentation-node.ts`).
-- Den er **ikke-blokerende og aldrig fatal** — hvis hentningen fra den eksterne tjeneste mislykkes, fortsætter OmniRoute
+- Den kører én gang ved serverstart og derefter med et periodisk interval
+  (`src/lib/arenaEloSync.ts`, tilsluttet fra `src/instrumentation-node.ts`).
+- Den er **ikke-blokerende og aldrig fatal** — hvis hentningen fra upstream-kilden mislykkes, fortsætter OmniRoute
   med at køre, og ranglisterne viser blot de seneste gyldige data (eller en tom tilstand).
 
 To miljøvariabler styrer den (dokumenteret i
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Variabel                  | Standardværdi | Formål                                                           |
-| ------------------------- | ------------- | ---------------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Indstil til `false` for at fravælge den udgående synkronisering. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24t) | Synkroniseringsinterval i sekunder.                              |
+| Variabel                  | Standard       | Formål                                                   |
+| ------------------------- | -------------- | -------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`         | Sæt til `false` for at fravælge udgående synkronisering. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 t) | Synkroniseringsinterval i sekunder.                      |
 
-### Manuel synkronisering / status / rydning
+### Manuel synkronisering/status/rydning
 
-For operatører giver et godkendt administrationsendepunkt mulighed for manuel styring
+For operatører tilbyder et godkendt administrationsslutpunkt manuel styring
 (`src/app/api/intelligence/sync/route.ts` — kræver administrationsgodkendelse):
 
 ```
 GET    /api/intelligence/sync          # aktuel synkroniseringsstatus (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # udløs en manuel synkronisering; body: { "dryRun": true } for at få vist et eksempel uden at skrive
+POST   /api/intelligence/sync          # udløs en manuel synkronisering; body: { "dryRun": true } for at få en forhåndsvisning uden at skrive
 DELETE /api/intelligence/sync          # ryd alle synkroniserede arena_elo-intelligensposter
 ```
 
-Hvis ranglistesiden er tom, udfyldes den igen ved et manuelt `POST /api/intelligence/sync` (eller blot
-ved at genstarte serveren).
+Hvis ranglistesiden er tom, genudfylder en manuel `POST /api/intelligence/sync` (eller blot
+en genstart af serveren) den.
 
 ### Matchning af modeller med ranglisten
 
-Model-id'er i registret og Arena-modelnavne stemmer ikke altid nøjagtigt overens. Rangeringen bruger
+Model-id'er i registret og Arena-modelnavne matcher ikke altid nøjagtigt. Rangeringen bruger
 fleksibel matchning (`findMatchingIntelligence` i `src/lib/freeProviderRankings.ts`):
 
-1. Nøjagtigt match med det normaliserede model-id.
-2. Match efter fjernelse af et efterstillet versionssuffiks (f.eks. `kimi-k2.6` → `kimi-k2`).
+1. Nøjagtigt match på det normaliserede model-id.
+2. Match efter fjernelse af et afsluttende versionssuffiks (f.eks. `kimi-k2.6` → `kimi-k2`).
 3. Præfiksmatch (et modelnavn på ranglisten er et præfiks for register-id'et).
 
 På synkroniseringssiden fjernes kendte leverandørpræfikser (`anthropic/`, `openai/`, `google/`, …),
-og en lille aliasoversigt udvider kanoniske navne til de varianter, OmniRoute bruger
-internt, så modeller fortsat kan findes under ethvert navn.
+og et lille aliaskort udvider kanoniske navne til de varianter, OmniRoute bruger
+internt, så modellerne kan findes under ethvert navn.
 
 ### Sådan rangeres en leverandør
 
-For hver gratis leverandør scorer motoren alle modeller i leverandørens katalog og derefter:
+For hver gratis leverandør scorer motoren hver model i leverandørens katalog og derefter:
 
-- **Bedste model** = leverandørens model med den højeste score.
+- **Topmodel** = leverandørens model med den højeste score.
 - **Gennemsnitlig score** = gennemsnitsscoren på tværs af alle leverandørens scorede modeller.
 - **Modeller** = hvor mange af leverandørens modeller der havde en Arena-score.
 
-Leverandører sorteres først efter **scoren for den bedste model** og derefter efter gennemsnitlig score. Dette belønner en
+Leverandører sorteres først efter **topmodellens score** og derefter efter gennemsnitsscoren. Dette belønner en
 leverandør, der tilbyder mindst én stærk gratis model.
 
 ---

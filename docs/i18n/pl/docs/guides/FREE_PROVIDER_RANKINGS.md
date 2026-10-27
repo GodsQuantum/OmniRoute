@@ -134,9 +134,14 @@ Kształt odpowiedzi:
 ### Źródło: ranking Arena AI
 
 Mechanizm synchronizacji Arena ELO (`src/lib/arenaEloSync.ts`) pobiera dwa rankingi — `text`
-oraz `code` — z interfejsu API rankingu Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Każdy wpis w rankingu
-zawiera nazwę modelu, dostawcę, `score` ELO, przedział ufności oraz liczbę głosów.
+i `code` — z API rankingu Arena AI
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Gdy to API nie zwraca
+użytecznego rankingu, mechanizm korzysta awaryjnie z oficjalnego zestawu
+`lmarena-ai/leaderboard-dataset` na serwerze datasets-server platformy Hugging Face
+(`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` raportuje `activeSource`, `lastError` oraz
+`lastFailedAt`. Każdy wpis w rankingu zawiera nazwę modelu, dostawcę, `score` ELO,
+przedział ufności oraz liczbę głosów.
 
 Kategorie rankingu są mapowane na kategorie zadań OmniRoute:
 
@@ -153,8 +158,9 @@ Surowe wyniki ELO są normalizowane osobno dla każdego rankingu do **wartości 
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Wynik nigdy nie osiąga `0` ani `1`, pozostawiając margines na nadpisania przez użytkownika. Jest to
-pole `score` widoczne w odpowiedzi API oraz etykieta wyświetlana w panelu.
+Wynik nigdy nie osiąga `0` ani `1`, dzięki czemu pozostaje margines na ustawienia
+użytkownika. Jest to pole `score` widoczne w odpowiedzi API oraz etykieta wyświetlana
+na panelu.
 
 ### Poziom ufności
 
@@ -170,52 +176,54 @@ Każdy wpis otrzymuje poziom ufności na podstawie liczby głosów w Arena:
 
 Znormalizowane wpisy są zapisywane w tabeli bazy danych `model_intelligence` z
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Wpisy **wygasają po
-7 dniach**, dzięki czemu dostawca, który przestanie się synchronizować, ostatecznie znika, zamiast udostępniać
-nieaktualne dane.
+7 dniach**, więc dostawca, którego dane przestają być synchronizowane, ostatecznie znika,
+zamiast udostępniać nieaktualne dane.
 
 Synchronizacja jest **domyślnie włączona**:
 
-- Jest uruchamiana raz podczas startu serwera, a następnie okresowo przez mechanizm czasowy
+- Jest uruchamiana raz podczas startu serwera, a następnie okresowo przez licznik czasu
   (`src/lib/arenaEloSync.ts`, podłączony z `src/instrumentation-node.ts`).
-- Jest **nieblokująca i nigdy nie powoduje krytycznego błędu** — jeśli pobieranie ze źródła zewnętrznego się nie powiedzie, OmniRoute nadal
-  działa, a rankingi pokazują po prostu ostatnie poprawne dane (lub stan pusty).
+- Jest **nieblokująca i nigdy nie powoduje błędu krytycznego** — jeśli pobieranie ze źródła
+  nadrzędnego się nie powiedzie, OmniRoute nadal działa, a rankingi pokazują ostatnie
+  poprawne dane (lub pusty stan).
 
 Sterują nią dwie zmienne środowiskowe (opisane w
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Zmienna                   | Wartość domyślna   | Przeznaczenie                                                |
-| ------------------------- | ------------------ | ------------------------------------------------------------ |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`             | Ustaw `false`, aby zrezygnować z synchronizacji wychodzącej. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 godz.) | Interwał synchronizacji w sekundach.                         |
+| Zmienna                   | Wartość domyślna | Przeznaczenie                                          |
+| ------------------------- | ---------------- | ------------------------------------------------------ |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`           | Ustaw `false`, aby wyłączyć synchronizację wychodzącą. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)    | Interwał synchronizacji w sekundach.                   |
 
 ### Ręczna synchronizacja / stan / czyszczenie
 
-Operatorzy mogą korzystać z uwierzytelnionego punktu końcowego zarządzania, który umożliwia ręczne sterowanie
+Dla operatorów uwierzytelniony punkt końcowy zarządzania udostępnia ręczne sterowanie
 (`src/app/api/intelligence/sync/route.ts` — wymaga uwierzytelnienia zarządzania):
 
 ```
 GET    /api/intelligence/sync          # bieżący stan synchronizacji (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # uruchom ręczną synchronizację; treść: { "dryRun": true }, aby wyświetlić podgląd bez zapisywania
-DELETE /api/intelligence/sync          # usuń wszystkie zsynchronizowane wpisy analityczne arena_elo
+POST   /api/intelligence/sync          # uruchomienie ręcznej synchronizacji; treść: { "dryRun": true }, aby wyświetlić podgląd bez zapisywania
+DELETE /api/intelligence/sync          # usunięcie wszystkich zsynchronizowanych wpisów analitycznych arena_elo
 ```
 
-Jeśli strona rankingów jest pusta, ręczne wywołanie `POST /api/intelligence/sync` (lub po prostu
-ponowne uruchomienie serwera) ponownie ją wypełni.
+Jeśli strona rankingów jest pusta, ręczne wywołanie `POST /api/intelligence/sync`
+(lub po prostu ponowne uruchomienie serwera) uzupełni ją ponownie.
 
 ### Dopasowywanie modeli do rankingu
 
-Identyfikatory modeli w rejestrze i nazwy modeli w Arena nie zawsze są identyczne. Ranking korzysta z
-elastycznego dopasowywania (`findMatchingIntelligence` w `src/lib/freeProviderRankings.ts`):
+Identyfikatory modeli w rejestrze i nazwy modeli w Arena nie zawsze są identyczne.
+Ranking korzysta z elastycznego dopasowywania (`findMatchingIntelligence` w
+`src/lib/freeProviderRankings.ts`):
 
 1. Dokładne dopasowanie znormalizowanego identyfikatora modelu.
 2. Dopasowanie po usunięciu końcowego sufiksu wersji (np. `kimi-k2.6` → `kimi-k2`).
-3. Dopasowanie prefiksu (nazwa modelu z rankingu jest prefiksem identyfikatora w rejestrze).
+3. Dopasowanie prefiksu (nazwa modelu w rankingu jest prefiksem identyfikatora w rejestrze).
 
-Podczas synchronizacji znane prefiksy dostawców (`anthropic/`, `openai/`, `google/`, …) są
-usuwane, a niewielka mapa aliasów rozszerza nazwy kanoniczne o warianty używane wewnętrznie przez OmniRoute,
-dzięki czemu modele można znaleźć pod dowolną nazwą.
+Po stronie synchronizacji znane prefiksy dostawców (`anthropic/`, `openai/`, `google/`, …)
+są usuwane, a niewielka mapa aliasów rozszerza nazwy kanoniczne o warianty używane
+wewnętrznie przez OmniRoute, dzięki czemu modele można znaleźć pod każdą nazwą.
 
-### Jak tworzony jest ranking dostawców
+### Jak klasyfikowany jest dostawca
 
 Dla każdego bezpłatnego dostawcy mechanizm ocenia każdy model w jego katalogu, a następnie:
 
@@ -223,8 +231,9 @@ Dla każdego bezpłatnego dostawcy mechanizm ocenia każdy model w jego katalogu
 - **Średni wynik** = średni wynik wszystkich ocenionych modeli tego dostawcy.
 - **Modele** = liczba modeli dostawcy, które miały wynik Arena.
 
-Dostawcy są sortowani najpierw według **wyniku najlepszego modelu**, a następnie według średniego wyniku. W ten sposób premiowany jest
-dostawca oferujący co najmniej jeden dobry bezpłatny model.
+Dostawcy są sortowani najpierw według **wyniku najlepszego modelu**, a następnie według
+średniego wyniku. Premiowani są w ten sposób dostawcy oferujący co najmniej jeden
+dobry bezpłatny model.
 
 ---
 

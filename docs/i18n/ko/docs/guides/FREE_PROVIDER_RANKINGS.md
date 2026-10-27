@@ -126,9 +126,14 @@ GET /api/free-provider-rankings?category=coding&limit=20
 
 Arena ELO 동기화 엔진(`src/lib/arenaEloSync.ts`)은 Arena AI 리더보드 API
 (`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`)에서 `text`와
-`code`, 두 개의 리더보드를 가져옵니다. 각 리더보드 항목에는 모델 이름, 공급업체, ELO `score`, 신뢰 구간 및 투표 수가 포함됩니다.
+`code`, 두 개의 리더보드를 가져옵니다. 해당 API가 사용 가능한 리더보드를 반환하지 않으면,
+엔진은 Hugging Face datasets-server의 공식 `lmarena-ai/leaderboard-dataset`으로
+대체합니다(`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`). `GET /api/intelligence/sync`는 `activeSource`, `lastError`,
+`lastFailedAt`을 보고합니다. 각 리더보드 항목에는 모델 이름, 공급업체, ELO `score`,
+신뢰 구간, 투표 수가 포함됩니다.
 
-리더보드 카테고리는 OmniRoute 작업 카테고리에 다음과 같이 매핑됩니다.
+리더보드 카테고리는 다음과 같이 OmniRoute 작업 카테고리에 매핑됩니다.
 
 | Arena 리더보드 | OmniRoute 작업 카테고리                           |
 | -------------- | ------------------------------------------------- |
@@ -137,13 +142,14 @@ Arena ELO 동기화 엔진(`src/lib/arenaEloSync.ts`)은 Arena AI 리더보드 A
 
 ### 정규화(작업 적합도 점수)
 
-원시 ELO 점수는 각 리더보드별로 **`[0.4, 0.98]` 범위의 작업 적합도 값**으로 정규화됩니다.
+원시 ELO 점수는 리더보드별로 **`[0.4, 0.98]` 범위의 작업 적합도 값**으로 정규화됩니다.
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-점수는 `0`이나 `1`에 도달하지 않으므로 사용자가 재정의할 수 있는 여유가 남습니다. 이 값이 API 응답에서 표시되는 `score` 필드이자 대시보드에 표시되는 레이블입니다.
+사용자 재정의를 위한 여유를 남기기 위해 점수는 `0` 또는 `1`에 도달하지 않습니다. 이 값은
+API 응답에 표시되는 `score` 필드이자 대시보드에 표시되는 레이블입니다.
 
 ### 신뢰도
 
@@ -157,53 +163,64 @@ taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 
 ### 저장 및 최신 상태 유지
 
-정규화된 항목은 `source = "arena_elo"`로 `model_intelligence` DB 테이블에 기록됩니다(`src/lib/db/modelIntelligence.ts`). 항목은 **7일 후 만료**되므로, 동기화를 중단한 공급업체는 오래된 데이터를 계속 제공하는 대신 최종적으로 목록에서 제외됩니다.
+정규화된 항목은 `source = "arena_elo"`로 `model_intelligence` DB 테이블에
+저장됩니다(`src/lib/db/modelIntelligence.ts`). 항목은 **7일 후 만료**되므로,
+동기화를 중단한 공급업체는 오래된 데이터를 계속 제공하는 대신 결국 목록에서 제외됩니다.
 
-동기화는 **기본적으로 활성화**됩니다.
+동기화는 **기본적으로 활성화**되어 있습니다.
 
 - 서버 시작 시 한 번 실행된 후 주기적인 타이머에 따라 실행됩니다
   (`src/lib/arenaEloSync.ts`, `src/instrumentation-node.ts`에서 연결).
-- **비차단 방식이며 치명적인 오류를 일으키지 않습니다**. 업스트림 가져오기에 실패해도 OmniRoute는 계속 실행되며, 순위에는 단순히 마지막으로 정상적으로 가져온 데이터가 표시됩니다(또는 빈 상태가 표시됩니다).
+- 동기화는 **비차단 방식이며 치명적인 오류를 일으키지 않습니다**. 업스트림 가져오기가 실패하더라도
+  OmniRoute는 계속 실행되며, 순위에는 마지막으로 정상 수집된 데이터가 표시됩니다
+  (또는 데이터가 없으면 빈 상태로 표시됩니다).
 
-다음 두 환경 변수로 동기화를 제어할 수 있습니다([`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)에 문서화되어 있음).
+두 가지 환경 변수로 동기화를 제어할 수 있습니다
+([`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)에 문서화됨).
 
-| 변수                      | 기본값           | 용도                                                        |
-| ------------------------- | ---------------- | ----------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`           | 아웃바운드 동기화를 사용하지 않으려면 `false`로 설정합니다. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24시간) | 동기화 간격(초)입니다.                                      |
+| 변수                      | 기본값        | 용도                                                     |
+| ------------------------- | ------------- | -------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | 아웃바운드 동기화를 비활성화하려면 `false`로 설정합니다. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | 초 단위 동기화 간격입니다.                               |
 
 ### 수동 동기화 / 상태 / 초기화
 
-운영자를 위해 인증된 관리 엔드포인트에서 수동 제어 기능을 제공합니다
+운영자는 인증된 관리 엔드포인트를 통해 수동으로 제어할 수 있습니다
 (`src/app/api/intelligence/sync/route.ts` — 관리 인증 필요).
 
 ```
 GET    /api/intelligence/sync          # 현재 동기화 상태(enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # 수동 동기화 실행. 기록하지 않고 미리 보려면 본문에 { "dryRun": true } 지정
+POST   /api/intelligence/sync          # 수동 동기화 실행. 본문: { "dryRun": true }로 설정하면 쓰지 않고 미리 보기
 DELETE /api/intelligence/sync          # 동기화된 모든 arena_elo 인텔리전스 항목 삭제
 ```
 
-순위 페이지가 비어 있다면 수동으로 `POST /api/intelligence/sync`를 실행하거나 서버를 다시 시작하기만 해도 데이터가 다시 채워집니다.
+순위 페이지가 비어 있다면 수동으로 `POST /api/intelligence/sync`를 실행하거나
+서버를 다시 시작하기만 해도 데이터가 다시 채워집니다.
 
 ### 모델과 리더보드 매칭
 
-레지스트리 모델 ID와 Arena 모델 이름이 항상 정확히 일치하는 것은 아닙니다. 순위 산정에는 유연한 매칭 방식(`src/lib/freeProviderRankings.ts`의 `findMatchingIntelligence`)이 사용됩니다.
+레지스트리 모델 ID와 Arena 모델 이름이 항상 정확히 일치하는 것은 아닙니다. 순위 산정에는
+유연한 매칭 방식(`src/lib/freeProviderRankings.ts`의 `findMatchingIntelligence`)이
+사용됩니다.
 
-1. 정규화된 모델 ID와 정확히 일치하는지 확인합니다.
-2. 뒤쪽 버전 접미사를 제거한 후 일치하는지 확인합니다(예: `kimi-k2.6` → `kimi-k2`).
+1. 정규화된 모델 ID가 정확히 일치하는지 확인합니다.
+2. 끝에 붙은 버전 접미사를 제거한 후 일치하는지 확인합니다(예: `kimi-k2.6` → `kimi-k2`).
 3. 접두사가 일치하는지 확인합니다(리더보드 모델 이름이 레지스트리 ID의 접두사인 경우).
 
-동기화 측에서는 알려진 공급업체 접두사(`anthropic/`, `openai/`, `google/`, …)를 제거하고, 소규모 별칭 맵을 사용해 정식 이름을 OmniRoute가 내부적으로 사용하는 변형 이름으로 확장합니다. 따라서 어떤 이름을 사용하더라도 모델을 찾을 수 있습니다.
+동기화 측에서는 알려진 공급업체 접두사(`anthropic/`, `openai/`, `google/`, …)를
+제거하고, 소규모 별칭 맵을 사용해 표준 이름을 OmniRoute 내부에서 사용하는 변형 이름으로
+확장합니다. 따라서 어떤 이름을 사용하더라도 모델을 찾을 수 있습니다.
 
 ### 공급업체 순위 산정 방식
 
-각 무료 공급업체에 대해 엔진은 해당 카탈로그의 모든 모델 점수를 산정한 후 다음 값을 계산합니다.
+엔진은 각 무료 공급업체 카탈로그의 모든 모델에 점수를 매긴 후 다음을 계산합니다.
 
-- **최고 모델** = 공급업체에서 점수가 가장 높은 모델.
+- **최고 모델** = 해당 공급업체에서 점수가 가장 높은 모델.
 - **평균 점수** = 해당 공급업체에서 점수가 산정된 모든 모델의 평균 점수.
-- **모델 수** = Arena 점수가 있는 공급업체 모델의 수.
+- **모델 수** = Arena 점수가 있는 해당 공급업체의 모델 수.
 
-공급업체는 먼저 **최고 모델 점수**를 기준으로 정렬한 다음 평균 점수를 기준으로 정렬됩니다. 따라서 강력한 무료 모델을 하나 이상 제공하는 공급업체가 높은 평가를 받습니다.
+공급업체는 먼저 **최고 모델 점수**, 그다음 평균 점수를 기준으로 정렬됩니다. 따라서 강력한
+무료 모델을 하나 이상 제공하는 공급업체가 높은 평가를 받습니다.
 
 ---
 

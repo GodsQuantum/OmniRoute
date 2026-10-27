@@ -120,32 +120,36 @@ Muundo wa jibu:
 
 ---
 
-## Alama Zinavyofanya Kazi
+## Jinsi Alama Zinavyofanya Kazi
 
-### Chanzo: ubao wa wanaoongoza wa Arena AI
+### Chanzo: jedwali la wanaoongoza la Arena AI
 
-Injini ya ulandanishi wa Arena ELO (`src/lib/arenaEloSync.ts`) huchota mbao mbili za wanaoongoza — `text`
-na `code` — kutoka kwenye API ya ubao wa wanaoongoza wa Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Kila ingizo la ubao wa wanaoongoza
-lina jina la modeli, mtoa huduma, `score` ya ELO, muda wa kujiamini, na idadi ya kura.
+Injini ya ulandanishaji wa Arena ELO (`src/lib/arenaEloSync.ts`) hupakua majedwali mawili ya wanaoongoza — `text`
+na `code` — kutoka API ya jedwali la wanaoongoza la Arena AI
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). API hiyo isiporejesha
+jedwali linaloweza kutumika, injini hutumia `lmarena-ai/leaderboard-dataset` rasmi kama
+mbadala kwenye datasets-server ya Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` huripoti `activeSource`, `lastError` na
+`lastFailedAt`. Kila ingizo la jedwali la wanaoongoza
+huwa na jina la modeli, muuzaji, `score` ya ELO, muda wa kujiamini, na idadi ya kura.
 
-Kategoria za ubao wa wanaoongoza huhusishwa na kategoria za kazi za OmniRoute:
+Kategoria za jedwali la wanaoongoza hulingana na kategoria za kazi za OmniRoute:
 
-| Ubao wa wanaoongoza wa Arena | Kategoria za kazi za OmniRoute                    |
-| ---------------------------- | ------------------------------------------------- |
-| `text`                       | `default`, `review`, `documentation`, `debugging` |
-| `code`                       | `coding`                                          |
+| Jedwali la wanaoongoza la Arena | Kategoria za kazi za OmniRoute                    |
+| ------------------------------- | ------------------------------------------------- |
+| `text`                          | `default`, `review`, `documentation`, `debugging` |
+| `code`                          | `coding`                                          |
 
 ### Usawazishaji (alama ya kufaa kwa kazi)
 
-Alama ghafi za ELO husawazishwa kwa kila ubao wa wanaoongoza kuwa **thamani ya kufaa kwa kazi katika `[0.4, 0.98]`**:
+Alama ghafi za ELO husawazishwa kwa kila jedwali la wanaoongoza kuwa **thamani ya kufaa kwa kazi katika `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Alama haifikii kamwe `0` au `1`, hivyo kuacha nafasi kwa mabadiliko ya mtumiaji. Hii ndiyo sehemu ya
-`score` unayoona katika jibu la API na lebo inayoonyeshwa kwenye dashibodi.
+Alama haifikii kamwe `0` au `1`, hivyo kuacha nafasi kwa marekebisho ya mtumiaji. Hii ndiyo
+sehemu ya `score` unayoona katika jibu la API na lebo inayoonyeshwa kwenye dashibodi.
 
 ### Kiwango cha kujiamini
 
@@ -157,65 +161,65 @@ Kila ingizo hupewa kiwango cha kujiamini kulingana na idadi ya kura za Arena:
 | `medium`              | ≥ 1,000 |
 | `low`                 | < 1,000 |
 
-### Hifadhi na usasishaji
+### Hifadhi na upya wa data
 
 Maingizo yaliyosawazishwa huandikwa kwenye jedwali la DB la `model_intelligence` yakiwa na
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Maingizo **huisha baada ya
 siku 7**, kwa hivyo mtoa huduma anayeacha kulandanisha hatimaye huondolewa badala ya kutoa
 data iliyopitwa na wakati.
 
-Ulandanishi huendeshwa **kwa chaguo-msingi**:
+Ulandanishaji **huendeshwa kwa chaguo-msingi**:
 
-- Huendeshwa mara moja seva inapoanza na kisha kwa kipima muda cha mara kwa mara
-  (`src/lib/arenaEloSync.ts`, kikiunganishwa kutoka `src/instrumentation-node.ts`).
-- **Hauzuii na hausababishi hitilafu mbaya kamwe** — ikiwa uchotaji kutoka chanzo cha nje utashindwa, OmniRoute huendelea
+- Huendeshwa mara moja seva inapoanzishwa, kisha kwa kipima muda cha mara kwa mara
+  (`src/lib/arenaEloSync.ts`, ikiunganishwa kutoka `src/instrumentation-node.ts`).
+- **Hauzuii mchakato na hausababishi kamwe hitilafu ya kusitisha mfumo** — ikiwa upakuaji kutoka chanzo cha juu utashindwa, OmniRoute huendelea
   kufanya kazi na upangaji huonyesha tu data nzuri ya mwisho (au hali tupu).
 
-Vigeu viwili vya mazingira vinaudhibiti (vimeandikwa katika
+Vigezo viwili vya mazingira huudhibiti (vimefafanuliwa katika
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Kigeu                     | Chaguo-msingi | Madhumuni                                                  |
-| ------------------------- | ------------- | ---------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Weka kuwa `false` ili kujiondoa kwenye ulandanishi wa nje. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Muda kati ya ulandanishi, kwa sekunde.                     |
+| Kigezo                    | Chaguo-msingi | Madhumuni                                                          |
+| ------------------------- | ------------- | ------------------------------------------------------------------ |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Weka kuwa `false` ili kujiondoa kwenye ulandanishaji unaotoka nje. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Muda kati ya ulandanishaji, kwa sekunde.                           |
 
-### Ulandanishi wa mkono / hali / kufuta
+### Ulandanishaji wa moja kwa moja / hali / kufuta
 
-Kwa waendeshaji, endpoint ya usimamizi iliyothibitishwa hutoa udhibiti wa mkono
+Kwa waendeshaji, endpoint ya usimamizi iliyothibitishwa hutoa udhibiti wa moja kwa moja
 (`src/app/api/intelligence/sync/route.ts` — inahitaji uthibitishaji wa usimamizi):
 
 ```
-GET    /api/intelligence/sync          # hali ya sasa ya ulandanishi (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # anzisha ulandanishi wa mkono; mwili: { "dryRun": true } ili kuhakiki bila kuandika
-DELETE /api/intelligence/sync          # futa maingizo yote ya taarifa ya arena_elo yaliyolandanishwa
+GET    /api/intelligence/sync          # hali ya sasa ya ulandanishaji (enabled, lastSync, nextSync, intervalMs)
+POST   /api/intelligence/sync          # anzisha ulandanishaji wa moja kwa moja; body: { "dryRun": true } ili kuhakiki bila kuandika
+DELETE /api/intelligence/sync          # futa maingizo yote ya taarifa za arena_elo yaliyolandanishwa
 ```
 
-Ikiwa ukurasa wa upangaji ni tupu, `POST /api/intelligence/sync` ya mkono (au
-kuanzisha upya seva tu) huujaza tena.
+Ikiwa ukurasa wa upangaji ni tupu, `POST /api/intelligence/sync` ya moja kwa moja (au
+kuanzisha seva upya tu) huujaza tena.
 
-### Kulinganisha modeli na ubao wa wanaoongoza
+### Kulinganisha modeli na jedwali la wanaoongoza
 
-Vitambulisho vya modeli vya sajili na majina ya modeli za Arena havilingani sawasawa kila wakati. Upangaji hutumia
+Vitambulisho vya modeli kwenye rejista na majina ya modeli za Arena havilingani kwa usahihi kila wakati. Upangaji hutumia
 ulinganishaji unaonyumbulika (`findMatchingIntelligence` katika `src/lib/freeProviderRankings.ts`):
 
-1. Ulinganifu kamili wa kitambulisho cha modeli kilichosawazishwa.
-2. Ulinganifu baada ya kuondoa kiambishi cha toleo kilicho mwishoni (k.m. `kimi-k2.6` → `kimi-k2`).
-3. Ulinganifu wa kiambishi cha mwanzo (jina la modeli kwenye ubao wa wanaoongoza ni kiambishi cha mwanzo cha kitambulisho cha sajili).
+1. Ulinganishaji kamili wa kitambulisho cha modeli kilichosawazishwa.
+2. Ulinganishaji baada ya kuondoa kiambishi cha toleo kilicho mwishoni (kwa mfano `kimi-k2.6` → `kimi-k2`).
+3. Ulinganishaji wa kiambishi-awali (jina la modeli katika jedwali la wanaoongoza ni kiambishi-awali cha kitambulisho cha rejista).
 
-Kwa upande wa ulandanishi, viambishi vya mwanzo vya watoa huduma vinavyojulikana (`anthropic/`, `openai/`, `google/`, …)
-huondolewa na ramani ndogo ya lakabu hupanua majina rasmi kuwa vibadala ambavyo OmniRoute hutumia
+Katika upande wa ulandanishaji, viambishi-awali vinavyojulikana vya wauzaji (`anthropic/`, `openai/`, `google/`, …)
+huondolewa na ramani ndogo ya lakabu hupanua majina sanifu kuwa vibadala ambavyo OmniRoute hutumia
 ndani, ili modeli ziendelee kupatikana kwa jina lolote.
 
 ### Jinsi mtoa huduma anavyopangwa
 
-Kwa kila mtoa huduma wa bila malipo, injini huipa alama kila modeli katika katalogi yake, kisha:
+Kwa kila mtoa huduma asiyelipishwa, injini huipa alama kila modeli katika katalogi yake, kisha:
 
-- **Modeli Bora** = modeli yenye alama ya juu zaidi ya mtoa huduma.
-- **Wastani wa Alama** = wastani wa alama katika modeli zote za mtoa huduma ambazo zimepewa alama.
+- **Modeli Bora** = modeli ya mtoa huduma iliyo na alama ya juu zaidi.
+- **Wastani wa Alama** = wastani wa alama za modeli zote za mtoa huduma huyo zilizopewa alama.
 - **Modeli** = idadi ya modeli za mtoa huduma zilizokuwa na alama ya Arena.
 
-Watoa huduma hupangwa kwa **alama ya modeli bora** kwanza, kisha kwa wastani wa alama. Hili humzawadia
-mtoa huduma anayetoa angalau modeli moja bora ya bila malipo.
+Watoa huduma hupangwa kwanza kwa **alama ya modeli bora**, kisha kwa wastani wa alama. Hili humtuza
+mtoa huduma anayetoa angalau modeli moja thabiti isiyolipishwa.
 
 ---
 

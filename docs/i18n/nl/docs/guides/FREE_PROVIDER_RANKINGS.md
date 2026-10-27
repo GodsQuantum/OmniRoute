@@ -125,8 +125,12 @@ taakgeschiktheid (zie hieronder). Providers zonder modellen met een score worden
 ### Bron: Arena AI-klassement
 
 De Arena ELO-synchronisatie-engine (`src/lib/arenaEloSync.ts`) haalt twee klassementen op — `text`
-en `code` — via de Arena AI-klassement-API
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Elke vermelding in het klassement
+en `code` — via de Arena AI-klassements-API
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Wanneer die API geen
+bruikbaar klassement retourneert, valt de engine terug op de officiële `lmarena-ai/leaderboard-dataset` op de
+Hugging Face datasets-server (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` rapporteert `activeSource`, `lastError` en
+`lastFailedAt`. Elke vermelding in het klassement
 bevat een modelnaam, leverancier, ELO-`score`, betrouwbaarheidsinterval en aantal stemmen.
 
 Klassementscategorieën worden als volgt gekoppeld aan OmniRoute-taakcategorieën:
@@ -144,8 +148,8 @@ Ruwe ELO-scores worden per klassement genormaliseerd tot een **taakgeschiktheids
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-De score bereikt nooit `0` of `1`, zodat er ruimte blijft voor gebruikersoverschrijvingen. Dit is het
-`score`-veld dat u in de API-respons ziet en het label dat op het dashboard wordt weergegeven.
+De score bereikt nooit `0` of `1`, zodat er ruimte overblijft voor gebruikersoverschrijvingen. Dit is het
+`score`-veld dat u in het API-antwoord ziet en het label dat op het dashboard wordt weergegeven.
 
 ### Betrouwbaarheid
 
@@ -162,60 +166,60 @@ Elke vermelding krijgt een betrouwbaarheidsniveau op basis van het aantal Arena-
 Genormaliseerde vermeldingen worden naar de DB-tabel `model_intelligence` geschreven met
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Vermeldingen **verlopen na
 7 dagen**, zodat een leverancier die stopt met synchroniseren uiteindelijk verdwijnt in plaats van
-verouderde gegevens aan te bieden.
+verouderde gegevens te blijven aanbieden.
 
 De synchronisatie wordt **standaard uitgevoerd**:
 
-- Deze wordt eenmaal uitgevoerd wanneer de server wordt gestart en vervolgens periodiek via een timer
+- Deze wordt eenmaal bij het opstarten van de server uitgevoerd en daarna via een periodieke timer
   (`src/lib/arenaEloSync.ts`, gekoppeld vanuit `src/instrumentation-node.ts`).
 - Deze is **niet-blokkerend en nooit fataal** — als het ophalen bij de externe bron mislukt, blijft OmniRoute
-  actief en tonen de ranglijsten gewoon de laatst correct opgehaalde gegevens (of een lege status).
+  actief en tonen de ranglijsten simpelweg de laatst bekende goede gegevens (of een lege status).
 
 Twee omgevingsvariabelen regelen dit (gedocumenteerd in
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Variabele                 | Standaardwaarde  | Doel                                                                |
-| ------------------------- | ---------------- | ------------------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`           | Stel in op `false` om de uitgaande synchronisatie uit te schakelen. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 uur) | Synchronisatie-interval, in seconden.                               |
+| Variabele                 | Standaard     | Doel                                                                |
+| ------------------------- | ------------- | ------------------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Stel in op `false` om de uitgaande synchronisatie uit te schakelen. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24u) | Synchronisatie-interval, in seconden.                               |
 
-### Handmatig synchroniseren / status / wissen
+### Handmatige synchronisatie / status / wissen
 
-Voor beheerders biedt een geauthenticeerd beheerendpoint handmatige bediening
+Voor beheerders biedt een geauthenticeerd beheereindpunt handmatige bediening
 (`src/app/api/intelligence/sync/route.ts` — vereist beheerauthenticatie):
 
 ```
 GET    /api/intelligence/sync          # huidige synchronisatiestatus (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # activeer een handmatige synchronisatie; body: { "dryRun": true } voor een voorbeeld zonder te schrijven
+POST   /api/intelligence/sync          # activeer een handmatige synchronisatie; body: { "dryRun": true } voor een voorbeeld zonder gegevens te schrijven
 DELETE /api/intelligence/sync          # wis alle gesynchroniseerde arena_elo-intelligentievermeldingen
 ```
 
-Als de ranglijstpagina leeg is, wordt deze opnieuw gevuld met een handmatige
-`POST /api/intelligence/sync` (of door simpelweg de server opnieuw te starten).
+Als de ranglijstpagina leeg is, wordt deze opnieuw gevuld met een handmatige `POST /api/intelligence/sync` (of simpelweg
+door de server opnieuw op te starten).
 
-### Modellen koppelen aan het klassement
+### Modellen aan het klassement koppelen
 
 Model-ID's in het register en Arena-modelnamen komen niet altijd exact overeen. De rangschikking gebruikt
-flexibele koppeling (`findMatchingIntelligence` in `src/lib/freeProviderRankings.ts`):
+flexibele overeenkomsten (`findMatchingIntelligence` in `src/lib/freeProviderRankings.ts`):
 
 1. Exacte overeenkomst met de genormaliseerde model-ID.
-2. Overeenkomst na het verwijderen van een versiesuffix aan het einde (bijvoorbeeld `kimi-k2.6` → `kimi-k2`).
+2. Overeenkomst na het verwijderen van een achtergevoegd versieachtervoegsel (bijv. `kimi-k2.6` → `kimi-k2`).
 3. Voorvoegselovereenkomst (een modelnaam uit het klassement is een voorvoegsel van de register-ID).
 
-Aan de synchronisatiezijde worden bekende leveranciersvoorvoegsels (`anthropic/`, `openai/`, `google/`, …)
-verwijderd en breidt een kleine aliasmap canonieke namen uit naar de varianten die OmniRoute
+Aan de synchronisatiekant worden bekende leveranciersvoorvoegsels (`anthropic/`, `openai/`, `google/`, …)
+verwijderd en breidt een kleine aliastabel canonieke namen uit naar de varianten die OmniRoute
 intern gebruikt, zodat modellen onder elke naam vindbaar blijven.
 
 ### Hoe een leverancier wordt gerangschikt
 
-Voor elke gratis leverancier berekent de engine een score voor elk model in diens catalogus, waarna:
+Voor elke gratis leverancier berekent de engine een score voor elk model in de catalogus en vervolgens geldt:
 
-- **Topmodel** = het model van de leverancier met de hoogste score.
-- **Gem. score** = de gemiddelde score van alle gescoorde modellen van die leverancier.
+- **Topmodel** = het hoogst scorende model van de leverancier.
+- **Gem. score** = de gemiddelde score van alle beoordeelde modellen van die leverancier.
 - **Modellen** = het aantal modellen van de leverancier dat een Arena-score had.
 
-Leveranciers worden eerst gesorteerd op **topmodelscore** en daarna op gemiddelde score. Hiermee wordt een
-leverancier beloond die ten minste één sterk gratis model aanbiedt.
+Leveranciers worden eerst gesorteerd op **topmodelscore** en vervolgens op gemiddelde score. Dit beloont een
+leverancier die ten minste één sterk gratis model aanbiedt.
 
 ---
 

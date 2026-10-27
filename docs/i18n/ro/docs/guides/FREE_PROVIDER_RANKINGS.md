@@ -129,10 +129,14 @@ Structura răspunsului:
 
 Motorul de sincronizare Arena ELO (`src/lib/arenaEloSync.ts`) preia două clasamente — `text`
 și `code` — din API-ul clasamentului Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Fiecare intrare din clasament
-conține numele modelului, furnizorul, `score` ELO, intervalul de încredere și numărul de voturi.
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Atunci când API-ul respectiv nu returnează
+niciun clasament utilizabil, motorul recurge la setul oficial `lmarena-ai/leaderboard-dataset` din
+serverul de seturi de date Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` raportează `activeSource`, `lastError` și
+`lastFailedAt`. Fiecare intrare din clasament
+conține numele unui model, furnizorul, `score` ELO, intervalul de încredere și numărul de voturi.
 
-Categoriile clasamentului corespund categoriilor de sarcini OmniRoute:
+Categoriile clasamentului sunt asociate cu categoriile de sarcini OmniRoute:
 
 | Clasament Arena | Categorii de sarcini OmniRoute                    |
 | --------------- | ------------------------------------------------- |
@@ -150,29 +154,29 @@ taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 Scorul nu ajunge niciodată la `0` sau `1`, lăsând o marjă pentru suprascrierile utilizatorului. Acesta este
 câmpul `score` pe care îl vedeți în răspunsul API și eticheta afișată în panoul de control.
 
-### Nivel de încredere
+### Încredere
 
-Fiecare intrare primește un nivel de încredere bazat pe numărul de voturi din Arena:
+Fiecare intrare primește un nivel de încredere pe baza numărului de voturi din Arena:
 
-| Nivel de încredere | Voturi  |
-| ------------------ | ------- |
-| `high`             | ≥ 5.000 |
-| `medium`           | ≥ 1.000 |
-| `low`              | < 1.000 |
+| Încredere | Voturi  |
+| --------- | ------- |
+| `high`    | ≥ 5.000 |
+| `medium`  | ≥ 1.000 |
+| `low`     | < 1.000 |
 
 ### Stocare și actualitate
 
-Intrările normalizate sunt scrise în tabelul DB `model_intelligence`, cu
+Intrările normalizate sunt scrise în tabelul BD `model_intelligence` cu
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Intrările **expiră după
 7 zile**, astfel încât un furnizor care nu se mai sincronizează este eliminat în cele din urmă, în loc să furnizeze
 date învechite.
 
-Sincronizarea rulează **implicit**:
+Sincronizarea rulează **în mod implicit**:
 
-- Rulează o dată la pornirea serverului și apoi periodic, pe baza unui temporizator
+- Rulează o dată la pornirea serverului și apoi cu ajutorul unui temporizator periodic
   (`src/lib/arenaEloSync.ts`, conectat din `src/instrumentation-node.ts`).
-- Este **neblocantă și nu cauzează niciodată o eroare fatală** — dacă preluarea din sursa din amonte eșuează, OmniRoute continuă să
-  ruleze, iar clasamentele afișează pur și simplu ultimele date valide (sau o stare fără date).
+- Este **neblocantă și niciodată fatală** — dacă preluarea din sursa externă eșuează, OmniRoute continuă
+  să ruleze, iar clasamentele afișează pur și simplu ultimele date valide (sau o stare goală).
 
 Două variabile de mediu o controlează (documentate în
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
@@ -190,7 +194,7 @@ Pentru operatori, un endpoint de administrare autentificat oferă control manual
 ```
 GET    /api/intelligence/sync          # starea curentă a sincronizării (enabled, lastSync, nextSync, intervalMs)
 POST   /api/intelligence/sync          # declanșează o sincronizare manuală; corp: { "dryRun": true } pentru previzualizare fără scriere
-DELETE /api/intelligence/sync          # șterge toate intrările de inteligență arena_elo sincronizate
+DELETE /api/intelligence/sync          # șterge toate intrările de informații arena_elo sincronizate
 ```
 
 Dacă pagina clasamentelor este goală, un `POST /api/intelligence/sync` manual (sau simpla
@@ -198,27 +202,27 @@ repornire a serverului) o repopulează.
 
 ### Asocierea modelelor cu clasamentul
 
-ID-urile modelelor din registru și numele modelelor din Arena nu corespund întotdeauna exact. Clasamentul utilizează
+ID-urile modelelor din registru și numele modelelor din Arena nu coincid întotdeauna exact. Clasamentul utilizează
 o asociere flexibilă (`findMatchingIntelligence` din `src/lib/freeProviderRankings.ts`):
 
 1. Potrivire exactă după ID-ul normalizat al modelului.
 2. Potrivire după eliminarea unui sufix final de versiune (de exemplu, `kimi-k2.6` → `kimi-k2`).
 3. Potrivire după prefix (numele unui model din clasament este un prefix al ID-ului din registru).
 
-În etapa de sincronizare, prefixele cunoscute ale furnizorilor (`anthropic/`, `openai/`, `google/`, …) sunt
-eliminate, iar o mică hartă de aliasuri extinde numele canonice în variantele pe care OmniRoute le utilizează
-intern, astfel încât modelele să poată fi găsite sub orice nume.
+În procesul de sincronizare, prefixele de furnizori cunoscute (`anthropic/`, `openai/`, `google/`, …) sunt
+eliminate, iar o mică hartă de aliasuri extinde numele canonice în variantele utilizate intern de OmniRoute,
+astfel încât modelele să poată fi găsite indiferent de nume.
 
 ### Cum este clasificat un furnizor
 
 Pentru fiecare furnizor gratuit, motorul evaluează fiecare model din catalogul său, apoi:
 
 - **Model de top** = modelul furnizorului cu cel mai mare scor.
-- **Scor mediu** = scorul mediu pentru toate modelele evaluate ale furnizorului respectiv.
+- **Scor mediu** = media scorurilor tuturor modelelor evaluate ale furnizorului respectiv.
 - **Modele** = numărul modelelor furnizorului care au avut un scor Arena.
 
-Furnizorii sunt sortați mai întâi după **scorul modelului de top**, apoi după scorul mediu. Astfel este recompensat un
-furnizor care oferă cel puțin un model gratuit performant.
+Furnizorii sunt sortați mai întâi după **scorul modelului de top**, apoi după scorul mediu. Astfel este
+avantajat un furnizor care oferă cel puțin un model gratuit performant.
 
 ---
 

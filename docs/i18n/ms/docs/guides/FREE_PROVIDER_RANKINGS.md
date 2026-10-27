@@ -122,12 +122,16 @@ Bentuk respons:
 
 ## Cara Skor Berfungsi
 
-### Sumber: papan pendahulu Arena AI
+### Sumber: Papan pendahulu Arena AI
 
-Enjin penyegerakan ELO Arena (`src/lib/arenaEloSync.ts`) mendapatkan dua papan pendahulu — `text`
+Enjin penyegerakan ELO Arena (`src/lib/arenaEloSync.ts`) mengambil dua papan pendahulu — `text`
 dan `code` — daripada API papan pendahulu Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Setiap entri papan pendahulu
-mengandungi nama model, vendor, `score` ELO, selang keyakinan dan bilangan undian.
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Apabila API tersebut tidak mengembalikan
+papan yang boleh digunakan, enjin beralih kepada `lmarena-ai/leaderboard-dataset` rasmi pada
+datasets-server Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` melaporkan `activeSource`, `lastError` dan
+`lastFailedAt`. Setiap entri papan pendahulu
+mengandungi nama model, vendor, `score` ELO, selang keyakinan dan jumlah undian.
 
 Kategori papan pendahulu dipetakan kepada kategori tugas OmniRoute:
 
@@ -144,12 +148,12 @@ Skor ELO mentah dinormalkan bagi setiap papan pendahulu kepada **nilai kesesuaia
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Skor tidak pernah mencapai `0` atau `1`, sekali gus menyediakan ruang untuk penggantian oleh pengguna. Ini ialah
+Skor tersebut tidak pernah mencapai `0` atau `1`, sekali gus menyediakan ruang untuk penggantian oleh pengguna. Ini ialah
 medan `score` yang anda lihat dalam respons API dan label yang dipaparkan pada papan pemuka.
 
 ### Keyakinan
 
-Setiap entri diberikan tahap keyakinan berdasarkan bilangan undian Arena:
+Setiap entri diberikan tahap keyakinan berdasarkan jumlah undian Arena:
 
 | Keyakinan | Undian  |
 | --------- | ------- |
@@ -161,17 +165,17 @@ Setiap entri diberikan tahap keyakinan berdasarkan bilangan undian Arena:
 
 Entri yang dinormalkan ditulis ke jadual DB `model_intelligence` dengan
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Entri **luput selepas
-7 hari**, jadi penyedia yang berhenti menyegerak akhirnya akan dikeluarkan dan bukannya menyajikan
+7 hari**, maka penyedia yang berhenti menyegerak akhirnya akan digugurkan dan bukannya terus menyediakan
 data lapuk.
 
-Penyegerakan **diaktifkan secara lalai**:
+Penyegerakan **dijalankan secara lalai**:
 
-- Ia dijalankan sekali semasa pelayan dimulakan dan kemudian mengikut pemasa berkala
+- Ia dijalankan sekali semasa pelayan dimulakan dan kemudian melalui pemasa berkala
   (`src/lib/arenaEloSync.ts`, disambungkan daripada `src/instrumentation-node.ts`).
-- Ia **tidak menyekat dan tidak pernah menyebabkan kegagalan kritikal** — jika pengambilan daripada sumber huluan gagal, OmniRoute terus
-  berjalan dan kedudukan hanya memaparkan data sah terakhir (atau keadaan kosong).
+- Ia **tidak menyekat dan tidak pernah membawa maut** — jika pengambilan daripada sumber huluan gagal, OmniRoute terus
+  berjalan dan kedudukan hanya memaparkan data baik yang terakhir (atau keadaan kosong).
 
-Dua pemboleh ubah persekitaran mengawalnya (didokumentasikan dalam
+Dua pemboleh ubah persekitaran mengawalnya (didokumenkan dalam
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
 | Pemboleh ubah             | Lalai         | Tujuan                                                                   |
@@ -187,31 +191,31 @@ Untuk pengendali, titik akhir pengurusan yang disahkan menyediakan kawalan manua
 ```
 GET    /api/intelligence/sync          # status penyegerakan semasa (enabled, lastSync, nextSync, intervalMs)
 POST   /api/intelligence/sync          # cetuskan penyegerakan manual; isi: { "dryRun": true } untuk pratonton tanpa menulis
-DELETE /api/intelligence/sync          # kosongkan semua entri kecerdasan arena_elo yang disegerakkan
+DELETE /api/intelligence/sync          # kosongkan semua entri kecerdasan arena_elo yang telah disegerakkan
 ```
 
-Jika halaman kedudukan kosong, `POST /api/intelligence/sync` secara manual (atau hanya
+Jika halaman kedudukan kosong, `POST /api/intelligence/sync` secara manual (atau sekadar
 memulakan semula pelayan) akan mengisinya semula.
 
 ### Memadankan model dengan papan pendahulu
 
-ID model registri dan nama model Arena tidak semestinya sepadan sepenuhnya. Kedudukan menggunakan
+ID model daftar dan nama model Arena tidak semestinya sepadan sepenuhnya. Kedudukan menggunakan
 pemadanan fleksibel (`findMatchingIntelligence` dalam `src/lib/freeProviderRankings.ts`):
 
 1. Padanan tepat pada ID model yang dinormalkan.
-2. Padanan selepas membuang akhiran versi di hujung (contohnya `kimi-k2.6` → `kimi-k2`).
-3. Padanan awalan (nama model papan pendahulu ialah awalan kepada ID registri).
+2. Padanan selepas membuang akhiran versi di penghujung (cth. `kimi-k2.6` → `kimi-k2`).
+3. Padanan awalan (nama model papan pendahulu ialah awalan bagi ID daftar).
 
 Pada bahagian penyegerakan, awalan vendor yang diketahui (`anthropic/`, `openai/`, `google/`, …)
-dibuang dan peta alias kecil mengembangkan nama kanonik kepada varian yang digunakan OmniRoute
-secara dalaman, supaya model kekal boleh ditemukan di bawah sebarang nama.
+dibuang dan peta alias kecil mengembangkan nama kanonik kepada variasi yang digunakan OmniRoute
+secara dalaman, supaya model kekal boleh ditemukan di bawah mana-mana nama.
 
 ### Cara penyedia diberi kedudukan
 
-Bagi setiap penyedia percuma, enjin memberi skor kepada setiap model dalam katalognya, kemudian:
+Bagi setiap penyedia percuma, enjin memberikan skor kepada setiap model dalam katalognya, kemudian:
 
 - **Model Teratas** = model penyedia dengan skor tertinggi.
-- **Purata Skor** = skor purata merentas semua model penyedia yang telah diberi skor.
+- **Skor Purata** = skor purata merentas semua model penyedia tersebut yang diberi skor.
 - **Model** = bilangan model penyedia yang mempunyai skor Arena.
 
 Penyedia diisih mengikut **skor model teratas** terlebih dahulu, kemudian mengikut skor purata. Ini memberi ganjaran kepada

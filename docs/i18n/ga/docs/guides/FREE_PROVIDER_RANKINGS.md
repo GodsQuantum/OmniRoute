@@ -126,7 +126,12 @@ Is é `eloRaw` bunluach ELO Arena; is é `score` an luach normalaithe oiriúnach
 
 Faigheann inneall sioncronaithe Arena ELO (`src/lib/arenaEloSync.ts`) dhá chlár ceannairí — `text`
 agus `code` — ó API chlár ceannairí Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Tá ainm samhla, díoltóir, `score` ELO, eatramh muiníne agus líon vótaí i ngach iontráil sa chlár ceannairí.
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Nuair nach dtugann an API sin aon
+chlár inúsáidte ar ais, úsáideann an t-inneall an `lmarena-ai/leaderboard-dataset` oifigiúil ar
+fhreastalaí tacair sonraí Hugging Face mar rogha thánaisteach (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); tuairiscíonn `GET /api/intelligence/sync` `activeSource`, `lastError` agus
+`lastFailedAt`. Tá ainm samhla, díoltóir, `score` ELO, eatramh muiníne agus líon vótaí
+ag gabháil le gach iontráil sa chlár ceannairí.
 
 Mapáiltear catagóirí an chláir ceannairí chuig catagóirí tascanna OmniRoute:
 
@@ -137,13 +142,14 @@ Mapáiltear catagóirí an chláir ceannairí chuig catagóirí tascanna OmniRou
 
 ### Normalú (scór oiriúnachta don tasc)
 
-Déantar scóir amh ELO a normalú de réir an chláir ceannairí ina **luach oiriúnachta don tasc sa raon `[0.4, 0.98]`**:
+Déantar scóir amh ELO a normalú de réir an chláir ceannairí ina **luach oiriúnachta don tasc in `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Ní shroicheann an scór `0` ná `1` riamh, rud a fhágann spás d’fhorghabhálacha úsáideora. Is é seo an réimse `score` a fheiceann tú i bhfreagairt an API agus an lipéad a thaispeántar ar an deais.
+Ní shroicheann an scór `0` ná `1` riamh, rud a fhágann spás do sháruithe úsáideora. Seo é an
+réimse `score` a fheiceann tú i bhfreagra an API agus an lipéad a thaispeántar ar an deais.
 
 ### Muinín
 
@@ -157,63 +163,63 @@ Faigheann gach iontráil leibhéal muiníne bunaithe ar líon vótaí Arena:
 
 ### Stóráil agus úire
 
-Scríobhtar iontrálacha normalaithe chuig tábla DB `model_intelligence` le
-`source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). **Téann iontrálacha in éag tar éis
+Scríobhtar iontrálacha normalaithe chuig tábla DB `model_intelligence` agus
+`source = "arena_elo"` acu (`src/lib/db/modelIntelligence.ts`). **Téann iontrálacha in éag tar éis
 7 lá**, mar sin baintear soláthraí a stopann de bheith ag sioncronú sa deireadh seachas sonraí
-as dáta a sholáthar.
+seanchaite a sholáthar.
 
 Ritheann an sioncronú **de réir réamhshocraithe**:
 
 - Ritheann sé uair amháin nuair a thosaíonn an freastalaí agus ansin ar amadóir tréimhsiúil
   (`src/lib/arenaEloSync.ts`, ceangailte ó `src/instrumentation-node.ts`).
-- Tá sé **neamhbhlocála agus ní bhíonn sé marfach riamh** — má theipeann ar an bhfáil réamhtheachtach, leanann OmniRoute
+- Tá sé **neamh-bhlocála agus ní bhíonn sé marfach riamh** — má theipeann ar an bhfáil ón bhfoinse réamhtheachtach, leanann OmniRoute
   de bheith ag rith agus ní thaispeánann na ranguithe ach na sonraí maithe is déanaí (nó staid fholamh).
 
 Rialaíonn dhá athróg timpeallachta é (doiciméadaithe in
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Athróg                    | Réamhshocrú   | Cuspóir                                              |
-| ------------------------- | ------------- | ---------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Socraigh go `false` chun diúltú don sioncronú amach. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24u) | Eatramh sioncronaithe, i soicindí.                   |
+| Athróg                    | Réamhshocrú   | Cuspóir                                               |
+| ------------------------- | ------------- | ----------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Socraigh mar `false` chun diúltú don sioncronú amach. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24u) | Eatramh sioncronaithe, i soicindí.                    |
 
-### Sioncronú de láimh / stádas / glanadh
+### Sioncronú láimhe / stádas / glanadh
 
-D’oibreoirí, cuireann críochphointe bainistíochta fíordheimhnithe rialú de láimh ar fáil
-(`src/app/api/intelligence/sync/route.ts` — teastaíonn fíordheimhniú bainistíochta):
+I gcás oibreoirí, soláthraíonn críochphointe bainistíochta fíordheimhnithe rialú láimhe
+(`src/app/api/intelligence/sync/route.ts` — tá fíordheimhniú bainistíochta de dhíth):
 
 ```
-GET    /api/intelligence/sync          # stádas reatha an tsioncronaithe (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # cuir tús le sioncronú de láimh; corp: { "dryRun": true } chun réamhamharc a fháil gan scríobh
-DELETE /api/intelligence/sync          # glan gach iontráil faisnéise arena_elo a sioncronaíodh
+GET    /api/intelligence/sync          # stádas reatha an tsioncronaithe (cumasaithe, an sioncronú deireanach, an chéad sioncronú eile, eatramh ina mhilleasoicindí)
+POST   /api/intelligence/sync          # spreag sioncronú láimhe; corp: { "dryRun": true } chun réamhamharc a fháil gan scríobh
+DELETE /api/intelligence/sync          # glan gach iontráil faisnéise arena_elo a sioncrónaíodh
 ```
 
-Má tá leathanach na ranguithe folamh, athlíonann `POST /api/intelligence/sync` de láimh (nó díreach
-an freastalaí a atosú) é.
+Má tá leathanach na ranguithe folamh, athlíonann `POST /api/intelligence/sync` láimhe (nó díreach
+atosú an fhreastalaí) é.
 
 ### Samhlacha a mheaitseáil leis an gclár ceannairí
 
-Ní bhíonn IDanna samhlacha na clárlainne agus ainmneacha samhlacha Arena ag teacht le chéile go díreach i gcónaí. Úsáideann an rangú
+Ní mheaitseálann aitheantais samhlacha na clárlainne agus ainmneacha samhlacha Arena go beacht i gcónaí. Úsáideann an rangú
 meaitseáil sholúbtha (`findMatchingIntelligence` in `src/lib/freeProviderRankings.ts`):
 
-1. Meaitseáil bheacht ar ID normalaithe na samhla.
-2. Meaitseáil tar éis iarmhír leagain ag an deireadh a bhaint (e.g. `kimi-k2.6` → `kimi-k2`).
-3. Meaitseáil réimíre (is réimír de ID na clárlainne é ainm samhla sa chlár ceannairí).
+1. Meaitseáil bheacht ar aitheantas normalaithe na samhla.
+2. Meaitseáil tar éis iarmhír leagain ag an deireadh a bhaint (m.sh. `kimi-k2.6` → `kimi-k2`).
+3. Meaitseáil réimíre (is réimír d’aitheantas na clárlainne é ainm samhla sa chlár ceannairí).
 
 Ar thaobh an tsioncronaithe, baintear réimíreanna aitheanta díoltóirí (`anthropic/`, `openai/`, `google/`, …)
-agus leathnaíonn léarscáil bheag ailiasanna ainmneacha canónacha chuig na malairtí a úsáideann OmniRoute
+agus leathnaíonn léarscáil bheag ailiasanna ainmneacha canónacha isteach sna leaganacha a úsáideann OmniRoute
 go hinmheánach, ionas gur féidir samhlacha a aimsiú faoi ainm ar bith.
 
 ### Conas a rangaítear soláthraí
 
-I gcás gach soláthraí saor in aisce, scórálann an t-inneall gach samhail ina chatalóg, ansin:
+I gcás gach soláthraí saor in aisce, scórálann an t-inneall gach samhail ina chatalóg, agus ansin:
 
-- **Samhail is Fearr** = samhail an tsoláthraí leis an scór is airde.
-- **Meánscór** = an meánscór thar gach samhail scóráilte de chuid an tsoláthraí sin.
+- **Samhail is Fearr** = an tsamhail leis an scór is airde atá ag an soláthraí.
+- **Meánscór** = an meánscór thar shamhlacha scóráilte uile an tsoláthraí sin.
 - **Samhlacha** = líon na samhlacha de chuid an tsoláthraí a raibh scór Arena acu.
 
-Déantar soláthraithe a shórtáil de réir **scór na samhla is fearr** ar dtús, agus ansin de réir an mheánscóir. Tugann sé seo luach saothair do
-sholáthraí a chuireann samhail láidir amháin ar a laghad ar fáil saor in aisce.
+Sórtáiltear soláthraithe de réir **scór na samhla is fearr** ar dtús, agus ansin de réir an mheánscóir. Tugann sé seo luach saothair do
+sholáthraí a chuireann ar fáil samhail láidir amháin saor in aisce ar a laghad.
 
 ---
 

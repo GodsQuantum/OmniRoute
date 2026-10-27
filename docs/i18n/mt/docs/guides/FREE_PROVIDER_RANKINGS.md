@@ -121,19 +121,23 @@ għall-kompitu (ara hawn taħt). Il-fornituri mingħajr mudelli b’punteġġ ji
 
 ## Kif Jaħdmu l-Punteġġi
 
-### Sors: il-klassifika Arena AI
+### Sors: il-klassifika ta’ Arena AI
 
 Il-magna tas-sinkronizzazzjoni Arena ELO (`src/lib/arenaEloSync.ts`) tikseb żewġ klassifiki — `text`
-u `code` — mill-API tal-klassifika Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Kull entrata fil-klassifika
-tinkludi isem tal-mudell, fornitur, `score` ELO, intervall ta’ kunfidenza, u għadd ta’ voti.
+u `code` — mill-API tal-klassifika ta’ Arena AI
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Meta dik l-API ma tirritorna l-ebda
+klassifika li tista’ tintuża, il-magna tuża minflok is-sett tad-data uffiċjali `lmarena-ai/leaderboard-dataset`
+fuq id-datasets-server ta’ Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` jirrapporta `activeSource`, `lastError` u
+`lastFailedAt`. Kull entrata fil-klassifika
+tinkludi isem tal-mudell, fornitur, `score` ELO, intervall ta’ kunfidenza u għadd ta’ voti.
 
-Il-kategoriji tal-klassifika jikkorrispondu mal-kategoriji tal-kompiti ta’ OmniRoute:
+Il-kategoriji tal-klassifika huma mmappjati mal-kategoriji tal-kompiti ta’ OmniRoute:
 
-| Klassifika Arena | Kategoriji tal-kompiti ta’ OmniRoute              |
-| ---------------- | ------------------------------------------------- |
-| `text`           | `default`, `review`, `documentation`, `debugging` |
-| `code`           | `coding`                                          |
+| Klassifika ta’ Arena | Kategoriji tal-kompiti ta’ OmniRoute              |
+| -------------------- | ------------------------------------------------- |
+| `text`               | `default`, `review`, `documentation`, `debugging` |
+| `code`               | `coding`                                          |
 
 ### Normalizzazzjoni (punteġġ tal-adegwatezza għall-kompitu)
 
@@ -143,12 +147,12 @@ Il-punteġġi ELO mhux ipproċessati jiġu normalizzati għal kull klassifika f�
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Il-punteġġ qatt ma jilħaq `0` jew `1`, u b’hekk jitħalla spazju għall-aġġustamenti tal-utent. Dan huwa l-qasam
-`score` li tara fit-tweġiba tal-API u t-tikketta murija fid-dashboard.
+Il-punteġġ qatt ma jilħaq `0` jew `1`, biex jitħalla marġni għas-sostituzzjonijiet definiti mill-utent. Dan huwa
+l-kamp `score` li tara fir-risposta tal-API u t-tikketta murija fuq id-dashboard.
 
 ### Kunfidenza
 
-Kull entrata tingħata livell ta’ kunfidenza bbażat fuq l-għadd ta’ voti f’Arena:
+Kull entrata tingħata livell ta’ kunfidenza bbażat fuq l-għadd ta’ voti ta’ Arena:
 
 | Kunfidenza | Voti    |
 | ---------- | ------- |
@@ -156,37 +160,37 @@ Kull entrata tingħata livell ta’ kunfidenza bbażat fuq l-għadd ta’ voti f
 | `medium`   | ≥ 1,000 |
 | `low`      | < 1,000 |
 
-### Ħżin u aġġornament
+### Ħżin u kemm id-data tkun aġġornata
 
-L-entrati normalizzati jinkitbu fit-tabella tad-DB `model_intelligence` b’
+L-entrati normalizzati jinkitbu fit-tabella DB `model_intelligence` b’
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). L-entrati **jiskadu wara
-7 ijiem**, għalhekk fornitur li jieqaf jissinkronizza eventwalment jitneħħa minflok ma jkompli jipprovdi
+7 ijiem**, għalhekk fornitur li jieqaf jissinkronizza eventwalment jitneħħa minflok ma jkompli jservi
 data skaduta.
 
-Is-sinkronizzazzjoni taħdem **awtomatikament b’mod predefinit**:
+Is-sinkronizzazzjoni taħdem **b’mod awtomatiku**:
 
-- Taħdem darba meta jitħaddem is-server u mbagħad fuq tajmer perjodiku
+- Tħaddem darba meta jitħaddem is-server u mbagħad fuq tajmer perjodiku
   (`src/lib/arenaEloSync.ts`, ikkonnettjat minn `src/instrumentation-node.ts`).
-- Hija **mhux imblokkanti u qatt ma tkun fatali** — jekk il-ġbir tad-data mis-sors estern ifalli, OmniRoute jibqa’
+- Hija **mhux imblukkanti u qatt fatali** — jekk il-kisba tad-data mis-sors estern tfalli, OmniRoute jibqa’
   jaħdem u l-klassifiki sempliċement juru l-aħħar data valida (jew stat vojt).
 
-Żewġ varjabbli tal-ambjent jikkontrollawha (dokumentati f’
+Żewġ varjabbli tal-ambjent jikkontrollawha (iddokumentati f’
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
 | Varjabbli                 | Valur predefinit | Għan                                                              |
 | ------------------------- | ---------------- | ----------------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`           | Issettja għal `false` biex ma ssirx is-sinkronizzazzjoni esterna. |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`           | Issettja għal `false` biex teskludi s-sinkronizzazzjoni ’l barra. |
 | `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)    | Intervall tas-sinkronizzazzjoni, f’sekondi.                       |
 
 ### Sinkronizzazzjoni manwali / status / tħassir
 
 Għall-operaturi, endpoint ta’ ġestjoni awtentikat jipprovdi kontroll manwali
-(`src/app/api/intelligence/sync/route.ts` — jeħtieġ awtentikazzjoni ta’ ġestjoni):
+(`src/app/api/intelligence/sync/route.ts` — jeħtieġ awtentikazzjoni tal-ġestjoni):
 
 ```
-GET    /api/intelligence/sync          # l-istatus attwali tas-sinkronizzazzjoni (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # attiva sinkronizzazzjoni manwali; body: { "dryRun": true } għal previżjoni mingħajr kitba
-DELETE /api/intelligence/sync          # ħassar l-entrati kollha sinkronizzati tal-intelliġenza arena_elo
+GET    /api/intelligence/sync          # status attwali tas-sinkronizzazzjoni (enabled, lastSync, nextSync, intervalMs)
+POST   /api/intelligence/sync          # niedi sinkronizzazzjoni manwali; korp: { "dryRun": true } għal previżjoni mingħajr kitba
+DELETE /api/intelligence/sync          # ħassar l-entrati kollha tal-intelliġenza arena_elo ssinkronizzati
 ```
 
 Jekk il-paġna tal-klassifiki tkun vojta, `POST /api/intelligence/sync` manwali (jew sempliċement
@@ -194,7 +198,7 @@ it-tħaddim mill-ġdid tas-server) jerġa’ jimliha.
 
 ### Tqabbil tal-mudelli mal-klassifika
 
-L-IDs tal-mudelli fir-reġistru u l-ismijiet tal-mudelli f’Arena mhux dejjem jaqblu eżattament. Il-klassifika tuża
+L-IDs tal-mudelli fir-reġistru u l-ismijiet tal-mudelli f’Arena mhux dejjem jaqblu eżattament. Il-klassifikazzjoni tuża
 tqabbil flessibbli (`findMatchingIntelligence` f’`src/lib/freeProviderRankings.ts`):
 
 1. Tqabbil eżatt mal-ID normalizzat tal-mudell.
@@ -202,18 +206,18 @@ tqabbil flessibbli (`findMatchingIntelligence` f’`src/lib/freeProviderRankings
 3. Tqabbil tal-prefiss (isem ta’ mudell fil-klassifika jkun prefiss tal-ID fir-reġistru).
 
 Min-naħa tas-sinkronizzazzjoni, il-prefissi magħrufa tal-fornituri (`anthropic/`, `openai/`, `google/`, …) jiġu
-mneħħija u mappa żgħira tal-psewdonimi tespandi l-ismijiet kanoniċi fil-varjanti li OmniRoute juża
+mneħħija u mappa żgħira tal-aliases tespandi l-ismijiet kanoniċi fil-varjanti li OmniRoute juża
 internament, sabiex il-mudelli jibqgħu jistgħu jinstabu taħt kwalunkwe isem.
 
 ### Kif jiġi kklassifikat fornitur
 
-Għal kull fornitur bla ħlas, il-magna tikkalkula punteġġ għal kull mudell fil-katalgu tiegħu, imbagħad:
+Għal kull fornitur bla ħlas, il-magna tikkalkula l-punteġġ ta’ kull mudell fil-katalgu tiegħu, imbagħad:
 
 - **L-Aqwa Mudell** = il-mudell tal-fornitur bl-ogħla punteġġ.
 - **Punteġġ Medju** = il-medja tal-punteġġi tal-mudelli kollha ta’ dak il-fornitur li kellhom punteġġ.
-- **Mudelli** = kemm mill-mudelli tal-fornitur kellhom punteġġ Arena.
+- **Mudelli** = kemm-il mudell tal-fornitur kellu punteġġ ta’ Arena.
 
-Il-fornituri jiġu magħżula l-ewwel skont il-**punteġġ tal-aqwa mudell**, imbagħad skont il-punteġġ medju. Dan jippremja
+Il-fornituri jiġu ordnati l-ewwel skont il-**punteġġ tal-aqwa mudell**, u mbagħad skont il-punteġġ medju. Dan jippremja
 fornitur li joffri mill-inqas mudell wieħed b’saħħtu u bla ħlas.
 
 ---

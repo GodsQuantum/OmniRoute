@@ -124,26 +124,30 @@ Antwortstruktur:
 ### Quelle: Arena-AI-Bestenliste
 
 Die Arena-ELO-Synchronisierungs-Engine (`src/lib/arenaEloSync.ts`) ruft zwei Bestenlisten — `text`
-und `code` — von der Arena-AI-Bestenlisten-API
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) ab. Jeder Bestenlisteneintrag
-enthält einen Modellnamen, Anbieter, ELO-`score`, ein Konfidenzintervall und die Anzahl der Stimmen.
+und `code` — von der Arena-AI-Bestenlisten-API ab
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Wenn diese API keine
+verwendbare Bestenliste zurückgibt, greift die Engine auf das offizielle `lmarena-ai/leaderboard-dataset`
+auf dem Hugging-Face-Datasets-Server zurück (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` meldet `activeSource`, `lastError` und
+`lastFailedAt`. Jeder Bestenlisteneintrag enthält einen Modellnamen, einen Anbieter, eine ELO-`score`,
+ein Konfidenzintervall und die Anzahl der Stimmen.
 
-Die Bestenlistenkategorien werden den OmniRoute-Aufgabenkategorien wie folgt zugeordnet:
+Die Kategorien der Bestenliste werden den OmniRoute-Aufgabenkategorien wie folgt zugeordnet:
 
 | Arena-Bestenliste | OmniRoute-Aufgabenkategorien                      |
 | ----------------- | ------------------------------------------------- |
 | `text`            | `default`, `review`, `documentation`, `debugging` |
 | `code`            | `coding`                                          |
 
-### Normalisierung (Aufgabeneignungswert)
+### Normalisierung (Aufgabeneignungsbewertung)
 
-Die ELO-Rohwerte werden pro Bestenliste auf einen **Aufgabeneignungswert in `[0.4, 0.98]`** normalisiert:
+Rohe ELO-Werte werden pro Bestenliste auf einen **Aufgabeneignungswert im Bereich `[0.4, 0.98]`** normalisiert:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Der Wert erreicht nie `0` oder `1`, sodass Spielraum für benutzerdefinierte Überschreibungen bleibt. Dies ist das
+Die Bewertung erreicht niemals `0` oder `1`, sodass Spielraum für benutzerdefinierte Überschreibungen bleibt. Dies ist das
 Feld `score`, das in der API-Antwort angezeigt wird, sowie die auf dem Dashboard dargestellte Bezeichnung.
 
 ### Konfidenz
@@ -158,62 +162,62 @@ Jeder Eintrag erhält basierend auf der Anzahl der Arena-Stimmen eine Konfidenzs
 
 ### Speicherung und Aktualität
 
-Normalisierte Einträge werden mit `source = "arena_elo"` in die DB-Tabelle `model_intelligence`
-geschrieben (`src/lib/db/modelIntelligence.ts`). Einträge **laufen nach
-7 Tagen ab**, sodass ein Anbieter, der nicht mehr synchronisiert wird, schließlich entfernt wird, anstatt
+Normalisierte Einträge werden mit `source = "arena_elo"` in die DB-Tabelle
+`model_intelligence` geschrieben (`src/lib/db/modelIntelligence.ts`). Einträge **laufen nach
+7 Tagen ab**, sodass ein Anbieter, dessen Synchronisierung aussetzt, schließlich entfernt wird, anstatt
 veraltete Daten bereitzustellen.
 
-Die Synchronisierung ist **standardmäßig aktiviert**:
+Die Synchronisierung wird **standardmäßig ausgeführt**:
 
-- Sie wird einmal beim Serverstart und anschließend in regelmäßigen Abständen ausgeführt
+- Sie wird einmal beim Serverstart und anschließend regelmäßig durch einen Timer ausgeführt
   (`src/lib/arenaEloSync.ts`, eingebunden über `src/instrumentation-node.ts`).
-- Sie ist **nicht blockierend und niemals fatal** — wenn der Abruf von der vorgelagerten Quelle fehlschlägt, läuft OmniRoute
-  weiter, und die Ranglisten zeigen einfach die letzten gültigen Daten an (oder einen leeren Zustand).
+- Sie ist **nicht blockierend und niemals kritisch** — wenn der Abruf von der vorgelagerten Quelle fehlschlägt, läuft OmniRoute
+  weiter und die Ranglisten zeigen lediglich die letzten gültigen Daten (oder einen leeren Zustand).
 
-Sie wird durch zwei Umgebungsvariablen gesteuert (dokumentiert in
+Sie wird über zwei Umgebungsvariablen gesteuert (dokumentiert in
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Variable                  | Standardwert  | Zweck                                                              |
-| ------------------------- | ------------- | ------------------------------------------------------------------ |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Auf `false` setzen, um die ausgehende Synchronisierung abzulehnen. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Synchronisierungsintervall in Sekunden.                            |
+| Variable                  | Standardwert  | Zweck                                                                |
+| ------------------------- | ------------- | -------------------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Auf `false` setzen, um die ausgehende Synchronisierung abzuschalten. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Synchronisierungsintervall in Sekunden.                              |
 
 ### Manuelle Synchronisierung / Status / Löschen
 
-Für Betreiber stellt ein authentifizierter Verwaltungsendpunkt eine manuelle Steuerung bereit
+Für Betreiber stellt ein authentifizierter Verwaltungsendpunkt manuelle Steuerungsmöglichkeiten bereit
 (`src/app/api/intelligence/sync/route.ts` — erfordert Verwaltungsauthentifizierung):
 
 ```
-GET    /api/intelligence/sync          # aktueller Synchronisierungsstatus (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # manuelle Synchronisierung auslösen; Body: { "dryRun": true } für eine Vorschau ohne Schreibvorgang
+GET    /api/intelligence/sync          # aktueller Synchronisierungsstatus (aktiviert, letzte Synchronisierung, nächste Synchronisierung, Intervall in ms)
+POST   /api/intelligence/sync          # manuelle Synchronisierung auslösen; Textkörper: { "dryRun": true } für eine Vorschau ohne Schreibvorgang
 DELETE /api/intelligence/sync          # alle synchronisierten arena_elo-Intelligence-Einträge löschen
 ```
 
 Wenn die Ranglistenseite leer ist, wird sie durch ein manuelles `POST /api/intelligence/sync` (oder einfach
-durch einen Neustart des Servers) wieder befüllt.
+durch einen Neustart des Servers) erneut befüllt.
 
 ### Abgleich von Modellen mit der Bestenliste
 
-Modell-IDs aus der Registry und Arena-Modellnamen stimmen nicht immer exakt überein. Die Rangliste verwendet
+Die Modell-IDs der Registry und die Arena-Modellnamen stimmen nicht immer exakt überein. Die Rangliste verwendet
 einen flexiblen Abgleich (`findMatchingIntelligence` in `src/lib/freeProviderRankings.ts`):
 
 1. Exakte Übereinstimmung mit der normalisierten Modell-ID.
 2. Übereinstimmung nach Entfernen eines abschließenden Versionssuffixes (z. B. `kimi-k2.6` → `kimi-k2`).
 3. Präfixübereinstimmung (ein Modellname aus der Bestenliste ist ein Präfix der Registry-ID).
 
-Auf der Synchronisierungsseite werden bekannte Anbieterpräfixe (`anthropic/`, `openai/`, `google/`, …)
+Bei der Synchronisierung werden bekannte Anbieterpräfixe (`anthropic/`, `openai/`, `google/`, …)
 entfernt, und eine kleine Alias-Zuordnung erweitert kanonische Namen um die Varianten, die OmniRoute
 intern verwendet, sodass Modelle unter jedem Namen auffindbar bleiben.
 
-### Einstufung eines Anbieters
+### Wie ein Anbieter eingestuft wird
 
 Für jeden kostenlosen Anbieter bewertet die Engine jedes Modell in dessen Katalog und bestimmt anschließend:
 
-- **Bestes Modell** = das Modell des Anbieters mit der höchsten Bewertung.
-- **Durchschnittswert** = der Mittelwert über alle bewerteten Modelle dieses Anbieters.
+- **Bestes Modell** = das am höchsten bewertete Modell des Anbieters.
+- **Durchschn. Bewertung** = die durchschnittliche Bewertung aller bewerteten Modelle dieses Anbieters.
 - **Modelle** = die Anzahl der Modelle des Anbieters, für die eine Arena-Bewertung vorlag.
 
-Anbieter werden zuerst nach der **Bewertung des besten Modells** und anschließend nach dem Durchschnittswert sortiert. Dadurch wird ein
+Anbieter werden zuerst nach der **Bewertung des besten Modells** und anschließend nach der Durchschnittsbewertung sortiert. Dadurch wird ein
 Anbieter belohnt, der mindestens ein leistungsstarkes kostenloses Modell anbietet.
 
 ---

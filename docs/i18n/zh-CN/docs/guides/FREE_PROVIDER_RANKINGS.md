@@ -107,11 +107,9 @@ GET /api/free-provider-rankings?category=coding&limit=20
 
 ### 来源：Arena AI 排行榜
 
-Arena ELO 同步引擎（`src/lib/arenaEloSync.ts`）从 Arena AI 排行榜 API
-（`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`）获取两个排行榜——`text`
-和 `code`。每个排行榜条目都包含模型名称、供应商、ELO `score`、置信区间和投票数。
+Arena ELO 同步引擎（`src/lib/arenaEloSync.ts`）从 Arena AI 排行榜 API（`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`）获取两个排行榜：`text` 和 `code`。当该 API 未返回可用的排行榜时，引擎会回退到 Hugging Face datasets-server 上的官方 `lmarena-ai/leaderboard-dataset`（`src/lib/arenaEloHfSource.ts`，CC-BY-4.0；`overall` → `text`，`coding` → `code`）；`GET /api/intelligence/sync` 会报告 `activeSource`、`lastError` 和 `lastFailedAt`。每个排行榜条目都包含模型名称、供应商、ELO `score`、置信区间和投票数。
 
-排行榜类别与 OmniRoute 任务类别的映射关系如下：
+排行榜类别映射到 OmniRoute 任务类别：
 
 | Arena 排行榜 | OmniRoute 任务类别                                |
 | ------------ | ------------------------------------------------- |
@@ -120,18 +118,17 @@ Arena ELO 同步引擎（`src/lib/arenaEloSync.ts`）从 Arena AI 排行榜 API
 
 ### 归一化（任务适配分数）
 
-原始 ELO 分数会在各自排行榜内归一化为 **`[0.4, 0.98]` 范围内的任务适配值**：
+原始 ELO 分数会在各排行榜内归一化为 **`[0.4, 0.98]` 范围内的任务适配值**：
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-该分数永远不会达到 `0` 或 `1`，从而为用户覆盖设置保留调整空间。这就是 API 响应中的
-`score` 字段，也是仪表板上显示的标签。
+该分数永远不会达到 `0` 或 `1`，从而为用户覆盖值预留空间。这就是 API 响应中显示的 `score` 字段，也是仪表板上展示的标签。
 
 ### 置信度
 
-每个条目都会根据 Arena 投票数获得一个置信度等级：
+每个条目都会根据 Arena 投票数获得一个置信度级别：
 
 | 置信度   | 投票数  |
 | -------- | ------- |
@@ -139,31 +136,25 @@ taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 | `medium` | ≥ 1,000 |
 | `low`    | < 1,000 |
 
-### 存储与数据新鲜度
+### 存储和时效性
 
-归一化后的条目会写入 `model_intelligence` 数据库表，并设置
-`source = "arena_elo"`（`src/lib/db/modelIntelligence.ts`）。条目会在 **7 天后过期**，
-因此停止同步的供应商最终会从榜单中消失，而不会继续提供过时数据。
+归一化后的条目会写入 `model_intelligence` 数据库表，并带有 `source = "arena_elo"`（`src/lib/db/modelIntelligence.ts`）。条目会在 **7 天后过期**，因此停止同步的供应商最终会从结果中移除，而不是继续提供过时数据。
 
 同步功能**默认启用**：
 
-- 服务器启动时运行一次，之后按周期定时运行
-  （`src/lib/arenaEloSync.ts`，由 `src/instrumentation-node.ts` 接入）。
-- 同步过程**不会阻塞，也绝不会导致致命错误**——如果上游获取失败，OmniRoute 会继续
-  运行，排行榜只会显示上次成功获取的数据（或空状态）。
+- 它会在服务器启动时运行一次，之后按周期定时运行（`src/lib/arenaEloSync.ts`，由 `src/instrumentation-node.ts` 接入）。
+- 它是**非阻塞的，并且永远不会导致致命错误**——如果上游获取失败，OmniRoute 会继续运行，排行榜只会显示最近一次成功获取的数据（或者空状态）。
 
-可通过两个环境变量控制该功能（相关文档位于
-[`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)）：
+可通过两个环境变量控制该功能（记录在 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md) 中）：
 
-| 变量                      | 默认值        | 用途                                  |
-| ------------------------- | ------------- | ------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | 设为 `false` 可禁用向外部发起的同步。 |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | 同步间隔，以秒为单位。                |
+| 变量                      | 默认值        | 用途                            |
+| ------------------------- | ------------- | ------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | 设置为 `false` 以退出出站同步。 |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | 同步间隔，单位为秒。            |
 
 ### 手动同步 / 状态 / 清除
 
-对于运维人员，经过身份验证的管理端点提供了手动控制功能
-（`src/app/api/intelligence/sync/route.ts`——需要管理身份验证）：
+对于运维人员，经过身份验证的管理端点提供了手动控制功能（`src/app/api/intelligence/sync/route.ts`——需要管理身份验证）：
 
 ```
 GET    /api/intelligence/sync          # 当前同步状态（enabled、lastSync、nextSync、intervalMs）
@@ -171,32 +162,27 @@ POST   /api/intelligence/sync          # 触发手动同步；请求体：{ "dry
 DELETE /api/intelligence/sync          # 清除所有已同步的 arena_elo 智能数据条目
 ```
 
-如果排行榜页面为空，手动执行 `POST /api/intelligence/sync`（或直接重启服务器）
-即可重新填充数据。
+如果排行榜页面为空，手动执行 `POST /api/intelligence/sync`（或直接重启服务器）即可重新填充数据。
 
-### 将模型与排行榜进行匹配
+### 将模型与排行榜匹配
 
-注册表中的模型 ID 与 Arena 模型名称并不总是完全匹配。排行榜采用灵活匹配机制
-（`src/lib/freeProviderRankings.ts` 中的 `findMatchingIntelligence`）：
+注册表中的模型 ID 与 Arena 模型名称并不总是完全一致。排行榜使用灵活匹配机制（`src/lib/freeProviderRankings.ts` 中的 `findMatchingIntelligence`）：
 
 1. 对归一化后的模型 ID 进行精确匹配。
-2. 移除末尾的版本后缀后进行匹配（例如 `kimi-k2.6` → `kimi-k2`）。
-3. 进行前缀匹配（排行榜中的模型名称是注册表 ID 的前缀）。
+2. 移除末尾版本后缀后进行匹配（例如 `kimi-k2.6` → `kimi-k2`）。
+3. 前缀匹配（排行榜中的模型名称是注册表 ID 的前缀）。
 
-在同步端，系统会移除已知的供应商前缀（`anthropic/`、`openai/`、`google/` 等），
-并通过一个小型别名映射将规范名称扩展为 OmniRoute 内部使用的变体，以确保无论使用
-哪种名称都能找到模型。
+在同步端，系统会移除已知的供应商前缀（`anthropic/`、`openai/`、`google/` 等），并通过一个小型别名映射将规范名称扩展为 OmniRoute 内部使用的各种变体，使模型无论使用哪个名称都能被找到。
 
 ### 供应商的排名方式
 
-对于每个免费供应商，引擎会为其目录中的每个模型评分，然后计算：
+对于每个免费供应商，引擎会为其目录中的每个模型评分，然后：
 
-- **最佳模型** = 该供应商得分最高的模型。
-- **平均分数** = 该供应商所有已评分模型的平均分。
+- **最佳模型** = 该供应商分数最高的模型。
+- **平均分数** = 该供应商所有已评分模型的平均分数。
 - **模型数** = 该供应商拥有 Arena 分数的模型数量。
 
-供应商首先按**最佳模型分数**排序，然后按平均分数排序。这种方式会奖励至少提供了一个
-强大免费模型的供应商。
+供应商首先按**最佳模型分数**排序，然后按平均分数排序。这种方式会奖励至少提供一个强大免费模型的供应商。
 
 ---
 
