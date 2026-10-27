@@ -27,14 +27,14 @@ test("a count update preserves non-Latin prose byte for byte", () => {
   assert.equal(result?.reuse.get(0), "## カタログ\n\n376 のプロバイダーを利用できます。");
 });
 
-test("an old source with a different recorded hash cannot authorize numeric reuse", () => {
+test("an old source with a different recorded hash invalidates the reuse plan", () => {
   const result = plan(
     previous,
     current,
     "## Catálogo\n\nHá 374 provedores.",
     previous.replace("375", "374")
   );
-  assert.deepEqual(result?.translate, [0]);
+  assert.equal(result, null);
 });
 
 test("missing old source text keeps the normal translation path", () => {

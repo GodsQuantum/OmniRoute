@@ -47,8 +47,15 @@ import { buildMirrorBar } from "./lib/language-bar.mjs";
 import { adoptState, mergeAdoptedState, refreshTargetHashes } from "./lib/translation-state.mjs";
 import { applyNumericSectionDelta } from "./lib/numeric-section-delta.mjs";
 import { linesOutsideFencedCode, looksUntranslated } from "./lib/untranslated-guard.mjs";
+import {
+  sectionCacheMatchesSnapshot,
+  sectionHashes,
+  splitSections,
+  stripFrontMatter,
+  stripTopHeading,
+} from "./lib/section-cache.mjs";
 
-export { looksUntranslated };
+export { looksUntranslated, sectionHashes, splitSections, stripTopHeading };
 
 // ----- .env loader --------------------------------------------------------
 // Loads variables from a local `.env` (gitignored) into process.env without
@@ -310,19 +317,9 @@ function targetPathFor(relSource, locale) {
 // H1 sits behind it, so the heading helpers look past the block: otherwise the
 // mirror gets the file name as its title and the front matter (plus a second
 // heading) is translated into its body.
-const FRONT_MATTER = /^---\r?\n[\s\S]*?\r?\n---\r?\n+/;
-
-function stripFrontMatter(markdown) {
-  return markdown.replace(FRONT_MATTER, "");
-}
-
 export function extractTopHeading(markdown) {
   const m = stripFrontMatter(markdown).match(/^# (.+)\r?\n/);
   return m ? m[1].trim() : null;
-}
-
-export function stripTopHeading(markdown) {
-  return stripFrontMatter(markdown).replace(/^# .+\r?\n+/, "");
 }
 
 // ----- Translator backend --------------------------------------------------
@@ -730,27 +727,9 @@ export function joinTranslatedChunks(parts) {
 // only — an inserted or removed section shifts everything after it and costs
 // a retranslation of the tail, which is acceptable.
 
-// Section 0 is the preamble (text before the first `## `); every other section
-// starts with its `## ` heading line. Joining with "\n\n" reproduces the body
-// modulo trailing whitespace. A `## ` inside a fenced code block never splits.
-export function splitSections(markdown) {
-  const sections = [[]];
-  let inFence = false;
-  for (const line of markdown.split("\n")) {
-    if (FENCE_LINE.test(line)) inFence = !inFence;
-    if (!inFence && /^## /.test(line) && sections.at(-1).length) sections.push([]);
-    sections.at(-1).push(line);
-  }
-  return sections.map((s) => s.join("\n").replace(/\s+$/, ""));
-}
-
-export function sectionHashes(sections) {
-  return sections.map((s) => sha256(Buffer.from(s.trim(), "utf8")).slice(0, 12));
-}
-
 // `null` means "no reuse possible — translate the whole body": no recorded
 // hashes, or the mirror on disk does not have the section count the hashes
-// were recorded for (a hand edit, or a mirror written by an older pipeline).
+// were recorded for, or an exact source snapshot contradicts the cache.
 export function planSectionReuse({
   previousHashes,
   previousSections = null,
@@ -761,6 +740,9 @@ export function planSectionReuse({
     return null;
   }
   if (previousHashes.length !== sections.length) return null;
+  if (previousSections !== null && !sectionCacheMatchesSnapshot(previousHashes, previousSections)) {
+    return null;
+  }
   const now = sectionHashes(sections);
   const verifiedPrevious =
     Array.isArray(previousSections) && previousSections.length === sections.length
@@ -902,7 +884,7 @@ export function mirrorLastCommitDate(mirrorRel, { cwd = ROOT } = {}) {
 
 const exactSourceSnapshots = new Map();
 
-async function resolveSectionPlan({ task, state, opts, sections }) {
+export async function resolveSectionPlan({ task, state, opts, sections }) {
   if (task.missingTarget || opts.force) return null;
   const recorded = state.sources[task.rel]?.locales?.[task.locale];
   let previousHashes = recorded?.section_hashes;
@@ -916,23 +898,34 @@ async function resolveSectionPlan({ task, state, opts, sections }) {
   }
   if (!previousHashes && recorded?.source_hash) {
     let oldText = exactOldText;
-    if (!oldText) {
+    if (oldText === null) {
       // `updated_at` is bumped by `--adopt`, so prefer the date of the last commit that
       // actually wrote the mirror (mirrors are only written by translation runs).
       const translatedAt =
         mirrorLastCommitDate(path.relative(ROOT, task.targetAbs)) || recorded.updated_at;
       if (translatedAt) oldText = findSourceTextBefore(task.rel, translatedAt);
     }
-    if (oldText) previousHashes = sectionHashes(splitSections(stripTopHeading(oldText)));
+    if (oldText !== null) previousHashes = sectionHashes(splitSections(stripTopHeading(oldText)));
   }
   if (!previousHashes) return null;
+  const exactPreviousSections =
+    exactOldText === null ? null : splitSections(stripTopHeading(exactOldText));
+  // Validate the cache even when mirror bytes are unverified: target_hash is
+  // required for numeric edits, but cannot authorize contradictory source metadata.
+  if (
+    exactPreviousSections !== null &&
+    !sectionCacheMatchesSnapshot(previousHashes, exactPreviousSections)
+  ) {
+    return null;
+  }
   const mirrorText = await fs.readFile(task.targetAbs, "utf8");
   const mirrorSections = splitSections(extractMirrorBody(mirrorText));
   // A timestamp fallback is not proof of the previous source. Numeric edits
   // require both the exact source snapshot and the recorded mirror bytes.
   const previousSections =
-    exactOldText && recorded?.target_hash === sha256(Buffer.from(mirrorText, "utf8"))
-      ? splitSections(stripTopHeading(exactOldText))
+    exactPreviousSections !== null &&
+    recorded?.target_hash === sha256(Buffer.from(mirrorText, "utf8"))
+      ? exactPreviousSections
       : undefined;
   return planSectionReuse({ previousHashes, previousSections, sections, mirrorSections });
 }
