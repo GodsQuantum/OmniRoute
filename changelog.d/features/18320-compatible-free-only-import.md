@@ -1,0 +1,1 @@
+- **feat(dashboard):** the "Import only free models" option now also works on OpenAI/Anthropic-compatible nodes. It keeps only models that the endpoint's own `/models` list marks as free and that have no paid signal; models without pricing data are never imported as free ([#18320](https://github.com/cheaper-inference/OmniRoute/pull/18320)) — thanks @IlyaKhalafi
