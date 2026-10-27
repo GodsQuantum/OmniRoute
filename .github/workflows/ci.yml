@@ -19,7 +19,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # A metadata edit must not evict a pending candidate from GitHub's single slot.
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.action == 'edited' && github.event.changes.base == null && github.run_id || 'candidate' }}
   # The fail-closed admission Gate uses always() to reject failed or cancelled dependencies.
   # Cancelling the running workflow can strand that Gate while it retains this group. Let the
   # running candidate finish; GitHub's single pending slot keeps only the latest waiter.
@@ -39,6 +40,8 @@ env:
 
 jobs:
   changes:
+    # Base retargets arrive as edited too; only body/title edits are observation-only.
+    if: ${{ github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.base != null }}
     name: Change Classification
     runs-on: ubuntu-latest
     outputs:
@@ -1557,8 +1560,11 @@ jobs:
       - run: npm run test:protocols:e2e
 
   admission-verdict:
-    name: Gate / CI
-    if: ${{ always() }}
+    # A skipped job reports success on GitHub. Reserve the admission check name for
+    # real candidates, so a body/title edit or ordinary draft cannot supersede it.
+    name: ${{ (github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.base != null) && (github.event_name != 'pull_request' || github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true' || needs.changes.result != 'success') && 'Gate / CI' || 'Admission not requested / CI' }}
+    # A failed/cancelled/missing classifier must still reach the fail-closed evaluator.
+    if: ${{ always() && (github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.base != null) && (github.event_name != 'pull_request' || github.event.pull_request.draft == false || needs.changes.outputs.queueCandidate == 'true' || needs.changes.result != 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs:
@@ -1611,7 +1617,7 @@ jobs:
   ci-summary:
     name: CI Dashboard
     runs-on: ubuntu-latest
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.base != null) }}
     needs:
       - changes
       - lint
