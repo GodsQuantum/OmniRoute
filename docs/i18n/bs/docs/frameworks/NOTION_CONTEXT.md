@@ -4,8 +4,6 @@
 
 ---
 
-# Notion Context Source
-
 > **Izvor istine:** `src/lib/notion/api.ts` (REST klijent), `src/lib/db/notion.ts`
 > (trajno čuvanje tokena), `open-sse/mcp-server/tools/notionTools.ts` (6 MCP alata),
 > `src/app/api/settings/notion/route.ts` (settings API). Registracija alata i
