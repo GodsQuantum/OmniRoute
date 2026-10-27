@@ -13,13 +13,18 @@ export async function GET(request: Request) {
     // Dashboard model pickers need provider rows even when /v1/models lists combos only.
     const response = await getUnifiedModelsResponse(request, {}, { ignoreExposeCombosOnly: true });
     const body = await response.json();
+    // The body is regrouped below, so forward only retry/status metadata, not
+    // representation headers such as Content-Length or ETag from the core body.
+    const headers = new Headers(diagnosticHeaders);
+    for (const name of ["Retry-After", "x-omniroute-catalog"]) {
+      const value = response.headers.get(name);
+      if (value !== null) headers.set(name, value);
+    }
 
     if (!response.ok) {
       return Response.json(body, {
         status: response.status,
-        headers: {
-          ...diagnosticHeaders,
-        },
+        headers,
       });
     }
 
@@ -65,11 +70,7 @@ export async function GET(request: Request) {
 
     return Response.json(
       { catalog, catalogVersion: response.headers.get("X-Model-Catalog-Version") },
-      {
-        headers: {
-          ...diagnosticHeaders,
-        },
-      }
+      { headers }
     );
   } catch (error) {
     return Response.json(

@@ -1,5 +1,6 @@
 import { appendToolCallArgumentDelta } from "../utils/toolCallArguments.ts";
 import { sanitizeErrorMessage } from "../utils/error.ts";
+import { pickResponsesSnapshot } from "./sseParser/responsesSnapshot.ts";
 
 /**
  * Extract a provider error message from a buffered SSE stream that carries an
@@ -169,7 +170,8 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
     if (!payload || payload === "[DONE]") continue;
     try {
       const parsed = JSON.parse(payload);
-      if (Array.isArray(parsed?.choices)) {
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) continue;
+      if (Array.isArray(parsed.choices)) {
         sawChoices = true;
       }
       chunks.push(parsed);
@@ -182,6 +184,7 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
 
   const first = chunks[0];
   const contentParts = [];
+  const refusalParts = [];
   const reasoningParts = [];
   type AccumulatedToolCall = {
     id: string | null;
@@ -208,6 +211,9 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
 
     if (typeof delta.content === "string" && delta.content.length > 0) {
       contentParts.push(delta.content);
+    }
+    if (typeof delta.refusal === "string" && delta.refusal.length > 0) {
+      refusalParts.push(delta.refusal);
     }
     if (typeof delta.reasoning_content === "string" && delta.reasoning_content.length > 0) {
       reasoningParts.push(delta.reasoning_content);
@@ -269,6 +275,9 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
     role: "assistant",
     content: joinedContent,
   };
+  if (refusalParts.length > 0) {
+    message.refusal = refusalParts.join("");
+  }
   if (joinedReasoning) {
     message.reasoning_content = joinedReasoning;
   }
@@ -818,7 +827,7 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     }
   }
 
-  const picked = terminalResponse || latestResponse;
+  const picked = pickResponsesSnapshot(terminalResponse, latestResponse, events);
   if (!picked || typeof picked !== "object") return null;
   const reconstructedOutput = [...outputItems.entries()]
     .sort((a, b) => a[0] - b[0])
