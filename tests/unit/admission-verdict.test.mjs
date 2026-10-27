@@ -306,12 +306,23 @@ function keepsForkCodeOffSelfHosted(runsOn) {
 }
 
 for (const profile of ["ci", "quality"]) {
-  test(`${profile}: workflow jobs and dependencies match the versioned admission policy`, () => {
+  test(`${profile}: workflow concurrency, jobs and dependencies match the admission policy`, () => {
     const workflow = loadYaml(
       readFileSync(new URL(`../../.github/workflows/${profile}.yml`, import.meta.url), "utf8")
     );
     const verdict = workflow.jobs["admission-verdict"];
     const ids = Object.keys(policy.profiles[profile].jobs).sort();
+    assert.equal(workflow.concurrency.group, "${{ github.workflow }}-${{ github.ref }}");
+    assert.equal(
+      workflow.concurrency["cancel-in-progress"],
+      false,
+      `${profile}: the running candidate must reach a terminal admission verdict`
+    );
+    assert.equal(
+      workflow.concurrency.queue ?? "single",
+      "single",
+      `${profile}: only the latest pending candidate should wait behind the running candidate`
+    );
     assert.deepEqual([...verdict.needs].sort(), ids);
     assert.deepEqual(
       Object.keys(workflow.jobs)
