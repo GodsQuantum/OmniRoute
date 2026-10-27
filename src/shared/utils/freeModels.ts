@@ -143,14 +143,20 @@ function toFreeModelCandidate(model: FreeBadgeCandidate): FreeModelCandidate {
   };
 }
 
+/** Public client-restricted offers and paid payloads cannot justify a Free badge. */
+function hasFreeBadgeVeto(provider: string, model: FreeBadgeCandidate): boolean {
+  return resolveProviderId(provider) === "opencode-zen" || hasPayloadPaidEvidence(model);
+}
+
 /** Feature flag that turns on the stricter badge rule (default off). */
 export const FREE_BADGE_STRICT_FLAG = "FREE_BADGE_REQUIRES_PROVIDER_FREE_TIER";
 
 /**
  * Whether the provider-page model list shows the "Free" badge for a model row.
+ * OpenCode Zen public hints are excluded in both modes: its free offers require its client.
  *
  * Default (`strict: false`) is the historical rule: any truthy `free` field, an explicit
- * `isFree === true` (live discovery evidence, honored on every provider as in strict mode),
+ * `isFree === true` (discovery evidence, subject to the eligibility veto in both modes),
  * a `:free` id suffix, "free"/"grátis" in the display name, or `isFreeModel`.
  *
  * With `strict: true` (feature flag FREE_BADGE_REQUIRES_PROVIDER_FREE_TIER) only badges
@@ -168,8 +174,8 @@ export function isModelFreeBadge(
   model: FreeBadgeCandidate,
   options: { strict?: boolean } = {}
 ): boolean {
-  // Both badge modes must honor the same paid veto as free-only import.
-  if (hasPayloadPaidEvidence(model)) return false;
+  // Both badge modes honor client eligibility and the free-only import paid veto.
+  if (hasFreeBadgeVeto(provider, model)) return false;
   const candidate = toFreeModelCandidate(model);
   if (resolveProviderId(provider) === "siliconflow") {
     return isFreeModel(provider, candidate);
@@ -320,6 +326,8 @@ export function matchesOnlyPaidModels(pattern: string): boolean {
   for (const m of AI_MODELS) {
     const fullId = `${m.provider}/${m.model}`;
     if (!regex.test(fullId)) continue;
+    // Client-restricted OpenCode offers are unknown here, not proven paid.
+    if (resolveProviderId(m.provider) === "opencode-zen") return false;
     matched = true;
     if (isFreeForProvider(m.provider, { id: m.model })) return false;
   }

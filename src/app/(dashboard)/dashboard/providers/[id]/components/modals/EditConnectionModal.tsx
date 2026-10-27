@@ -125,7 +125,10 @@ export default function EditConnectionModal({
   const provider = connection?.provider || providerId;
   const connectionAuthType = connection?.authType;
   const connectionProviderSpecificData = connection?.providerSpecificData;
-  const showFreeModelsToggle = providerSupportsFreeOnlyImport(provider);
+  // A retired offer must not trap an existing free-only preference or clear it silently.
+  const showFreeModelsToggle =
+    providerSupportsFreeOnlyImport(provider) ||
+    connectionProviderSpecificData?.importFreeModelsOnly === true;
   const [formData, setFormData] = useState({
     name: "",
     priority: 1,

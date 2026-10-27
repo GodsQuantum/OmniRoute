@@ -341,19 +341,10 @@ export const FREE_MODEL_BUDGETS: FreeModelBudget[] = [
   { provider: "onomeo", modelId: "glm-4.5-flash", displayName: "GLM 4.5 Flash", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "onomeo", tos: "caution", trainsOnPrompts: true },
   { provider: "onomeo", modelId: "glm-4.6v-flash", displayName: "GLM 4.6v Flash", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "onomeo", tos: "caution", trainsOnPrompts: true },
   { provider: "onomeo", modelId: "glm-4.7-flash", displayName: "GLM 4.7 Flash", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "onomeo", tos: "caution", trainsOnPrompts: true },
-  // OpenCode Zen free set refreshed 2026-10-20 against https://opencode.ai/zen/v1/models
-  // (served IDs) ∩ https://opencode.ai/docs/zen/ ($0 input+output pricing). The free list
-  // rotates ("free for a limited time"); only IDs present in BOTH sources are listed here.
-  { provider: "opencode-zen", modelId: "opencode/big-pickle", displayName: "Big Pickle (stealth)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/beam-free", displayName: "Beam (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/mimo-v2.6-flash-free", displayName: "MiMo V2.6 Flash (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/nemotron-3.5-super-vl-free", displayName: "Nemotron 3.5 Super VL (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/nemotron-3.5-lightning-free", displayName: "Nemotron 3.5 Lightning (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/jev-1.13-free", displayName: "Jev 1.13 (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/longcat-2.5-preview-free", displayName: "LongCat 2.5 Preview (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/deepseek-v4.1-flash-free", displayName: "DeepSeek V4.1 Flash (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/glm-5.3-flash-free", displayName: "GLM 5.3 Flash (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
-  { provider: "opencode-zen", modelId: "opencode/minimax-m3.1-flash-free", displayName: "MiniMax M3.1 Flash (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "opencode-zen-free", tos: "caution" },
+  // OpenCode's free-tier chat offers require its own client (checked 2026-10-27):
+  // https://opencode.ai/v2/docs/console/models/#endpoints
+  // Public zero prices do not grant generic proxy eligibility. Keep the provider
+  // available for manual/paid use, but do not count these offers as free access.
   { provider: "openrouter", modelId: "auto", displayName: "Auto (Best Available)", monthlyTokens: 1200000, creditTokens: 0, freeType: "recurring-daily", poolKey: "openrouter-free", tos: "caution" },
   { provider: "openrouter", modelId: "stealth/ox-alpha", displayName: "Stealth Ox Alpha (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-daily", poolKey: "openrouter-free", tos: "caution" },
   { provider: "openrouter", modelId: "liquid/lfm-2.5-2.6b:free", displayName: "LiquidAI: LFM2.5-2.6B (free)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-daily", poolKey: "openrouter-free", tos: "caution" },

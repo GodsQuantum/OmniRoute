@@ -33,15 +33,15 @@ describe("#17028 SiliconFlow pay-as-you-go model protection", () => {
   it("retains honest release catalog counts and never counts SiliconFlow as statically uncapped", () => {
     const totals = computeFreeModelTotals();
     // Measured 2026-10-27 inventory: 484 inherited identities minus four
-    // Ollama grants contradicted by the current exact-ID pricing table.
+    // Ollama grants and ten OpenCode offers restricted to its own client.
     // Pin identities as well as the total so unrelated replacement is visible.
     const identities = FREE_MODEL_BUDGETS.map((row) => `${row.provider}/${row.modelId}`).sort();
-    assert.equal(new Set(identities).size, 480);
+    assert.equal(new Set(identities).size, 470);
     assert.equal(
       createHash("sha256").update(identities.join("\n")).digest("hex"),
-      "dceb97aee1abb3144b8680d437c12f7d21a2df1158499c8502dfe365d057c451"
+      "2a10c6e85b5be622577f58b422d000a7efe7c4c64873ab73663e63944d5b319a"
     );
-    assert.equal(totals.modelCount, 480);
+    assert.equal(totals.modelCount, 470);
     assert.equal(totals.poolCount, 34);
     assert.equal(totals.uncappedProviders.includes("siliconflow"), false);
   });
