@@ -1087,6 +1087,27 @@ export class CommandCodeExecutor extends BaseExecutor {
     return { response, url: cliUrl, headers: cliHeaders, transformedBody: cliTransformedBody };
   }
 
+  /** Headers for the flat provider endpoint (chat completions / responses). */
+  private buildProviderHeaders(input: {
+    model: string;
+    apiKey: string;
+    stream: boolean;
+    upstreamExtraHeaders?: Record<string, string>;
+    providerSpecificData?: unknown;
+  }): Record<string, string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${input.apiKey}`,
+      Accept: input.stream ? "text/event-stream" : "application/json",
+    };
+    if (getModelTargetFormat("command-code", input.model) === "claude") {
+      headers["anthropic-version"] = ANTHROPIC_VERSION_HEADER;
+    }
+    mergeUpstreamExtraHeaders(headers, input.upstreamExtraHeaders);
+    applyCommandCodeZdrHeader(headers, input.providerSpecificData);
+    return headers;
+  }
+
   async execute({ model, body, stream, credentials, signal, upstreamExtraHeaders }: ExecuteInput) {
     const apiKey = credentials?.apiKey || credentials?.accessToken;
     if (!apiKey) throw new Error("Command Code API key required");
@@ -1102,16 +1123,14 @@ export class CommandCodeExecutor extends BaseExecutor {
       ? this.buildResponsesUrl()
       : this.buildUrl(model);
 
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      Accept: stream ? "text/event-stream" : "application/json",
-    };
-    if (getModelTargetFormat("command-code", model) === "claude") {
-      headers["anthropic-version"] = ANTHROPIC_VERSION_HEADER;
-    }
-    mergeUpstreamExtraHeaders(headers, upstreamExtraHeaders);
-    applyCommandCodeZdrHeader(headers, credentials?.providerSpecificData);
+    const providerSpecificData = credentials?.providerSpecificData;
+    const headers = this.buildProviderHeaders({
+      model,
+      apiKey,
+      stream,
+      upstreamExtraHeaders,
+      providerSpecificData,
+    });
 
     let upstream = await fetch(url, {
       method: "POST",
@@ -1168,7 +1187,7 @@ export class CommandCodeExecutor extends BaseExecutor {
           apiKey,
           signal,
           upstreamExtraHeaders,
-          providerSpecificData: credentials?.providerSpecificData,
+          providerSpecificData,
         });
       }
     }

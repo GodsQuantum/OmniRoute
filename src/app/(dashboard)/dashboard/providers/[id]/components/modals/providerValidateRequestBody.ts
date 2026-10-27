@@ -16,6 +16,29 @@ type ValidateFormFields = {
   commandCodeZdrEnabled?: boolean;
 };
 
+const trimmedOrUndefined = (value: string) => value.trim() || undefined;
+
+function validateRegion(
+  formData: ValidateFormFields,
+  isAwsPolly: boolean,
+  showsRegion: boolean,
+  defaultRegion: string
+): string | undefined {
+  if (isAwsPolly) return formData.region.trim() || "us-east-1";
+  return showsRegion ? formData.region.trim() || defaultRegion : undefined;
+}
+
+/** Fields that only apply to one provider family; undefined otherwise. */
+function familyFields(formData: ValidateFormFields, isAwsPolly: boolean, webCodex: boolean) {
+  return {
+    accessKeyId: isAwsPolly ? trimmedOrUndefined(formData.awsAccessKeyId) : undefined,
+    sessionToken: isAwsPolly ? trimmedOrUndefined(formData.awsSessionToken) : undefined,
+    runtimeKey: webCodex ? trimmedOrUndefined(formData.runtimeKey) : undefined,
+    tunnelId: webCodex ? trimmedOrUndefined(formData.tunnelId) : undefined,
+    connectorName: webCodex ? trimmedOrUndefined(formData.connectorName) : undefined,
+  };
+}
+
 export function buildProviderValidateRequestBody(options: {
   provider: string;
   apiKey: string;
@@ -26,24 +49,20 @@ export function buildProviderValidateRequestBody(options: {
   isChatGptWebCodex: boolean;
 }) {
   const { provider, apiKey, formData, isAwsPolly, showsRegion, defaultRegion } = options;
-  const webCodex = options.isChatGptWebCodex;
+  const family = familyFields(formData, isAwsPolly, options.isChatGptWebCodex);
   return {
     provider,
     apiKey,
     validationModelId: formData.validationModelId || undefined,
-    customUserAgent: formData.customUserAgent.trim() || undefined,
-    baseUrl: formData.baseUrl.trim() || undefined,
-    region: isAwsPolly
-      ? formData.region.trim() || "us-east-1"
-      : showsRegion
-        ? formData.region.trim() || defaultRegion
-        : undefined,
-    accessKeyId: isAwsPolly ? formData.awsAccessKeyId.trim() || undefined : undefined,
-    sessionToken: isAwsPolly ? formData.awsSessionToken.trim() || undefined : undefined,
-    cx: formData.cx.trim() || undefined,
-    runtimeKey: webCodex ? formData.runtimeKey.trim() || undefined : undefined,
-    tunnelId: webCodex ? formData.tunnelId.trim() || undefined : undefined,
-    connectorName: webCodex ? formData.connectorName.trim() || undefined : undefined,
+    customUserAgent: trimmedOrUndefined(formData.customUserAgent),
+    baseUrl: trimmedOrUndefined(formData.baseUrl),
+    region: validateRegion(formData, isAwsPolly, showsRegion, defaultRegion),
+    accessKeyId: family.accessKeyId,
+    sessionToken: family.sessionToken,
+    cx: trimmedOrUndefined(formData.cx),
+    runtimeKey: family.runtimeKey,
+    tunnelId: family.tunnelId,
+    connectorName: family.connectorName,
     zdrEnabled:
       provider === "command-code" && formData.commandCodeZdrEnabled === true ? true : undefined,
   };
