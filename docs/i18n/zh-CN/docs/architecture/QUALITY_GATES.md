@@ -38,7 +38,7 @@ CLI 会拒绝检出 SHA 与事件 SHA 不匹配的情况。工作流测试会将
 ### UI 执行容量
 
 CI 以四个 `test-vitest` 矩阵分片运行完整的 UI 清单，每个分片最多使用
-四个工作进程，并沿用现有的 15 分钟作业时限。第一个分片还会运行
+两个工作进程，并沿用现有的 15 分钟作业时限。第一个分片还会运行
 MCP/autoCombo Vitest 测试套件。必需作业的结果涵盖每个矩阵项；
 任一分片失败或被取消都无法确定候选版本准入。
 
@@ -56,6 +56,12 @@ MCP/autoCombo Vitest 测试套件。必需作业的结果涵盖每个矩阵项�
 输入会保留 c8 的全局文件名顺序；对于混合函数/代码块覆盖率，
 按分片预先合并并不安全。缺失、格式错误或不兼容的分片会导致准入失败。
 测试失败的分片会单独保留原始诊断覆盖率；这些数据不能进入最终合并。
+
+### 验收结果归约器中的留存证据
+
+`scripts/quality/validate-release-acceptance.mjs` 汇总传入的计划及其清单，并不证明该计划覆盖了完整的发布流水线。即使计划的状态为 `VERIFIED`，其报告也会明确设置 `releaseAcceptance: false`。`release-acceptance.yml` 工作流仍然使用影子测试夹具，而非真实的构建、打包、启动或晋级回执。
+
+CLI 需要 `--evidence-root` 才能核验留存证据。文件按 `<evidence-root>/<artifact_id>/<member>` 路径解析，并计算 SHA-256 哈希。没有证据的 PASS 记录、缺失或已变更的文件、不安全的路径或符号链接都会阻止核验通过。文件缺失不等同于成功执行产生的空日志。现有的 SHA/run/attempt 检查仍然独立：字节相同无法使过期回执有效。文件完整性不能证明执行的真实性或产物已完成晋级。
 
 ### 静态扫描清单
 
@@ -192,24 +198,24 @@ CI 的事实来源是 `.github/workflows/ci.yml`。
 
 ### 作业：`docs-sync-strict`
 
-适用于面向 `main` 和 `release/**` 的代码或文档候选变更。失败时阻止准入。
+对于目标分支为 `main` 或 `release/**` 的拉取请求，此作业仅对非草稿（或来自可信队列）且被归类为文档或代码变更的候选运行。它也在非 PR 的 CI 事件中运行；此工作流的 push 触发器仅覆盖 `main`，不覆盖 `release/**`。以非零退出码结束的步骤会阻断作业；仅报告的发现以及下文记载的豁免不会阻断。
 
-| 脚本                           | 验证内容                                                                                                                   | 阻断策略                   |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `check:docs-all`               | 按顺序运行以下 7 个子门禁的元门禁                                                                                          | 是                         |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                   | 是                         |
-| ↳ `check:docs-frontmatter`     | 已编译的文档页面包含有效的 frontmatter 标题                                                                                | 是                         |
-| ↳ `check:docs-counts`          | 正文中的计数（提供者数量、迁移数量等）处于实际计数的棘轮窗口范围内                                                         | 是                         |
-| ↳ `check:env-doc-sync`         | `.env.example` 中的每个环境变量都记录在文档表格中，反之亦然                                                                | 是                         |
-| ↳ `check:deprecated-versions`  | 文档中不存在已弃用的版本字符串                                                                                             | 是                         |
-| ↳ `check:doc-links`            | 文档中的内部 markdown 链接解析到真实文件（`[text]`/`(path)` 形式）                                                         | 是                         |
-| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径在代码库中存在。通过 `--strict` 实施硬门禁；不带该标志时为软失败。 | 是（CI 中通过 `--strict`） |
-| `check:cli-i18n`               | 所有 i18n 语言区域文件中都包含 CLI 命令字符串                                                                              | 是                         |
-| `check:openapi-coverage`       | OpenAPI 规范对真实路由的覆盖率至少达到棘轮下限                                                                             | 是                         |
-| `check:openapi-security-tiers` | `openapi.yaml` 中的安全层级注解与 `routeGuard.ts` 分类保持一致                                                             | **建议性**                 |
-| `check:openapi-routes`         | `openapi.yaml` 中的每个路径都解析到真实的 `route.ts`（防止虚构）                                                           | 是                         |
-| `check:docs-symbols`           | `docs/**/*.md` 中的每个 `/api/...` 引用都解析到真实的 `route.ts`（防止虚构）                                               | 是                         |
-| `i18n translation drift`       | i18n 语言区域文件中未翻译的键——仅警告                                                                                      | **建议性**                 |
+| 脚本                           | 验证内容                                                                                                                                                                                                                           | 阻断策略                                                                |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `check:docs-all`               | 按顺序运行以下 7 个子门禁的元门禁                                                                                                                                                                                                  | 是                                                                      |
+| ↳ `check:docs-sync`            | 软件包、OpenAPI 和 CHANGELOG 的版本一致性，`llm.txt` 镜像的精确一致性，已翻译 CHANGELOG 的章节与大小不变量，以及不存在已被替代的重复文档                                                                                           | 是                                                                      |
+| ↳ `check:docs-frontmatter`     | 已编译的文档页面包含有效的 frontmatter 标题                                                                                                                                                                                        | 是                                                                      |
+| ↳ `check:docs-counts`          | 高置信度的计数不变量采用严格检查；启发式文件计数检查仅发出警告，除非脚本收到 `--strict` 参数（CI 元门禁不会传入该参数）                                                                                                            | 严格层级阻断；宽松层级仅供参考                                          |
+| ↳ `check:env-doc-sync`         | 应用明确的忽略项、仅文档项和仅环境项允许列表后，源代码中的环境变量读取、`.env.example` 与 `docs/reference/ENVIRONMENT.md` 保持一致                                                                                                 | 是，但已记录的允许列表例外除外                                          |
+| ↳ `check:deprecated-versions`  | 报告安全历史上下文之外可能过时的版本及过时的更新日期，忽略的文档除外                                                                                                                                                               | 当前 CI 配置中仅供参考（未传入 `--strict`）                             |
+| ↳ `check:doc-links`            | 文档中的内部 markdown 链接解析到真实文件（`[text]`/`(path)` 形式）                                                                                                                                                                 | 是                                                                      |
+| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径在代码库中存在。通过 `--strict` 实施硬门禁；不带该标志时为软失败。                                                                                                         | 是（CI 中通过 `--strict`）                                              |
+| `check:cli-i18n`               | CLI 使用的 `t()` 键存在于 `en` 中；`pt-BR` 保留所有顶层章节；`zh-CN` 和 `zh-TW` 包含 `en` 的每个键                                                                                                                                 | 是                                                                      |
+| `check:openapi-coverage`       | OpenAPI 规范对真实路由的覆盖率至少达到棘轮下限                                                                                                                                                                                     | 是                                                                      |
+| `check:openapi-security-tiers` | 声明的 `x-loopback-only`/`x-always-protected` 注解必须得到 `routeGuard.ts` 的支持；解析器错误和正向检查不匹配会阻断。反向检查在仅限本地访问的前缀下发现缺少 `x-loopback-only` 时发出警告，且仅通过模式定义的路由不参与该反向检查。 | 解析器和正向检查阻断；反向检查仅供参考                                  |
+| `check:openapi-routes`         | 应用有理由支持的 `KNOWN_STALE_SPEC` 允许列表后，`openapi.yaml` 中的每个 `/api...` 路径都须忽略参数差异匹配到真实路由；允许列表中过时的条目也会导致失败                                                                             | 是                                                                      |
+| `check:docs-symbols`           | 非镜像的规范文档中的内部 `/api/...` URL 引用须匹配到真实路由或路由族；代理、上游、占位符及文件引用，以及有理由支持的 `KNOWN_STALE_DOC_REFS` 条目均被排除，允许列表中过时的条目会导致失败                                           | 是                                                                      |
+| `i18n translation drift`       | 核心翻译文档的源和目标哈希与 `.i18n-state.json` 一致。PR 仅会因其新引入的源漂移、目标缺失或目标哈希漂移而失败；非 PR 检查采用严格模式。PR 中继承的漂移和过时目标的源哈希仅产生警告。                                               | PR 中的新漂移及非 PR 严格检查中的漂移会阻断；继承的漂移和过时项仅供参考 |
 
 ### 作业：`i18n-ui-coverage`
 

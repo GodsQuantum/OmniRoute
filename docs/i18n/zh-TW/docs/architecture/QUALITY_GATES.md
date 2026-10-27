@@ -41,7 +41,7 @@ CLI 會拒絕簽出 SHA 與事件 SHA 不相符的情況。工作流程測試會
 ### UI 執行容量
 
 CI 會透過四個 `test-vitest` 矩陣分片執行完整的 UI 清單，每個分片最多使用
-四個工作程序，並沿用現有的 15 分鐘工作期限。第一個分片也會執行
+兩個工作程序，並沿用現有的 15 分鐘工作期限。第一個分片也會執行
 MCP/autoCombo Vitest 測試套件。必要工作的結果涵蓋每個矩陣執行項；任一分片失敗
 或遭取消皆無法建立候選版本的准入資格。
 
@@ -59,6 +59,12 @@ MCP/autoCombo Vitest 測試套件。必要工作的結果涵蓋每個矩陣執�
 涵蓋率門檻。輸入會保留 c8 的全域檔名順序；對混合函式／區塊涵蓋率而言，
 逐分片預先合併並不安全。缺少、格式錯誤或不相容的分片會導致准入失敗。
 失敗的測試分片會另行保留原始診斷涵蓋率；該資料不得進入最終合併。
+
+### 驗收結果歸約器中的留存證據
+
+`scripts/quality/validate-release-acceptance.mjs` 彙整傳入的計畫及其清單，並不證明該計畫涵蓋完整的發布管線。即使計畫的狀態為 `VERIFIED`，其報告也會明確設定 `releaseAcceptance: false`。`release-acceptance.yml` 工作流程仍然使用影子測試資料，而非實際的建置、封裝、啟動或晉級回執。
+
+CLI 需要 `--evidence-root` 才能核驗留存證據。檔案依 `<evidence-root>/<artifact_id>/<member>` 路徑解析，並計算 SHA-256 雜湊。沒有證據的 PASS 記錄、遺失或已變更的檔案、不安全的路徑或符號連結，都會阻止核驗通過。檔案遺失不等同於成功執行產生的空白日誌。現有的 SHA/run/attempt 檢查仍然獨立：位元組相同無法使過期回執有效。檔案完整性不能證明執行的真實性或產物已完成晉級。
 
 ### 靜態掃描清單
 
@@ -194,24 +200,24 @@ Barrel 重新匯出與動態匯入僅屬解析診斷；絕不會產生阻擋性�
 
 ### 作業：`docs-sync-strict`
 
-適用於 `main` 與 `release/**` 的程式碼或文件候選版本。失敗時會阻止納入。
+對於目標為 `main` 或 `release/**` 的 pull request，此作業僅對非草稿（或位於受信任佇列中）、且被分類為文件或程式碼變更的候選版本執行。它也會在非 PR 的 CI 事件中執行；此工作流程的 push 觸發條件僅涵蓋 `main`，不涵蓋 `release/**`。步驟以非零結束碼結束時會阻擋作業；下列僅供報告的發現與已記錄的例外不會阻擋。
 
-| 指令碼                         | 驗證項目                                                                                                                                | 阻擋條件                   |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `check:docs-all`               | 依序執行下列 7 個子閘門的中繼閘門                                                                                                       | 是                         |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                                | 是                         |
-| ↳ `check:docs-frontmatter`     | 已編譯的文件頁面包含有效的 frontmatter 標題                                                                                             | 是                         |
-| ↳ `check:docs-counts`          | 內文中的數量（提供者數量、遷移數量等）位於實際數量的 ratchet 範圍內                                                                     | 是                         |
-| ↳ `check:env-doc-sync`         | `.env.example` 中的每個環境變數都記錄於文件表格中，反之亦然                                                                             | 是                         |
-| ↳ `check:deprecated-versions`  | 文件中不含已棄用的版本字串                                                                                                              | 是                         |
-| ↳ `check:doc-links`            | 文件中的內部 markdown 連結會解析至實際檔案（`[text]`/`(path)` 格式）                                                                    | 是                         |
-| ↳ `check:fabricated-docs`      | 文件中引用的路由、環境變數、CLI 命令、hook 名稱及檔案路徑確實存在於程式碼庫中。使用 `--strict` 時為硬性閘門；未使用該旗標時為軟性失敗。 | 是（CI 中透過 `--strict`） |
-| `check:cli-i18n`               | 所有 i18n 語系檔案中都包含 CLI 命令字串                                                                                                 | 是                         |
-| `check:openapi-coverage`       | OpenAPI 規格至少涵蓋真實路由的 ratchet 下限                                                                                             | 是                         |
-| `check:openapi-security-tiers` | `openapi.yaml` 中的安全層級註解與 `routeGuard.ts` 分類一致                                                                              | **諮詢性**                 |
-| `check:openapi-routes`         | `openapi.yaml` 中的每個路徑都會解析至真實的 `route.ts`（防止虛構）                                                                      | 是                         |
-| `check:docs-symbols`           | `docs/**/*.md` 中的每個 `/api/...` 參照都會解析至真實的 `route.ts`（防止虛構）                                                          | 是                         |
-| `i18n translation drift`       | i18n 語系檔案中未翻譯的鍵值——僅發出警告                                                                                                 | **諮詢性**                 |
+| 指令碼                         | 驗證項目                                                                                                                                                                                                                   | 阻擋條件                                                        |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `check:docs-all`               | 依序執行下列 7 個子閘門的中繼閘門                                                                                                                                                                                          | 是                                                              |
+| ↳ `check:docs-sync`            | 套件/OpenAPI/CHANGELOG 的版本一致性、`llm.txt` 的精確鏡像、已翻譯 CHANGELOG 的章節/大小不變條件，以及不存在已被取代的重複文件                                                                                              | 是                                                              |
+| ↳ `check:docs-frontmatter`     | 已編譯的文件頁面包含有效的 frontmatter 標題                                                                                                                                                                                | 是                                                              |
+| ↳ `check:docs-counts`          | 高可信度的數量不變條件採嚴格檢查；啟發式檔案數量檢查僅發出警告，除非指令碼收到 `--strict`（CI 中的中繼閘門不會傳入此旗標）                                                                                                 | 嚴格層級會阻擋；寬鬆層級僅供建議                                |
+| ↳ `check:env-doc-sync`         | 套用明確的 ignore、doc-only 與 env-only 例外清單後，原始碼中讀取的環境變數、`.env.example` 與 `docs/reference/ENVIRONMENT.md` 必須一致                                                                                     | 是，已記錄的例外清單以外均適用                                  |
+| ↳ `check:deprecated-versions`  | 排除被忽略的文件後，報告安全歷史脈絡以外可能過時的版本，以及過時的更新日期                                                                                                                                                 | 目前 CI 接線方式下僅供建議（未傳入 `--strict`）                 |
+| ↳ `check:doc-links`            | 文件中的內部 markdown 連結會解析至實際檔案（`[text]`/`(path)` 格式）                                                                                                                                                       | 是                                                              |
+| ↳ `check:fabricated-docs`      | 文件中引用的路由、環境變數、CLI 命令、hook 名稱及檔案路徑確實存在於程式碼庫中。使用 `--strict` 時為硬性閘門；未使用該旗標時為軟性失敗。                                                                                    | 是（CI 中透過 `--strict`）                                      |
+| `check:cli-i18n`               | CLI 使用的 `t()` 鍵必須存在於 `en`；`pt-BR` 保留每個最上層區段；`zh-CN` 和 `zh-TW` 包含 `en` 的每個鍵                                                                                                                      | 是                                                              |
+| `check:openapi-coverage`       | OpenAPI 規格至少涵蓋真實路由的 ratchet 下限                                                                                                                                                                                | 是                                                              |
+| `check:openapi-security-tiers` | 已宣告的 `x-loopback-only`/`x-always-protected` 註解必須有 `routeGuard.ts` 的支援；剖析器錯誤與正向檢查的不符會阻擋。對僅限本機的前綴下缺少 `x-loopback-only` 的反向檢查會發出警告，而僅由模式定義的路由不納入該反向檢查。 | 剖析器/正向檢查會阻擋；反向檢查僅供建議                         |
+| `check:openapi-routes`         | 套用有理由依據的 `KNOWN_STALE_SPEC` 例外清單後，`openapi.yaml` 中的每個 `/api...` 路徑都必須忽略參數差異而解析至真實路由；過時的例外清單項目也會使檢查失敗                                                                 | 是                                                              |
+| `check:docs-symbols`           | 非鏡像的標準文件中，內部 `/api/...` URL 參照必須解析至真實路由或路由群組；proxy/upstream/placeholder/檔案參照及有理由依據的 `KNOWN_STALE_DOC_REFS` 項目會被排除，過時的例外清單項目則使檢查失敗                            | 是                                                              |
+| `i18n translation drift`       | 核心翻譯文件的來源/目標雜湊須符合 `.i18n-state.json`。PR 僅會因新引入的來源差異、缺少目標或目標雜湊差異而失敗；非 PR 檢查採嚴格模式。PR 繼承的差異與過時目標的來源雜湊問題僅發出警告。                                     | PR 的新增差異/非 PR 的嚴格差異檢查會阻擋；繼承/過時差異僅供建議 |
 
 ### 作業：`i18n-ui-coverage`
 
