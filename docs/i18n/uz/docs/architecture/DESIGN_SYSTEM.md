@@ -93,13 +93,29 @@
 
 ## 2. Qoidalar
 
-1. Literal qiymatlar emas, tokenlardan foydalaning. Ataylab saqlangan istisnolar: doimo qorongʻi konsol terminali, `STATUS_HEX` (`src/shared/constants/statusColors.ts`) orqali ReactFlow SVG chiziqlari hamda `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) va `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`) kategoriyali palitralari.
-2. `packages/ui-kit/src` ichini hech qachon qoʻlda oʻzgartirmang: `scripts/dev/sync-ui-kit.sh <commit>` yordamida sinxronlang; pre-commit tekshiruvi `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mahkamlangan upstream commitdan biror bayt farq qilsa, muvaffaqiyatsiz tugaydi (upstream kloni — `UI_KIT_CLONE` yoki `_references/cheaper-inference-ui-kit` — mavjud boʻlmasa, ogohlantirish bilan oʻtkazib yuboriladi). Kitda biror narsa yetishmasa, adapter yoki ekranda muqobil yechimdan foydalaning va uni upstreamdan soʻrang.
-3. Kit matnlarining standart qiymatlari ingliz tilida (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit komponenti matn ko‘rsatgan har bir holatda `useTranslations(...)` orqali tarjima qilingan satrlarni uzating.
-4. Tailwind utilitalari kit komponentlari klasslaridan ustun turadi (kit `@layer theme, base, components, utilities` qatlamlarini e’lon qiladi va uning qoidalari `components` ichida joylashgan) — kit komponentlari rangini oʻzgartirish uchun emas, oraliqlar va joylashuv uchun utilitalardan foydalaning.
-5. Sarlavhalar: sahifa va boʻlim sarlavhalari uchun `.ci-heading` (Inter, harflar oraligʻisiz); `.ci-dashboard-display` (Instrument Serif) faqat xatolik sahifasidagi holat kodi kabi katta va siyrak ko‘rsatma matnlari uchun.
-6. `tests/unit/dashboard-kit-sweep.test.ts` kitning qoʻllanilishini nazorat qiladi: `src/app` yoki `src/shared/components` ostida Material ligatura spani boʻlmasligi kerak; dashboard daraxtida (`src/app/(dashboard)` va `src/shared/components`) xom `<select>`, `<textarea>` yoki `<table>` hamda roʻyxatdagi istisnolardan (`Select` adapterining mahalliy tarmogʻi, `RequestLoggerDetail`) tashqarida qoʻlda yaratilgan `role="dialog"` boʻlmasligi kerak; u yerdagi har bir xom `<button>` yoki `<input>` elementidan koʻpi bilan 3 qator yuqorida tugaydigan, sabab koʻrsatilgan `kit-exception:` izohi boʻlishi shart; palitra tuslari va `dark:` variantlariga faqat test roʻyxatida koʻrsatilgan fayllarda ruxsat beriladi.
-7. PR yuborishdan oldin ikkala mavzuni va 390 px viewportni tekshiring (skrinshotlar); `tests/e2e/a11y.spec.ts` axe’ni ishga tushiradi.
+1. Literallar emas, tokenlardan foydalaning. Ataylab saqlangan istisnolar: doimo qorongʻi konsol terminali va `STATUS_HEX` (`src/shared/constants/statusColors.ts`) orqali ReactFlow
+   SVG chiziqlari. Marshrutlash strategiyasi va siqish qatlami palitralari `strategyColorVar` hamda
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) orqali kit diagramma tokenlaridan foydalanadi.
+2. `packages/ui-kit/src` fayllarini hech qachon qoʻlda oʻzgartirmang: `scripts/dev/sync-ui-kit.sh <commit>` orqali sinxronlang;
+   pre-commit tekshiruvi `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mahkamlangan yuqori oqim commitidan
+   biror bayt farq qilsa, muvaffaqiyatsiz tugaydi (yuqori oqim kloni,
+   `UI_KIT_CLONE` yoki `_references/cheaper-inference-ui-kit` mavjud boʻlmasa, ogohlantirish bilan oʻtkazib yuboriladi). Kitda biror narsa yetishmasa,
+   adapter yoki ekranda muqobil yechimdan foydalaning va uni yuqori oqimdan soʻrang.
+3. Kit matnlarining standart qiymatlari ingliz tilida (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit komponenti matnni ko‘rsatganda
+   `useTranslations(...)` orqali tarjima qilingan satrlarni uzating.
+4. Tailwind utilitalari kit komponenti klasslaridan ustun turadi (kit
+   `@layer theme, base, components, utilities` ni eʼlon qiladi va uning qoidalari `components` ichida joylashgan) — kit komponentlari rangini
+   oʻzgartirish uchun emas, oraliqlar va maket uchun utilitalardan foydalaning.
+5. Sarlavhalar: sahifa va boʻlim sarlavhalari uchun `.ci-heading` (Inter, harflar oraligʻisiz); `.ci-dashboard-display`
+   (Instrument Serif) faqat xatolik sahifasidagi holat kodi kabi katta va siyrak joylashtirilgan namoyish matni uchun.
+6. `tests/unit/dashboard-kit-sweep.test.ts` kitning joriy etilishini nazorat qiladi: `src/app` yoki
+   `src/shared/components` ostida Material ligatura span elementi boʻlmasligi kerak; dashboard daraxtida (`src/app/(dashboard)` va
+   `src/shared/components`) xom `<select>`, `<textarea>` yoki `<table>` hamda sanab oʻtilgan istisnolardan (`Select` adapterining mahalliy tarmogʻi,
+   `RequestLoggerDetail`) tashqarida qoʻlda yaratilgan `role="dialog"` boʻlmasligi kerak; u yerdagi har bir xom `<button>` yoki `<input>` undan koʻpi bilan
+   3 qator yuqorida tugaydigan, sabab koʻrsatilgan `kit-exception:` ni oʻz ichiga olgan izohga ega boʻlishi kerak; palitra tuslari va `dark:` variantlari
+   faqat test roʻyxatida koʻrsatilgan fayllarda boʻlishi mumkin.
+7. PR yuborishdan oldin ikkala mavzuni va 390 px ko‘rish maydonini tekshiring (skrinshotlar); `tests/e2e/a11y.spec.ts`
+   axeʼni ishga tushiradi.
 
 ## 3. Ekran qoʻshish
 

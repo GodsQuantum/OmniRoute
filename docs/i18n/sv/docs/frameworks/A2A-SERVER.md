@@ -154,25 +154,25 @@ curl -X POST http://localhost:20128/a2a \
 
 OmniRoute exponerar 6 A2A-färdigheter som är kopplade i `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Varje färdighetsmodul finns i `src/lib/a2a/skills/`.
 
-| Färdighet          | ID                   | Beskrivning                                                                                                                                                           | Taggar                        | Exempel                                        |
-| :----------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------- | :--------------------------------------------- |
-| Smart dirigering   | `smart-routing`      | Dirigerar en prompt genom den optimala leverantören/kombinationen med hjälp av OmniRoutes kombinationsmotor och poängsättning                                         | dirigering, leverantörer      | "Dirigera denna prompt via den bästa modellen" |
-| Kvothantering      | `quota-management`   | Rapporterar kvotstatus per leverantör och hjälper anropare att avgöra när de ska begränsa eller byta                                                                  | kvot, leverantörer            | "Kontrollera kvoten för anthropic"             |
-| Leverantörssökning | `provider-discovery` | Listar installerade leverantörer med funktioner, information om kostnadsfria nivåer och OAuth-status                                                                  | leverantörer, sökning         | "Vilka leverantörer är tillgängliga?"          |
-| Kostnadsanalys     | `cost-analysis`      | Uppskattar kostnaden för en begäran eller konversation utifrån katalogen och den senaste användningen                                                                 | kostnad, användning           | "Uppskatta kostnaden för denna konversation"   |
-| Hälsorapport       | `health-report`      | Sammanställer status för kretsbrytare, nedkylningsperioder och spärrar per leverantör                                                                                 | hälsa, motståndskraft         | "Visa hälsostatus för alla leverantörer"       |
-| Lista funktioner   | `list-capabilities`  | Returnerar den fullständiga katalogen med 45 agentfärdigheter (23 API + 21 CLI + 1 konfiguration) som en markdown-tabell med råa SKILL.md-URL:er för kontextinjektion | katalog, sökning, färdigheter | "Lista alla OmniRoute-funktioner"              |
+| Färdighet          | ID                   | Beskrivning                                                                                                                                                  | Taggar                        | Exempel                                        |
+| :----------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------- | :--------------------------------------------- |
+| Smart dirigering   | `smart-routing`      | Dirigerar en prompt genom den optimala leverantören/kombinationen med hjälp av OmniRoutes kombinationsmotor och poängsättning                                | dirigering, leverantörer      | "Dirigera denna prompt via den bästa modellen" |
+| Kvothantering      | `quota-management`   | Rapporterar kvotstatus per leverantör och hjälper anropare att avgöra när de bör begränsa eller byta                                                         | kvot, leverantörer            | "Kontrollera kvoten för anthropic"             |
+| Leverantörssökning | `provider-discovery` | Listar installerade leverantörer med funktioner, kostnadsfria nivåer och OAuth-status                                                                        | leverantörer, sökning         | "Vilka leverantörer är tillgängliga?"          |
+| Kostnadsanalys     | `cost-analysis`      | Uppskattar kostnaden för en begäran/konversation utifrån katalogen och den senaste användningen                                                              | kostnad, användning           | "Uppskatta kostnaden för denna konversation"   |
+| Hälsorapport       | `health-report`      | Sammanställer status för kretsbrytare, nedkylningsperiod och spärrning per leverantör                                                                        | hälsa, motståndskraft         | "Visa hälsostatus för alla leverantörer"       |
+| Lista funktioner   | `list-capabilities`  | Returnerar hela Agent Skills-katalogen med 45 poster (23 API + 21 CLI + 1 konfiguration) som en markdown-tabell med råa SKILL.md-URL:er för kontextinjektion | katalog, sökning, färdigheter | "Lista alla OmniRoute-funktioner"              |
 
-> Agentkortet bör hållas synkroniserat med den aktuella katalogen med 376 leverantörer. Antalet leverantörer och metadata om kostnadsfri åtkomst/åtkomst utan autentisering hämtas från körningsregistret.
+> Agentkortet bör hållas synkroniserat med den aktuella katalogen med 376 leverantörer. Antalet leverantörer samt metadata om kostnadsfria alternativ och alternativ utan autentisering hämtas från körningsregistret.
 
 ### Information om färdigheten `list-capabilities`
 
-Färdigheten `list-capabilities` är särskilt användbar för externa agenter som behöver ta reda på vad OmniRoute exponerar innan de skickar API-anrop. Den returnerar en strukturerad markdown-tabellartefakt:
+Färdigheten `list-capabilities` är särskilt användbar för externa agenter som behöver identifiera vad OmniRoute exponerar innan de skickar API-anrop. Den returnerar en strukturerad markdown-tabellartefakt:
 
 ```
-| ID | Namn | Kategori | Område | Slutpunkter/kommandon | Rå URL |
+| ID | Name | Category | Area | Endpoints/Commands | Raw URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Autentisering och sessioner | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Auth & Sessions | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 

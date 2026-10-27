@@ -13,30 +13,29 @@
 
 ## Kaj je to
 
-OmniRoute registrira 376 ponudnikov, vključno s 155 vnosi v katalogu, označenimi kot **brezplačni/brez preverjanja pristnosti**
-(brez preverjanja pristnosti,
-OAuth z brezplačno ravnjo ali ključ API z brezplačno ravnjo — glejte
-[vodnik po brezplačnih ravneh](../getting-started/FREE-TIERS-GUIDE.md) in celoten
-[imenik brezplačnih ravni](../reference/FREE_TIERS.md)). Vendar obstaja zadržek: brezplačni ponudniki se
-zelo razlikujejo po kakovosti modelov. Ponudnik brez preverjanja pristnosti, ki ponuja vrhunski model, je veliko uporabnejši
-od ponudnika, ki ponuja majhen zastarel model.
+OmniRoute registrira 376 ponudnikov, vključno s 155 vnosi v katalogu, označenimi kot **brezplačno/brez-avtentikacije**
+(brez avtentikacije, OAuth z brezplačnim nivojem ali API ključ z brezplačnim nivojem — glejte
+[Vodnik po brezplačnih nivojih](../getting-started/FREE-TIERS-GUIDE.md) in celoten
+[imenik brezplačnih nivojev](../reference/FREE_TIERS.md)). Težava je v tem: brezplačni ponudniki se
+zelo razlikujejo v kakovosti modelov. Ponudnik brez avtentikacije, ki ponuja najsodobnejši model, je veliko bolj uporaben
+kot tisti, ki ponuja majhen zastarel model.
 
-**Razvrstitev brezplačnih ponudnikov** odgovarja na vprašanje »**kateri brezplačni ponudnik mi ponuja najboljši model?**« tako,
-da katalog vsakega brezplačnega ponudnika poveže z **množično zbranimi ocenami kakovosti** z
-**lestvice Arena AI** (ELO na podlagi človeških preferenc, enaka zamisel kot pri areni klepetalnih robotov
-LMArena). Ponudniki so nato razvrščeni glede na zmogljivost svojega **najboljšega brezplačnega modela**.
+**Razvrstitev brezplačnih ponudnikov** odgovori na vprašanje »**kateri brezplačni ponudnik mi ponuja najboljši model?**«
+tako, da združi katalog vsakega brezplačnega ponudnika z **množično zbranimi ocenami kakovosti** z
+**lestvice Arena AI** (ELO na podlagi človeških preferenc, ista ideja kot pri LMArena
+chatbot areni). Ponudniki so nato razvrščeni glede na moč njihovega **najboljšega brezplačnega modela**.
 
-Razvrstitev je izračunana iz treh dejanskih virov:
+Razvrstitev se izračuna iz treh dejanskih virov:
 
-1. Seznami brezplačnih ponudnikov — `NOAUTH_PROVIDERS` ter vnosi `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS`, označeni z `hasFree`
+1. Seznami brezplačnih ponudnikov — `NOAUTH_PROVIDERS`, ter vnosi `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS`, označeni z zastavico `hasFree`
    (`src/shared/constants/providers.ts`).
 2. Katalog modelov vsakega ponudnika iz registra ponudnikov
    (`open-sse/config/providerRegistry.ts`).
-3. Ocene primernosti za naloge, izpeljane iz ELO, ki jih mehanizem za sinhronizacijo Arena ELO shranjuje v tabelo zbirke podatkov `model_intelligence`
-   (`src/lib/arenaEloSync.ts`).
+3. Ocene primernosti za naloge, izpeljane iz ELO, ki jih pogon za sinhronizacijo Arena ELO
+   (`src/lib/arenaEloSync.ts`) shranjuje v tabelo zbirke podatkov `model_intelligence`.
 
-Logika povezovanja je v `src/lib/freeProviderRankings.ts`.
+Logika združevanja se nahaja v `src/lib/freeProviderRankings.ts`.
 
 ---
 
@@ -124,10 +123,14 @@ Oblika odgovora:
 
 ### Vir: lestvica Arena AI
 
-Mehanizem za sinhronizacijo Arena ELO (`src/lib/arenaEloSync.ts`) pridobi dve lestvici — `text`
+Mehanizem za sinhronizacijo ELO Arena (`src/lib/arenaEloSync.ts`) pridobi dve lestvici — `text`
 in `code` — iz API-ja lestvice Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Vsak vnos na lestvici
-vsebuje ime modela, ponudnika, ELO `score`, interval zaupanja in število glasov.
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Če ta API ne vrne nobene
+uporabne lestvice, mehanizem uporabi uradni `lmarena-ai/leaderboard-dataset` v storitvi
+Hugging Face datasets-server (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` poroča o `activeSource`, `lastError` in
+`lastFailedAt`. Vsak vnos na lestvici
+vsebuje ime modela, ponudnika, `score` ELO, interval zaupanja in število glasov.
 
 Kategorije lestvice se preslikajo v kategorije opravil OmniRoute:
 
@@ -138,7 +141,7 @@ Kategorije lestvice se preslikajo v kategorije opravil OmniRoute:
 
 ### Normalizacija (ocena primernosti za opravilo)
 
-Neobdelane ocene ELO se za vsako lestvico normalizirajo v **vrednost primernosti za opravilo v območju `[0.4, 0.98]`**:
+Neobdelane ocene ELO so za vsako lestvico normalizirane v **vrednost primernosti za opravilo v razponu `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
@@ -149,7 +152,7 @@ polje `score`, ki ga vidite v odzivu API-ja, in oznaka, prikazana na nadzorni pl
 
 ### Zaupanje
 
-Vsak vnos dobi raven zaupanja glede na število glasov v Areni:
+Vsak vnos dobi raven zaupanja na podlagi števila glasov v Areni:
 
 | Zaupanje | Glasovi |
 | -------- | ------- |
@@ -157,48 +160,48 @@ Vsak vnos dobi raven zaupanja glede na število glasov v Areni:
 | `medium` | ≥ 1.000 |
 | `low`    | < 1.000 |
 
-### Shranjevanje in svežina
+### Shranjevanje in aktualnost
 
-Normalizirani vnosi se zapišejo v tabelo podatkovne zbirke `model_intelligence` z
+Normalizirani vnosi se zapišejo v tabelo zbirke podatkov `model_intelligence` z
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Vnosi **potečejo po
-7 dneh**, zato ponudnik, ki se preneha sinhronizirati, sčasoma izgine, namesto da bi
+7 dneh**, zato ponudnik, ki se preneha sinhronizirati, sčasoma izpade, namesto da bi
 ponujal zastarele podatke.
 
 Sinhronizacija se **privzeto izvaja**:
 
-- Izvede se enkrat ob zagonu strežnika in nato periodično glede na časovnik
+- Izvede se enkrat ob zagonu strežnika, nato pa periodično po časovniku
   (`src/lib/arenaEloSync.ts`, povezano iz `src/instrumentation-node.ts`).
-- Je **neblokirajoča in nikoli usodna** — če pridobivanje podatkov iz nadrejenega vira ne uspe, OmniRoute še naprej
-  deluje, lestvice pa preprosto prikazujejo zadnje veljavne podatke (ali prazno stanje).
+- Je **neblokirajoča in nikoli usodna** — če pridobivanje iz nadrejenega vira ne uspe, OmniRoute še naprej
+  deluje, razvrstitve pa preprosto prikazujejo zadnje veljavne podatke (ali prazno stanje).
 
-Nadzirata jo dve spremenljivki okolja (dokumentirani v
+Upravljata jo dve okoljski spremenljivki (dokumentirani v
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Spremenljivka             | Privzeto       | Namen                                                        |
-| ------------------------- | -------------- | ------------------------------------------------------------ |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`         | Nastavite na `false`, da onemogočite izhodno sinhronizacijo. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 h) | Interval sinhronizacije v sekundah.                          |
+| Spremenljivka             | Privzeto      | Namen                                                        |
+| ------------------------- | ------------- | ------------------------------------------------------------ |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Nastavite na `false`, da onemogočite odhodno sinhronizacijo. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Interval sinhronizacije v sekundah.                          |
 
 ### Ročna sinhronizacija / stanje / brisanje
 
-Preverjena upravljavska končna točka operaterjem omogoča ročni nadzor
-(`src/app/api/intelligence/sync/route.ts` — zahteva preverjanje pristnosti za upravljanje):
+Za upravljavce je na voljo overjena upravljavska končna točka za ročni nadzor
+(`src/app/api/intelligence/sync/route.ts` — zahteva upravljavsko overjanje):
 
 ```
-GET    /api/intelligence/sync          # trenutno stanje sinhronizacije (enabled, lastSync, nextSync, intervalMs)
+GET    /api/intelligence/sync          # trenutno stanje sinhronizacije (omogočeno, zadnja sinhronizacija, naslednja sinhronizacija, interval v ms)
 POST   /api/intelligence/sync          # sproži ročno sinhronizacijo; telo: { "dryRun": true } za predogled brez zapisovanja
-DELETE /api/intelligence/sync          # izbriše vse sinhronizirane vnose podatkov arena_elo
+DELETE /api/intelligence/sync          # izbriše vse sinhronizirane vnose inteligence arena_elo
 ```
 
-Če je stran z lestvicami prazna, jo ročni `POST /api/intelligence/sync` (ali preprost
+Če je stran z razvrstitvami prazna, jo ročni `POST /api/intelligence/sync` (ali preprosto
 ponovni zagon strežnika) znova napolni.
 
 ### Ujemanje modelov z lestvico
 
-ID-ji modelov v registru in imena modelov v Areni se ne ujemajo vedno natančno. Razvrščanje uporablja
+ID-ji modelov v registru in imena modelov v Areni se ne ujemajo vedno popolnoma. Razvrščanje uporablja
 prilagodljivo ujemanje (`findMatchingIntelligence` v `src/lib/freeProviderRankings.ts`):
 
-1. Natančno ujemanje z normaliziranim ID-jem modela.
+1. Natančno ujemanje normaliziranega ID-ja modela.
 2. Ujemanje po odstranitvi končne pripone različice (npr. `kimi-k2.6` → `kimi-k2`).
 3. Ujemanje predpone (ime modela na lestvici je predpona ID-ja v registru).
 
@@ -206,16 +209,16 @@ Na strani sinhronizacije se znane predpone ponudnikov (`anthropic/`, `openai/`, 
 odstranijo, majhen zemljevid vzdevkov pa razširi kanonična imena v različice, ki jih OmniRoute uporablja
 interno, zato je modele mogoče najti pod katerim koli imenom.
 
-### Kako se ponudnik razvrsti
+### Kako je ponudnik razvrščen
 
-Za vsakega brezplačnega ponudnika mehanizem oceni vsak model v njegovem katalogu, nato pa določi:
+Za vsakega brezplačnega ponudnika mehanizem oceni vsak model v njegovem katalogu, nato pa:
 
-- **Najboljši model** = model ponudnika z najvišjo oceno.
+- **Najboljši model** = ponudnikov model z najvišjo oceno.
 - **Povprečna ocena** = povprečna ocena vseh ocenjenih modelov tega ponudnika.
-- **Modeli** = število modelov ponudnika, ki so imeli oceno Arena.
+- **Modeli** = koliko ponudnikovih modelov je imelo oceno Arena.
 
-Ponudniki so razvrščeni najprej po **oceni najboljšega modela**, nato pa po povprečni oceni. Tako je
-nagrajen ponudnik, ki ponuja vsaj en zmogljiv brezplačen model.
+Ponudniki so najprej razvrščeni po **oceni najboljšega modela**, nato pa po povprečni oceni. Tako je nagrajen
+ponudnik, ki ponuja vsaj en zmogljiv brezplačen model.
 
 ---
 

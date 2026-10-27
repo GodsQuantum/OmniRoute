@@ -484,7 +484,7 @@ Bu, şunları işler:
 
 ## Yapılandırma
 
-`open-sse/config/`, yapılandırma katmanını barındırır:
+`open-sse/config/`, yapılandırma katmanını içerir:
 
 | Dosya                         | Amaç                                                           |
 | ----------------------------- | -------------------------------------------------------------- |
@@ -492,7 +492,7 @@ Bu, şunları işler:
 | `providerModels.ts`           | Model takma adları, biçim eşlemesi                             |
 | `constants.ts`                | Zaman aşımları, sınırlar, durum kodları                        |
 | `defaultThinkingSignature.ts` | Varsayılan Claude düşünme imzası                               |
-| `modelStrip.ts` (hizmetlerde) | Sağlayıcı bazında alanların çıkarılması                        |
+| `modelStrip.ts` (servislerde) | Sağlayıcı bazında alan kaldırma                                |
 
 ### Sağlayıcı Kayıt Defteri Şeması
 

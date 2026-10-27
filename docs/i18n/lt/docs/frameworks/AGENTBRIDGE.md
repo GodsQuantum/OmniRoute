@@ -16,34 +16,34 @@ AgentBridge yra „OmniRoute“ MITM („Man-in-the-Middle“, tarpininko) tarpi
 
 ### Kas yra AgentBridge?
 
-Kai IDE agentas (pvz., GitHub Copilot, Cursor, Claude Code) atlieka API iškvietimą, jis tiesiogiai prisijungia prie pirminio DI paslaugų teikėjo (OpenAI, Anthropic ir kt.). AgentBridge skaidriai perima šį ryšį TLS lygmeniu — nereikalaujant jokių agento konfigūracijos pakeitimų — ir peradresuoja užklausą per OmniRoute.
+Kai IDE agentas (pvz., GitHub Copilot, Cursor, Claude Code) atlieka API užklausą, jis jungiasi tiesiogiai prie pirminio AI teikėjo (OpenAI, Anthropic ir kt.). AgentBridge skaidriai perima šį ryšį TLS lygmenyje — nereikalaujant jokių agento konfigūracijos pakeitimų — ir perrašo užklausą per OmniRoute.
 
-Tai leidžia:
+Tai reiškia, kad galite:
 
-- **Peradresuoti bet kurį agentą į bet kurį paslaugų teikėją**: Copilot kreipiasi į OpenAI? Peradresuokite jį į Anthropic Claude, Gemini arba bet kurį iš 376 OmniRoute paslaugų teikėjų.
-- **Taikyti modelių susiejimus**: `gemini-3-flash` → `claude-sonnet-4.7` skaidriai apdorojimo programos lygmeniu.
-- **Stebėti visą agentų srautą**: kiekviena perimta užklausa paskelbiama [srauto inspektoriuje](./TRAFFIC_INSPECTOR.md).
-- **Taikyti OmniRoute atsparumo mechanizmus**: kombinuotasis maršruto parinkimas, grandinės pertraukikliai, atsarginiai variantai ir išlaidų stebėjimas taip pat veikia IDE agentų srautui.
+- **Peradresuoti bet kurį agentą bet kuriam teikėjui**: Copilot bendrauja su OpenAI? Nukreipkite jį į Anthropic Claude, Gemini ar bet kurį iš 376 OmniRoute teikėjų.
+- **Taikyti modelių susiejimus**: `gemini-3-flash` → `claude-sonnet-4.7` skaidriai apdorotojo (handler) lygmenyje.
+- **Stebėti visą agentų srautą**: kiekviena perimta užklausa publikuojama [Srauto inspektoriuje](./TRAFFIC_INSPECTOR.md).
+- **Pasinaudoti OmniRoute atsparumu**: kombinuotas maršrutizavimas, grandinės pertraukikliai, atsarginiai variantai ir sąnaudų stebėjimas veikia ir IDE agentų srautui.
 
-### Padėtis rinkoje
+### Pozicionavimas rinkos atžvilgiu
 
-| Funkcija                      | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| ----------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity                   |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot                |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)                    |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex                  |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE                    |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries                |    —    |    ✓     |        —        |             ✓             |
-| Claude Code                   |    —    |    —     |        ✓        |             ✓             |
-| Open Code                     |    —    |    —     |        ✓        |             ✓             |
-| Trae                          |    —    |    —     |        —        |        🔍 Tiriama         |
-| Valdymo skydelio UI           |    ✓    |    ✗     |        ✗        |             ✓             |
-| Srauto inspektorius           |    ✗    |    ✗     |        ✓        |             ✓             |
-| OmniRoute maršruto parinkimas |    ✗    |    ✗     |        ✗        |             ✓             |
-| Modelių susiejimo UI          |    ✗    |    ✗     |        ✗        |             ✓             |
-| Apėjimo sąrašas               |    ✗    |    ✗     |        ✓        |             ✓             |
-| Pirminis CA sertifikatas      |    ✗    |    ✗     |        ✓        |             ✓             |
+| Funkcija                   | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| -------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity                |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot             |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)                 |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex               |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE                 |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries             |    —    |    ✓     |        —        |             ✓             |
+| Claude Code                |    —    |    —     |        ✓        |             ✓             |
+| Open Code                  |    —    |    —     |        ✓        |             ✓             |
+| Trae                       |    —    |    —     |        —        |        🔍 Tiriama         |
+| Informacijos suvestinės UI |    ✓    |    ✗     |        ✗        |             ✓             |
+| Srauto inspektorius        |    ✗    |    ✗     |        ✓        |             ✓             |
+| OmniRoute maršrutizavimas  |    ✗    |    ✗     |        ✗        |             ✓             |
+| Modelių susiejimo UI       |    ✗    |    ✗     |        ✗        |             ✓             |
+| Aplenkimo sąrašas          |    ✗    |    ✗     |        ✓        |             ✓             |
+| Pirminio CA sertifikatas   |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -549,20 +549,20 @@ Išsamios OpenAPI schemos: `docs/openapi.yaml` → žyma `AgentBridge`.
 
 Trae yra palyginti naujas DI programavimo asistentas. Prieš įgyvendinant apdorojimo modulį:
 
-1. Identifikuoti vykdomąjį failą / plėtinį VS Code / JetBrains prekyvietėse arba kaip atskirą programą
-2. Perimti srautą naudojant mitmproxy, kad būtų nustatyti API serveriai ir galinių taškų struktūros
+1. Identifikuoti dvejetainį failą / plėtinį VS Code / JetBrains prekyvietėse arba kaip atskirą programą
+2. Perimti srautą naudojant mitmproxy, kad būtų aptikti API prieglobos serveriai ir galinių taškų struktūros
 3. Nustatyti autentifikavimo mechanizmą
-4. Įvertinti, ar tęsti, atsižvelgiant į naudojimo sąlygas ir API aptinkamumą
+4. Įvertinti, ar tęsti darbus, atsižvelgiant į paslaugų teikimo sąlygas ir API aptinkamumą
 
-Kol tyrimas nebaigtas, Trae kortelėje valdymo skydelyje rodoma žyma „Tiriama“ su nuoroda „Pranešti apie perspektyvumą“. Apdorojimo modulio ruošinys faile `src/mitm/handlers/trae.ts` pateikia struktūrizuotą klaidą `Dar neįgyvendinta`.
+Kol tyrimas nebaigtas, Trae kortelėje valdymo skydelyje rodoma žyma „Tiriama“ su nuoroda „Pranešti apie tinkamumą“. Apdorojimo modulio ruošinys, esantis `src/mitm/handlers/trae.ts`, pateikia struktūrizuotą klaidą `Not yet implemented`.
 
-### Laukiantys agentai (būtinas MITM — nėra tinkinto bazinio URL palaikymo)
+### Neatliktų darbų agentai (būtinas MITM — pasirinktinio bazinio URL palaikymo nėra)
 
-Toliau nurodyti įrankiai dabartinėse versijose nepalaiko tinkintų bazinių URL, todėl MITM yra vienintelis srauto perėmimo būdas. Perspektyvumo vertinimas dar neatliktas:
+Toliau nurodyti įrankiai dabartinėse savo versijose nepalaiko pasirinktinių bazinių URL, todėl MITM yra vienintelis srauto perėmimo būdas. Tinkamumo vertinimas dar neatliktas:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — atskirai nuo Kiro IDE)
 - **Cowork** (Anthropic darbalaukio programa)
 
-Pastaba: GitHub Copilot CLI ≥v1.0.19 palaiko `COPILOT_PROVIDER_BASE_URL` — šiam įrankiui vietoje MITM naudokite tiesioginę konfigūraciją.
+Pastaba: GitHub Copilot CLI ≥v1.0.19 palaiko `COPILOT_PROVIDER_BASE_URL` — šiam įrankiui naudokite tiesioginę konfigūraciją, o ne MITM.

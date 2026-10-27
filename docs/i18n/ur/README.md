@@ -695,7 +695,7 @@ omniroute configure codex          # یہ بھی: claude opencode qwen aider goo
 
 </div>
 
-> کینونیکل چیٹ، میڈیا، تلاش، مقامی، کلاؤڈ ایجنٹ اور سسٹم کلیکشنز میں **376 رجسٹرڈ فراہم کنندگان**، جن میں **153 کے ساتھ `hasFree: true` ڈسکوری میٹا ڈیٹا موجود ہے**۔ چیٹ ماڈل رجسٹری میں **239 فراہم کنندگان / 3,059 منفرد فراہم کنندہ-ماڈل جوڑے / 1,475 خام ماڈل IDs** شامل ہیں؛ علیحدہ مفت بجٹ کیٹلاگ میں **471 فی ماڈل قطاریں**، **34 اعادی پولز** اور **52 اعادی/بلا کلید ہمیشہ مفت فراہم کنندگان** ہیں۔ یہ دانستہ طور پر مختلف مخرج ہیں؛ تعریفیں اور پول کی نقلیں ہٹا کر کیے گئے حسابات [فراہم کنندہ حوالہ](docs/reference/PROVIDER_REFERENCE.md) اور [مفت درجے](docs/reference/FREE_TIERS.md) میں موجود ہیں۔
+> کینونیکل چیٹ، میڈیا، تلاش، مقامی، کلاؤڈ ایجنٹ اور سسٹم کلیکشنز میں **376 رجسٹرڈ فراہم کنندگان**، جن میں **153 کے ساتھ `hasFree: true` ڈسکوری میٹا ڈیٹا موجود ہے**۔ چیٹ ماڈل رجسٹری میں **239 فراہم کنندگان / 3,059 منفرد فراہم کنندہ-ماڈل جوڑے / 1,475 خام ماڈل IDs** شامل ہیں؛ علیحدہ مفت بجٹ کیٹلاگ میں **484 فی ماڈل قطاریں**، **34 اعادی پولز** اور **52 اعادی/بلا کلید ہمیشہ مفت فراہم کنندگان** ہیں۔ یہ دانستہ طور پر مختلف مخرج ہیں؛ تعریفیں اور پول کی نقلیں ہٹا کر کیے گئے حسابات [فراہم کنندہ حوالہ](docs/reference/PROVIDER_REFERENCE.md) اور [مفت درجے](docs/reference/FREE_TIERS.md) میں موجود ہیں۔
 
 <div align="center">
 
@@ -1092,13 +1092,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` سب سے اعلیٰ **شائع شدہ** مستحکم SemVer کی پیروی کرتا ہے۔ یہ git `main` کو ٹریک نہیں کرتا۔ GitOps کے لیے `:X.Y.Z` مقرر کریں۔ [Docker ریلیز چینلز](docs/guides/DOCKER_GUIDE.md#release-channels) دیکھیں۔ امیج میں **`OMNIROUTE_MEMORY_MB=1024`** مقرر ہے۔ یہ ڈیش بورڈ اور ہلکی چیٹ کے لیے کافی ہے۔ **کوڈنگ ایجنٹس** (Claude Code، Codex، Grok، … سے `POST /v1/responses`) کو کہیں زیادہ بڑا V8 heap درکار ہوتا ہے، ورنہ دو باہم متجاوز طویل contexts کے دوران تقریباً 12 GiB پر پراسیس `FATAL ERROR` دیتا ہے۔ کنٹینر کا سائز heap سے زیادہ رکھیں (native buffers، V8 سے باہر موجود ہوتے ہیں):
+`:latest` سب سے بلند **شائع شدہ** مستحکم SemVer کی پیروی کرتا ہے۔ یہ git کے `main` کو ٹریک نہیں کرتا۔ GitOps کے لیے `:X.Y.Z` کو پن کریں۔ [Docker ریلیز چینلز](docs/guides/DOCKER_GUIDE.md#release-channels) دیکھیں۔ امیج میں **`OMNIROUTE_MEMORY_MB=1024`** پن کیا گیا ہے۔ یہ ڈیش بورڈ اور ہلکی چیٹ کے لیے کافی ہے۔ **کوڈنگ ایجنٹس** (Claude Code، Codex، Grok، … سے `POST /v1/responses`) کو کہیں زیادہ بڑی V8 ہیپ درکار ہوتی ہے، ورنہ دو باہم متجاوز طویل کانٹیکسٹس کے تحت تقریباً 12 GiB پر پراسیس `FATAL ERROR` دیتا ہے۔ کنٹینر کا سائز ہیپ سے زیادہ رکھیں (نیٹو بفرز V8 سے باہر رہتے ہیں):
 
-| کام کا بوجھ                     | Heap (`-e OMNIROUTE_MEMORY_MB`) | کنٹینر (`--memory`) |
-| ------------------------------- | ------------------------------- | ------------------- |
-| ڈیش بورڈ / ہلکی چیٹ             | `1024` (امیج کا ڈیفالٹ)         | ≥2 g                |
-| ایک کوڈنگ ایجنٹ                 | `8192`                          | ≥10 g               |
-| بیک وقت دو طویل `/v1/responses` | `10240`–`12288`                 | ≥12–16 g            |
+| کام کا بوجھ                     | ہیپ (`-e OMNIROUTE_MEMORY_MB`) | کنٹینر (`--memory`) |
+| ------------------------------- | ------------------------------ | ------------------- |
+| ڈیش بورڈ / ہلکی چیٹ             | `1024` (امیج ڈیفالٹ)           | ≥2 g                |
+| ایک کوڈنگ ایجنٹ                 | `8192`                         | ≥10 g               |
+| دو بیک وقت طویل `/v1/responses` | `10240`–`12288`                | ≥12–16 g            |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1108,19 +1108,19 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 مکمل جدول: [Docker گائیڈ — رن ٹائم RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents)۔
 
-> **قبل از ریلیز Docker چینل:** `diegosouzapw/omniroute:next` اور
+> **پری ریلیز Docker چینل:** `diegosouzapw/omniroute:next` اور
 > `diegosouzapw/omniroute:next-web` موجودہ ڈیفالٹ `release/v*`
-> برانچ کی پیروی کرتے ہیں۔ یہ قابلِ تغیر tags صرف غیر جاری شدہ اصلاحات کی جانچ کے لیے ہیں اور
-> **پروڈکشن کے لیے معاونت یافتہ نہیں ہیں**۔ دیکھیں
+> برانچ کی پیروی کرتے ہیں۔ یہ قابلِ تغیر ٹیگز صرف غیر جاری شدہ اصلاحات کی جانچ کے لیے ہیں اور
+> **پروڈکشن کے لیے معاونت یافتہ نہیں ہیں**۔ دیکھیے
 > [Docker ریلیز چینلز](docs/guides/DOCKER_GUIDE.md#release-channels)۔
 
 **🥟 Bun**
 
 Bun رن ٹائم کی شناخت کے ذریعے معیاری `bun install` اور عالمی تنصیب (`bun install -g omniroute`) معاونت یافتہ ہیں:
 
-- **بلٹ اِن `bun:sqlite`**: Bun کے تحت چلتے وقت OmniRoute، Bun کا بلٹ اِن `bun:sqlite` ڈرائیور استعمال کرتا ہے، جبکہ Node.js پر `better-sqlite3` یا `sql.js` استعمال کرتا ہے۔
-- **ڈویلپمنٹ میں خودکار Webpack bundler انتخاب**: ڈویلپمنٹ (`bun run dev`) خودکار طور پر Bun کی شناخت کرتی ہے اور native V8 binding کی عدم مطابقت روکنے کے لیے Turbopack کو غیر فعال کرکے Webpack استعمال کرتی ہے۔ پروڈکشن builds (`bun run build`) عین Node کی طرح `OMNIROUTE_USE_TURBOPACK` کی پیروی کرتی ہیں: ڈیفالٹ طور پر Turbopack، اور Webpack کے ساتھ build کرنے کے لیے `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` اسے `--build-arg` کے طور پر فراہم کرتا ہے)۔
-- **Bun کے لیے مخصوص Dockerfile**: مقامی Bun پروڈکشن deployments کے لیے multi-stage `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`)۔
+- **بلٹ اِن `bun:sqlite`**: Bun کے تحت چلتے وقت OmniRoute، Bun کا بلٹ اِن `bun:sqlite` ڈرائیور استعمال کرتا ہے، جبکہ Node.js پر `better-sqlite3` یا `sql.js` کو بطور متبادل استعمال کرتا ہے۔
+- **ڈیولپمنٹ میں خودکار Webpack بنڈلر کا انتخاب**: ڈیولپمنٹ (`bun run dev`) خودکار طور پر Bun کا پتا لگاتی ہے اور نیٹو V8 بائنڈنگ کی عدم مطابقت روکنے کے لیے Turbopack کو غیر فعال کرکے Webpack استعمال کرتی ہے۔ پروڈکشن بلڈز (`bun run build`) بالکل Node کی طرح `OMNIROUTE_USE_TURBOPACK` کی پیروی کرتے ہیں: ڈیفالٹ طور پر Turbopack، جبکہ Webpack سے بلڈ کرنے کے لیے `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` اسے `--build-arg` کے طور پر فراہم کرتا ہے)۔
+- **مخصوص Bun Dockerfile**: نیٹو Bun پروڈکشن ڈیپلائمنٹس کے لیے ملٹی اسٹیج `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`)۔
 
 ```bash
 # Bun کے ساتھ تنصیب کریں اور چلائیں
@@ -1158,51 +1158,53 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Docker گائیڈ](docs/guides/DOCKER_GUIDE.md) — Compose profiles، Caddy HTTPS، Cloudflare tunnels۔
+📖 [Docker گائیڈ](docs/guides/DOCKER_GUIDE.md) — Compose پروفائلز، Caddy HTTPS، Cloudflare ٹنلز۔
 
 **🦭 Podman**
 
 ```bash
-# 1. bind-mounted ڈیٹا ڈائریکٹری تیار کریں
+# 1. بائنڈ ماؤنٹ شدہ ڈیٹا ڈائریکٹری تیار کریں
 mkdir -p data
 
-# 2. صرف Linux + مقامی rootless Podman (کبھی بھی remote Podman Machine client نہیں):
+# 2. صرف Linux + مقامی روٹ لیس Podman (کبھی بھی ریموٹ Podman Machine کلائنٹ نہیں):
 podman unshare chown 1000:1000 ./data
 
-# 3. رن ٹائم hint مقرر کریں، مقامی Compose امیج build کریں، اور آغاز کریں
+# 3. رن ٹائم ہنٹ سیٹ کریں، مقامی Compose امیج بلڈ کریں، اور آغاز کریں
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS یا Windows پر، Podman ایک remote Podman Machine استعمال کرتا ہے: `podman unshare` کو چھوڑ دیں اور
-[topology کے لحاظ سے مخصوص ڈیٹا ڈائریکٹری کی رہنمائی](contrib/podman/README.md#data-directory-permissions-by-topology) پر عمل کریں۔
+macOS یا Windows پر Podman ایک ریموٹ Podman Machine استعمال کرتا ہے: `podman unshare` کو چھوڑ دیں اور
+[ٹوپولوجی کے لحاظ سے مخصوص ڈیٹا ڈائریکٹری کی رہنمائی](contrib/podman/README.md#data-directory-permissions-by-topology) پر عمل کریں۔
 
-📖 [Podman گائیڈ](contrib/podman/README.md) — Compose builds، Podman Machine، اور
+📖 [Podman گائیڈ](contrib/podman/README.md) — Compose بلڈز، Podman Machine، اور
 Linux/systemd Quadlet سیٹ اپ۔
 
-**⚡ تیز تر / ہلکی تنصیب (native build کو چھوڑ دیں)**
+**⚡ زیادہ تیز / کم حجم تنصیب (نیٹو بلڈ چھوڑ دیں)**
 
-native SQLite انجن (`better-sqlite3`) ایک **اختیاری** dependency ہے، اس لیے عالمی
-تنصیب کبھی بھی سورس سے compilation پر نہیں رکتی: جب کوئی prebuilt binary آپ کے
-پلیٹ فارم/Node سے مطابقت رکھتی ہو تو اسے استعمال کیا جاتا ہے، بصورتِ دیگر شفاف انداز میں pure-JS انجن
-(Node 22+ پر `node:sqlite`، ورنہ شامل کردہ `sql.js` WASM) استعمال کیا جاتا ہے — کسی build tool کی ضرورت نہیں۔
+نیٹو SQLite انجن (`better-sqlite3`) ایک **اختیاری** ڈیپینڈنسی ہے، اس لیے عالمی
+تنصیب کبھی بھی سورس سے کمپائل ہونے کے انتظار میں نہیں رکتی: اگر آپ کے پلیٹ فارم/Node سے مطابقت رکھنے والی
+پری بلٹ بائنری موجود ہو تو اسے استعمال کرتی ہے، بصورتِ دیگر شفاف انداز میں خالص JS انجن
+(Node 22+ پر `node:sqlite`، ورنہ بنڈل شدہ `sql.js` WASM) استعمال کرتی ہے — کسی بلڈ ٹول کی ضرورت نہیں۔
 
-تنصیب کے بعد کی native warm-up کارروائی کو مکمل طور پر چھوڑنے کے لیے (CI، headless، یا سست مشینیں):
+تنصیب کے بعد ہونے والے **نیٹو وارم اپ** کو مکمل طور پر چھوڑنے کے لیے (CI، ہیڈ لیس، یا سست مشینیں)۔
+نوٹ: یہ صرف نیٹو SQLite وارم اپ مرحلہ (`scripts/postinstall.mjs`) چھوڑتا ہے؛
+بائنری کاپی/مرمت ہُک (`scripts/build/postinstall.mjs`) معمول کے مطابق چلتا رہتا ہے:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 بھی اسے چھوڑ دیتا ہے
 ```
 
-تیز ترین تنصیبات کے لیے **pnpm** کو ترجیح دیں (content-addressed store + hard links — اوپر دیکھیں)۔
-ڈیش بورڈ کے بغیر headless رن ٹائم کے لیے Docker کا `base` profile (اوپر) یا
-[Termux گائیڈ](docs/guides/TERMUX_GUIDE.md) استعمال کریں۔ CLI اور ویب ڈیش بورڈ ایک ہی پراسیس کے ذریعے ایک
-پورٹ پر پیش کیے جاتے ہیں، اس لیے فی الحال کوئی الگ صرف-CLI package موجود نہیں ہے۔
+تیز ترین تنصیبات کے لیے **pnpm** کو ترجیح دیں (مواد کے پتے پر مبنی اسٹور + ہارڈ لنکس — اوپر دیکھیں)۔
+ڈیش بورڈ کے بغیر، ہیڈ لیس رن ٹائم کے لیے Docker کا `base` پروفائل (اوپر) یا
+[Termux گائیڈ](docs/guides/TERMUX_GUIDE.md) استعمال کریں۔ CLI اور ویب ڈیش بورڈ ایک ہی پورٹ پر
+ایک ہی پراسیس کے ذریعے پیش کیے جاتے ہیں، اس لیے فی الحال کوئی الگ صرف CLI پیکیج موجود نہیں ہے۔
 
 <br/>
 
 <div align="center">
 
-# 🎬 OmniRoute عملی حالت میں
+# 🎬 OmniRoute عملی طور پر
 
 </div>
 

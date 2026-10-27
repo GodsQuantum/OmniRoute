@@ -86,30 +86,30 @@
 
 ## 2. Pravila
 
-1. Tokeni, nikad literali. Namjerno zadržane iznimke: terminal konzole koji je uvijek taman, ReactFlow SVG
-   potezi putem `STATUS_HEX` (`src/shared/constants/statusColors.ts`) te kategorijske palete
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) i
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Nikad ručno ne mijenjajte `packages/ui-kit/src`: sinkronizirajte ga s pomoću `scripts/dev/sync-ui-kit.sh <commit>`; provjera
-   prije commita `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ne prolazi ako se ijedan bajt
-   razlikuje od prikvačenog uzvodnog commita (preskače se uz upozorenje kada uzvodni klon,
+1. Tokeni, nikad literali. Namjerno zadržane iznimke: uvijek tamni terminal konzole i ReactFlow
+   SVG obrubi putem `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategija usmjeravanja i
+   palete sloja kompresije koriste tokene grafikona iz kompleta putem `strategyColorVar` i
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Nikad ručno ne mijenjajte `packages/ui-kit/src`: sinkronizirajte pomoću `scripts/dev/sync-ui-kit.sh <commit>`;
+   kontrola prije commita `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ne prolazi ako se ijedan bajt
+   razlikuje od prikvačenog upstream commita (preskače se uz upozorenje kada upstream klon,
    `UI_KIT_CLONE` ili `_references/cheaper-inference-ui-kit`, nije prisutan). Kada kompletu nešto nedostaje,
-   zaobiđite to u adapteru ili na zaslonu i zatražite to od uzvodnog projekta.
-3. Zadane tekstualne vrijednosti kompleta na engleskom su jeziku (`label = "Loading"`, `loadingLabel = "Loading table"`…) — proslijedite prevedene
+   zaobiđite to u adapteru ili na zaslonu i zatražite to od upstreama.
+3. Zadane tekstne vrijednosti kompleta na engleskom su jeziku (`label = "Loading"`, `loadingLabel = "Loading table"`…) — proslijedite prevedene
    nizove iz `useTranslations(...)` kad god komponenta kompleta prikazuje tekst.
 4. Tailwind pomoćne klase imaju prednost pred klasama komponenti kompleta (komplet deklarira
-   `@layer theme, base, components, utilities`, a njegova se pravila nalaze u `components`) — koristite pomoćne klase za
-   razmake i raspored, a ne za ponovno bojenje komponenti kompleta.
+   `@layer theme, base, components, utilities`, a njegova se pravila nalaze u sloju `components`) — koristite pomoćne klase za
+   razmake i raspored, a ne za promjenu boja komponenti kompleta.
 5. Naslovi: `.ci-heading` (Inter, bez razmaka među slovima) za naslove stranica i odjeljaka; `.ci-dashboard-display`
-   (Instrument Serif) samo za velik, rijetko raspoređen istaknuti tekst, poput statusnog koda na stranici pogreške.
-6. `tests/unit/dashboard-kit-sweep.test.ts` nadzire usvajanje kompleta: nema raspona s Material ligaturom pod
+   (Instrument Serif) samo za velik, rijetko raspoređen prikazni tekst, poput statusnog koda na stranici pogreške.
+6. `tests/unit/dashboard-kit-sweep.test.ts` nadzire usvajanje kompleta: nema Material raspona ligatura unutar
    `src/app` ili `src/shared/components`; u stablu nadzorne ploče (`src/app/(dashboard)` i
-   `src/shared/components`) nema sirovih elemenata `<select>`, `<textarea>` ili `<table>` ni ručno izrađenog
+   `src/shared/components`) nema neobrađenih elemenata `<select>`, `<textarea>` ili `<table>` ni ručno izrađenog
    `role="dialog"` izvan navedenih iznimki (izvorna grana adaptera `Select`,
-   `RequestLoggerDetail`); svaki sirovi `<button>` ili `<input>` ondje zahtijeva komentar koji sadrži
+   `RequestLoggerDetail`); svaki neobrađeni `<button>` ili `<input>` ondje zahtijeva komentar koji sadrži
    `kit-exception:` (s razlogom), a završava najviše 3 retka iznad njega; nijanse palete i varijante `dark:`
-   dopuštene su samo u datotekama koje test navodi.
-7. Prije PR-a provjerite obje teme i prikaznu površinu širine 390 px (snimke zaslona); `tests/e2e/a11y.spec.ts` pokreće
+   dopuštene su samo u datotekama navedenima u testu.
+7. Prije PR-a provjerite obje teme i prikaz širine 390 px (snimke zaslona); `tests/e2e/a11y.spec.ts` pokreće
    axe.
 
 ## 3. Dodavanje zaslona

@@ -80,13 +80,13 @@
 
 ## 2. 规则
 
-1. 使用设计令牌，绝不使用字面值。有意保留的例外：始终使用深色的控制台终端、通过 `STATUS_HEX`（`src/shared/constants/statusColors.ts`）设置的 ReactFlow SVG 描边，以及分类调色板 `STRATEGY_COLORS`（`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`）和 `LAYER_COLORS`（`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`）。
-2. 绝不要手动修改 `packages/ui-kit/src`：使用 `scripts/dev/sync-ui-kit.sh <commit>` 进行同步；提交前检查 `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）会在任何字节与固定的上游提交不同时失败（当上游克隆、`UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit` 不存在时，它会显示警告并跳过）。当组件库缺少某项功能时，请在适配器或页面中规避，并向上游提出需求。
-3. 组件库的文本默认值为英语（`label = "Loading"`、`loadingLabel = "Loading table"`……）——只要组件库中的组件会渲染文本，就应从 `useTranslations(...)` 传入翻译后的字符串。
-4. Tailwind 工具类优先于组件库的组件类（组件库声明了 `@layer theme, base, components, utilities`，其规则位于 `components` 中）——使用工具类设置间距和布局，而不要用它们为组件库中的组件重新着色。
-5. 标题：页面和章节标题使用 `.ci-heading`（Inter，无字距）；`.ci-dashboard-display`（Instrument Serif）仅用于错误页面状态码等尺寸较大且布局疏朗的展示文本。
-6. `tests/unit/dashboard-kit-sweep.test.ts` 用于守护组件库的采用情况：`src/app` 或 `src/shared/components` 下不得存在 Material 连字 span；仪表板目录树（`src/app/(dashboard)` 和 `src/shared/components`）中不得出现原始 `<select>`、`<textarea>` 或 `<table>`，也不得在列出的例外（`Select` 适配器的原生分支、`RequestLoggerDetail`）之外手动实现 `role="dialog"`；其中每个原始 `<button>` 或 `<input>` 都必须带有包含 `kit-exception:`（并说明原因）的注释，且该注释必须在其上方最多 3 行处结束；调色板色相和 `dark:` 变体只能出现在测试所列出的文件中。
-7. 在提交 PR 前验证两种主题和 390 px 视口（提供截图）；`tests/e2e/a11y.spec.ts` 会运行 axe。
+1. 使用令牌，绝不使用字面值。有意保留的例外：始终为深色的控制台终端，以及通过 `STATUS_HEX`（`src/shared/constants/statusColors.ts`）设置的 ReactFlow SVG 描边。路由策略和压缩层调色板通过 `strategyColorVar` 和 `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）使用工具包的图表令牌。
+2. 切勿手动修改 `packages/ui-kit/src`：使用 `scripts/dev/sync-ui-kit.sh <commit>` 进行同步；预提交检查 `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）会在任何字节与锁定的上游提交不一致时失败（当上游克隆、`UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit` 不存在时，它会发出警告并跳过）。如果工具包缺少某项功能，请在适配器或页面中采用变通方案，并向上游提出需求。
+3. 工具包的文本默认值为英文（`label = "Loading"`、`loadingLabel = "Loading table"`……）——每当工具包组件渲染文本时，都要传入来自 `useTranslations(...)` 的翻译字符串。
+4. Tailwind 工具类的优先级高于工具包组件类（工具包声明了 `@layer theme, base, components, utilities`，其规则位于 `components` 中）——使用工具类控制间距和布局，不要用它们重新着色工具包组件。
+5. 标题：页面和章节标题使用 `.ci-heading`（Inter，无字距调整）；`.ci-dashboard-display`（Instrument Serif）仅用于大号、稀疏的展示文本，例如错误页面的状态码。
+6. `tests/unit/dashboard-kit-sweep.test.ts` 用于守护工具包的采用情况：`src/app` 或 `src/shared/components` 下不得存在 Material 连字 span；仪表板目录树（`src/app/(dashboard)` 和 `src/shared/components`）中不得使用原生 `<select>`、`<textarea>` 或 `<table>`，也不得在列出的例外（`Select` 适配器的原生分支、`RequestLoggerDetail`）之外手工实现 `role="dialog"`；其中每个原生 `<button>` 或 `<input>` 上方最多 3 行内都必须有一条以 `kit-exception:` 开头并包含原因的注释；调色板色相和 `dark:` 变体只能出现在测试所列出的文件中。
+7. 提交 PR 前，请在两种主题和 390 px 视口下进行验证（截图）；`tests/e2e/a11y.spec.ts` 会运行 axe。
 
 ## 3. 添加页面
 

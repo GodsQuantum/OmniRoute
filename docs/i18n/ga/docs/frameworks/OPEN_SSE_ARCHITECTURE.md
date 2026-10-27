@@ -484,7 +484,7 @@ Láimhseálann sé seo:
 
 ## Cumraíocht
 
-Tá an tsraith chumraíochta in `open-sse/config/`:
+Coinníonn `open-sse/config/` an tsraith chumraíochta:
 
 | Comhad                        | Cuspóir                                               |
 | ----------------------------- | ----------------------------------------------------- |
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Cinntíonn bailíochtú Zod ag luchtú an mhodúil go bhfuil gach cumraíocht soláthraí bailí.
+Cinntíonn bailíochtú Zod agus an modúl á luchtú go bhfuil gach cumraíocht soláthraí bailí.
 
 ---
 

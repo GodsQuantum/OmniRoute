@@ -691,7 +691,7 @@ do histórie vášho shellu. → [Integrácie CLI](docs/guides/CLI-INTEGRATIONS.
 
 </div>
 
-> **376 registrovaných poskytovateľov** v rámci kanonických kolekcií pre chat, médiá, vyhľadávanie, lokálne služby, cloudových agentov a systémové služby vrátane **153 poskytovateľov s metadátami vyhľadávania `hasFree: true`**. Register chatovacích modelov zahŕňa **239 poskytovateľov / 3 059 jedinečných dvojíc poskytovateľ–model / 1 475 nespracovaných ID modelov**; samostatný katalóg bezplatných rozpočtov obsahuje **471 záznamov pre jednotlivé modely**, **34 obnovovaných fondov** a **52 obnovovaných/bezkľúčových poskytovateľov bezplatných navždy**. Menovatele sa zámerne líšia; definície a výpočty so zlúčenými fondmi nájdete v dokumentoch [Referenčná príručka poskytovateľov](docs/reference/PROVIDER_REFERENCE.md) a [Bezplatné úrovne](docs/reference/FREE_TIERS.md).
+> **376 registrovaných poskytovateľov** v rámci kanonických kolekcií pre chat, médiá, vyhľadávanie, lokálne služby, cloudových agentov a systémové služby vrátane **153 poskytovateľov s metadátami vyhľadávania `hasFree: true`**. Register chatovacích modelov zahŕňa **239 poskytovateľov / 3 059 jedinečných dvojíc poskytovateľ–model / 1 475 nespracovaných ID modelov**; samostatný katalóg bezplatných rozpočtov obsahuje **484 záznamov pre jednotlivé modely**, **34 obnovovaných fondov** a **52 obnovovaných/bezkľúčových poskytovateľov bezplatných navždy**. Menovatele sa zámerne líšia; definície a výpočty so zlúčenými fondmi nájdete v dokumentoch [Referenčná príručka poskytovateľov](docs/reference/PROVIDER_REFERENCE.md) a [Bezplatné úrovne](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1089,7 +1089,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` sleduje najvyššiu **publikovanú** stabilnú verziu SemVer. Nesleduje vetvu git `main`. Pre GitOps pripnite verziu `:X.Y.Z`. Pozrite si [Kanály vydaní Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Obraz má pevne nastavenú hodnotu **`OMNIROUTE_MEMORY_MB=1024`**. To postačuje pre ovládací panel a nenáročný chat. **Programovacie agenty** (`POST /v1/responses` z Claude Code, Codex, Grok, …) potrebujú oveľa väčšiu haldu V8, inak proces skončí s chybou `FATAL ERROR` pri približne 12 GiB počas dvoch prekrývajúcich sa dlhých kontextov. Veľkosť kontajnera nastavte nad veľkosť haldy (natívne vyrovnávacie pamäte sa nachádzajú mimo V8):
+`:latest` sleduje najvyššiu **publikovanú** stabilnú verziu SemVer. Nesleduje vetvu git `main`. Pre GitOps použite konkrétnu verziu `:X.Y.Z`. Pozrite si [Kanály vydaní Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Obraz má nastavenú hodnotu **`OMNIROUTE_MEMORY_MB=1024`**. Tá postačuje pre ovládací panel a nenáročný chat. **Programovací agenti** (`POST /v1/responses` z Claude Code, Codex, Grok, …) potrebujú oveľa väčšiu haldu V8, inak proces pri dvoch prekrývajúcich sa dlhých kontextoch skončí chybou `FATAL ERROR` približne pri 12 GiB. Veľkosť kontajnera nastavte vyššiu než veľkosť haldy (natívne vyrovnávacie pamäte sa nachádzajú mimo V8):
 
 | Pracovné zaťaženie               | Halda (`-e OMNIROUTE_MEMORY_MB`) | Kontajner (`--memory`) |
 | -------------------------------- | -------------------------------- | ---------------------- |
@@ -1108,16 +1108,16 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 > **Kanál predbežných vydaní Docker:** `diegosouzapw/omniroute:next` a
 > `diegosouzapw/omniroute:next-web` sledujú aktuálnu predvolenú vetvu `release/v*`.
 > Tieto premenlivé značky sú určené iba na testovanie zatiaľ nevydaných opráv a
-> **nie sú podporované v produkčnom prostredí**. Pozrite si
+> **nie sú podporované v produkcii**. Pozrite si
 > [Kanály vydaní Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Štandardné `bun install` a globálna inštalácia (`bun install -g omniroute`) sú podporované prostredníctvom detekcie runtime prostredia Bun:
+Štandardné použitie `bun install` a globálna inštalácia (`bun install -g omniroute`) sú podporované prostredníctvom detekcie runtime prostredia Bun:
 
-- **Vstavaný `bun:sqlite`**: Pri spustení v prostredí Bun používa OmniRoute vstavaný ovládač `bun:sqlite`; v Node.js použije ako náhradné riešenie `better-sqlite3` alebo `sql.js`.
-- **Automatický výber bundlera Webpack pri vývoji**: Vývojové prostredie (`bun run dev`) automaticky rozpozná Bun a vypne Turbopack v prospech Webpacku, aby sa predišlo nekompatibilite natívnych väzieb V8. Produkčné zostavenia (`bun run build`) sa riadia premennou `OMNIROUTE_USE_TURBOPACK` presne tak ako v Node: predvolene používajú Turbopack; na zostavenie pomocou Webpacku použite `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` ju sprístupňuje ako `--build-arg`).
-- **Samostatný Dockerfile pre Bun**: Viacfázový `Dockerfile.bun` pre natívne produkčné nasadenia Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Vstavaný modul `bun:sqlite`**: OmniRoute pri behu v prostredí Bun používa vstavaný ovládač `bun:sqlite` a v prostredí Node.js prejde na `better-sqlite3` alebo `sql.js`.
+- **Automatický výber bundlera Webpack pri vývoji**: Vývojové prostredie (`bun run dev`) automaticky rozpozná Bun a vypne Turbopack v prospech Webpacku, aby sa zabránilo nekompatibilite natívnych väzieb V8. Produkčné zostavenia (`bun run build`) sa riadia premennou `OMNIROUTE_USE_TURBOPACK` presne tak ako v Node: predvolene používajú Turbopack, pri nastavení `OMNIROUTE_USE_TURBOPACK=0` sa zostavujú pomocou Webpacku (`Dockerfile.bun` ju sprístupňuje ako argument `--build-arg`).
+- **Vyhradený Dockerfile pre Bun**: Viacfázový súbor `Dockerfile.bun` pre natívne produkčné nasadenia Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Inštalácia a spustenie pomocou Bun
@@ -1147,11 +1147,11 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Použitie Nix flakes
+# Pomocou Nix flakes
 nix develop
 npm run dev
 
-# Alebo použitie devbox
+# Alebo pomocou devbox
 devbox run npm run dev
 ```
 
@@ -1166,7 +1166,7 @@ mkdir -p data
 # 2. Iba Linux + lokálny rootless Podman (nikdy nie vzdialený klient Podman Machine):
 podman unshare chown 1000:1000 ./data
 
-# 3. Nastavte informáciu o runtime prostredí, zostavte lokálny obraz Compose a spustite ho
+# 3. Nastavte pomôcku pre runtime prostredie, zostavte lokálny obraz Compose a spustite ho
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
@@ -1177,23 +1177,25 @@ postupujte podľa [pokynov pre dátový adresár špecifických pre danú topol�
 📖 [Sprievodca Podmanom](contrib/podman/README.md) — zostavenia Compose, Podman Machine a
 nastavenie Quadlet pre Linux/systemd.
 
-**⚡ Rýchlejšia / úspornejšia inštalácia (preskočenie natívneho zostavenia)**
+**⚡ Rýchlejšia / úspornejšia inštalácia (vynechanie natívneho zostavenia)**
 
 Natívny engine SQLite (`better-sqlite3`) je **voliteľná** závislosť, takže globálna
-inštalácia sa nikdy nezablokuje pri kompilácii zo zdrojového kódu: použije vopred zostavený binárny súbor, ak je dostupný
-pre vašu platformu/Node, a v opačnom prípade transparentne prejde na engine v čistom JS
-(`node:sqlite` v Node 22+, inak pribalený `sql.js` WASM) — bez potreby nástrojov na zostavenie.
+inštalácia nikdy nečaká na kompiláciu zo zdrojového kódu: ak je k dispozícii zodpovedajúci
+predkompilovaný binárny súbor pre vašu platformu/Node, použije ho, inak transparentne prejde na engine
+implementovaný výhradne v JS (`node:sqlite` v Node 22+, inak pribalený `sql.js` WASM) — bez potreby nástrojov na zostavovanie.
 
-Ak chcete úplne preskočiť natívnu inicializáciu po inštalácii (CI, prostredia bez grafického rozhrania alebo pomalé počítače):
+Ak chcete úplne vynechať **natívnu prípravu** po inštalácii (CI, bezgrafické alebo pomalé počítače).
+Poznámka: vynechá sa iba krok prípravy natívneho SQLite (`scripts/postinstall.mjs`);
+hook na kopírovanie/opravu binárnych súborov (`scripts/build/postinstall.mjs`) sa naďalej spúšťa štandardne:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 ju tiež preskočí
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Vynechá sa aj pri CI=1
 ```
 
-Pre najrýchlejšie inštalácie uprednostnite **pnpm** (úložisko adresované obsahom + pevné odkazy — pozrite vyššie).
-Pre runtime prostredie bez ovládacieho panela a grafického rozhrania použite profil Docker `base` (vyššie) alebo
-[sprievodcu Termuxom](docs/guides/TERMUX_GUIDE.md). CLI a webový ovládací panel obsluhuje
-rovnaký proces na jednom porte, takže v súčasnosti neexistuje samostatný balík iba pre CLI.
+Pre najrýchlejšie inštalácie uprednostnite **pnpm** (úložisko adresované podľa obsahu + pevné odkazy — pozrite vyššie).
+Ak chcete runtime prostredie bez ovládacieho panela a grafického rozhrania, použite profil Docker `base` (vyššie) alebo
+[sprievodcu pre Termux](docs/guides/TERMUX_GUIDE.md). CLI a webový ovládací panel obsluhuje
+ten istý proces na jednom porte, takže v súčasnosti neexistuje samostatný balík iba pre CLI.
 
 <br/>
 

@@ -81,30 +81,30 @@
 
 ## 2. Правила
 
-1. Токени, никада литерали. Намерно задржани изузеци: увек тамни терминал конзоле, ReactFlow SVG
-   потези преко `STATUS_HEX` (`src/shared/constants/statusColors.ts`) и категоријске палете
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) и
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Никада немојте ручно мењати `packages/ui-kit/src`: синхронизујте га помоћу `scripts/dev/sync-ui-kit.sh <commit>`;
-   pre-commit провера `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) не успева ако се било који бајт
-   разликује од фиксираног upstream commit-а (прескаче се уз упозорење када upstream клон,
+1. Токени, никада литерали. Намерно задржани изузеци: увек тамни терминал конзоле и ReactFlow
+   SVG потези преко `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Палете стратегије рутирања и
+   слоја компресије користе токене графикона из комплета преко `strategyColorVar` и
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Никада ручно не мењајте `packages/ui-kit/src`: синхронизујте помоћу `scripts/dev/sync-ui-kit.sh <commit>`; провера
+   пре комитовања `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) не успева ако се било који бајт
+   разликује од фиксираног upstream комита (прескаче се уз упозорење када upstream клон,
    `UI_KIT_CLONE` или `_references/cheaper-inference-ui-kit`, није присутан). Када комплету нешто недостаје,
-   заобиђите то у адаптеру или екрану и затражите од upstream тима да то дода.
+   заобиђите то у адаптеру или на екрану и затражите од upstream тима да то дода.
 3. Подразумевани текстови комплета су на енглеском (`label = "Loading"`, `loadingLabel = "Loading table"`…) — проследите преведене
    ниске из `useTranslations(...)` кад год компонента комплета приказује текст.
 4. Tailwind услужне класе имају предност над класама компоненти комплета (комплет декларише
    `@layer theme, base, components, utilities`, а његова правила се налазе у `components`) — користите услужне класе за
-   размаке и распоред, а не за поновно бојење компоненти комплета.
+   размаке и распоред, а не за промену боја компоненти комплета.
 5. Наслови: `.ci-heading` (Inter, без размака између слова) за наслове страница и одељака; `.ci-dashboard-display`
-   (Instrument Serif) само за велики, ненатрпан приказни текст, као што је статусни кôд на страници грешке.
-6. `tests/unit/dashboard-kit-sweep.test.ts` контролише усвајање комплета: нема Material span елемента са лигатуром у
+   (Instrument Serif) само за велики, издвојени приказни текст, као што је статусни код на страници грешке.
+6. `tests/unit/dashboard-kit-sweep.test.ts` контролише усвајање комплета: нема Material span елемената са лигатурама у
    `src/app` или `src/shared/components`; у стаблу контролне табле (`src/app/(dashboard)` и
-   `src/shared/components`) нема необрађених `<select>`, `<textarea>` или `<table>` елемената, нити ручно направљених
-   `role="dialog"` елемената изван наведених изузетака (изворна грана адаптера `Select`,
-   `RequestLoggerDetail`); свако необрађено `<button>` или `<input>` дугме или поље у њима мора имати коментар који садржи
-   `kit-exception:` (са разлогом) и који се завршава највише 3 реда изнад њега; нијансе палете и `dark:` варијанте
+   `src/shared/components`) нема необрађених `<select>`, `<textarea>` или `<table>` елемената, нити ручно направљеног
+   `role="dialog"` ван наведених изузетака (изворна грана адаптера `Select`,
+   `RequestLoggerDetail`); свако необрађено `<button>` или `<input>` дугме/поље тамо мора да има коментар који садржи
+   `kit-exception:` (са разлогом) и завршава се највише 3 реда изнад њега; нијансе палете и `dark:` варијанте
    дозвољене су само у датотекама које тест наводи.
-7. Пре PR-а проверите обе теме и приказ ширине 390 px (снимцима екрана); `tests/e2e/a11y.spec.ts` покреће
+7. Пре PR-а проверите обе теме и приказ ширине 390 px (снимци екрана); `tests/e2e/a11y.spec.ts` покреће
    axe.
 
 ## 3. Додавање екрана

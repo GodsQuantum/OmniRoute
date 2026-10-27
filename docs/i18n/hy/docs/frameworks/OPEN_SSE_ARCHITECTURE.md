@@ -491,7 +491,7 @@ createResponsesApiTransformStream(): TransformStream
 | `providerRegistry.ts`                | Զրույցի մոդելների ռեեստր՝ հիմնված 376 մատակարարների կատալոգի վրա |
 | `providerModels.ts`                  | Մոդելների այլանուններ, ձևաչափերի համապատասխանեցում               |
 | `constants.ts`                       | Սպասման ժամանակներ, սահմանաչափեր, կարգավիճակի կոդեր              |
-| `defaultThinkingSignature.ts`        | Claude-ի մտածողության կանխադրված ստորագրություն                  |
+| `defaultThinkingSignature.ts`        | Claude-ի մտածողության լռելյայն ստորագրություն                    |
 | `modelStrip.ts` (ծառայություններում) | Դաշտերի հեռացում՝ ըստ մատակարարի                                 |
 
 ### Մատակարարի ռեեստրի սխեմա

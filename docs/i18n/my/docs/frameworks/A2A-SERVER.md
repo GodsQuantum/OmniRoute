@@ -150,33 +150,33 @@ curl -X POST http://localhost:20128/a2a \
 
 ---
 
-## ရရှိနိုင်သော Skill များ
+## ရရှိနိုင်သော Skills များ
 
-OmniRoute သည် `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS` တွင် ချိတ်ဆက်ထားသော A2A skill ၆ ခုကို ဖော်ထုတ်ပေးထားသည်။ Skill module တစ်ခုစီသည် `src/lib/a2a/skills/` တွင် တည်ရှိသည်။
+OmniRoute သည် `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS` တွင် ချိတ်ဆက်ထားသော A2A skills ၆ ခုကို ဖော်ထုတ်ပေးထားသည်။ Skill module တစ်ခုစီသည် `src/lib/a2a/skills/` တွင် တည်ရှိသည်။
 
-| Skill              | ID                   | ဖော်ပြချက်                                                                                                                                                                                  | Tag များ                   | ဥပမာများ                                                           |
-| :----------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------- | :----------------------------------------------------------------- |
-| Smart Routing      | `smart-routing`      | OmniRoute ၏ combo engine နှင့် အမှတ်ပေးစနစ်ကို အသုံးပြု၍ prompt တစ်ခုကို အသင့်တော်ဆုံး provider/combo မှတစ်ဆင့် လမ်းကြောင်းသတ်မှတ်ပေးသည်                                                    | routing, providers         | "ဤ prompt ကို အကောင်းဆုံး model မှတစ်ဆင့် လမ်းကြောင်းသတ်မှတ်ပေးပါ" |
-| Quota Management   | `quota-management`   | Provider တစ်ခုချင်းစီ၏ quota အခြေအနေကို အစီရင်ခံပြီး မည်သည့်အချိန်တွင် throttle လုပ်ရန် သို့မဟုတ် ပြောင်းလဲအသုံးပြုရန် လိုအပ်ကြောင်း ခေါ်ယူသူများ ဆုံးဖြတ်နိုင်ရန် ကူညီပေးသည်               | quota, providers           | "anthropic အတွက် quota ကို စစ်ဆေးပါ"                               |
-| Provider Discovery | `provider-discovery` | ထည့်သွင်းထားသော provider များကို ၎င်းတို့၏ လုပ်ဆောင်နိုင်စွမ်းများ၊ အခမဲ့အဆင့်ဆိုင်ရာ အမှတ်အသားများနှင့် OAuth အခြေအနေတို့နှင့်အတူ စာရင်းပြုစုပေးသည်                                        | providers, discovery       | "မည်သည့် provider များ ရရှိနိုင်သနည်း။"                            |
-| Cost Analysis      | `cost-analysis`      | Catalog နှင့် မကြာသေးမီက အသုံးပြုမှုအပေါ် အခြေခံ၍ request/conversation တစ်ခု၏ ကုန်ကျစရိတ်ကို ခန့်မှန်းပေးသည်                                                                                | cost, usage                | "ဤ conversation အတွက် ကုန်ကျစရိတ်ကို ခန့်မှန်းပေးပါ"               |
-| Health Report      | `health-report`      | Provider တစ်ခုချင်းစီ၏ circuit breaker၊ cooldown နှင့် lockout အခြေအနေတို့ကို စုစည်းဖော်ပြပေးသည်                                                                                            | health, resilience         | "Provider အားလုံး၏ ကျန်းမာရေးအခြေအနေကို ပြပါ"                      |
-| List Capabilities  | `list-capabilities`  | Context ထည့်သွင်းအသုံးပြုနိုင်ရန် raw SKILL.md URL များပါဝင်သော markdown table အဖြစ် entry ၄၅ ခုရှိသည့် Agent Skills catalog အပြည့်အစုံကို ပြန်ပေးသည် (API ၂၃ ခု + CLI ၂၁ ခု + config ၁ ခု) | catalog, discovery, skills | "OmniRoute ၏ လုပ်ဆောင်နိုင်စွမ်းအားလုံးကို စာရင်းပြုစုပါ"          |
+| Skill              | ID                   | ဖော်ပြချက်                                                                                                                                                                  | Tags                       | ဥပမာများ                                                    |
+| :----------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------- | :---------------------------------------------------------- |
+| Smart Routing      | `smart-routing`      | OmniRoute ၏ combo engine + scoring ကို အသုံးပြု၍ prompt တစ်ခုကို အကောင်းဆုံး provider/combo မှတစ်ဆင့် လမ်းကြောင်းပေးသည်                                                     | routing, providers         | "ဤ prompt ကို အကောင်းဆုံး model မှတစ်ဆင့် လမ်းကြောင်းပေးပါ" |
+| Quota Management   | `quota-management`   | Provider တစ်ခုချင်းစီ၏ quota အခြေအနေကို အစီရင်ခံပြီး ခေါ်ဆိုသူများအား မည်သည့်အချိန်တွင် throttle/switch လုပ်ရမည်ကို ဆုံးဖြတ်နိုင်ရန် ကူညီပေးသည်                             | quota, providers           | "anthropic အတွက် quota ကို စစ်ဆေးပါ"                        |
+| Provider Discovery | `provider-discovery` | ထည့်သွင်းထားသော providers များကို capabilities၊ free-tier flags နှင့် OAuth status တို့နှင့်အတူ စာရင်းပြုစုပေးသည်                                                           | providers, discovery       | "မည်သည့် providers များ ရရှိနိုင်သနည်း?"                    |
+| Cost Analysis      | `cost-analysis`      | Catalog + လတ်တလောအသုံးပြုမှုအပေါ် အခြေခံ၍ request/conversation တစ်ခု၏ ကုန်ကျစရိတ်ကို ခန့်မှန်းပေးသည်                                                                        | cost, usage                | "ဤ conversation အတွက် ကုန်ကျစရိတ်ကို ခန့်မှန်းပါ"           |
+| Health Report      | `health-report`      | Provider တစ်ခုချင်းစီ၏ circuit breaker၊ cooldown နှင့် lockout အခြေအနေတို့ကို စုစည်းဖော်ပြပေးသည်                                                                            | health, resilience         | "Providers အားလုံး၏ health status ကို ပြပါ"                 |
+| List Capabilities  | `list-capabilities`  | Context injection အတွက် raw SKILL.md URLs များပါဝင်သည့် ပြည့်စုံသော 45-entry Agent Skills catalog (API ၂၃ ခု + CLI ၂၁ ခု + config ၁ ခု) ကို markdown table အဖြစ် ပြန်ပေးသည် | catalog, discovery, skills | "OmniRoute capabilities အားလုံးကို စာရင်းပြုစုပေးပါ"        |
 
-> Agent Card ကို လက်ရှိအသုံးပြုနေသော provider ၃၇၆ ခုပါ catalog နှင့် ကိုက်ညီအောင် ထိန်းသိမ်းထားသင့်သည်။ Provider အရေအတွက်များနှင့် အခမဲ့/အထောက်အထားစိစစ်ရန်မလိုသော metadata တို့ကို runtime registry မှ ရယူထားသည်။
+> Agent Card ကို လက်ရှိအသုံးပြုနေသော provider ၃၇၆ ခုပါ catalog နှင့် ကိုက်ညီအောင် ထိန်းသိမ်းထားသင့်သည်။ Provider အရေအတွက်များနှင့် free/no-auth metadata ကို runtime registry မှ ရယူထားသည်။
 
 ### `list-capabilities` Skill အသေးစိတ်
 
-`list-capabilities` skill သည် API call များ မပို့မီ OmniRoute က မည်သည့်အရာများကို ဖော်ထုတ်ပေးထားကြောင်း ရှာဖွေသိရှိရန်လိုအပ်သည့် ပြင်ပ agent များအတွက် အထူးအသုံးဝင်သည်။ ၎င်းသည် ဖွဲ့စည်းပုံကျသော markdown table artifact တစ်ခုကို ပြန်ပေးသည်-
+`list-capabilities` skill သည် API calls များ မပို့မီ OmniRoute က ဖော်ထုတ်ပေးထားသည့်အရာများကို ရှာဖွေသိရှိရန် လိုအပ်သော external agents များအတွက် အထူးအသုံးဝင်သည်။ ၎င်းသည် ဖွဲ့စည်းတည်ဆောက်ထားသော markdown table artifact တစ်ခုကို ပြန်ပေးသည်-
 
 ```
-| ID | အမည် | အမျိုးအစား | နယ်ပယ် | Endpoint/Command များ | Raw URL |
+| ID | အမည် | အမျိုးအစား | နယ်ပယ် | Endpoints/Commands | Raw URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | အထောက်အထားစိစစ်ခြင်းနှင့် Session များ | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Auth နှင့် Sessions | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Row တစ်ခုစီတွင် `rawUrl` column ပါဝင်သဖြင့် agent များသည် SKILL.md အပြည့်အစုံကို ချက်ချင်းရယူနိုင်သည်။ `metadata.totalSkills` field သည် catalog အရွယ်အစားနှင့် ကိုက်ညီသည် (ယနေ့တွင် ၄၅ ခု)။ အကောင်အထည်ဖော်ထားသည့်နေရာ- `src/lib/a2a/skills/listCapabilities.ts`။ [AGENT-SKILLS.md](./AGENT-SKILLS.md) ကိုလည်း ကြည့်ပါ။
+Agents များက SKILL.md အပြည့်အစုံကို ချက်ချင်းရယူနိုင်ရန် row တစ်ခုစီတွင် `rawUrl` column ပါဝင်သည်။ `metadata.totalSkills` field သည် catalog အရွယ်အစား (ယနေ့တွင် ၄၅ ခု) နှင့် ကိုက်ညီသည်။ အကောင်အထည်ဖော်ထားသည့်နေရာ- `src/lib/a2a/skills/listCapabilities.ts`။ [AGENT-SKILLS.md](./AGENT-SKILLS.md) ကိုလည်း ကြည့်ပါ။
 
 ---
 

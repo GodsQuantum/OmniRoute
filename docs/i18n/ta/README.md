@@ -699,7 +699,7 @@ omniroute configure codex          # மேலும்: claude opencode qwen ai
 
 </div>
 
-> அதிகாரப்பூர்வ அரட்டை, ஊடகம், தேடல், உள்ளூர், கிளவுட்-ஏஜென்ட் மற்றும் சிஸ்டம் தொகுப்புகளில் **376 பதிவுசெய்யப்பட்ட வழங்குநர்கள்** உள்ளனர்; இவர்களில் **153 வழங்குநர்கள் `hasFree: true` கண்டறிதல் மெட்டாடேட்டாவைக் கொண்டுள்ளனர்**. அரட்டை மாடல் பதிவகம் **239 வழங்குநர்கள் / 3,059 தனித்துவமான வழங்குநர்-மாடல் இணைகள் / 1,475 மூல மாடல் ID-கள்** ஆகியவற்றை உள்ளடக்குகிறது; தனியான இலவச பட்ஜெட் பட்டியலில் **மாடலுக்கு ஒன்று வீதம் 471 வரிசைகள்**, **34 தொடர் வளத் தொகுப்புகள்** மற்றும் **52 தொடர்/விசையில்லா நிரந்தர இலவச வழங்குநர்கள்** உள்ளனர். வடிவமைப்பின்படி இவற்றின் வகுத்தெண்கள் வேறுபடுகின்றன; வரையறைகளும் வளத் தொகுப்பு நகல் நீக்கப்பட்ட கணக்கீடுகளும் [வழங்குநர் குறிப்பில்](docs/reference/PROVIDER_REFERENCE.md) மற்றும் [இலவச அடுக்குகளில்](docs/reference/FREE_TIERS.md) உள்ளன.
+> அதிகாரப்பூர்வ அரட்டை, ஊடகம், தேடல், உள்ளூர், கிளவுட்-ஏஜென்ட் மற்றும் சிஸ்டம் தொகுப்புகளில் **376 பதிவுசெய்யப்பட்ட வழங்குநர்கள்** உள்ளனர்; இவர்களில் **153 வழங்குநர்கள் `hasFree: true` கண்டறிதல் மெட்டாடேட்டாவைக் கொண்டுள்ளனர்**. அரட்டை மாடல் பதிவகம் **239 வழங்குநர்கள் / 3,059 தனித்துவமான வழங்குநர்-மாடல் இணைகள் / 1,475 மூல மாடல் ID-கள்** ஆகியவற்றை உள்ளடக்குகிறது; தனியான இலவச பட்ஜெட் பட்டியலில் **மாடலுக்கு ஒன்று வீதம் 484 வரிசைகள்**, **34 தொடர் வளத் தொகுப்புகள்** மற்றும் **52 தொடர்/விசையில்லா நிரந்தர இலவச வழங்குநர்கள்** உள்ளனர். வடிவமைப்பின்படி இவற்றின் வகுத்தெண்கள் வேறுபடுகின்றன; வரையறைகளும் வளத் தொகுப்பு நகல் நீக்கப்பட்ட கணக்கீடுகளும் [வழங்குநர் குறிப்பில்](docs/reference/PROVIDER_REFERENCE.md) மற்றும் [இலவச அடுக்குகளில்](docs/reference/FREE_TIERS.md) உள்ளன.
 
 <div align="center">
 
@@ -1089,7 +1089,7 @@ Ollama tags:      http://localhost:20128/vscode/YOUR_KEY/api/tags
 
 <br/>
 
-## 📦 மேலும் நிறுவல் முறைகள் — Docker, மூலக் குறியீடு, pnpm, Arch
+## 📦 மேலும் நிறுவல் முறைகள் — Docker, source, pnpm, Arch
 
 **🐳 Docker**
 
@@ -1098,7 +1098,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` என்பது **வெளியிடப்பட்ட** நிலையான SemVer பதிப்புகளில் மிக உயர்ந்ததைப் பின்பற்றும். இது git `main`-ஐப் பின்தொடராது. GitOps-க்கு `:X.Y.Z` எனப் பதிப்பை நிலைநிறுத்தவும். [Docker வெளியீட்டுச் சேனல்கள்](docs/guides/DOCKER_GUIDE.md#release-channels) என்பதைப் பார்க்கவும். இந்த image-ல் **`OMNIROUTE_MEMORY_MB=1024`** நிலைநிறுத்தப்பட்டுள்ளது. Dashboard மற்றும் இலகுவான chat-க்கு அது போதுமானது. **Coding agents** (Claude Code, Codex, Grok, … இலிருந்து `POST /v1/responses`) இயக்க மிகவும் பெரிய V8 heap தேவை; இல்லையெனில் ஒன்றுடன் ஒன்று நேரத்தில் இயங்கும் இரண்டு நீண்ட context-களின்போது, செயல்முறை சுமார் 12 GiB-ல் `FATAL ERROR` ஏற்படுத்தும். Heap-ஐ விட container-ன் அளவை அதிகமாக அமைக்கவும் (native buffer-கள் V8-க்கு வெளியே இருக்கும்):
+`:latest` என்பது **வெளியிடப்பட்ட** மிக உயர்ந்த நிலையான SemVer பதிப்பைப் பின்பற்றும். இது git `main` கிளையைப் பின்தொடராது. GitOps-க்கு `:X.Y.Z` என்பதை நிலைநிறுத்திப் பயன்படுத்தவும். [Docker வெளியீட்டுச் சேனல்கள்](docs/guides/DOCKER_GUIDE.md#release-channels) என்பதைப் பார்க்கவும்.இந்த image-இல் **`OMNIROUTE_MEMORY_MB=1024`** நிலைநிறுத்தப்பட்டுள்ளது. dashboard மற்றும் இலகுவான chat-க்கு இது போதுமானது. **Coding agents** (Claude Code, Codex, Grok போன்றவற்றிலிருந்து `POST /v1/responses`) மிகப் பெரிய V8 heap-ஐக் கோரும்; இல்லையெனில் ஒன்றுடன் ஒன்று மேலிடும் இரண்டு நீண்ட context-களின்போது சுமார் 12 GiB-இல் process `FATAL ERROR` ஏற்படுத்தும். heap-ஐவிட container-ஐப் பெரிதாக அமைக்கவும் (native buffer-கள் V8-க்கு வெளியே இருக்கும்):
 
 | பணிச்சுமை                                  | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
 | ------------------------------------------ | ------------------------------- | ---------------------- |
@@ -1112,21 +1112,21 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-முழு அட்டவணை: [Docker வழிகாட்டி — இயக்கநேர RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+முழு அட்டவணை: [Docker வழிகாட்டி — runtime RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **முன்வெளியீட்டு Docker சேனல்:** `diegosouzapw/omniroute:next` மற்றும்
+> **முன்-வெளியீட்டு Docker சேனல்:** `diegosouzapw/omniroute:next` மற்றும்
 > `diegosouzapw/omniroute:next-web` ஆகியவை தற்போதைய இயல்புநிலை `release/v*`
-> branch-ஐப் பின்பற்றுகின்றன. மாறக்கூடிய இந்த tag-கள், இன்னும் வெளியிடப்படாத திருத்தங்களைச் சோதிப்பதற்காக மட்டுமே உருவாக்கப்பட்டவை;
-> அவை **production-க்கு ஆதரிக்கப்படவில்லை**. பார்க்க:
+> கிளையைப் பின்பற்றுகின்றன. மாற்றக்கூடிய இந்த tag-கள் வெளியிடப்படாத திருத்தங்களைச் சோதிப்பதற்கு
+> மட்டுமே நோக்கப்பட்டவை; அவை **production பயன்பாட்டுக்கு ஆதரிக்கப்படுவதில்லை**. பார்க்கவும்:
 > [Docker வெளியீட்டுச் சேனல்கள்](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Bun runtime கண்டறிதல் மூலம் வழக்கமான `bun install` மற்றும் global நிறுவல் (`bun install -g omniroute`) ஆதரிக்கப்படுகின்றன:
+நிலையான `bun install` மற்றும் உலகளாவிய நிறுவல் (`bun install -g omniroute`) ஆகியவை Bun runtime கண்டறிதல் மூலம் ஆதரிக்கப்படுகின்றன:
 
-- **உள்ளமைந்த `bun:sqlite`**: Bun-ன் கீழ் இயங்கும்போது, OmniRoute அதன் உள்ளமைந்த `bun:sqlite` driver-ஐப் பயன்படுத்துகிறது; Node.js-ல் `better-sqlite3` அல்லது `sql.js`-க்கு fallback செய்கிறது.
-- **dev-ல் தானியங்கி Webpack bundler தேர்வு**: Development (`bun run dev`) தானாகவே Bun-ஐக் கண்டறிந்து, native V8 binding இணக்கமின்மைகளைத் தடுக்க Turbopack-ஐ முடக்கி Webpack-ஐப் பயன்படுத்துகிறது. Production build-கள் (`bun run build`), Node-ஐப் போலவே `OMNIROUTE_USE_TURBOPACK`-ஐத் துல்லியமாகப் பின்பற்றுகின்றன: இயல்புநிலையாக Turbopack; Webpack மூலம் build செய்ய `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` இதை `--build-arg` ஆக வழங்குகிறது).
-- **Bun-க்கெனத் தனிப்பட்ட Dockerfile**: Native Bun production deployment-களுக்கான multi-stage `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **உள்ளமைந்த `bun:sqlite`**: Bun-இல் இயங்கும்போது OmniRoute, Bun-இன் உள்ளமைந்த `bun:sqlite` driver-ஐப் பயன்படுத்துகிறது; Node.js-இல் `better-sqlite3` அல்லது `sql.js` என்பதற்கு fallback ஆகும்.
+- **dev-இல் தானியங்கி Webpack bundler தேர்வு**: Development (`bun run dev`) தானாகவே Bun-ஐக் கண்டறிந்து, native V8 binding இணக்கமின்மைகளைத் தடுக்க Turbopack-ஐ முடக்கி Webpack-ஐப் பயன்படுத்துகிறது. Production build-கள் (`bun run build`), Node-இல் இருப்பதைப் போலவே `OMNIROUTE_USE_TURBOPACK` என்பதைத் துல்லியமாகப் பின்பற்றும்: இயல்புநிலையாக Turbopack; Webpack மூலம் build செய்ய `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` இதனை `--build-arg` ஆக வெளிப்படுத்துகிறது).
+- **பிரத்யேக Bun Dockerfile**: native Bun production deployment-களுக்கான multi-stage `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Bun மூலம் நிறுவி இயக்கவும்
@@ -1134,7 +1134,7 @@ bun install
 bun run dev
 ```
 
-**🛠️ மூலக் குறியீட்டிலிருந்து**
+**🛠️ Source-இலிருந்து**
 
 ```bash
 cp .env.example .env && npm install
@@ -1156,7 +1156,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Nix flake-களைப் பயன்படுத்துதல்
+# Nix flakes-ஐப் பயன்படுத்துதல்
 nix develop
 npm run dev
 
@@ -1169,40 +1169,42 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Bind-mount செய்யப்பட்ட data directory-ஐத் தயாரிக்கவும்
+# 1. bind-mount செய்யப்பட்ட data directory-ஐத் தயாரிக்கவும்
 mkdir -p data
 
-# 2. Linux + உள்ளூர் rootless Podman-க்கு மட்டும் (remote Podman Machine client-ல் ஒருபோதும் பயன்படுத்த வேண்டாம்):
+# 2. Linux + உள்ளூர் rootless Podman-க்கு மட்டும் (தொலைநிலை Podman Machine client-க்கு ஒருபோதும் அல்ல):
 podman unshare chown 1000:1000 ./data
 
-# 3. Runtime hint-ஐ அமைத்து, உள்ளூர் Compose image-ஐ build செய்து, தொடங்கவும்
+# 3. runtime hint-ஐ அமைத்து, உள்ளூர் Compose image-ஐ build செய்து, தொடங்கவும்
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS அல்லது Windows-ல், Podman ஒரு remote Podman Machine-ஐப் பயன்படுத்துகிறது: `podman unshare`-ஐத் தவிர்த்து,
-[topology-க்கேற்ற data directory வழிகாட்டுதலை](contrib/podman/README.md#data-directory-permissions-by-topology) பின்பற்றவும்.
+macOS அல்லது Windows-இல், Podman ஒரு தொலைநிலை Podman Machine-ஐப் பயன்படுத்துகிறது: `podman unshare` என்பதைத் தவிர்த்து,
+[topology-க்கான குறிப்பிட்ட data directory வழிகாட்டுதலைப்](contrib/podman/README.md#data-directory-permissions-by-topology) பின்பற்றவும்.
 
 📖 [Podman வழிகாட்டி](contrib/podman/README.md) — Compose build-கள், Podman Machine மற்றும்
 Linux/systemd Quadlet அமைப்பு.
 
-**⚡ வேகமான / குறைந்த அளவிலான நிறுவல் (native build-ஐத் தவிர்க்கவும்)**
+**⚡ வேகமான / இலகுவான நிறுவல் (native build-ஐத் தவிர்க்கவும்)**
 
-Native SQLite engine (`better-sqlite3`) ஒரு **விருப்பமான** dependency ஆகும்; எனவே global
-நிறுவல், மூலக் குறியீட்டிலிருந்து compile செய்வதற்காக ஒருபோதும் காத்திருக்காது: உங்கள்
-platform/Node-க்கு பொருந்தும்போது prebuilt binary-ஐப் பயன்படுத்தும்; இல்லையெனில் pure-JS engine-க்கு
-வெளிப்படையாக fallback ஆகும் (Node 22+ இல் `node:sqlite`; இல்லையெனில் தொகுப்புடன் வழங்கப்படும் `sql.js` WASM) — build tool-கள் தேவையில்லை.
+native SQLite engine (`better-sqlite3`) ஒரு **விருப்பத்திற்குரிய** dependency ஆகும்; எனவே உலகளாவிய
+நிறுவல் source-இலிருந்து compile செய்வதால் ஒருபோதும் தடைபடாது: உங்கள் platform/Node-க்குப் பொருத்தமான
+prebuilt binary இருந்தால் அதைப் பயன்படுத்தும்; இல்லையெனில் pure-JS engine-க்கு வெளிப்படையாக fallback ஆகும்
+(Node 22+-இல் `node:sqlite`, இல்லையெனில் bundle செய்யப்பட்ட `sql.js` WASM) — build கருவிகள் தேவையில்லை.
 
-நிறுவலுக்குப் பிந்தைய native warm-up-ஐ முழுமையாகத் தவிர்க்க (CI, headless அல்லது மெதுவான கணினிகள்):
+நிறுவலுக்குப் பிந்தைய **native warm-up**-ஐ முற்றிலுமாகத் தவிர்க்க (CI, headless அல்லது மெதுவான கணினிகள்).
+குறிப்பு: இது native SQLite warm-up படிநிலையை (`scripts/postinstall.mjs`) மட்டுமே தவிர்க்கும்;
+binary-copy/repair hook (`scripts/build/postinstall.mjs`) வழக்கம்போலவே இயங்கும்:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 என்பதும் இதைத் தவிர்க்கும்
 ```
 
-மிக வேகமான நிறுவல்களுக்கு **pnpm**-ஐப் பயன்படுத்தவும் (content-addressed store + hard link-கள் — மேலே பார்க்கவும்).
-Dashboard இல்லாத headless runtime-க்கு Docker `base` profile-ஐ (மேலே) அல்லது
-[Termux வழிகாட்டியை](docs/guides/TERMUX_GUIDE.md) பயன்படுத்தவும். CLI மற்றும் web dashboard ஆகியவை ஒரே process மூலம்
-ஒரே port-ல் வழங்கப்படுகின்றன; எனவே தற்போது தனியான CLI-only package இல்லை.
+மிக வேகமான நிறுவல்களுக்கு **pnpm**-ஐ விரும்பிப் பயன்படுத்தவும் (content-addressed store + hard link-கள் — மேலே பார்க்கவும்).
+dashboard இல்லாத, headless runtime-க்கு Docker `base` profile-ஐ (மேலே) அல்லது
+[Termux வழிகாட்டியைப்](docs/guides/TERMUX_GUIDE.md) பயன்படுத்தவும். CLI மற்றும் web dashboard ஆகியவை ஒரே
+port-இல் ஒரே process மூலம் வழங்கப்படுகின்றன; எனவே தற்போது தனியான CLI-only package இல்லை.
 
 <br/>
 

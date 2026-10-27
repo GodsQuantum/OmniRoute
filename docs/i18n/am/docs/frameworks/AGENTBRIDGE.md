@@ -16,34 +16,34 @@ AgentBridge የOmniRoute MITM (Man-in-the-Middle) ፕሮክሲ ሲሆን፣ ከI
 
 ### AgentBridge ምንድን ነው?
 
-የIDE ወኪል (ለምሳሌ፣ GitHub Copilot፣ Cursor፣ Claude Code) የAPI ጥሪ ሲያደርግ፣ በቀጥታ ከዋናው የAI አቅራቢ (OpenAI፣ Anthropic፣ ወዘተ) ጋር ይገናኛል። AgentBridge ምንም የወኪል ውቅር ለውጥ ሳያስፈልገው ያንን ግንኙነት በTLS ደረጃ በግልጽነት ይጠልፋል — እና ጥያቄውን በOmniRoute በኩል እንደገና ይጽፈዋል።
+IDE ወኪል (ለምሳሌ፣ GitHub Copilot፣ Cursor፣ Claude Code) API ጥሪ ሲያደርግ፣ በቀጥታ ከላይኛው (upstream) AI አቅራቢ (OpenAI፣ Anthropic፣ ወዘተ) ጋር ይገናኛል። AgentBridge ያንን ግንኙነት በTLS ደረጃ በግልጽ ሁኔታ ያግደዋል — ምንም የወኪል ማዋቀሪያ ለውጥ ሳይጠይቅ — እና ጥያቄውን በOmniRoute በኩል እንደገና ይጽፈዋል።
 
-ይህም የሚከተሉትን እንዲያደርጉ ያስችልዎታል፦
+ይህ ማለት የሚከተሉትን መሥራት ይችላሉ ማለት ነው፦
 
-- **ማንኛውንም ወኪል ወደ ማንኛውም አቅራቢ እንደገና ያዘዋውሩ**፦ Copilot ከOpenAI ጋር እየተገናኘ ነው? ወደ Anthropic Claude፣ Gemini፣ ወይም ከOmniRoute 376 አቅራቢዎች ወደ ማንኛውም ያዘዋውሩት።
-- **የሞዴል ማዛመጃዎችን ይተግብሩ**፦ `gemini-3-flash` → `claude-sonnet-4.7` በአስተናጋጁ ደረጃ በግልጽነት።
-- **ሁሉንም የወኪል ትራፊክ ይከታተሉ**፦ እያንዳንዱ የተጠለፈ ጥያቄ ወደ [የትራፊክ መርማሪ](./TRAFFIC_INSPECTOR.md) ይታተማል።
-- **የOmniRoute የመቋቋም ችሎታን ይተግብሩ**፦ ጥምር ማዘዋወር፣ የወረዳ ቆራጮች፣ አማራጭ መንገዶች እና የወጪ ክትትል ለIDE ወኪል ትራፊክም ይሰራሉ።
+- **ማንኛውንም ወኪል ወደ ማንኛውም አቅራቢ እንደገና ማስመራት**፦ Copilot ከOpenAI ጋር እየተነጋገረ ነው? ወደ Anthropic Claude፣ Gemini፣ ወይም ከOmniRoute 376 አቅራቢዎች ወደ ማንኛውም ያዞሩት።
+- **የሞዴል ማስማቶችን መተግበር**፦ `gemini-3-flash` → `claude-sonnet-4.7` በግልጽ ሁኔታ በአስተናጋጅ (handler) ደረጃ።
+- **የወኪሎችን ሁሉ ትራፊክ መከታተል**፦ እያንዳንዱ የተያዘ ጥያቄ ወደ [Traffic Inspector](./TRAFFIC_INSPECTOR.md) ይታተማል።
+- **የOmniRoute መቋቋምን መተግበር**፦ የተጣመረ መከፋፈል (combo routing)፣ የወሰን መቋረጫዎች (circuit breakers)፣ አማራጭ መንገዶች (fallbacks)፣ እና የወጪ ክትትል ለIDE ወኪል ትራፊክም ይሠራሉ።
 
-### ከገበያው አንፃር ያለው አቀማመጥ
+### ከገበያ ጋር ያለው አቀማመጥ
 
-| ባህሪ                   | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| --------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity           |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot        |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)            |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex          |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE            |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries        |    —    |    ✓     |        —        |             ✓             |
-| Claude Code           |    —    |    —     |        ✓        |             ✓             |
-| Open Code             |    —    |    —     |        ✓        |             ✓             |
-| Trae                  |    —    |    —     |        —        |        🔍 በምርመራ ላይ        |
-| የዳሽቦርድ UI             |    ✓    |    ✗     |        ✗        |             ✓             |
-| የትራፊክ መርማሪ            |    ✗    |    ✗     |        ✓        |             ✓             |
-| የOmniRoute ማዘዋወር      |    ✗    |    ✗     |        ✗        |             ✓             |
-| የሞዴል ማዛመጃ UI          |    ✗    |    ✗     |        ✗        |             ✓             |
-| የማለፊያ ዝርዝር            |    ✗    |    ✗     |        ✓        |             ✓             |
-| የዋና አቅራቢ CA ምስክር ወረቀት |    ✗    |    ✗     |        ✓        |             ✓             |
+| ባህሪይ              | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| ----------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity       |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot    |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)        |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex      |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE        |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries    |    —    |    ✓     |        —        |             ✓             |
+| Claude Code       |    —    |    —     |        ✓        |             ✓             |
+| Open Code         |    —    |    —     |        ✓        |             ✓             |
+| Trae              |    —    |    —     |        —        |        🔍 በምርመራ ላይ        |
+| የዳሽቦርድ UI         |    ✓    |    ✗     |        ✗        |             ✓             |
+| Traffic Inspector |    ✗    |    ✗     |        ✓        |             ✓             |
+| የOmniRoute መከፋፈል  |    ✗    |    ✗     |        ✗        |             ✓             |
+| የሞዴል ማስማት UI      |    ✗    |    ✗     |        ✗        |             ✓             |
+| የማለፊያ ዝርዝር        |    ✗    |    ✗     |        ✓        |             ✓             |
+| የኋላኛ CA ምስክር ወረቀት |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -546,22 +546,22 @@ AgentBridge ጥያቄዎቹን ቢያቋርጥም ሁሉም ጥያቄዎች ካ�
 
 ### የTrae ምርመራ
 
-Trae በአንጻራዊነት አዲስ የAI ኮድ ማጎልበቻ ረዳት ነው። ማስተናገጃ ከመተግበርዎ በፊት፦
+Trae በአንጻራዊነት አዲስ የAI ኮዲንግ ረዳት ነው። ሃንድለር ከመተግበሩ በፊት፦
 
-1. በVS Code / JetBrains የመተግበሪያ ገበያዎች ውስጥ ወይም ራሱን የቻለ መተግበሪያ ከሆነ ባይነሪውን/ቅጥያውን ይለዩ
-2. የAPI አስተናጋጆችን እና የመግቢያ ነጥቦችን ቅርጽ ለማወቅ ትራፊኩን በmitmproxy ይቅረጹ
+1. ባይነሪውን/ቅጥያውን በVS Code / JetBrains የመተግበሪያ ገበያዎች ወይም እንደ ራሱን የቻለ መተግበሪያ ይለዩ
+2. የAPI አስተናጋጆችን እና የመጨረሻ ነጥቦችን ቅርጽ ለማወቅ ትራፊክን በmitmproxy ይቅረጹ
 3. የማረጋገጫ ዘዴውን ይወስኑ
-4. በTOS እና በAPI ተገኝነት ላይ በመመርኮዝ ለመቀጠል/ላለመቀጠል ይገምግሙ
+4. በTOS እና በAPI ተገኝነት ላይ ተመስርተው መቀጠል/አለመቀጠልን ይገምግሙ
 
-ምርመራው እስኪጠናቀቅ ድረስ፣ በዳሽቦርዱ ውስጥ ያለው የTrae ካርድ የ"በምርመራ ላይ" ባጅ ከ"የአዋጭነት ሪፖርት ያድርጉ" አገናኝ ጋር ያሳያል። `src/mitm/handlers/trae.ts` ላይ ያለው የማስተናገጃ አጽም የተዋቀረ `ገና አልተተገበረም` ስህተት ይጥላል።
+ምርመራው እስኪጠናቀቅ ድረስ፣ በዳሽቦርዱ ውስጥ ያለው የTrae ካርድ የ"Investigating" ባጅ ከ"Report viability" አገናኝ ጋር ያሳያል። በ`src/mitm/handlers/trae.ts` ያለው የሃንድለር ስተብ የተዋቀረ `Not yet implemented` ስህተት ይጥላል።
 
-### በወረፋ ላይ ያሉ ወኪሎች (MITM ያስፈልጋል — ብጁ base URL ድጋፍ የለም)
+### በባክሎግ ያሉ ወኪሎች (MITM ያስፈልጋል — ብጁ የመሠረት URL ድጋፍ የለም)
 
-የሚከተሉት መሳሪያዎች አሁን ባሉት ስሪቶቻቸው ብጁ base URL አይደግፉም፤ ይህም MITMን ብቸኛው የመጥለፍ መንገድ ያደርገዋል። የአዋጭነት ግምገማ በመጠባበቅ ላይ ነው፦
+የሚከተሉት መሣሪያዎች አሁን ባሉት ስሪቶቻቸው ብጁ የመሠረት URLዎችን አይደግፉም፣ ስለዚህ MITM ብቸኛው የመጥለፍ መንገድ ነው። የአዋጭነት ግምገማው በመጠባበቅ ላይ ነው፦
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — ከKiro IDE የተለየ)
 - **Cowork** (Anthropic desktop)
 
-ማስታወሻ፦ GitHub Copilot CLI ≥v1.0.19 `COPILOT_PROVIDER_BASE_URL`ን ይደግፋል — ለዚያ መሳሪያ MITMን ከመጠቀም ይልቅ ቀጥተኛ ውቅረትን ይጠቀሙ።
+ማስታወሻ፦ GitHub Copilot CLI ≥v1.0.19 `COPILOT_PROVIDER_BASE_URL`ን ይደግፋል — ለዚያ መሣሪያ MITMን ከመጠቀም ይልቅ ቀጥተኛ ውቅርን ይጠቀሙ።

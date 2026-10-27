@@ -691,7 +691,7 @@ a shell előzményeitől. → [CLI-integrációk](docs/guides/CLI-INTEGRATIONS.m
 
 </div>
 
-> **376 regisztrált szolgáltató** a kanonikus csevegési, média-, keresési, helyi, felhőügynök- és rendszergyűjteményekben, köztük **153, amely `hasFree: true` felfedezési metaadatot tartalmaz**. A csevegési modellek nyilvántartása **239 szolgáltatót / 3 059 különálló szolgáltató–modell párost / 1 475 nyers modellazonosítót** fed le; a különálló ingyenes keretkatalógusban **471 modellenkénti sor**, **34 megújuló keret** és **52 megújuló vagy kulcs nélkül használható, örökre ingyenes szolgáltató** található. Ezek szándékosan eltérő nevezők; a definíciók és a keretek duplikációját kiszűrő számítások a [Szolgáltatói referenciában](docs/reference/PROVIDER_REFERENCE.md) és az [Ingyenes csomagok](docs/reference/FREE_TIERS.md) dokumentumban találhatók.
+> **376 regisztrált szolgáltató** a kanonikus csevegési, média-, keresési, helyi, felhőügynök- és rendszergyűjteményekben, köztük **153, amely `hasFree: true` felfedezési metaadatot tartalmaz**. A csevegési modellek nyilvántartása **239 szolgáltatót / 3 059 különálló szolgáltató–modell párost / 1 475 nyers modellazonosítót** fed le; a különálló ingyenes keretkatalógusban **484 modellenkénti sor**, **34 megújuló keret** és **52 megújuló vagy kulcs nélkül használható, örökre ingyenes szolgáltató** található. Ezek szándékosan eltérő nevezők; a definíciók és a keretek duplikációját kiszűrő számítások a [Szolgáltatói referenciában](docs/reference/PROVIDER_REFERENCE.md) és az [Ingyenes csomagok](docs/reference/FREE_TIERS.md) dokumentumban találhatók.
 
 <div align="center">
 
@@ -1090,11 +1090,11 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-A `:latest` a legmagasabb **közzétett** stabil SemVer-verziót követi. Nem követi a git `main` ágát. GitOps használatához rögzítse a `:X.Y.Z` verziót. Lásd: [Docker kiadási csatornák](docs/guides/DOCKER_GUIDE.md#release-channels). A lemezképben az **`OMNIROUTE_MEMORY_MB=1024`** érték van rögzítve. Ez elegendő a vezérlőpulthoz és könnyű csevegési feladatokhoz. A **kódoló ügynököknek** (Claude Code, Codex, Grok stb. által küldött `POST /v1/responses` kérések) jóval nagyobb V8-heapre van szükségük, különben a folyamat két, egymást időben átfedő hosszú kontextus esetén körülbelül 12 GiB-nál `FATAL ERROR` hibával leáll. A konténer méretét a heap fölé állítsa (a natív pufferek a V8-on kívül helyezkednek el):
+A `:latest` a legmagasabb **közzétett**, stabil SemVer-verziót követi. Nem követi a git `main` ágát. GitOps használatához rögzítse a `:X.Y.Z` verziót. Lásd: [Docker kiadási csatornák](docs/guides/DOCKER_GUIDE.md#release-channels). A lemezképben az **`OMNIROUTE_MEMORY_MB=1024`** érték van rögzítve. Ez elegendő az irányítópulthoz és könnyebb csevegéshez. A **kódoló ügynököknek** (Claude Code, Codex, Grok stb. által küldött `POST /v1/responses`) jóval nagyobb V8-heapre van szükségük, különben a folyamat két, egymást átfedő hosszú kontextus esetén körülbelül 12 GiB-nál `FATAL ERROR` hibával leáll. A konténer méretét a heap fölé állítsa be (a natív pufferek a V8-on kívül helyezkednek el):
 
-| Terhelés                            | Heap (`-e OMNIROUTE_MEMORY_MB`) | Konténer (`--memory`) |
+| Munkaterhelés                       | Heap (`-e OMNIROUTE_MEMORY_MB`) | Konténer (`--memory`) |
 | ----------------------------------- | ------------------------------- | --------------------- |
-| Vezérlőpult / könnyű csevegés       | `1024` (lemezkép alapértéke)    | ≥2 g                  |
+| Irányítópult / könnyebb csevegés    | `1024` (a lemezkép alapértéke)  | ≥2 g                  |
 | Egy kódoló ügynök                   | `8192`                          | ≥10 g                 |
 | Két egyidejű hosszú `/v1/responses` | `10240`–`12288`                 | ≥12–16 g              |
 
@@ -1104,7 +1104,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-Teljes táblázat: [Docker útmutató — futásidejű RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+A teljes táblázat: [Docker útmutató — futásidejű RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **Előzetes kiadású Docker-csatorna:** a `diegosouzapw/omniroute:next` és a
 > `diegosouzapw/omniroute:next-web` az aktuális alapértelmezett `release/v*`
@@ -1116,9 +1116,9 @@ Teljes táblázat: [Docker útmutató — futásidejű RAM](docs/guides/DOCKER_G
 
 A szabványos `bun install` és a globális telepítés (`bun install -g omniroute`) a Bun futtatókörnyezetének felismerésével támogatott:
 
-- **Beépített `bun:sqlite`**: Az OmniRoute a Bun alatt történő futtatáskor a Bun beépített `bun:sqlite` illesztőprogramját használja, Node.js alatt pedig a `better-sqlite3`, illetve a `sql.js` használatára tér át.
-- **A Webpack csomagoló automatikus kiválasztása fejlesztéskor**: A fejlesztési mód (`bun run dev`) automatikusan felismeri a Bunt, és a natív V8-kötések inkompatibilitásának megelőzése érdekében letiltja a Turbopacket a Webpack javára. Az éles buildelés (`bun run build`) pontosan úgy követi az `OMNIROUTE_USE_TURBOPACK` értékét, mint Node alatt: alapértelmezés szerint Turbopacket használ; Webpackkel történő buildeléshez állítsa be az `OMNIROUTE_USE_TURBOPACK=0` értéket (a `Dockerfile.bun` ezt `--build-arg` argumentumként teszi elérhetővé).
-- **Dedikált Bun Dockerfile**: Többlépcsős `Dockerfile.bun` natív Bun-alapú éles telepítésekhez (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Beépített `bun:sqlite`**: Bun alatt futtatva az OmniRoute a Bun beépített `bun:sqlite` illesztőprogramját használja, Node.js esetén pedig a `better-sqlite3` vagy a `sql.js` használatára vált vissza.
+- **A Webpack csomagoló automatikus kiválasztása fejlesztéskor**: A fejlesztői futtatás (`bun run dev`) automatikusan felismeri a Bunt, és a natív V8-kötések inkompatibilitásának elkerülése érdekében letiltja a Turbopacket a Webpack javára. Az éles buildek (`bun run build`) pontosan ugyanúgy követik az `OMNIROUTE_USE_TURBOPACK` értékét, mint Node alatt: alapértelmezés szerint Turbopack, Webpackkel történő buildhez pedig `OMNIROUTE_USE_TURBOPACK=0` szükséges (a `Dockerfile.bun` ezt `--build-arg` argumentumként teszi elérhetővé).
+- **Külön Bun Dockerfile**: Többlépcsős `Dockerfile.bun` a natív, éles Bun-telepítésekhez (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Telepítés és futtatás Bunnal
@@ -1148,7 +1148,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Nix flake-ek használatával
+# Nix flakes használatával
 nix develop
 npm run dev
 
@@ -1161,40 +1161,42 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. A csatolással hozzákapcsolt adatkönyvtár előkészítése
+# 1. A bind mounttal csatolt adatkönyvtár előkészítése
 mkdir -p data
 
-# 2. Csak Linux + helyi root nélküli Podman esetén (távoli Podman Machine-klienssel soha):
+# 2. Csak Linux + helyi, root nélküli Podman esetén (távoli Podman Machine-klienssel soha):
 podman unshare chown 1000:1000 ./data
 
-# 3. Állítsa be a futtatókörnyezetre vonatkozó jelzést, építse meg a helyi Compose-lemezképet, majd indítsa el
+# 3. A futtatókörnyezetre vonatkozó jelzés beállítása, a helyi Compose-lemezkép buildelése és indítás
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS vagy Windows rendszeren a Podman távoli Podman Machine-t használ: hagyja ki a `podman unshare` lépést, és
-kövesse a [topológiaspecifikus adatkönyvtár-útmutatást](contrib/podman/README.md#data-directory-permissions-by-topology).
+macOS vagy Windows rendszeren a Podman egy távoli Podman Machine-t használ: hagyja ki a `podman unshare` lépést, és
+kövesse a [topológiára jellemző adatkönyvtár-útmutatást](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Podman útmutató](contrib/podman/README.md) — Compose-buildek, Podman Machine és
-Linux/systemd Quadlet-beállítás.
+Linux/systemd Quadlet beállítása.
 
-**⚡ Gyorsabb / kisebb erőforrás-igényű telepítés (a natív build kihagyása)**
+**⚡ Gyorsabb / kisebb telepítés (a natív build kihagyása)**
 
 A natív SQLite-motor (`better-sqlite3`) egy **opcionális** függőség, ezért a globális
-telepítés soha nem akad el a forráskódból történő fordításnál: előre buildelt bináris fájlt használ, ha talál az
-adott platformnak/Node-nak megfelelőt, ellenkező esetben pedig észrevétlenül egy tisztán JS-alapú motorra vált
-(`node:sqlite` Node 22+ alatt, egyébként a mellékelt `sql.js` WASM-re) — nincs szükség buildeszközökre.
+telepítést soha nem tartja fel a forráskódból történő fordítás: előre lefordított bináris fájlt használ, ha az megfelel
+az adott platformnak/Node-verziónak, ellenkező esetben pedig észrevétlenül visszavált egy tisztán JavaScript-alapú motorra
+(Node 22+ alatt `node:sqlite`, egyébként a mellékelt `sql.js` WASM) — nincs szükség buildeszközökre.
 
-A telepítés utáni natív előkészítés teljes kihagyásához (CI, grafikus felület nélküli vagy lassú gépeken):
+A telepítés utáni **natív előkészítés** teljes kihagyásához (CI, grafikus felület nélküli vagy lassú gépek esetén).
+Megjegyzés: ez csak a natív SQLite előkészítési lépését (`scripts/postinstall.mjs`) hagyja ki; a
+bináris fájl másolási/javítási hookja (`scripts/build/postinstall.mjs`) továbbra is a megszokott módon fut:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # A CI=1 szintén kihagyja
 ```
 
-A leggyorsabb telepítéshez részesítse előnyben a **pnpm** használatát (tartalomcímzett tároló + merev hivatkozások — lásd fent).
-Vezérlőpult nélküli, grafikus felületet nem igénylő futtatáshoz használja a Docker `base` profilját (fent) vagy a
-[Termux útmutatót](docs/guides/TERMUX_GUIDE.md). A CLI-t és a webes vezérlőpultot ugyanaz a
-folyamat szolgálja ki egyetlen porton, ezért jelenleg nincs külön, kizárólag CLI-t tartalmazó csomag.
+A leggyorsabb telepítéshez részesítse előnyben a **pnpm** használatát (tartalomcímzett tároló + hard linkek — lásd fent).
+Irányítópult nélküli, grafikus felület nélküli futtatókörnyezethez használja a Docker `base` profilját (fent) vagy a
+[Termux útmutatót](docs/guides/TERMUX_GUIDE.md). A CLI-t és a webes irányítópultot ugyanaz a folyamat szolgálja ki egyetlen
+porton, így jelenleg nincs külön, kizárólag CLI-t tartalmazó csomag.
 
 <br/>
 

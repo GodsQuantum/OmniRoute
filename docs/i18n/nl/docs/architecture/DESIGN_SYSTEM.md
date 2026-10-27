@@ -81,30 +81,30 @@
 
 ## 2. Regels
 
-1. Tokens, nooit letterlijke waarden. Bewust behouden uitzonderingen: de altijd donkere consoleterminal, ReactFlow SVG-
-   lijnen via `STATUS_HEX` (`src/shared/constants/statusColors.ts`) en de categorische paletten
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) en
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
+1. Tokens, nooit letterlijke waarden. Bewust behouden uitzonderingen: de altijd donkere consoleterminal en ReactFlow
+   SVG-lijnen via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). De routeringsstrategie en
+   paletten van de compressielaag gebruiken de grafiektokens van de kit via `strategyColorVar` en
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
 2. Pas `packages/ui-kit/src` nooit handmatig aan: synchroniseer met `scripts/dev/sync-ui-kit.sh <commit>`; de
    pre-commitcontrole `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mislukt bij elke byte die
    afwijkt van de vastgezette upstream-commit (de controle wordt met een waarschuwing overgeslagen wanneer de upstream-kloon,
-   `UI_KIT_CLONE` of `_references/cheaper-inference-ui-kit`, ontbreekt). Als de kit iets niet bevat,
-   werk je eromheen in de adapter of het scherm en vraag je upstream om toevoeging ervan.
+   `UI_KIT_CLONE` of `_references/cheaper-inference-ui-kit`, ontbreekt). Wanneer er iets in de kit ontbreekt,
+   omzeil dit dan in de adapter of het scherm en vraag upstream om toevoeging ervan.
 3. De standaardteksten van de kit zijn Engels (`label = "Loading"`, `loadingLabel = "Loading table"`…) — geef vertaalde
-   tekenreeksen uit `useTranslations(...)` door wanneer een kitcomponent tekst rendert.
-4. Tailwind-utilities hebben voorrang op kitcomponentklassen (de kit declareert
-   `@layer theme, base, components, utilities` en de regels ervan staan in `components`) — gebruik utilities voor
-   witruimte en lay-out, niet om kitcomponenten een andere kleur te geven.
-5. Koppen: `.ci-heading` (Inter, zonder tekenafstand) voor pagina- en sectietitels; `.ci-dashboard-display`
-   (Instrument Serif) alleen voor grote, spaarzaam gebruikte weergavetekst, zoals de statuscode op een foutpagina.
-6. `tests/unit/dashboard-kit-sweep.test.ts` bewaakt het gebruik van de kit: geen Material-ligatuurspan onder
+   tekenreeksen vanuit `useTranslations(...)` door wanneer een kitcomponent tekst weergeeft.
+4. Tailwind-hulpprogramma's hebben voorrang op kitcomponentklassen (de kit declareert
+   `@layer theme, base, components, utilities` en de regels ervan bevinden zich in `components`) — gebruik hulpprogramma's voor
+   witruimte en lay-out, niet om kitcomponenten opnieuw in te kleuren.
+5. Koppen: `.ci-heading` (Inter, zonder letterspatiëring) voor pagina- en sectietitels; `.ci-dashboard-display`
+   (Instrument Serif) alleen voor grote, spaarzaam gebruikte weergavetekst, zoals de statuscode op de foutpagina.
+6. `tests/unit/dashboard-kit-sweep.test.ts` bewaakt de toepassing van de kit: geen Material-ligatuurspan onder
    `src/app` of `src/shared/components`; in de dashboardstructuur (`src/app/(dashboard)` en
    `src/shared/components`) geen onbewerkte `<select>`, `<textarea>` of `<table>` en geen zelfgemaakte
-   `role="dialog"` buiten de vermelde uitzonderingen (de native vertakking van de `Select`-adapter,
-   `RequestLoggerDetail`); elke onbewerkte `<button>` of `<input>` daar vereist een commentaarregel met
+   `role="dialog"` buiten de vermelde uitzonderingen (de native tak van de `Select`-adapter,
+   `RequestLoggerDetail`); elke onbewerkte `<button>` of `<input>` daar vereist een opmerking met
    `kit-exception:` (met de reden) die maximaal 3 regels erboven eindigt; palettinten en `dark:`-varianten
-   zijn alleen toegestaan in de bestanden die door de test worden vermeld.
-7. Controleer vóór een PR beide thema's en de viewport van 390 px (met schermafbeeldingen); `tests/e2e/a11y.spec.ts` voert
+   alleen in de bestanden die door de test worden vermeld.
+7. Controleer vóór een PR beide thema's en de viewport van 390 px (screenshots); `tests/e2e/a11y.spec.ts` voert
    axe uit.
 
 ## 3. Een scherm toevoegen

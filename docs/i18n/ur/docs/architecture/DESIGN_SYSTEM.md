@@ -78,30 +78,30 @@
 
 ## 2. قواعد
 
-1. ٹوکنز استعمال کریں، لِٹرلز کبھی نہیں۔ دانستہ طور پر برقرار رکھی گئی مستثنیات: ہمیشہ تاریک رہنے والا کنسول ٹرمینل، ReactFlow SVG
-   اسٹروکس بذریعہ `STATUS_HEX` (`src/shared/constants/statusColors.ts`)، اور زمرہ جاتی پیلیٹس
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) اور
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)۔
-2. `packages/ui-kit/src` کو کبھی بھی دستی طور پر پیچ نہ کریں: `scripts/dev/sync-ui-kit.sh <commit>` کے ذریعے ہم وقت کریں؛
+1. ٹوکنز، کبھی بھی لٹریلز نہیں۔ دانستہ رکھی گئی مستثنیات: ہمیشہ تاریک رہنے والا کنسول ٹرمینل اور ReactFlow
+   کے SVG اسٹروکس بذریعہ `STATUS_HEX` (`src/shared/constants/statusColors.ts`)۔ روٹنگ کی حکمتِ عملی اور
+   کمپریشن لیئر کی پیلیٹس، `strategyColorVar` اور
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) کے ذریعے کِٹ کے چارٹ ٹوکنز استعمال کرتی ہیں۔
+2. `packages/ui-kit/src` کو کبھی بھی دستی طور پر پیچ نہ کریں: `scripts/dev/sync-ui-kit.sh <commit>` کے ذریعے ہم آہنگ کریں؛
    پری کمیٹ گیٹ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) کسی بھی ایسے بائٹ پر ناکام ہو جاتا ہے
-   جو پن شدہ upstream commit سے مختلف ہو (جب upstream clone،
-   `UI_KIT_CLONE` یا `_references/cheaper-inference-ui-kit`، موجود نہ ہو تو یہ انتباہ کے ساتھ چھوڑ دیتا ہے)۔ جب کِٹ میں کوئی چیز موجود نہ ہو،
-   تو adapter یا اسکرین میں اس کا متبادل حل استعمال کریں اور upstream سے اس کی درخواست کریں۔
-3. کِٹ کے متن کی طے شدہ زبان انگریزی ہے (`label = "Loading"`, `loadingLabel = "Loading table"`…) — جب بھی کِٹ کا کوئی component متن رینڈر کرے،
+   جو پن کیے گئے اپ اسٹریم کمیٹ سے مختلف ہو (جب اپ اسٹریم کلون،
+   `UI_KIT_CLONE` یا `_references/cheaper-inference-ui-kit`، موجود نہ ہو تو یہ تنبیہ کے ساتھ نظر انداز ہو جاتا ہے)۔ جب کِٹ میں کوئی چیز موجود نہ ہو،
+   تو اڈاپٹر یا اسکرین میں متبادل حل اپنائیں اور اپ اسٹریم سے اس کی درخواست کریں۔
+3. کِٹ کے متن کی ڈیفالٹ قدریں انگریزی میں ہیں (`label = "Loading"`, `loadingLabel = "Loading table"`…) — جب بھی کِٹ کا کوئی کمپوننٹ متن رینڈر کرے،
    `useTranslations(...)` سے ترجمہ شدہ اسٹرنگز فراہم کریں۔
-4. Tailwind utilities کو کِٹ component classes پر فوقیت حاصل ہے (کِٹ
-   `@layer theme, base, components, utilities` کا اعلان کرتی ہے اور اس کے قواعد `components` میں ہوتے ہیں) — utilities کو
-   spacing اور layout کے لیے استعمال کریں، کِٹ components کو دوبارہ رنگ دینے کے لیے نہیں۔
-5. سرخیاں: صفحے اور سیکشن کے عنوانات کے لیے `.ci-heading` (Inter، بغیر tracking)؛ `.ci-dashboard-display`
-   (Instrument Serif) صرف بڑے اور کم کثافت والے نمایاں متن کے لیے، جیسے error page کا status code۔
-6. `tests/unit/dashboard-kit-sweep.test.ts` کِٹ کو اپنانے کی نگرانی کرتا ہے: `src/app` یا
-   `src/shared/components` کے تحت کوئی Material ligature span نہیں؛ dashboard tree (`src/app/(dashboard)` اور
-   `src/shared/components`) میں کوئی خام `<select>`، `<textarea>` یا `<table>` نہیں اور فہرست شدہ مستثنیات (`Select` adapter کی native branch،
-   `RequestLoggerDetail`) کے علاوہ کوئی دستی طور پر بنایا گیا
-   `role="dialog"` نہیں؛ وہاں ہر خام `<button>` یا `<input>` کے لیے ایک ایسا تبصرہ درکار ہے جس میں
-   `kit-exception:` (وجہ سمیت) شامل ہو اور جو اس سے زیادہ سے زیادہ 3 سطریں اوپر ختم ہو؛ palette hues اور `dark:` variants
-   صرف ان فائلوں میں ہوں جو test میں درج ہیں۔
-7. PR سے پہلے دونوں themes اور 390 px viewport کی تصدیق کریں (screenshots)؛ `tests/e2e/a11y.spec.ts`
+4. Tailwind یوٹیلیٹیز کو کِٹ کمپوننٹ کلاسز پر ترجیح حاصل ہے (کِٹ
+   `@layer theme, base, components, utilities` کا اعلان کرتی ہے اور اس کے قواعد `components` میں موجود ہیں) — اسپیسنگ اور لے آؤٹ کے لیے یوٹیلیٹیز استعمال کریں،
+   کِٹ کمپوننٹس کے رنگ تبدیل کرنے کے لیے نہیں۔
+5. سرخیاں: صفحے اور سیکشن کے عنوانات کے لیے `.ci-heading` (Inter، بغیر ٹریکنگ)؛ `.ci-dashboard-display`
+   (Instrument Serif) صرف بڑے اور کم کثافت والے نمایشی متن کے لیے، جیسے ایرر صفحے کا اسٹیٹس کوڈ۔
+6. `tests/unit/dashboard-kit-sweep.test.ts` کِٹ کو اپنانے کی نگرانی کرتا ہے: `src/app` یا `src/shared/components` کے تحت
+   کوئی Material ligature span نہیں؛ ڈیش بورڈ ٹری (`src/app/(dashboard)` اور
+   `src/shared/components`) میں کوئی خام `<select>`، `<textarea>` یا `<table>` نہیں، اور درج شدہ مستثنیات (`Select` اڈاپٹر کی نیٹو برانچ،
+   `RequestLoggerDetail`) کے علاوہ دستی طور پر بنایا گیا کوئی
+   `role="dialog"` نہیں؛ وہاں ہر خام `<button>` یا `<input>` کے لیے ایسا تبصرہ ضروری ہے جس میں
+   `kit-exception:` (وجہ کے ساتھ) شامل ہو اور جو اس سے زیادہ سے زیادہ 3 سطریں اوپر ختم ہو؛ پیلیٹ ہیوز اور `dark:` ویریئنٹس
+   صرف ان فائلوں میں ہوں جنہیں ٹیسٹ نے درج کیا ہے۔
+7. PR سے پہلے دونوں تھیمز اور 390 px ویوپورٹ کی اسکرین شاٹس کے ذریعے تصدیق کریں؛ `tests/e2e/a11y.spec.ts`
    axe چلاتا ہے۔
 
 ## 3. اسکرین شامل کرنا

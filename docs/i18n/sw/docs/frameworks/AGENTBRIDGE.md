@@ -16,34 +16,34 @@ AgentBridge ni proksi ya MITM (Mtu-katikati) ya OmniRoute ambayo hunasa trafiki 
 
 ### AgentBridge ni nini?
 
-Wakati ajenti wa IDE (kwa mfano, GitHub Copilot, Cursor, Claude Code) anapopiga simu ya API, huunganisha moja kwa moja na mtoa huduma wa AI wa upstream (OpenAI, Anthropic, n.k.). AgentBridge hunasa muunganisho huo kwa uwazi katika kiwango cha TLS — bila kuhitaji mabadiliko yoyote ya usanidi wa ajenti — na huandika upya ombi ili lipitie OmniRoute.
+Wakati wakala wa IDE (k.m., GitHub Copilot, Cursor, Claude Code) anapofanya wito wa API, huunganisha moja kwa moja na mtoa huduma wa AI wa ngazi ya juu (OpenAI, Anthropic, n.k.). AgentBridge hukatiza muunganisho huo kwa uwazi katika kiwango cha TLS — bila kuhitaji mabadiliko yoyote ya usanidi wa wakala — na kuandika upya ombi kupitia OmniRoute.
 
 Hii inamaanisha unaweza:
 
-- **Kuelekeza upya ajenti yeyote kwa mtoa huduma yeyote**: Copilot inawasiliana na OpenAI? Ielekeze upya kwa Anthropic Claude, Gemini, au yeyote kati ya watoa huduma 376 wa OmniRoute.
-- **Kutumia ulinganishaji wa modeli**: `gemini-3-flash` → `claude-sonnet-4.7` kwa uwazi katika kiwango cha kishughulikiaji.
-- **Kuchunguza trafiki yote ya ajenti**: kila ombi lililonaswa huchapishwa kwenye [Kikaguzi cha Trafiki](./TRAFFIC_INSPECTOR.md).
-- **Kutumia ustahimilivu wa OmniRoute**: uelekezaji wa mseto, vivunja saketi, mbinu mbadala, na ufuatiliaji wa gharama hufanya kazi kwa trafiki ya ajenti wa IDE pia.
+- **Kuelekeza upya wakala yeyote kwa mtoa huduma yeyote**: Copilot akizungumza na OpenAI? Muelekeze kwa Anthropic Claude, Gemini, au mojawapo ya watoa huduma 376 wa OmniRoute.
+- **Kutumia ramani za modeli**: `gemini-3-flash` → `claude-sonnet-4.7` kwa uwazi katika kiwango cha kishughulikiaji.
+- **Kuchunguza trafiki yote ya wakala**: kila ombi lililokatizwa huchapishwa kwenye [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
+- **Kutumia ustahimilivu wa OmniRoute**: uelekezaji wa combo, circuit breakers, fallbacks, na ufuatiliaji wa gharama hufanya kazi kwa trafiki ya wakala wa IDE pia.
 
 ### Nafasi ikilinganishwa na soko
 
-| Kipengele                             | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| ------------------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity                           |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot                        |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)                            |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex                          |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE                            |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries                        |    —    |    ✓     |        —        |             ✓             |
-| Claude Code                           |    —    |    —     |        ✓        |             ✓             |
-| Open Code                             |    —    |    —     |        ✓        |             ✓             |
-| Trae                                  |    —    |    —     |        —        |      🔍 Inachunguzwa      |
-| Kiolesura cha Dashibodi               |    ✓    |    ✗     |        ✗        |             ✓             |
-| Kikaguzi cha Trafiki                  |    ✗    |    ✗     |        ✓        |             ✓             |
-| Uelekezaji wa OmniRoute               |    ✗    |    ✗     |        ✗        |             ✓             |
-| Kiolesura cha ulinganishaji wa modeli |    ✗    |    ✗     |        ✗        |             ✓             |
-| Orodha ya kupita bila kunaswa         |    ✗    |    ✗     |        ✓        |             ✓             |
-| Cheti cha CA cha upstream             |    ✗    |    ✗     |        ✓        |             ✓             |
+| Kipengele                 | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| ------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity               |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot            |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)                |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex              |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE                |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries            |    —    |    ✓     |        —        |             ✓             |
+| Claude Code               |    —    |    —     |        ✓        |             ✓             |
+| Open Code                 |    —    |    —     |        ✓        |             ✓             |
+| Trae                      |    —    |    —     |        —        |      🔍 Inachunguzwa      |
+| UI ya Dashibodi           |    ✓    |    ✗     |        ✗        |             ✓             |
+| Traffic Inspector         |    ✗    |    ✗     |        ✓        |             ✓             |
+| Uelekezaji wa OmniRoute   |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI ya ramani za modeli    |    ✗    |    ✗     |        ✗        |             ✓             |
+| Orodha ya bypass          |    ✗    |    ✗     |        ✓        |             ✓             |
+| Cheti cha CA cha upstream |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -544,26 +544,26 @@ Skimu kamili za OpenAPI: `docs/openapi.yaml` → lebo `AgentBridge`.
 
 ---
 
-## §8 Ramani ya utekelezaji
+## §8 Ramani ya maendeleo
 
 ### Uchunguzi wa Trae
 
 Trae ni msaidizi mpya kwa kiasi fulani wa uandishi wa msimbo kwa kutumia AI. Kabla ya kutekeleza kishughulikiaji:
 
-1. Tambua faili ya binary/kiendelezi katika masoko ya VS Code / JetBrains au kama programu inayojitegemea
+1. Tambua faili tekelezi/kiendelezi katika masoko ya VS Code / JetBrains au kama programu inayojitegemea
 2. Nasa trafiki kwa kutumia mitmproxy ili kugundua seva za API na miundo ya endpoint
 3. Bainisha utaratibu wa uthibitishaji
-4. Tathmini kuendelea/kutoendelea kulingana na TOS na uwezekano wa kugundua API
+4. Tathmini uamuzi wa kuendelea/kutoendelea kulingana na Masharti ya Huduma na uwezekano wa kugundua API
 
-Hadi uchunguzi utakapokamilika, kadi ya Trae kwenye dashibodi itaonyesha beji ya "Inachunguzwa" yenye kiungo cha "Ripoti uwezekano wa kutekelezeka". Kiolezo cha kishughulikiaji kilicho katika `src/mitm/handlers/trae.ts` hutupa hitilafu iliyopangwa ya `Bado haijatekelezwa`.
+Hadi uchunguzi utakapokamilika, kadi ya Trae kwenye dashibodi inaonyesha beji ya "Inachunguzwa" yenye kiungo cha "Ripoti uwezekano wa kutekelezeka". Kiunzi cha kishughulikiaji katika `src/mitm/handlers/trae.ts` husababisha hitilafu iliyopangiliwa ya `Not yet implemented`.
 
-### Ajenti zilizo kwenye orodha ya kusubiri (MITM inahitajika — hazitumii URL maalum ya msingi)
+### Mawakala kwenye orodha ya kazi zilizosalia (MITM inahitajika — hakuna usaidizi wa URL maalum ya msingi)
 
-Zana zifuatazo hazitumii URL maalum za msingi katika matoleo yake ya sasa, hivyo kufanya MITM kuwa njia pekee ya kuingilia mawasiliano. Tathmini ya uwezekano wa kutekelezeka bado inasubiri:
+Zana zifuatazo hazitumii URL maalum za msingi katika matoleo yake ya sasa, hivyo kufanya MITM kuwa njia pekee ya kunasa mawasiliano. Tathmini ya uwezekano wa kutekelezeka bado inasubiriwa:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — tofauti na Kiro IDE)
-- **Cowork** (programu ya eneo-kazi ya Anthropic)
+- **Cowork** (programu ya mezani ya Anthropic)
 
-Kumbuka: GitHub Copilot CLI ≥v1.0.19 hutumia `COPILOT_PROVIDER_BASE_URL` — tumia usanidi wa moja kwa moja badala ya MITM kwa zana hiyo.
+Kumbuka: GitHub Copilot CLI ≥v1.0.19 inatumia `COPILOT_PROVIDER_BASE_URL` — tumia usanidi wa moja kwa moja badala ya MITM kwa zana hiyo.

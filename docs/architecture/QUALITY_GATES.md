@@ -197,9 +197,10 @@ Runs after `test-coverage`. Blocks merge on failure.
 
 The job blocks applicable candidates. Bundle size, secret findings, vulnerability
 findings, workflow findings and OpenAPI changes are checked with required ratchets.
-Circular-dependency diagnostics and scanner installation are advisory steps; a failed
-installation does not waive the subsequent required measurement. Missing tools,
-invalid reports or missing baselines leave the required scanner gate INCOMPLETE.
+Circular-dependency diagnostics remain advisory. Scanner installation is required:
+`scripts/ci/install-quality-scanners.sh` provisions pinned versions and propagates
+installation failures. Missing tools, invalid reports or missing baselines leave
+the required scanner gate INCOMPLETE.
 
 | Script                   | Validates                                                                                                                                                                                       | Blocking                                          |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |

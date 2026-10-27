@@ -14,16 +14,16 @@ AgentBridge ialah proksi MITM (Man-in-the-Middle) OmniRoute yang memintas trafik
 
 ## §1 Gambaran Keseluruhan
 
-### Apakah itu AgentBridge?
+### Apakah AgentBridge?
 
-Apabila ejen IDE (cth., GitHub Copilot, Cursor, Claude Code) membuat panggilan API, ia bersambung terus kepada penyedia AI huluan (OpenAI, Anthropic, dll.). AgentBridge memintas sambungan tersebut secara telus pada peringkat TLS — tanpa memerlukan sebarang perubahan konfigurasi ejen — dan menulis semula permintaan melalui OmniRoute.
+Apabila ejen IDE (cth., GitHub Copilot, Cursor, Claude Code) membuat panggilan API, ia bersambung terus ke penyedia AI hulu (OpenAI, Anthropic, dsb.). AgentBridge memintas sambungan tersebut secara telus pada tahap TLS — tanpa memerlukan sebarang perubahan konfigurasi ejen — dan menulis semula permintaan itu melalui OmniRoute.
 
 Ini bermakna anda boleh:
 
-- **Menghalakan semula mana-mana ejen kepada mana-mana penyedia**: Copilot berkomunikasi dengan OpenAI? Halakan semula kepada Anthropic Claude, Gemini, atau mana-mana daripada 376 penyedia OmniRoute.
-- **Menggunakan pemetaan model**: `gemini-3-flash` → `claude-sonnet-4.7` secara telus pada peringkat pengendali.
-- **Memantau semua trafik ejen**: setiap permintaan yang dipintas diterbitkan kepada [Pemeriksa Trafik](./TRAFFIC_INSPECTOR.md).
-- **Menggunakan daya tahan OmniRoute**: penghalaan gabungan, pemutus litar, pilihan sandaran, dan penjejakan kos turut berfungsi untuk trafik ejen IDE.
+- **Menghala semula sebarang ejen ke sebarang penyedia**: Copilot berhubung dengan OpenAI? Alihkannya ke Anthropic Claude, Gemini, atau mana-mana daripada 376 penyedia OmniRoute.
+- **Menggunakan pemetaan model**: `gemini-3-flash` → `claude-sonnet-4.7` secara telus pada tahap pengendali.
+- **Memerhati semua trafik ejen**: setiap permintaan yang dipintas diterbitkan ke [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
+- **Menggunakan daya tahan OmniRoute**: penghalaan kombo, pemutus litar, fallback, dan penjejakan kos turut berfungsi untuk trafik ejen IDE.
 
 ### Kedudukan berbanding pasaran
 
@@ -37,13 +37,13 @@ Ini bermakna anda boleh:
 | Zed Industries       |    —    |    ✓     |        —        |             ✓             |
 | Claude Code          |    —    |    —     |        ✓        |             ✓             |
 | Open Code            |    —    |    —     |        ✓        |             ✓             |
-| Trae                 |    —    |    —     |        —        |     🔍 Dalam siasatan     |
-| UI papan pemuka      |    ✓    |    ✗     |        ✗        |             ✓             |
-| Pemeriksa Trafik     |    ✗    |    ✗     |        ✓        |             ✓             |
+| Trae                 |    —    |    —     |        —        |   🔍 Dalam Penyiasatan    |
+| UI Papan Pemuka      |    ✓    |    ✗     |        ✗        |             ✓             |
+| Traffic Inspector    |    ✗    |    ✗     |        ✓        |             ✓             |
 | Penghalaan OmniRoute |    ✗    |    ✗     |        ✗        |             ✓             |
-| UI pemetaan model    |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI Pemetaan Model    |    ✗    |    ✗     |        ✗        |             ✓             |
 | Senarai pintasan     |    ✗    |    ✗     |        ✓        |             ✓             |
-| Sijil CA huluan      |    ✗    |    ✗     |        ✓        |             ✓             |
+| Sijil CA hulu        |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -545,18 +545,18 @@ Skema OpenAPI penuh: `docs/openapi.yaml` → tag `AgentBridge`.
 
 ## §8 Hala Tuju
 
-### Siasatan Trae
+### Penyiasatan Trae
 
 Trae ialah pembantu pengekodan AI yang agak baharu. Sebelum melaksanakan pengendali:
 
-1. Kenal pasti binari/sambungan dalam gedung VS Code / JetBrains atau sebagai aplikasi kendiri
+1. Kenal pasti binari/sambungan dalam pasaran VS Code / JetBrains atau sebagai aplikasi kendiri
 2. Tangkap trafik dengan mitmproxy untuk mengenal pasti hos API dan bentuk titik akhir
 3. Tentukan mekanisme pengesahan
-4. Nilai teruskan/hentikan berdasarkan TOS dan kebolehkesanan API
+4. Nilai sama ada untuk diteruskan atau tidak berdasarkan TOS dan kebolehkesanan API
 
-Sehingga siasatan selesai, kad Trae dalam papan pemuka memaparkan lencana "Sedang Disiasat" dengan pautan "Laporkan kebolehlaksanaan". Rangka pengendali di `src/mitm/handlers/trae.ts` melontarkan ralat berstruktur `Belum dilaksanakan`.
+Sehingga penyiasatan selesai, kad Trae dalam papan pemuka memaparkan lencana "Sedang Disiasat" dengan pautan "Laporkan kebolehlaksanaan". Stub pengendali di `src/mitm/handlers/trae.ts` melontarkan ralat berstruktur `Not yet implemented`.
 
-### Ejen tertunggak (MITM diperlukan — tiada sokongan URL asas tersuai)
+### Ejen tunggakan (MITM diperlukan — tiada sokongan URL asas tersuai)
 
 Alat berikut tidak menyokong URL asas tersuai dalam versi semasa, menjadikan MITM satu-satunya laluan pemintasan. Penilaian kebolehlaksanaan masih belum selesai:
 

@@ -16,34 +16,34 @@ AgentBridge je MITM (Man-in-the-Middle, „čovjek u sredini”) proxy poslužit
 
 ### Što je AgentBridge?
 
-Kada IDE agent (npr. GitHub Copilot, Cursor, Claude Code) izvrši API poziv, izravno se povezuje s izvornim pružateljem AI usluge (OpenAI, Anthropic itd.). AgentBridge transparentno presreće tu vezu na TLS razini — bez potrebe za promjenom konfiguracije agenta — i preusmjerava zahtjev putem OmniRoutea.
+Kada IDE agent (npr. GitHub Copilot, Cursor, Claude Code) izvrši API poziv, on se povezuje izravno s upstream AI pružateljem usluge (OpenAI, Anthropic itd.). AgentBridge prozirno presreće tu vezu na TLS razini — bez potrebe za ikakvom promjenom konfiguracije agenta — i prepisuje zahtjev kroz OmniRoute.
 
 To znači da možete:
 
-- **Preusmjeriti bilo kojeg agenta na bilo kojeg pružatelja**: Copilot komunicira s OpenAI-jem? Preusmjerite ga na Anthropic Claude, Gemini ili bilo kojeg od 376 pružatelja usluge koje podržava OmniRoute.
-- **Primijeniti mapiranja modela**: `gemini-3-flash` → `claude-sonnet-4.7` transparentno na razini rukovatelja.
-- **Pratiti sav promet agenata**: svaki presretnuti zahtjev objavljuje se u [Inspektoru prometa](./TRAFFIC_INSPECTOR.md).
-- **Primijeniti otpornost OmniRoutea**: kombinirano usmjeravanje, zaštitni prekidači, pričuvne opcije i praćenje troškova funkcioniraju i za promet IDE agenata.
+- **Preusmjeriti bilo kojeg agenta na bilo kojeg pružatelja**: Copilot razgovara s OpenAI-jem? Preusmjerite ga na Anthropic Claude, Gemini ili bilo kojeg od 376 pružatelja usluga OmniRoutea.
+- **Primijeniti mapiranja modela**: `gemini-3-flash` → `claude-sonnet-4.7` prozirno na razini handlera.
+- **Promatrati sav promet agenata**: svaki presretnuti zahtjev objavljuje se u [Inspektoru prometa](./TRAFFIC_INSPECTOR.md).
+- **Primijeniti otpornost OmniRoutea**: combo usmjeravanje, circuit breakeri, fallbackovi i praćenje troškova također funkcioniraju i za promet IDE agenata.
 
 ### Pozicioniranje u odnosu na tržište
 
-| Značajka                               | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| -------------------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity                            |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot                         |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)                             |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex                           |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE                             |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries                         |    —    |    ✓     |        —        |             ✓             |
-| Claude Code                            |    —    |    —     |        ✓        |             ✓             |
-| Open Code                              |    —    |    —     |        ✓        |             ✓             |
-| Trae                                   |    —    |    —     |        —        |      🔍 Istražuje se      |
-| Korisničko sučelje nadzorne ploče      |    ✓    |    ✗     |        ✗        |             ✓             |
-| Inspektor prometa                      |    ✗    |    ✗     |        ✓        |             ✓             |
-| Usmjeravanje putem OmniRoutea          |    ✗    |    ✗     |        ✗        |             ✓             |
-| Korisničko sučelje za mapiranje modela |    ✗    |    ✗     |        ✗        |             ✓             |
-| Popis zaobilaženja                     |    ✗    |    ✗     |        ✓        |             ✓             |
-| CA certifikat izvornog poslužitelja    |    ✗    |    ✗     |        ✓        |             ✓             |
+| Značajka               | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| ---------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity            |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot         |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)             |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex           |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE             |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries         |    —    |    ✓     |        —        |             ✓             |
+| Claude Code            |    —    |    —     |        ✓        |             ✓             |
+| Open Code              |    —    |    —     |        ✓        |             ✓             |
+| Trae                   |    —    |    —     |        —        |       🔍 U istrazi        |
+| UI nadzorne ploče      |    ✓    |    ✗     |        ✗        |             ✓             |
+| Inspektor prometa      |    ✗    |    ✗     |        ✓        |             ✓             |
+| OmniRoute usmjeravanje |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI mapiranja modela    |    ✗    |    ✗     |        ✗        |             ✓             |
+| Popis zaobilaženja     |    ✗    |    ✗     |        ✓        |             ✓             |
+| Upstream CA certifikat |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -550,16 +550,16 @@ Potpune OpenAPI sheme: `docs/openapi.yaml` → oznaka `AgentBridge`.
 
 Trae je relativno nov AI pomoćnik za programiranje. Prije implementacije rukovatelja:
 
-1. Identificirati binarnu datoteku/proširenje na VS Code / JetBrains tržištima ili kao samostalnu aplikaciju
-2. Snimiti promet pomoću alata mitmproxy kako bi se otkrili API hostovi i oblici krajnjih točaka
-3. Utvrditi mehanizam autentifikacije
-4. Procijeniti treba li nastaviti ili odustati na temelju uvjeta korištenja i mogućnosti otkrivanja API-ja
+1. Identificirajte binarnu datoteku/proširenje na tržištima za VS Code / JetBrains ili kao samostalnu aplikaciju
+2. Snimite promet pomoću mitmproxyja kako biste otkrili API hostove i strukture krajnjih točaka
+3. Utvrdite mehanizam autentifikacije
+4. Procijenite nastavak ili odustajanje na temelju uvjeta korištenja i mogućnosti otkrivanja API-ja
 
-Dok se istraživanje ne dovrši, kartica Trae na nadzornoj ploči prikazuje oznaku "Istraživanje u tijeku" s poveznicom "Prijavi izvedivost". Kostur rukovatelja u `src/mitm/handlers/trae.ts` izbacuje strukturiranu pogrešku `Još nije implementirano`.
+Dok se istraživanje ne dovrši, kartica Trae na nadzornoj ploči prikazuje oznaku "U istraživanju" s poveznicom "Prijavi održivost". Kostur rukovatelja u `src/mitm/handlers/trae.ts` generira strukturiranu pogrešku `Not yet implemented`.
 
-### Agenti na popisu zadataka (potreban je MITM — nema podrške za prilagođeni osnovni URL)
+### Agenti na popisu zadataka (MITM je obavezan — nema podrške za prilagođeni osnovni URL)
 
-Sljedeći alati u svojim trenutačnim verzijama ne podržavaju prilagođene osnovne URL-ove, zbog čega je MITM jedini način presretanja. Procjena izvedivosti je u tijeku:
+Sljedeći alati u svojim trenutačnim verzijama ne podržavaju prilagođene osnovne URL-ove, zbog čega je MITM jedini način presretanja. Procjena održivosti još je u tijeku:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)

@@ -13,30 +13,31 @@
 
 ## Apa Itu
 
-OmniRoute mendaftarkan 376 penyedia, termasuk 155 entri katalog yang ditandai **gratis/tanpa autentikasi**
-(tanpa autentikasi,
-OAuth tingkat gratis, atau kunci API tingkat gratis — lihat
-[Panduan Tingkat Gratis](../getting-started/FREE-TIERS-GUIDE.md) dan
-[Direktori Tingkat Gratis](../reference/FREE_TIERS.md) lengkap). Namun, kualitas model dari penyedia gratis sangat
-bervariasi. Penyedia tanpa autentikasi yang menyediakan model terdepan jauh lebih berguna
-daripada penyedia yang menyediakan model lawas berukuran kecil.
+OmniRoute mendaftarkan 376 penyedia, termasuk 155 entri katalog yang ditandai **gratis/no-auth**
+(no-auth,
+OAuth tingkat gratis, atau API key tingkat gratis — lihat
+[Panduan Free Tiers](../getting-started/FREE-TIERS-GUIDE.md) dan
+[direktori Free Tiers](../reference/FREE_TIERS.md) lengkap). Masalahnya: kualitas model
+penyedia gratis sangat bervariasi. Penyedia no-auth yang menyajikan model frontier jauh
+lebih berguna daripada yang menyajikan model lawas berukuran kecil.
 
-**Peringkat Penyedia Gratis** menjawab "**penyedia gratis mana yang memberi saya model terbaik?**" dengan
-menggabungkan katalog setiap penyedia gratis dengan **skor kualitas urun daya** dari
-**papan peringkat Arena AI** (ELO preferensi manusia, konsep yang sama di balik arena
-chatbot LMArena). Penyedia kemudian diperingkat berdasarkan kemampuan **model gratis terbaik** mereka.
+**Free Provider Rankings** menjawab pertanyaan "**penyedia gratis mana yang memberikan model terbaik bagi saya?**" dengan
+menggabungkan katalog setiap penyedia gratis dengan **skor kualitas yang bersumber dari komunitas (crowd-sourced)** dari
+**leaderboard Arena AI** (ELO preferensi manusia, konsep yang sama dengan arena chatbot
+LMArena). Penyedia kemudian diperingkat berdasarkan kekuatan **model gratis terbaik** mereka.
 
-Peringkat dihitung dari tiga sumber nyata:
+Peringkat ini dihitung dari tiga sumber data nyata:
 
 1. Daftar penyedia gratis — `NOAUTH_PROVIDERS`, ditambah entri `OAUTH_PROVIDERS` /
    `APIKEY_PROVIDERS` yang ditandai `hasFree`
    (`src/shared/constants/providers.ts`).
 2. Katalog model setiap penyedia dari registri penyedia
    (`open-sse/config/providerRegistry.ts`).
-3. Skor kesesuaian tugas yang diturunkan dari ELO dan disimpan dalam tabel DB `model_intelligence` oleh
-   mesin sinkronisasi ELO Arena (`src/lib/arenaEloSync.ts`).
+3. Skor kesesuaian tugas (task-fit) yang diturunkan dari ELO, disimpan dalam tabel DB
+   `model_intelligence` oleh mesin sinkronisasi
+   Arena ELO (`src/lib/arenaEloSync.ts`).
 
-Logika penggabungan berada di `src/lib/freeProviderRankings.ts`.
+Logika penggabungan (join) berada di `src/lib/freeProviderRankings.ts`.
 
 ---
 
@@ -122,11 +123,15 @@ Bentuk respons:
 
 ## Cara Kerja Skor
 
-### Sumber: papan peringkat Arena AI
+### Sumber: Papan peringkat Arena AI
 
 Mesin sinkronisasi ELO Arena (`src/lib/arenaEloSync.ts`) mengambil dua papan peringkat — `text`
 dan `code` — dari API papan peringkat Arena AI
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Setiap entri papan peringkat
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Ketika API tersebut tidak
+mengembalikan papan peringkat yang dapat digunakan, mesin beralih ke `lmarena-ai/leaderboard-dataset` resmi di
+datasets-server Hugging Face (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` melaporkan `activeSource`, `lastError`, dan
+`lastFailedAt`. Setiap entri papan peringkat
 memuat nama model, vendor, `score` ELO, interval kepercayaan, dan jumlah suara.
 
 Kategori papan peringkat dipetakan ke kategori tugas OmniRoute:
@@ -144,34 +149,34 @@ Skor ELO mentah dinormalisasi per papan peringkat menjadi **nilai kesesuaian tug
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-Skor tidak pernah mencapai `0` atau `1`, sehingga menyisakan ruang untuk penimpaan oleh pengguna. Ini adalah
-bidang `score` yang Anda lihat dalam respons API dan label yang ditampilkan di dasbor.
+Skor tersebut tidak pernah mencapai `0` atau `1`, sehingga menyisakan ruang untuk penggantian oleh pengguna. Ini adalah
+kolom `score` yang Anda lihat dalam respons API dan label yang ditampilkan di dasbor.
 
-### Tingkat kepercayaan
+### Keyakinan
 
-Setiap entri mendapatkan tingkat kepercayaan berdasarkan jumlah suara Arena:
+Setiap entri mendapatkan tingkat keyakinan berdasarkan jumlah suara Arena:
 
-| Tingkat kepercayaan | Suara   |
-| ------------------- | ------- |
-| `high`              | ≥ 5.000 |
-| `medium`            | ≥ 1.000 |
-| `low`               | < 1.000 |
+| Keyakinan | Suara   |
+| --------- | ------- |
+| `high`    | ≥ 5.000 |
+| `medium`  | ≥ 1.000 |
+| `low`     | < 1.000 |
 
-### Penyimpanan dan kebaruan
+### Penyimpanan dan keterkinian
 
 Entri yang telah dinormalisasi ditulis ke tabel DB `model_intelligence` dengan
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Entri **kedaluwarsa setelah
 7 hari**, sehingga penyedia yang berhenti melakukan sinkronisasi pada akhirnya akan dikeluarkan alih-alih menyajikan
-data yang sudah usang.
+data usang.
 
-Sinkronisasi **aktif secara default**:
+Sinkronisasi berjalan **secara default**:
 
-- Sinkronisasi dijalankan sekali saat server dimulai, lalu secara berkala berdasarkan pengatur waktu
+- Sinkronisasi dijalankan sekali saat server dimulai, lalu secara berkala melalui pengatur waktu
   (`src/lib/arenaEloSync.ts`, dihubungkan dari `src/instrumentation-node.ts`).
-- Sinkronisasi ini **tidak memblokir dan tidak pernah menyebabkan kegagalan fatal** — jika pengambilan data dari sumber hulu gagal, OmniRoute tetap
-  berjalan dan peringkat hanya menampilkan data valid terakhir (atau status kosong).
+- Sinkronisasi ini **tidak memblokir dan tidak pernah bersifat fatal** — jika pengambilan data dari sumber hulu gagal, OmniRoute tetap
+  berjalan dan peringkat hanya menampilkan data valid terakhir (atau keadaan kosong).
 
-Dua variabel lingkungan mengontrolnya (didokumentasikan dalam
+Dua variabel lingkungan mengendalikannya (didokumentasikan dalam
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
 | Variabel                  | Default       | Tujuan                                                   |
@@ -179,42 +184,42 @@ Dua variabel lingkungan mengontrolnya (didokumentasikan dalam
 | `ARENA_ELO_SYNC_ENABLED`  | `true`        | Atur ke `false` untuk menonaktifkan sinkronisasi keluar. |
 | `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Interval sinkronisasi, dalam detik.                      |
 
-### Sinkronisasi manual / status / pembersihan
+### Sinkronisasi manual / status / hapus
 
 Untuk operator, endpoint pengelolaan terautentikasi menyediakan kontrol manual
 (`src/app/api/intelligence/sync/route.ts` — memerlukan autentikasi pengelolaan):
 
 ```
-GET    /api/intelligence/sync          # status sinkronisasi saat ini (diaktifkan, sinkronisasi terakhir, sinkronisasi berikutnya, interval dalam milidetik)
-POST   /api/intelligence/sync          # memicu sinkronisasi manual; isi: { "dryRun": true } untuk melihat pratinjau tanpa menulis
-DELETE /api/intelligence/sync          # menghapus semua entri inteligensi arena_elo yang telah disinkronkan
+GET    /api/intelligence/sync          # status sinkronisasi saat ini (diaktifkan, sinkronisasi terakhir, sinkronisasi berikutnya, intervalMs)
+POST   /api/intelligence/sync          # picu sinkronisasi manual; isi: { "dryRun": true } untuk melihat pratinjau tanpa menulis
+DELETE /api/intelligence/sync          # hapus semua entri intelijen arena_elo yang telah disinkronkan
 ```
 
-Jika halaman peringkat kosong, `POST /api/intelligence/sync` secara manual (atau cukup
+Jika halaman peringkat kosong, `POST /api/intelligence/sync` manual (atau cukup
 memulai ulang server) akan mengisinya kembali.
 
 ### Mencocokkan model dengan papan peringkat
 
-ID model registri dan nama model Arena tidak selalu sama persis. Pemeringkatan menggunakan
+ID model registri dan nama model Arena tidak selalu sama persis. Peringkat menggunakan
 pencocokan fleksibel (`findMatchingIntelligence` dalam `src/lib/freeProviderRankings.ts`):
 
 1. Kecocokan persis pada ID model yang telah dinormalisasi.
-2. Kecocokan setelah menghapus sufiks versi di akhir (misalnya `kimi-k2.6` → `kimi-k2`).
+2. Kecocokan setelah menghapus sufiks versi di bagian akhir (misalnya `kimi-k2.6` → `kimi-k2`).
 3. Kecocokan prefiks (nama model papan peringkat merupakan prefiks dari ID registri).
 
 Di sisi sinkronisasi, prefiks vendor yang dikenal (`anthropic/`, `openai/`, `google/`, …)
 dihapus dan peta alias kecil memperluas nama kanonis menjadi varian yang digunakan OmniRoute
-secara internal, sehingga model tetap dapat ditemukan dengan nama apa pun.
+secara internal, sehingga model tetap dapat ditemukan menggunakan nama apa pun.
 
 ### Cara penyedia diberi peringkat
 
-Untuk setiap penyedia gratis, mesin menilai setiap model dalam katalognya, kemudian:
+Untuk setiap penyedia gratis, mesin memberi skor pada setiap model dalam katalognya, lalu:
 
 - **Model Teratas** = model penyedia dengan skor tertinggi.
-- **Skor Rata-rata** = skor rata-rata dari semua model penyedia yang dinilai.
+- **Skor Rata-Rata** = skor rata-rata dari semua model penyedia yang diberi skor.
 - **Model** = jumlah model penyedia yang memiliki skor Arena.
 
-Penyedia diurutkan terlebih dahulu berdasarkan **skor model teratas**, lalu berdasarkan skor rata-rata. Hal ini memberi penghargaan kepada
+Penyedia diurutkan terlebih dahulu berdasarkan **skor model teratas**, lalu berdasarkan skor rata-rata. Hal ini memberikan penghargaan kepada
 penyedia yang menawarkan setidaknya satu model gratis yang unggul.
 
 ---

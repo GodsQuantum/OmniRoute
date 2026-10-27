@@ -16,14 +16,14 @@ AgentBridge is de MITM-proxy (Man-in-the-Middle) van OmniRoute die HTTPS-verkeer
 
 ### Wat is AgentBridge?
 
-Wanneer een IDE-agent (bijv. GitHub Copilot, Cursor, Claude Code) een API-aanroep doet, maakt deze rechtstreeks verbinding met de upstream-AI-provider (OpenAI, Anthropic, enz.). AgentBridge onderschept die verbinding transparant op TLS-niveau — zonder dat hiervoor wijzigingen in de configuratie van de agent nodig zijn — en herschrijft het verzoek via OmniRoute.
+Wanneer een IDE-agent (bijv. GitHub Copilot, Cursor, Claude Code) een API-aanroep doet, maakt deze rechtstreeks verbinding met de upstream AI-provider (OpenAI, Anthropic, enz.). AgentBridge onderschept die verbinding transparant op TLS-niveau — zonder dat er een wijziging in de agentconfiguratie nodig is — en herschrijft het verzoek via OmniRoute.
 
-Dit betekent dat je het volgende kunt doen:
+Dit betekent dat je:
 
-- **Elke agent omleiden naar elke provider**: communiceert Copilot met OpenAI? Leid het om naar Anthropic Claude, Gemini of een van de 376 providers van OmniRoute.
-- **Modeltoewijzingen toepassen**: `gemini-3-flash` → `claude-sonnet-4.7` transparant op handlerniveau.
-- **Al het agentverkeer observeren**: elk onderschept verzoek wordt gepubliceerd in de [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
-- **De weerbaarheidsfuncties van OmniRoute toepassen**: combinatieroutering, circuitbreakers, fallbacks en kostentracering werken ook voor IDE-agentverkeer.
+- **Elke agent kunt omleiden naar elke provider**: Copilot die met OpenAI praat? Leid hem om naar Anthropic Claude, Gemini of een van de 376 providers van OmniRoute.
+- **Modelmappings kunt toepassen**: `gemini-3-flash` → `claude-sonnet-4.7` transparant op handlerniveau.
+- **Al het agentverkeer kunt bekijken**: elk onderschept verzoek wordt gepubliceerd naar de [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
+- **De veerkracht van OmniRoute kunt toepassen**: comborouting, circuit breakers, fallbacks en kostenregistratie werken ook voor IDE-agentverkeer.
 
 ### Positionering ten opzichte van de markt
 
@@ -40,10 +40,10 @@ Dit betekent dat je het volgende kunt doen:
 | Trae                    |    —    |    —     |        —        |    🔍 Wordt onderzocht    |
 | Dashboard-UI            |    ✓    |    ✗     |        ✗        |             ✓             |
 | Traffic Inspector       |    ✗    |    ✗     |        ✓        |             ✓             |
-| OmniRoute-routering     |    ✗    |    ✗     |        ✗        |             ✓             |
-| UI voor modeltoewijzing |    ✗    |    ✗     |        ✗        |             ✓             |
-| Omzeilingslijst         |    ✗    |    ✗     |        ✓        |             ✓             |
-| Upstream-CA-certificaat |    ✗    |    ✗     |        ✓        |             ✓             |
+| OmniRoute-routing       |    ✗    |    ✗     |        ✗        |             ✓             |
+| Modelmapping-UI         |    ✗    |    ✗     |        ✗        |             ✓             |
+| Bypasslijst             |    ✗    |    ✗     |        ✓        |             ✓             |
+| Upstream CA-certificaat |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -553,17 +553,17 @@ Trae is een relatief nieuwe AI-codeerassistent. Voordat een handler wordt geïmp
 1. Identificeer het binaire bestand/de extensie in de marketplaces van VS Code / JetBrains of als zelfstandige app
 2. Leg verkeer vast met mitmproxy om API-hosts en endpointstructuren te ontdekken
 3. Bepaal het authenticatiemechanisme
-4. Beoordeel go/no-go op basis van de TOS en de vindbaarheid van de API
+4. Beoordeel of er een go/no-go-besluit moet worden genomen op basis van de gebruiksvoorwaarden en de vindbaarheid van de API
 
-Totdat het onderzoek is afgerond, toont de Trae-kaart in het dashboard een badge 'In onderzoek' met een link 'Haalbaarheid rapporteren'. De handlerstub in `src/mitm/handlers/trae.ts` genereert een gestructureerde fout `Nog niet geïmplementeerd`.
+Totdat het onderzoek is afgerond, toont de Trae-kaart in het dashboard een badge "Onderzoek loopt" met een link "Haalbaarheid rapporteren". De handlerstub op `src/mitm/handlers/trae.ts` genereert een gestructureerde fout `Not yet implemented`.
 
-### Agents in de backlog (MITM vereist — geen ondersteuning voor aangepaste basis-URL)
+### Backlogagents (MITM vereist — geen ondersteuning voor aangepaste basis-URL)
 
-De volgende tools ondersteunen in hun huidige versies geen aangepaste basis-URL's, waardoor MITM de enige manier is om verkeer te onderscheppen. De haalbaarheidsbeoordeling is nog niet afgerond:
+De volgende tools ondersteunen in hun huidige versies geen aangepaste basis-URL's, waardoor MITM het enige interceptiepad is. De haalbaarheidsbeoordeling is nog niet afgerond:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
-- **Amazon Q / Kiro CLI** (AWS Bedrock — niet hetzelfde als Kiro IDE)
+- **Amazon Q / Kiro CLI** (AWS Bedrock — losstaand van Kiro IDE)
 - **Cowork** (Anthropic-desktopapp)
 
 Opmerking: GitHub Copilot CLI ≥v1.0.19 ondersteunt `COPILOT_PROVIDER_BASE_URL` — gebruik voor die tool directe configuratie in plaats van MITM.

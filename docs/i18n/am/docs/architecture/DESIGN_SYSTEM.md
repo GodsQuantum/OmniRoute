@@ -81,30 +81,30 @@
 
 ## 2. ደንቦች
 
-1. ሁልጊዜ tokensን ይጠቀሙ፤ literalsን በፍጹም አይጠቀሙ። ሆን ተብለው የተቀመጡ ልዩ ሁኔታዎች፦ ሁልጊዜ ጨለማ የሆነው የconsole terminal፣ በ`STATUS_HEX` (`src/shared/constants/statusColors.ts`) በኩል የሚተገበሩ የReactFlow SVG
-   strokes፣ እንዲሁም ምድባዊ palettes የሆኑት
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) እና
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`) ናቸው።
-2. `packages/ui-kit/src`ን በእጅ ፈጽሞ patch አያድርጉ፦ በ`scripts/dev/sync-ui-kit.sh <commit>` ያመሳስሉት፤
-   የpre-commit gate `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ከተወሰነው upstream commit በአንድ byte እንኳ
-   የተለየ ነገር ካለ አይሳካም (የupstream clone፣
-   `UI_KIT_CLONE` ወይም `_references/cheaper-inference-ui-kit`፣ ከሌለ ከማስጠንቀቂያ ጋር ይዘለዋል)። kit አንድ ነገር ካልያዘ፣
-   በadapter ወይም በscreen ውስጥ አማራጭ መፍትሔ ይጠቀሙ እና upstream እንዲያክለው ይጠይቁ።
-3. የkit ነባሪ ጽሑፎች በእንግሊዝኛ ናቸው (`label = "Loading"`, `loadingLabel = "Loading table"`…) — የkit component ጽሑፍ በሚያሳይበት ጊዜ ሁሉ ከ`useTranslations(...)`
-   የተገኙ የተተረጎሙ ሕብረቁምፊዎችን ያስተላልፉ።
-4. የTailwind utilities ከkit component classes ቅድሚያ ያገኛሉ (kit
-   `@layer theme, base, components, utilities` ያውጃል እና ደንቦቹ በ`components` ውስጥ ይገኛሉ) — utilitiesን ለ
-   ክፍተት እና layout ይጠቀሙ፤ የkit componentsን ቀለም ለመቀየር አይጠቀሙባቸው።
-5. ርዕሶች፦ `.ci-heading` (Inter፣ tracking የሌለው) ለገጽ እና ለክፍል ርዕሶች፤ `.ci-dashboard-display`
-   (Instrument Serif) እንደ የerror-page status code ላሉ ትልቅና የተራራቁ display ጽሑፎች ብቻ።
-6. `tests/unit/dashboard-kit-sweep.test.ts` የkit አጠቃቀምን ይቆጣጠራል፦
-   በ`src/app` ወይም `src/shared/components` ስር Material ligature span መኖር የለበትም፤ በdashboard tree (`src/app/(dashboard)` እና
-   `src/shared/components`) ውስጥ raw `<select>`፣ `<textarea>` ወይም `<table>`፣ እንዲሁም ከተዘረዘሩት ልዩ ሁኔታዎች (የ`Select` adapter native branch፣
-   `RequestLoggerDetail`) ውጪ በእጅ የተሠራ
-   `role="dialog"` መኖር የለበትም፤ እያንዳንዱ raw `<button>` ወይም `<input>` ምክንያቱን የሚገልጽ
-   `kit-exception:` የያዘና ከእሱ ቢበዛ 3 መስመሮች በላይ የሚያልቅ comment ሊኖረው ይገባል፤ palette hues እና `dark:` variants
+1. Tokens ይጠቀሙ፣ literals ፈጽሞ አይጠቀሙ። ሆን ተብለው የተቀመጡ ልዩ ሁኔታዎች፦ ሁልጊዜ ጨለማ የሆነው console terminal እና ReactFlow
+   SVG strokes በ`STATUS_HEX` (`src/shared/constants/statusColors.ts`) በኩል። የRouting strategy እና
+   የcompression-layer palettes የkit chart tokensን በ`strategyColorVar` እና
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) በኩል ይጠቀማሉ።
+2. `packages/ui-kit/src`ን በእጅ ፈጽሞ አያስተካክሉ፦ በ`scripts/dev/sync-ui-kit.sh <commit>` ያመሳስሉት፤
+   የpre-commit መቆጣጠሪያው `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ከተወሰነው upstream commit
+   በአንድ byte እንኳ ልዩነት ሲኖር አይሳካም (upstream clone፣
+   `UI_KIT_CLONE` ወይም `_references/cheaper-inference-ui-kit`፣ ከሌለ ከማስጠንቀቂያ ጋር ይዘለዋል)። kit የሆነ ነገር ከሌለው፣
+   በadapter ወይም በscreen ውስጥ አማራጭ መፍትሔ ይጠቀሙ እና upstreamን እንዲያክለው ይጠይቁ።
+3. የKit ነባሪ ጽሑፎች በእንግሊዝኛ ናቸው (`label = "Loading"`, `loadingLabel = "Loading table"`…) — አንድ kit component ጽሑፍ በሚያሳይበት ጊዜ ሁሉ
+   ከ`useTranslations(...)` የተገኙ የተተረጎሙ stringsን ያስተላልፉ።
+4. የTailwind utilities ከkit component classes ይቀድማሉ (kit
+   `@layer theme, base, components, utilities` ያውጃል እና rulesዎቹ በ`components` ውስጥ ይገኛሉ) — utilitiesን ለ
+   spacing እና layout ይጠቀሙ፣ የkit componentsን ቀለም እንደገና ለመቀየር አይጠቀሙባቸው።
+5. ርዕሶች፦ `.ci-heading` (Inter፣ tracking የሌለው) ለpage እና section titles፤ `.ci-dashboard-display`
+   (Instrument Serif) እንደ error-page status code ላሉ ትልቅና ክፍት ቦታ ላላቸው display textዎች ብቻ።
+6. `tests/unit/dashboard-kit-sweep.test.ts` የkit adoptionን ይጠብቃል፦ በ
+   `src/app` ወይም `src/shared/components` ስር Material ligature span አይኖርም፤ በdashboard tree (`src/app/(dashboard)` እና
+   `src/shared/components`) ውስጥ ጥሬ `<select>`፣ `<textarea>` ወይም `<table>` እንዲሁም በዝርዝሩ ከተጠቀሱት ልዩ ሁኔታዎች ውጭ በእጅ የተሠራ
+   `role="dialog"` አይኖርም (የ`Select` adapter native branch፣
+   `RequestLoggerDetail`)፤ በዚያ ያለ እያንዳንዱ ጥሬ `<button>` ወይም `<input>` ቢበዛ ከ3 መስመሮች በላይ ርቆ የማያበቃ
+   `kit-exception:`ን (ከምክንያቱ ጋር) የያዘ comment ያስፈልገዋል፤ palette hues እና `dark:` variants
    testው በዘረዘራቸው files ውስጥ ብቻ መኖር አለባቸው።
-7. PR ከመክፈትዎ በፊት ሁለቱንም themes እና የ390 px viewportን በscreenshots ያረጋግጡ፤ `tests/e2e/a11y.spec.ts`
+7. ከPR በፊት ሁለቱንም themes እና የ390 px viewportን ያረጋግጡ (screenshots)፤ `tests/e2e/a11y.spec.ts`
    axeን ያስኬዳል።
 
 ## 3. Screen ማከል

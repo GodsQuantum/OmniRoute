@@ -81,29 +81,29 @@
 
 ## 2. নিয়মাবলি
 
-1. লিটারাল নয়, টোকেন ব্যবহার করুন। উদ্দেশ্যপ্রণোদিতভাবে রাখা ব্যতিক্রমগুলো হলো: সর্বদা-ডার্ক কনসোল টার্মিনাল, ReactFlow SVG
-   স্ট্রোকের জন্য `STATUS_HEX` (`src/shared/constants/statusColors.ts`), এবং শ্রেণিভিত্তিক প্যালেট
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ও
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)।
-2. `packages/ui-kit/src` কখনো হাতে পরিবর্তন করবেন না: `scripts/dev/sync-ui-kit.sh <commit>` দিয়ে সিঙ্ক করুন; কোনো
-   বাইট পিন করা আপস্ট্রিম কমিট থেকে আলাদা হলে প্রি-কমিট গেট
-   `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ব্যর্থ হয় (আপস্ট্রিম ক্লোন,
-   `UI_KIT_CLONE` বা `_references/cheaper-inference-ui-kit`, অনুপস্থিত থাকলে এটি সতর্কবার্তা দিয়ে পরীক্ষা এড়িয়ে যায়)। কিটে কিছু না থাকলে,
-   অ্যাডাপ্টার বা স্ক্রিনে বিকল্প ব্যবস্থা নিন এবং সেটির জন্য আপস্ট্রিমে অনুরোধ করুন।
-3. কিটের টেক্সট ডিফল্টগুলো ইংরেজিতে (`label = "Loading"`, `loadingLabel = "Loading table"`…) — কোনো কিট কম্পোনেন্ট টেক্সট
-   রেন্ডার করলে প্রতিবার `useTranslations(...)` থেকে অনূদিত স্ট্রিং পাঠান।
-4. কিট কম্পোনেন্টের ক্লাসের চেয়ে Tailwind ইউটিলিটি অগ্রাধিকার পায় (কিটটি
+1. টোকেন ব্যবহার করুন, কখনোই লিটারেল নয়। উদ্দেশ্যমূলকভাবে রাখা ব্যতিক্রম: সর্বদা-ডার্ক কনসোল টার্মিনাল এবং ReactFlow
+   SVG স্ট্রোক, `STATUS_HEX`-এর মাধ্যমে (`src/shared/constants/statusColors.ts`)। রাউটিং কৌশল এবং
+   কম্প্রেশন-লেয়ার প্যালেটগুলো `strategyColorVar` এবং
+   `categoricalSlotFor`-এর মাধ্যমে কিটের চার্ট টোকেন ব্যবহার করে (`src/shared/utils/categoricalPalette.ts`)।
+2. কখনোই হাতে `packages/ui-kit/src` প্যাচ করবেন না: `scripts/dev/sync-ui-kit.sh <commit>` দিয়ে সিঙ্ক করুন;
+   প্রি-কমিট গেট `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) পিন করা আপস্ট্রিম কমিটের চেয়ে
+   কোনো একটি বাইটও আলাদা হলে ব্যর্থ হয় (আপস্ট্রিম ক্লোন,
+   `UI_KIT_CLONE` বা `_references/cheaper-inference-ui-kit`, অনুপস্থিত থাকলে এটি একটি সতর্কতা দিয়ে এড়িয়ে যায়)। কিটে কোনো কিছু না থাকলে,
+   অ্যাডাপ্টার বা স্ক্রিনে বিকল্প ব্যবস্থা করুন এবং সেটির জন্য আপস্ট্রিমে অনুরোধ জানান।
+3. কিটের টেক্সট ডিফল্টগুলো ইংরেজিতে (`label = "Loading"`, `loadingLabel = "Loading table"`…) — কোনো কিট কম্পোনেন্ট টেক্সট রেন্ডার করলে
+   `useTranslations(...)` থেকে অনূদিত স্ট্রিং পাঠান।
+4. Tailwind ইউটিলিটিগুলো কিট কম্পোনেন্টের ক্লাসের ওপর অগ্রাধিকার পায় (কিটটি
    `@layer theme, base, components, utilities` ঘোষণা করে এবং এর নিয়মগুলো `components`-এ থাকে) — স্পেসিং ও
-   লেআউটের জন্য ইউটিলিটি ব্যবহার করুন, কিট কম্পোনেন্টের রং বদলানোর জন্য নয়।
-5. শিরোনাম: পেজ ও সেকশন শিরোনামের জন্য `.ci-heading` (Inter, ট্র্যাকিং ছাড়া); `.ci-dashboard-display`
-   (Instrument Serif) কেবল বড় ও কম ঘনত্বের ডিসপ্লে টেক্সটের জন্য, যেমন এরর-পেজের স্ট্যাটাস কোড।
-6. `tests/unit/dashboard-kit-sweep.test.ts` কিট গ্রহণের নিয়মগুলো প্রয়োগ করে: `src/app` বা
-   `src/shared/components`-এর অধীনে কোনো Material লিগেচার স্প্যান নয়; ড্যাশবোর্ড ট্রিতে (`src/app/(dashboard)` এবং
-   `src/shared/components`) কোনো কাঁচা `<select>`, `<textarea>` বা `<table>` নয় এবং তালিকাভুক্ত
+   লেআউটের জন্য ইউটিলিটি ব্যবহার করুন, কিট কম্পোনেন্টের রং পরিবর্তনের জন্য নয়।
+5. শিরোনাম: পেজ ও সেকশন শিরোনামের জন্য `.ci-heading` (Inter, কোনো ট্র্যাকিং নয়); `.ci-dashboard-display`
+   (Instrument Serif) শুধু বড়, বিরল ডিসপ্লে টেক্সটের জন্য, যেমন এরর-পেজের স্ট্যাটাস কোড।
+6. `tests/unit/dashboard-kit-sweep.test.ts` কিট গ্রহণের নিয়মগুলো নিশ্চিত করে: `src/app` বা
+   `src/shared/components`-এর অধীনে কোনো Material লিগেচার span নয়; ড্যাশবোর্ড ট্রিতে (`src/app/(dashboard)` এবং
+   `src/shared/components`) কোনো সরাসরি `<select>`, `<textarea>` বা `<table>` নয় এবং তালিকাভুক্ত
    ব্যতিক্রমগুলোর (`Select` অ্যাডাপ্টারের নেটিভ শাখা,
-   `RequestLoggerDetail`) বাইরে হাতে তৈরি কোনো `role="dialog"` নয়; সেখানে প্রতিটি কাঁচা `<button>` বা `<input>`-এর জন্য
-   কারণসহ `kit-exception:` থাকা একটি মন্তব্য প্রয়োজন, যা সেটির সর্বোচ্চ 3 লাইন উপরে শেষ হবে; প্যালেটের হিউ এবং `dark:` ভ্যারিয়েন্ট
-   কেবল টেস্টে তালিকাভুক্ত ফাইলগুলোতেই অনুমোদিত।
+   `RequestLoggerDetail`) বাইরে হাতে তৈরি কোনো `role="dialog"` নয়; সেখানে থাকা প্রতিটি সরাসরি `<button>` বা `<input>`-এর সর্বোচ্চ
+   3 লাইন আগে কারণসহ `kit-exception:`-সম্বলিত একটি মন্তব্য থাকতে হবে; প্যালেট হিউ এবং `dark:` ভ্যারিয়েন্ট
+   শুধু টেস্টে তালিকাভুক্ত ফাইলগুলোতেই ব্যবহার করা যাবে।
 7. PR-এর আগে উভয় থিম এবং 390 px ভিউপোর্ট যাচাই করুন (স্ক্রিনশটসহ); `tests/e2e/a11y.spec.ts`
    axe চালায়।
 

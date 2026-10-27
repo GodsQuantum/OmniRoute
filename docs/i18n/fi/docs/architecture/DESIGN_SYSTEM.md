@@ -81,32 +81,31 @@
 
 ## 2. Säännöt
 
-1. Käytä tokeneita, älä koskaan literaaleja. Tarkoituksella säilytetyt poikkeukset: aina tumma konsolipääte, ReactFlow’n SVG-
-   viivat `STATUS_HEX`-arvojen kautta (`src/shared/constants/statusColors.ts`) sekä kategoriset paletit
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ja
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
+1. Käytä tokeneita, älä koskaan literaaleja. Tarkoituksella säilytetyt poikkeukset: aina tumma konsolipääte ja ReactFlow'n
+   SVG-viivat `STATUS_HEX`-vakion kautta (`src/shared/constants/statusColors.ts`). Reititysstrategian ja
+   pakkauskerrosten paletit käyttävät kitin kaaviotokeneita `strategyColorVar`- ja
+   `categoricalSlotFor`-funktioiden kautta (`src/shared/utils/categoricalPalette.ts`).
 2. Älä koskaan muokkaa `packages/ui-kit/src`-hakemistoa käsin: synkronoi se komennolla `scripts/dev/sync-ui-kit.sh <commit>`;
-   ennakkocommit-tarkistus `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) epäonnistuu, jos yksikin tavu
-   poikkeaa kiinnitetystä upstream-commitista (tarkistus ohitetaan varoituksen kera, jos upstream-klooni
-   `UI_KIT_CLONE` tai `_references/cheaper-inference-ui-kit` puuttuu). Kun paketista puuttuu jotakin,
-   kierrä puute adapterissa tai näkymässä ja pyydä ominaisuutta upstream-projektilta.
-3. Paketin tekstien oletuskieli on englanti (`label = "Loading"`, `loadingLabel = "Loading table"`…) — välitä käännetyt
-   merkkijonot funktiosta `useTranslations(...)` aina, kun paketin komponentti näyttää tekstiä.
-4. Tailwind-apuluokat ohittavat paketin komponenttiluokat (paketti määrittää
-   `@layer theme, base, components, utilities`, ja sen säännöt sijaitsevat `components`-tasolla) — käytä apuluokkia
-   välistykseen ja asetteluun, älä paketin komponenttien värien muuttamiseen.
-5. Otsikot: `.ci-heading` (Inter, ei kirjainvälistystä) sivujen ja osioiden otsikoille; `.ci-dashboard-display`
-   (Instrument Serif) vain suurille ja väljästi käytetyille näyttöteksteille, kuten virhesivun tilakoodille.
-6. `tests/unit/dashboard-kit-sweep.test.ts` valvoo paketin käyttöönottoa: `src/app`- tai
-   `src/shared/components`-hakemistossa ei saa olla Material-ligatuureja käyttäviä span-elementtejä;
-   hallintapuun (`src/app/(dashboard)` ja `src/shared/components`) sisällä ei saa olla raakoja
-   `<select>`-, `<textarea>`- tai `<table>`-elementtejä eikä itse toteutettuja `role="dialog"`-elementtejä
-   lueteltujen poikkeusten ulkopuolella (`Select`-adapterin natiivi haara ja `RequestLoggerDetail`); jokainen
-   raaka `<button>`- tai `<input>`-elementti tarvitsee syyn sisältävän `kit-exception:`-kommentin, joka päättyy
-   enintään 3 riviä ennen elementtiä; palettien värisävyt ja `dark:`-variantit ovat sallittuja vain testin
-   luettelemissa tiedostoissa.
-7. Tarkista molemmat teemat ja 390 px:n näkymäleveys ennen PR:ää (kuvakaappauksilla);
-   `tests/e2e/a11y.spec.ts` suorittaa axe-tarkistuksen.
+   commitointia edeltävä tarkistus `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) epäonnistuu, jos yksikin tavu
+   poikkeaa kiinnitetystä upstream-commitista (tarkistus ohitetaan varoituksella, jos upstream-klooni
+   `UI_KIT_CLONE` tai `_references/cheaper-inference-ui-kit` puuttuu). Jos kitistä puuttuu jotakin,
+   kierrä puute adapterissa tai näkymässä ja pyydä ominaisuutta upstreamista.
+3. Kitin tekstien oletuskieli on englanti (`label = "Loading"`, `loadingLabel = "Loading table"`…) — välitä käännetyt
+   merkkijonot `useTranslations(...)`-funktiosta aina, kun kitin komponentti renderöi tekstiä.
+4. Tailwind-apuluokat ohittavat kitin komponenttiluokat (kit määrittää
+   `@layer theme, base, components, utilities`, ja sen säännöt sijaitsevat `components`-kerroksessa) — käytä apuluokkia
+   välistykseen ja asetteluun, älä kitin komponenttien värien muuttamiseen.
+5. Otsikot: `.ci-heading` (Inter, ei merkkivälistystä) sivujen ja osioiden otsikoihin; `.ci-dashboard-display`
+   (Instrument Serif) vain suuriin, väljiin näyttöteksteihin, kuten virhesivun tilakoodiin.
+6. `tests/unit/dashboard-kit-sweep.test.ts` valvoo kitin käyttöönottoa: ei Material-ligatuurin span-elementtiä
+   `src/app`- tai `src/shared/components`-hakemistoissa; dashboard-puussa (`src/app/(dashboard)` ja
+   `src/shared/components`) ei raakoja `<select>`-, `<textarea>`- tai `<table>`-elementtejä eikä itse toteutettua
+   `role="dialog"`-roolia lueteltujen poikkeusten ulkopuolella (`Select`-adapterin natiivi haara,
+   `RequestLoggerDetail`); jokainen raaka `<button>`- tai `<input>`-elementti tarvitsee kommentin, joka sisältää
+   `kit-exception:`-tekstin (sekä syyn) ja päättyy enintään 3 riviä ennen elementtiä; palettisävyt ja `dark:`-variantit
+   ovat sallittuja vain testin luettelemissa tiedostoissa.
+7. Tarkista molemmat teemat ja 390 px:n näkymä ennen PR:ää (kuvakaappaukset); `tests/e2e/a11y.spec.ts` suorittaa
+   axe-tarkistuksen.
 
 ## 3. Näkymän lisääminen
 

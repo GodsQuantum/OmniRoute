@@ -26,7 +26,7 @@ Totalt antal leverantörer: **376**. Se kategorifördelningen nedan.
 
 Ytterligare taggar: `image`, `video`, `aggregator`, `enterprise`, `embed/rerank`, `self-hosted`.
 
-`Verktygsanrop` (där det visas): `native` — verklig funktionanrops-API; `emulated` — `tools`-arrayen är prompt-emulerad via `webTools.ts` (regex-parsade `<tool>{...}</tool>`-block); `none` — `tools` ignoreras för närvarande tyst. Se #7286.
+`Tool calling` (Verktygsanrop) (där det visas): `native` — verklig funktionanrops-API; `emulated` — `tools`-arrayen är prompt-emulerad via `webTools.ts` (regex-parsade `<tool>{...}</tool>`-block); `none` — `tools` ignoreras för närvarande tyst. Se #7286.
 
 Använd kontrollpanelen på `/dashboard/providers` för att aktivera, konfigurera och testa varje leverantör.
 

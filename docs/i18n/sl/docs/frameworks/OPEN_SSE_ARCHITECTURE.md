@@ -484,7 +484,7 @@ Ta obravnava:
 
 ## Konfiguracija
 
-`open-sse/config/` vsebuje konfiguracijski sloj:
+`open-sse/config/` vsebuje konfiguracijsko plast:
 
 | Datoteka                      | Namen                                                |
 | ----------------------------- | ---------------------------------------------------- |
@@ -492,7 +492,7 @@ Ta obravnava:
 | `providerModels.ts`           | Vzdevki modelov, preslikava formatov                 |
 | `constants.ts`                | Časovne omejitve, omejitve, kode stanja              |
 | `defaultThinkingSignature.ts` | Privzeti podpis razmišljanja Claude                  |
-| `modelStrip.ts` (v storitvah) | Odstranjevanje polj glede na ponudnika               |
+| `modelStrip.ts` (v storitvah) | Odstranjevanje polj glede na posameznega ponudnika   |
 
 ### Shema registra ponudnikov
 
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Preverjanje z Zodom ob nalaganju modula zagotavlja, da so vse konfiguracije ponudnikov veljavne.
+Preverjanje veljavnosti Zod ob nalaganju modula zagotavlja, da so vse konfiguracije ponudnikov veljavne.
 
 ---
 

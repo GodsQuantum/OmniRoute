@@ -81,27 +81,30 @@
 
 ## 2. ច្បាប់
 
-1. ប្រើ token ជានិច្ច មិនត្រូវប្រើតម្លៃ literal ឡើយ។ ករណីលើកលែងដែលរក្សាទុកដោយចេតនា៖ terminal របស់ console ដែលងងឹតជានិច្ច, stroke របស់ ReactFlow SVG តាមរយៈ `STATUS_HEX` (`src/shared/constants/statusColors.ts`) និង palette តាមប្រភេទ
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) និង
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)។
-2. មិនត្រូវកែ `packages/ui-kit/src` ដោយដៃឡើយ៖ ធ្វើសមកាលកម្មដោយប្រើ `scripts/dev/sync-ui-kit.sh <commit>`; របាំងត្រួតពិនិត្យមុន commit
-   `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) នឹងបរាជ័យ ប្រសិនបើមាន byte ណាមួយខុសពី upstream commit ដែលបានកំណត់ជាប់ (វានឹងរំលងដោយបង្ហាញការព្រមាន នៅពេលគ្មាន upstream clone,
+1. ប្រើ token ជានិច្ច មិនប្រើ literal ទេ។ ករណីលើកលែងដែលរក្សាទុកដោយចេតនា៖ console terminal ដែលងងឹតជានិច្ច និង stroke របស់ ReactFlow
+   SVG តាមរយៈ `STATUS_HEX` (`src/shared/constants/statusColors.ts`)។ យុទ្ធសាស្ត្រ routing និង
+   palette របស់ compression layer ប្រើ chart token របស់ kit តាមរយៈ `strategyColorVar` និង
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`)។
+2. កុំកែ `packages/ui-kit/src` ដោយដៃ៖ ធ្វើសមកាលកម្មជាមួយ `scripts/dev/sync-ui-kit.sh <commit>`; ច្រកត្រួតពិនិត្យ
+   មុន commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) នឹងបរាជ័យ ប្រសិនបើមាន byte ណាមួយ
+   ខុសពី upstream commit ដែលបាន pin (វារំលងដោយមានការព្រមាន នៅពេលគ្មាន upstream clone,
    `UI_KIT_CLONE` ឬ `_references/cheaper-inference-ui-kit`)។ នៅពេល kit ខ្វះអ្វីមួយ
-   សូមដោះស្រាយជាបណ្ដោះអាសន្ននៅក្នុង adapter ឬ screen ហើយស្នើសុំវាពី upstream។
-3. តម្លៃលំនាំដើមនៃអត្ថបទក្នុង kit ជាភាសាអង់គ្លេស (`label = "Loading"`, `loadingLabel = "Loading table"`…) — ផ្ដល់ string ដែលបានបកប្រែពី `useTranslations(...)` រាល់ពេលដែល component របស់ kit បង្ហាញអត្ថបទ។
-4. Tailwind utility មានអាទិភាពលើ class របស់ component ក្នុង kit (kit ប្រកាស
+   ចូរដោះស្រាយបណ្ដោះអាសន្ននៅក្នុង adapter ឬ screen ហើយស្នើសុំវាពី upstream។
+3. តម្លៃលំនាំដើមនៃអត្ថបទរបស់ kit គឺជាភាសាអង់គ្លេស (`label = "Loading"`, `loadingLabel = "Loading table"`…) — ផ្ដល់ string
+   ដែលបានបកប្រែពី `useTranslations(...)` រាល់ពេល component របស់ kit render អត្ថបទ។
+4. utility របស់ Tailwind មានអាទិភាពលើ class របស់ component ក្នុង kit (kit ប្រកាស
    `@layer theme, base, components, utilities` ហើយ rule របស់វាស្ថិតនៅក្នុង `components`) — ប្រើ utility សម្រាប់
    spacing និង layout មិនមែនសម្រាប់ប្ដូរពណ៌ component របស់ kit ទេ។
-5. ចំណងជើង៖ `.ci-heading` (Inter, គ្មាន tracking) សម្រាប់ចំណងជើងទំព័រ និងផ្នែក; `.ci-dashboard-display`
-   (Instrument Serif) សម្រាប់តែអត្ថបទបង្ហាញដែលមានទំហំធំ និងមានចន្លោះទូលាយ ដូចជា status code នៅទំព័រកំហុស។
-6. `tests/unit/dashboard-kit-sweep.test.ts` ការពារការអនុវត្ត kit៖ មិនអនុញ្ញាតឱ្យមាន span ជា Material ligature នៅក្រោម
-   `src/app` ឬ `src/shared/components`; នៅក្នុងមែកធាង dashboard (`src/app/(dashboard)` និង
+5. Heading៖ `.ci-heading` (Inter, គ្មាន tracking) សម្រាប់ចំណងជើងទំព័រ និងផ្នែក; `.ci-dashboard-display`
+   (Instrument Serif) សម្រាប់តែអត្ថបទបង្ហាញធំៗ និងមិនសូវញឹកញាប់ ដូចជា status code នៅលើទំព័រកំហុស។
+6. `tests/unit/dashboard-kit-sweep.test.ts` ការពារការប្រើប្រាស់ kit៖ មិនអនុញ្ញាតឱ្យមាន span ជា Material ligature នៅក្រោម
+   `src/app` ឬ `src/shared/components`; នៅក្នុង dashboard tree (`src/app/(dashboard)` និង
    `src/shared/components`) មិនអនុញ្ញាតឱ្យមាន `<select>`, `<textarea>` ឬ `<table>` ដើម និងមិនអនុញ្ញាតឱ្យបង្កើត
-   `role="dialog"` ដោយខ្លួនឯងនៅក្រៅករណីលើកលែងដែលបានរាយបញ្ជី (branch បែប native របស់ adapter `Select`,
+   `role="dialog"` ដោយដៃនៅក្រៅករណីលើកលែងដែលបានរាយបញ្ជី (native branch របស់ adapter `Select`,
    `RequestLoggerDetail`); រាល់ `<button>` ឬ `<input>` ដើមនៅទីនោះ ត្រូវមាន comment ដែលផ្ទុក
-   `kit-exception:` (រួមជាមួយមូលហេតុ) ហើយបញ្ចប់នៅខាងលើវាមិនលើសពី 3 បន្ទាត់; hue របស់ palette និង variant `dark:`
-   អនុញ្ញាតតែនៅក្នុង file ដែល test បានរាយបញ្ជីប៉ុណ្ណោះ។
-7. ផ្ទៀងផ្ទាត់ theme ទាំងពីរ និង viewport ទំហំ 390 px មុនបង្កើត PR (តាមរយៈ screenshot); `tests/e2e/a11y.spec.ts` ដំណើរការ
+   `kit-exception:` (ជាមួយហេតុផល) និងបញ្ចប់មិនលើសពី 3 បន្ទាត់នៅខាងលើវា; hue របស់ palette និង variant `dark:`
+   អនុញ្ញាតតែក្នុង file ដែល test បានរាយបញ្ជីប៉ុណ្ណោះ។
+7. ផ្ទៀងផ្ទាត់ theme ទាំងពីរ និង viewport ទំហំ 390 px មុនបង្កើត PR (ជាមួយ screenshot); `tests/e2e/a11y.spec.ts` ដំណើរការ
    axe។
 
 ## 3. ការបន្ថែម screen

@@ -491,7 +491,7 @@ Deze verwerkt:
 | `providerRegistry.ts`         | Register van chatmodellen voor de catalogus met 376 providers |
 | `providerModels.ts`           | Modelaliassen, formaattoewijzing                              |
 | `constants.ts`                | Time-outs, limieten, statuscodes                              |
-| `defaultThinkingSignature.ts` | Standaarddenksignatuur van Claude                             |
+| `defaultThinkingSignature.ts` | Standaard-denksignatuur van Claude                            |
 | `modelStrip.ts` (in services) | Veldverwijdering per provider                                 |
 
 ### Schema van het providerregister

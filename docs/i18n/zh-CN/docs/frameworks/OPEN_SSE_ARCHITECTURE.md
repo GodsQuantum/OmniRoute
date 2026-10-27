@@ -494,7 +494,7 @@ createResponsesApiTransformStream(): TransformStream
 | `defaultThinkingSignature.ts`       | 默认 Claude 思考签名                  |
 | `modelStrip.ts`（位于 services 中） | 按提供者移除字段                      |
 
-### 提供者注册表架构
+### 提供者注册表模式
 
 ```ts
 interface ProviderConfig {
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-模块加载时进行的 Zod 验证可确保所有提供者配置均有效。
+模块加载时进行 Zod 验证，以确保所有提供者配置均有效。
 
 ---
 

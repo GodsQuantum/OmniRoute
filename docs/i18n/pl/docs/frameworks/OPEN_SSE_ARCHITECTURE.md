@@ -493,13 +493,13 @@ Obsługuje:
 
 `open-sse/config/` zawiera warstwę konfiguracji:
 
-| Plik                          | Przeznaczenie                                           |
-| ----------------------------- | ------------------------------------------------------- |
-| `providerRegistry.ts`         | Rejestr modeli czatu obejmujący katalog 376 dostawców   |
-| `providerModels.ts`           | Aliasy modeli, mapowanie formatów                       |
-| `constants.ts`                | Limity czasu, ograniczenia, kody stanu                  |
-| `defaultThinkingSignature.ts` | Domyślna sygnatura myślenia Claude                      |
-| `modelStrip.ts` (w usługach)  | Usuwanie pól specyficznych dla poszczególnych dostawców |
+| Plik                          | Przeznaczenie                                         |
+| ----------------------------- | ----------------------------------------------------- |
+| `providerRegistry.ts`         | Rejestr modeli czatu obejmujący katalog 376 dostawców |
+| `providerModels.ts`           | Aliasy modeli, mapowanie formatów                     |
+| `constants.ts`                | Limity czasu, ograniczenia, kody stanu                |
+| `defaultThinkingSignature.ts` | Domyślna sygnatura myślenia Claude                    |
+| `modelStrip.ts` (w usługach)  | Usuwanie pól właściwe dla poszczególnych dostawców    |
 
 ### Schemat rejestru dostawców
 

@@ -691,7 +691,7 @@ omniroute configure codex          # እነዚህም አሉ፦ claude opencode q
 
 </div>
 
-> በመደበኛዎቹ የውይይት፣ ሚዲያ፣ ፍለጋ፣ አካባቢያዊ፣ የደመና-ወኪል እና የስርዓት ስብስቦች ውስጥ **376 የተመዘገቡ አቅራቢዎች** አሉ፤ ከእነዚህም **153ቱ `hasFree: true` የማግኛ ሜታዳታ አላቸው**። የውይይት ሞዴል መዝገቡ **239 አቅራቢዎችን / 3,059 የተለያዩ የአቅራቢ-ሞዴል ጥምረቶችን / 1,475 ጥሬ የሞዴል መለያዎችን** ይሸፍናል፤ የተለየው የነጻ በጀት ካታሎግ ደግሞ **471 ለእያንዳንዱ ሞዴል የተዘጋጁ ረድፎች**፣ **34 ተደጋጋሚ ገንዳዎች** እና **52 ተደጋጋሚ/ቁልፍ-አልባ ለዘላለም ነጻ አቅራቢዎች** አሉት። እነዚህ በዓላማ የተለያዩ መነሻ ብዛቶች ናቸው፤ ትርጓሜዎቹ እና በገንዳ የተባዙ መዝገቦች የተወገዱባቸው ስሌቶች በ[የአቅራቢ ማጣቀሻ](docs/reference/PROVIDER_REFERENCE.md) እና [ነጻ ደረጃዎች](docs/reference/FREE_TIERS.md) ውስጥ ይገኛሉ።
+> በመደበኛዎቹ የውይይት፣ ሚዲያ፣ ፍለጋ፣ አካባቢያዊ፣ የደመና-ወኪል እና የስርዓት ስብስቦች ውስጥ **376 የተመዘገቡ አቅራቢዎች** አሉ፤ ከእነዚህም **153ቱ `hasFree: true` የማግኛ ሜታዳታ አላቸው**። የውይይት ሞዴል መዝገቡ **239 አቅራቢዎችን / 3,059 የተለያዩ የአቅራቢ-ሞዴል ጥምረቶችን / 1,475 ጥሬ የሞዴል መለያዎችን** ይሸፍናል፤ የተለየው የነጻ በጀት ካታሎግ ደግሞ **484 ለእያንዳንዱ ሞዴል የተዘጋጁ ረድፎች**፣ **34 ተደጋጋሚ ገንዳዎች** እና **52 ተደጋጋሚ/ቁልፍ-አልባ ለዘላለም ነጻ አቅራቢዎች** አሉት። እነዚህ በዓላማ የተለያዩ መነሻ ብዛቶች ናቸው፤ ትርጓሜዎቹ እና በገንዳ የተባዙ መዝገቦች የተወገዱባቸው ስሌቶች በ[የአቅራቢ ማጣቀሻ](docs/reference/PROVIDER_REFERENCE.md) እና [ነጻ ደረጃዎች](docs/reference/FREE_TIERS.md) ውስጥ ይገኛሉ።
 
 <div align="center">
 
@@ -1090,13 +1090,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` ከታተሙት የተረጋጉ SemVer ስሪቶች ከፍተኛውን ይከተላል። git `main`ን አይከተልም። ለGitOps `:X.Y.Z`ን በቋሚነት ይጠቀሙ። [Docker የልቀት ቻናሎች](docs/guides/DOCKER_GUIDE.md#release-channels)ን ይመልከቱ። ምስሉ **`OMNIROUTE_MEMORY_MB=1024`**ን በቋሚነት ያስቀምጣል። ይህ ለዳሽቦርዱ እና ለቀላል ውይይት በቂ ነው። **የኮድ ጽሑፍ ወኪሎች** (ከClaude Code፣ Codex፣ Grok፣ … የሚመጣ `POST /v1/responses`) እጅግ ትልቅ የV8 heap ያስፈልጋቸዋል፤ አለበለዚያ ሁለት ረጅም እና ተደራራቢ ዐውደ-ጽሑፎች ሲኖሩ ሂደቱ ~12 GiB ላይ `FATAL ERROR` ያጋጥመዋል። ኮንቴይነሩን ከheap በላይ የሆነ መጠን ይመድቡ (ቤተኛ buffers ከV8 ውጭ ይገኛሉ)፦
+`:latest` ከታተሙት የተረጋጉ SemVer ስሪቶች ከፍተኛውን ይከተላል። የgit `main` ቅርንጫፍን አይከታተልም። ለGitOps `:X.Y.Z`ን በቋሚነት ይጠቀሙ። [የDocker ልቀት ቻናሎች](docs/guides/DOCKER_GUIDE.md#release-channels)ን ይመልከቱ። ምስሉ **`OMNIROUTE_MEMORY_MB=1024`**ን በቋሚነት ያስቀምጣል። ይህ ለዳሽቦርዱ እና ለቀላል ውይይት በቂ ነው። **የኮድ ወኪሎች** (ከClaude Code፣ Codex፣ Grok፣ … የሚመጣ `POST /v1/responses`) እጅግ ትልቅ የV8 heap ያስፈልጋቸዋል፤ አለበለዚያ ሁለት ረጅም አውዶች በሚደራረቡበት ጊዜ ፕሮሰሱ በ~12 GiB ላይ `FATAL ERROR` ያጋጥመዋል። የcontainerን መጠን ከheap በላይ ያድርጉ (native buffers ከV8 ውጭ ይቀመጣሉ)፦
 
-| የሥራ ጫና                                | Heap (`-e OMNIROUTE_MEMORY_MB`) | ኮንቴይነር (`--memory`) |
-| ------------------------------------- | ------------------------------- | ------------------- |
-| ዳሽቦርድ / ቀላል ውይይት                      | `1024` (የምስሉ ነባሪ)               | ≥2 g                |
-| አንድ የኮድ ጽሑፍ ወኪል                       | `8192`                          | ≥10 g               |
-| ሁለት በአንድ ጊዜ የሚካሄዱ ረጅም `/v1/responses` | `10240`–`12288`                 | ≥12–16 g            |
+| የሥራ ጫና                               | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
+| ------------------------------------ | ------------------------------- | ---------------------- |
+| ዳሽቦርድ / ቀላል ውይይት                     | `1024` (የምስሉ ነባሪ)               | ≥2 g                   |
+| አንድ የኮድ ወኪል                          | `8192`                          | ≥10 g                  |
+| ሁለት በአንድ ጊዜ የሚሰሩ ረጅም `/v1/responses` | `10240`–`12288`                 | ≥12–16 g               |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1104,24 +1104,24 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-ሙሉ ሰንጠረዥ፦ [Docker መመሪያ — የአሂድ ጊዜ RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents)።
+ሙሉ ሰንጠረዥ፦ [የDocker መመሪያ — የruntime RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents)።
 
 > **የቅድመ-ልቀት Docker ቻናል፦** `diegosouzapw/omniroute:next` እና
 > `diegosouzapw/omniroute:next-web` የአሁኑን ነባሪ `release/v*`
-> branch ይከተላሉ። እነዚህ ሊለወጡ የሚችሉ tags ያልተለቀቁ ማስተካከያዎችን ለመሞከር ብቻ የታሰቡ ሲሆን
-> **በምርት አካባቢ አይደገፉም**።
-> [Docker የልቀት ቻናሎች](docs/guides/DOCKER_GUIDE.md#release-channels)ን ይመልከቱ።
+> ቅርንጫፍ ይከተላሉ። እነዚህ ሊለወጡ የሚችሉ tags ያልተለቀቁ ጥገናዎችን ለመሞከር ብቻ የታሰቡ ሲሆን
+> **ለproduction አይደገፉም**።
+> [የDocker ልቀት ቻናሎች](docs/guides/DOCKER_GUIDE.md#release-channels)ን ይመልከቱ።
 
 **🥟 Bun**
 
-መደበኛው `bun install` እና ዓለም አቀፍ መጫን (`bun install -g omniroute`) በBun አሂድ ጊዜ ራስ-ሰር ማወቅ በኩል ይደገፋሉ፦
+መደበኛው `bun install` እና ዓለም አቀፍ መጫን (`bun install -g omniroute`) በBun runtime ማወቂያ አማካይነት ይደገፋሉ፦
 
-- **አብሮ የተካተተ `bun:sqlite`**፦ OmniRoute በBun ስር ሲሠራ አብሮ የተካተተውን የBun `bun:sqlite` driver ይጠቀማል፤ በNode.js ላይ ደግሞ ወደ `better-sqlite3` ወይም `sql.js` ይመለሳል።
-- **በልማት ጊዜ ራስ-ሰር የWebpack bundler ምርጫ**፦ ልማት (`bun run dev`) የቤተኛ V8 binding አለመጣጣምን ለመከላከል Bunን በራስ-ሰር ያውቃል እና Turbopackን በማሰናከል Webpackን ይጠቀማል። የምርት builds (`bun run build`) በNode ላይ እንዳለው `OMNIROUTE_USE_TURBOPACK`ን በትክክል ይከተላሉ፦ በነባሪ Turbopack፣ በWebpack build ለማድረግ `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` ይህን እንደ `--build-arg` ያቀርባል)።
-- **ለBun የተለየ Dockerfile**፦ ለቤተኛ Bun የምርት deployments ባለብዙ-ደረጃ `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`)።
+- **አብሮ የተካተተ `bun:sqlite`**፦ OmniRoute በBun ስር ሲሠራ አብሮ የተካተተውን የBun `bun:sqlite` driver ይጠቀማል፤ በNode.js ላይ `better-sqlite3`ን ወይም `sql.js`ን እንደ አማራጭ ይጠቀማል።
+- **በdevelopment ውስጥ ራስ-ሰር የWebpack bundler ምርጫ**፦ Development (`bun run dev`) Bunን በራስ-ሰር በመለየት የnative V8 binding አለመጣጣሞችን ለመከላከል Turbopackን ያሰናክልና Webpackን ይጠቀማል። Production builds (`bun run build`) ልክ በNode ላይ እንደሚደረገው `OMNIROUTE_USE_TURBOPACK`ን ይከተላሉ፦ በነባሪ Turbopack፣ በWebpack ለመገንባት `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` እንደ `--build-arg` ያቀርበዋል)።
+- **የተለየ የBun Dockerfile**፦ ለnative Bun production deployments ባለብዙ-ደረጃ `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`)።
 
 ```bash
-# በBun ይጫኑ እና ያስኪዱ
+# በBun ይጫኑ እና ያስኬዱ
 bun install
 bun run dev
 ```
@@ -1156,45 +1156,47 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Docker መመሪያ](docs/guides/DOCKER_GUIDE.md) — Compose profiles፣ Caddy HTTPS፣ Cloudflare tunnels።
+📖 [የDocker መመሪያ](docs/guides/DOCKER_GUIDE.md) — Compose profiles፣ Caddy HTTPS፣ Cloudflare tunnels።
 
 **🦭 Podman**
 
 ```bash
-# 1. bind-mounted የውሂብ ማውጫውን ያዘጋጁ
+# 1. በbind mount የሚገናኘውን የውሂብ ማውጫ ያዘጋጁ
 mkdir -p data
 
-# 2. ለLinux + አካባቢያዊ rootless Podman ብቻ (በርቀት የPodman Machine client ላይ ፈጽሞ አይጠቀሙ)፦
+# 2. ለLinux + አካባቢያዊ rootless Podman ብቻ (በፍጹም ለremote Podman Machine client አይደለም)፦
 podman unshare chown 1000:1000 ./data
 
-# 3. የአሂድ ጊዜ ፍንጭን ያዘጋጁ፣ አካባቢያዊውን Compose image ይገንቡ እና ያስጀምሩ
+# 3. የruntime ፍንጩን ያዘጋጁ፣ አካባቢያዊውን Compose image ይገንቡ እና ያስጀምሩ
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-በmacOS ወይም Windows ላይ Podman የርቀት Podman Machine ይጠቀማል፦ `podman unshare`ን ይዝለሉ እና
+በmacOS ወይም Windows ላይ Podman የremote Podman Machine ይጠቀማል፦ `podman unshare`ን ይዝለሉ እና
 [ለtopology የተለየውን የውሂብ ማውጫ መመሪያ](contrib/podman/README.md#data-directory-permissions-by-topology) ይከተሉ።
 
-📖 [Podman መመሪያ](contrib/podman/README.md) — Compose builds፣ Podman Machine፣ እና
+📖 [የPodman መመሪያ](contrib/podman/README.md) — Compose builds፣ Podman Machine፣ እና
 የLinux/systemd Quadlet ማዋቀር።
 
-**⚡ ፈጣን / ቀለል ያለ ጭነት (ቤተኛውን build ይዝለሉ)**
+**⚡ ፈጣን / ቀለል ያለ መጫን (native buildን ዝለሉ)**
 
-ቤተኛው SQLite engine (`better-sqlite3`) **አማራጭ** dependency ነው፤ ስለዚህ ዓለም አቀፍ
-ጭነት ከምንጭ ማጠናቀርን በመጠበቅ ፈጽሞ አይታገድም፦ ከእርስዎ platform/Node ጋር የሚዛመድ ከሆነ
-አስቀድሞ የተገነባ binary ይጠቀማል፤ አለበለዚያ በግልጽነት ወደ ሙሉ-JS engine
-(በNode 22+ ላይ `node:sqlite`፣ ያለበለዚያ የተካተተው `sql.js` WASM) ይመለሳል — የbuild መሣሪያዎች አያስፈልጉም።
+native SQLite engine (`better-sqlite3`) **አማራጭ** dependency ነው፤ ስለዚህ ዓለም አቀፍ
+መጫን ከምንጭ በማጠናቀር ምክንያት ፈጽሞ አይታገድም፦ ከplatform/Nodeዎ ጋር የሚዛመድ ከሆነ
+ቀድሞ የተገነባ binary ይጠቀማል፤ ካልሆነ ግን በግልጽነት ወደ pure-JS engine
+(በNode 22+ ላይ `node:sqlite`፣ ካልሆነ ጥቅሉ ውስጥ የተካተተው `sql.js` WASM) ይቀየራል — ምንም build tools አያስፈልጉም።
 
-ከጭነት በኋላ የሚደረገውን ቤተኛ warm-up ሙሉ በሙሉ ለመዝለል (CI፣ headless ወይም ዘገምተኛ ማሽኖች)፦
+ከመጫን በኋላ ያለውን **native warm-up** ሙሉ በሙሉ ለመዝለል (CI፣ headless፣ ወይም ዝግተኛ ማሽኖች)።
+ማስታወሻ፦ ይህ የሚዘለው የnative SQLite warm-up ደረጃን (`scripts/postinstall.mjs`) ብቻ ነው፤
+binary-copy/repair hook (`scripts/build/postinstall.mjs`) እንደተለመደው መሥራቱን ይቀጥላል፦
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1ም ይዘለዋል
 ```
 
-ለፈጣኑ ጭነት **pnpm**ን ይምረጡ (በይዘት አድራሻ የሚሰጥ store + hard links — ከላይ ይመልከቱ)።
-ዳሽቦርድ ለሌለው headless አሂድ ጊዜ የDocker `base` profileን (ከላይ) ወይም
-[የTermux መመሪያ](docs/guides/TERMUX_GUIDE.md)ን ይጠቀሙ። CLIው እና የድር ዳሽቦርዱ በአንድ port ላይ በተመሳሳይ
-ሂደት ይቀርባሉ፤ ስለዚህ በአሁኑ ጊዜ የተለየ CLI-only package የለም።
+ለፈጣን መጫኛዎች **pnpm**ን ይምረጡ (content-addressed store + hard links — ከላይ ይመልከቱ)።
+ዳሽቦርድ ለሌለው headless runtime የDocker `base` profileን (ከላይ) ወይም
+[የTermux መመሪያ](docs/guides/TERMUX_GUIDE.md)ን ይጠቀሙ። CLIው እና web dashboardው በአንድ port ላይ በአንድ
+ፕሮሰስ ይቀርባሉ፤ ስለዚህ በአሁኑ ጊዜ የተለየ CLI-only package የለም።
 
 <br/>
 

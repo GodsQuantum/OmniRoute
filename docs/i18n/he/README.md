@@ -691,7 +691,7 @@ omniroute configure codex          # זמינים גם: claude opencode qwen aid
 
 </div>
 
-> **376 ספקים רשומים** באוספים הקנוניים של צ'אט, מדיה, חיפוש, הפעלה מקומית, סוכני ענן ומערכת, ובהם **153 שנושאים מטא-נתוני גילוי מסוג `hasFree: true`**. מרשם מודלי הצ'אט כולל **239 ספקים / 3,059 צמדים ייחודיים של ספק ומודל / 1,475 מזהי מודל גולמיים**; קטלוג התקציבים החינמיים הנפרד כולל **471 שורות לפי מודל**, **34 מאגרים מתחדשים** ו-**52 ספקים חינמיים לתמיד, מתחדשים או ללא צורך במפתח**. המכנים הללו שונים במכוון; ההגדרות והחישובים לאחר הסרת כפילויות בין מאגרים מופיעים ב[מדריך הספקים](docs/reference/PROVIDER_REFERENCE.md) וב[מסלולים החינמיים](docs/reference/FREE_TIERS.md).
+> **376 ספקים רשומים** באוספים הקנוניים של צ'אט, מדיה, חיפוש, הפעלה מקומית, סוכני ענן ומערכת, ובהם **153 שנושאים מטא-נתוני גילוי מסוג `hasFree: true`**. מרשם מודלי הצ'אט כולל **239 ספקים / 3,059 צמדים ייחודיים של ספק ומודל / 1,475 מזהי מודל גולמיים**; קטלוג התקציבים החינמיים הנפרד כולל **484 שורות לפי מודל**, **34 מאגרים מתחדשים** ו-**52 ספקים חינמיים לתמיד, מתחדשים או ללא צורך במפתח**. המכנים הללו שונים במכוון; ההגדרות והחישובים לאחר הסרת כפילויות בין מאגרים מופיעים ב[מדריך הספקים](docs/reference/PROVIDER_REFERENCE.md) וב[מסלולים החינמיים](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1087,13 +1087,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-התגית `:latest` עוקבת אחר גרסת ה-SemVer היציבה **שפורסמה** הגבוהה ביותר. היא אינה עוקבת אחר `main` ב-git. עבור GitOps, קבעו גרסה באמצעות `:X.Y.Z`. ראו [ערוצי הפצה של Docker](docs/guides/DOCKER_GUIDE.md#release-channels).התמונה מקבעת את **`OMNIROUTE_MEMORY_MB=1024`**. זה מספיק ללוח הבקרה ולצ'אט קל. **סוכני קידוד** (`POST /v1/responses` מ-Claude Code, Codex, Grok, …) זקוקים לערמת V8 גדולה בהרבה, אחרת התהליך נתקל ב-`FATAL ERROR` בסביבות 12 GiB כאשר שני הקשרים ארוכים חופפים. הקצו למכולה יותר זיכרון מגודל הערמה (מאגרים טבעיים נמצאים מחוץ ל-V8):
+`:latest` עוקב אחר גרסת ה-SemVer היציבה **שפורסמה** ובעלת המספר הגבוה ביותר. הוא אינו עוקב אחר `main` של git. עבור GitOps, קבעו גרסה באמצעות `:X.Y.Z`. ראו [ערוצי הפצה של Docker](docs/guides/DOCKER_GUIDE.md#release-channels). בתמונה מוגדר **`OMNIROUTE_MEMORY_MB=1024`**. כמות זו מספיקה ללוח הבקרה ולצ'אט קל. **סוכני תכנות** (`POST /v1/responses` מ-Claude Code,‏ Codex,‏ Grok, …) זקוקים לערימת V8 גדולה בהרבה, אחרת התהליך נתקל ב-`FATAL ERROR` בסביבות 12 GiB כאשר שני הקשרים ארוכים חופפים. הקצו לקונטיינר זיכרון מעבר לגודל הערימה (מאגרים טבעיים נמצאים מחוץ ל-V8):
 
-| עומס עבודה                              | ערמה (`-e OMNIROUTE_MEMORY_MB`) | מכולה (`--memory`) |
-| --------------------------------------- | ------------------------------- | ------------------ |
-| לוח בקרה / צ'אט קל                      | `1024` (ברירת המחדל של התמונה)  | ≥2 g               |
-| סוכן קידוד אחד                          | `8192`                          | ≥10 g              |
-| שתי בקשות `/v1/responses` ארוכות במקביל | `10240`–`12288`                 | ≥12–16 g           |
+| עומס עבודה                              | ערימה (`-e OMNIROUTE_MEMORY_MB`) | קונטיינר (`--memory`) |
+| --------------------------------------- | -------------------------------- | --------------------- |
+| לוח בקרה / צ'אט קל                      | `1024` (ברירת המחדל של התמונה)   | ≥2 g                  |
+| סוכן תכנות אחד                          | `8192`                           | ≥10 g                 |
+| שתי בקשות `/v1/responses` ארוכות במקביל | `10240`–`12288`                  | ≥12–16 g              |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1103,18 +1103,18 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 הטבלה המלאה: [מדריך Docker — זיכרון RAM בזמן ריצה](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **ערוץ קדם-הפצה של Docker:** התגיות `diegosouzapw/omniroute:next` ו-
-> `diegosouzapw/omniroute:next-web` עוקבות אחר ענף ברירת המחדל הנוכחי `release/v*`.
-> תגיות משתנות אלו מיועדות רק לבדיקת תיקונים שטרם הופצו,
-> ו**אינן נתמכות לשימוש בסביבת ייצור**. ראו
+> **ערוץ Docker לגרסאות קדם-הפצה:** `diegosouzapw/omniroute:next` ו-
+> `diegosouzapw/omniroute:next-web` עוקבים אחר ענף ברירת המחדל הנוכחי `release/v*`.
+> תגים משתנים אלה מיועדים רק לבדיקת תיקונים שטרם פורסמו, והם
+> **אינם נתמכים בסביבת ייצור**. ראו
 > [ערוצי הפצה של Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-התקנה רגילה באמצעות `bun install` והתקנה גלובלית (`bun install -g omniroute`) נתמכות באמצעות זיהוי סביבת הריצה Bun:
+יש תמיכה ב-`bun install` רגיל ובהתקנה גלובלית (`bun install -g omniroute`) באמצעות זיהוי סביבת הריצה של Bun:
 
-- **`bun:sqlite` מובנה**: בעת ריצה תחת Bun, ‏OmniRoute משתמש במנהל ההתקן `bun:sqlite` המובנה של Bun, ובמקרה הצורך חוזר ל-`better-sqlite3` ב-Node.js או ל-`sql.js`.
-- **בחירה אוטומטית ב-Webpack לפיתוח**: סביבת הפיתוח (`bun run dev`) מזהה את Bun באופן אוטומטי ומשביתה את Turbopack לטובת Webpack, כדי למנוע אי-תאימויות עם קישורי V8 טבעיים. בניות לייצור (`bun run build`) פועלות בדיוק בהתאם ל-`OMNIROUTE_USE_TURBOPACK`, כמו ב-Node: ‏Turbopack כברירת מחדל, או `OMNIROUTE_USE_TURBOPACK=0` לבנייה באמצעות Webpack (`Dockerfile.bun` חושף אותו כ-`--build-arg`).
+- **`bun:sqlite` מובנה**: בעת הרצה תחת Bun,‏ OmniRoute משתמש במנהל ההתקן `bun:sqlite` המובנה של Bun, ובמקרה הצורך עובר ל-`better-sqlite3` ב-Node.js או ל-`sql.js`.
+- **בחירה אוטומטית של מאגד Webpack בפיתוח**: סביבת הפיתוח (`bun run dev`) מזהה את Bun באופן אוטומטי ומשביתה את Turbopack לטובת Webpack, כדי למנוע אי-תאימות עם איגודי V8 טבעיים. בניות ייצור (`bun run build`) פועלות בדיוק לפי `OMNIROUTE_USE_TURBOPACK`, כמו ב-Node:‏ Turbopack כברירת מחדל, או `OMNIROUTE_USE_TURBOPACK=0` כדי לבנות באמצעות Webpack (`Dockerfile.bun` חושף אותו בתור `--build-arg`).
 - **Dockerfile ייעודי ל-Bun**: הקובץ הרב-שלבי `Dockerfile.bun` מיועד לפריסות ייצור טבעיות של Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
@@ -1145,7 +1145,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# שימוש ב-flakes של Nix
+# שימוש בפתיתי Nix
 nix develop
 npm run dev
 
@@ -1153,7 +1153,7 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [מדריך Docker](docs/guides/DOCKER_GUIDE.md) — פרופילי Compose, ‏HTTPS באמצעות Caddy ומנהרות Cloudflare.
+📖 [מדריך Docker](docs/guides/DOCKER_GUIDE.md) — פרופילים של Compose,‏ Caddy HTTPS ומנהרות Cloudflare.
 
 **🦭 Podman**
 
@@ -1161,37 +1161,31 @@ devbox run npm run dev
 # 1. הכנת ספריית הנתונים המחוברת באמצעות bind mount
 mkdir -p data
 
-# 2. רק ב-Linux וב-Podman מקומי ללא root (לעולם לא בלקוח מרוחק של Podman Machine):
+# 2. עבור Linux ו-Podman מקומי ללא root בלבד (לעולם לא לקוח מרוחק של Podman Machine):
 podman unshare chown 1000:1000 ./data
 
-# 3. הגדרת רמז סביבת הריצה, בניית תמונת Compose המקומית והפעלה
+# 3. הגדרת הרמז לסביבת הריצה, בניית תמונת Compose המקומית והפעלה
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-ב-macOS או ב-Windows, ‏Podman משתמש ב-Podman Machine מרוחק: דלגו על `podman unshare`
-ופעלו לפי [ההנחיות לספריית הנתונים בהתאם לטופולוגיה](contrib/podman/README.md#data-directory-permissions-by-topology).
+ב-macOS או ב-Windows,‏ Podman משתמש ב-Podman Machine מרוחק: דלגו על `podman unshare` ופעלו לפי [ההנחיות לספריית הנתונים בהתאם לטופולוגיה](contrib/podman/README.md#data-directory-permissions-by-topology).
 
-📖 [מדריך Podman](contrib/podman/README.md) — בניות Compose, ‏Podman Machine והגדרת
-Quadlet עם Linux/systemd.
+📖 [מדריך Podman](contrib/podman/README.md) — בניות Compose,‏ Podman Machine והגדרת Quadlet של Linux/systemd.
 
 **⚡ התקנה מהירה / רזה יותר (דילוג על הבנייה הטבעית)**
 
-מנוע SQLite הטבעי (`better-sqlite3`) הוא תלות **אופציונלית**, ולכן התקנה גלובלית
-לעולם אינה נתקעת בהידור מקוד המקור: היא משתמשת בקובץ בינארי שנבנה מראש כאשר הוא תואם
-לפלטפורמה/Node שלכם, ובמקרה אחר חוזרת באופן שקוף למנוע JavaScript טהור
-(`node:sqlite` ב-Node 22 ומעלה, או `sql.js` WASM המצורף) — ללא צורך בכלי בנייה.
+מנוע SQLite הטבעי (`better-sqlite3`) הוא תלות **אופציונלית**, ולכן התקנה גלובלית לעולם אינה מתעכבת עקב הידור מקוד המקור: היא משתמשת בקובץ בינארי שנבנה מראש כאשר קיימת התאמה לפלטפורמה/Node שלכם, ובמקרים אחרים עוברת באופן שקוף למנוע JavaScript טהור (`node:sqlite` ב-Node 22 ומעלה, או לחלופין `sql.js` WASM המצורף) — ללא צורך בכלי בנייה.
 
-כדי לדלג לחלוטין על החימום הטבעי שלאחר ההתקנה (CI, מערכת ללא ממשק גרפי או מחשבים איטיים):
+כדי לדלג לחלוטין על **החימום הטבעי** שלאחר ההתקנה (ב-CI, בסביבה ללא ממשק גרפי או במכונות איטיות).
+הערה: פעולה זו מדלגת רק על שלב החימום של SQLite הטבעי (`scripts/postinstall.mjs`); ה-hook להעתקה/תיקון של הקובץ הבינארי (`scripts/build/postinstall.mjs`) עדיין מופעל כרגיל:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # גם CI=1 מדלג עליו
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # גם CI=1 גורם לדילוג עליו
 ```
 
-להתקנות המהירות ביותר, העדיפו את **pnpm** (אחסון ממוען-תוכן + קישורים קשיחים — ראו לעיל).
-לסביבת ריצה ללא לוח בקרה וללא ממשק גרפי, השתמשו בפרופיל Docker בשם `base` (לעיל) או
-ב[מדריך Termux](docs/guides/TERMUX_GUIDE.md). ממשק שורת הפקודה ולוח הבקרה האינטרנטי מסופקים על ידי
-אותו תהליך ביציאה אחת, ולכן כיום אין חבילה נפרדת לממשק שורת הפקודה בלבד.
+להתקנות המהירות ביותר, העדיפו את **pnpm** (מאגר ממוען-תוכן + קישורים קשיחים — ראו לעיל).
+לסביבת ריצה ללא לוח בקרה וללא ממשק גרפי, השתמשו בפרופיל Docker‏ `base` (לעיל) או ב-[מדריך Termux](docs/guides/TERMUX_GUIDE.md). ממשק שורת הפקודה ולוח הבקרה באינטרנט מוגשים על ידי אותו תהליך דרך יציאה אחת, ולכן כיום אין חבילה נפרדת לממשק שורת הפקודה בלבד.
 
 <br/>
 

@@ -154,29 +154,29 @@ curl -X POST http://localhost:20128/a2a \
 
 OmniRoute hutoa ujuzi 6 wa A2A uliounganishwa katika `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kila moduli ya ujuzi ipo katika `src/lib/a2a/skills/`.
 
-| Ujuzi                    | ID                   | Maelezo                                                                                                                                                                                      | Lebo                      | Mifano                                      |
-| :----------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------ | :------------------------------------------ |
-| Uelekezaji Mahiri        | `smart-routing`      | Huelekeza kidokezo kupitia mtoa huduma/mchanganyiko bora kwa kutumia injini ya michanganyiko ya OmniRoute pamoja na uwekaji alama                                                            | uelekezaji, watoa huduma  | "Elekeza kidokezo hiki kupitia modeli bora" |
-| Usimamizi wa Mgao        | `quota-management`   | Huripoti hali ya mgao kwa kila mtoa huduma na kuwasaidia waitaji kuamua wakati wa kupunguza kasi/kubadilisha                                                                                 | mgao, watoa huduma        | "Kagua mgao wa anthropic"                   |
-| Ugunduzi wa Watoa Huduma | `provider-discovery` | Huorodhesha watoa huduma waliosakinishwa pamoja na uwezo wao, viashiria vya kiwango cha bila malipo na hali ya OAuth                                                                         | watoa huduma, ugunduzi    | "Ni watoa huduma gani wanaopatikana?"       |
-| Uchanganuzi wa Gharama   | `cost-analysis`      | Hukadiria gharama ya ombi/mazungumzo kulingana na katalogi pamoja na matumizi ya hivi karibuni                                                                                               | gharama, matumizi         | "Kadiria gharama ya mazungumzo haya"        |
-| Ripoti ya Afya           | `health-report`      | Hujumlisha hali ya kikata mzunguko, kipindi cha kusubiri na kufungiwa kwa kila mtoa huduma                                                                                                   | afya, ustahimilivu        | "Onyesha hali ya afya ya watoa huduma wote" |
-| Orodhesha Uwezo          | `list-capabilities`  | Hurejesha katalogi kamili yenye vipengee 45 ya Ujuzi wa Ajenti (23 vya API + 21 vya CLI + 1 cha usanidi) kama jedwali la markdown lenye URL ghafi za SKILL.md kwa ajili ya kuingiza muktadha | katalogi, ugunduzi, ujuzi | "Orodhesha uwezo wote wa OmniRoute"         |
+| Ujuzi                    | ID                   | Maelezo                                                                                                                                                                                       | Lebo                      | Mifano                                      |
+| :----------------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------ | :------------------------------------------ |
+| Uelekezaji Mahiri        | `smart-routing`      | Huelekeza kidokezo kupitia mtoa huduma/mchanganyiko bora kwa kutumia injini ya michanganyiko ya OmniRoute pamoja na mfumo wa utoaji alama                                                     | uelekezaji, watoa huduma  | "Elekeza kidokezo hiki kupitia modeli bora" |
+| Usimamizi wa Kiwango     | `quota-management`   | Huripoti hali ya kiwango kwa kila mtoa huduma na kuwasaidia waitaji kuamua wakati wa kupunguza kasi/kubadilisha                                                                               | kiwango, watoa huduma     | "Kagua kiwango cha anthropic"               |
+| Ugunduzi wa Watoa Huduma | `provider-discovery` | Huorodhesha watoa huduma waliosakinishwa pamoja na uwezo wao, viashiria vya kiwango kisicholipishwa na hali ya OAuth                                                                          | watoa huduma, ugunduzi    | "Ni watoa huduma gani wanaopatikana?"       |
+| Uchanganuzi wa Gharama   | `cost-analysis`      | Hukadiria gharama ya ombi/mazungumzo kwa kuzingatia katalogi pamoja na matumizi ya hivi karibuni                                                                                              | gharama, matumizi         | "Kadiria gharama ya mazungumzo haya"        |
+| Ripoti ya Afya           | `health-report`      | Hukusanya hali ya circuit breaker, cooldown na lockout kwa kila mtoa huduma                                                                                                                   | afya, ustahimilivu        | "Onyesha hali ya afya ya watoa huduma wote" |
+| Orodhesha Uwezo          | `list-capabilities`  | Hurejesha katalogi kamili yenye vipengee 45 vya Ujuzi wa Ajenti (23 vya API + 21 vya CLI + 1 cha usanidi) kama jedwali la markdown lenye URL ghafi za SKILL.md kwa ajili ya kuingiza muktadha | katalogi, ugunduzi, ujuzi | "Orodhesha uwezo wote wa OmniRoute"         |
 
-> Kadi ya Ajenti inapaswa kusawazishwa na katalogi hai ya watoa huduma 376; idadi ya watoa huduma na metadata ya bila malipo/isiyohitaji uthibitishaji hutolewa na rejista ya wakati wa utekelezaji.
+> Kadi ya Ajenti inapaswa kuendelea kuwiana na katalogi hai yenye watoa huduma 376; idadi ya watoa huduma na metadata ya bure/isiyohitaji uthibitishaji hutolewa na sajili ya wakati wa utekelezaji.
 
 ### Maelezo ya Ujuzi wa `list-capabilities`
 
-Ujuzi wa `list-capabilities` ni muhimu hasa kwa maajenti wa nje wanaohitaji kugundua kile ambacho OmniRoute hutoa kabla ya kutuma miito ya API. Hurejesha artefakti ya jedwali la markdown lililopangwa:
+Ujuzi wa `list-capabilities` ni muhimu hasa kwa ajenti wa nje wanaohitaji kugundua kile ambacho OmniRoute hutoa kabla ya kutuma miito ya API. Hurejesha artefakti ya jedwali la markdown lenye muundo:
 
 ```
-| ID | Jina | Kategoria | Eneo | Ncha/Amri | URL Ghafi |
+| ID | Jina | Kategoria | Eneo | Vituo/Amri | URL Ghafi |
 | --- | --- | --- | --- | --- | --- |
 | omni-auth | Uthibitishaji na Vipindi | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Kila safu inajumuisha safu wima ya `rawUrl` ili maajenti waweze kuleta SKILL.md kamili mara moja. Sehemu ya `metadata.totalSkills` huakisi ukubwa wa katalogi (45 kwa sasa). Utekelezaji: `src/lib/a2a/skills/listCapabilities.ts`. Tazama pia [AGENT-SKILLS.md](./AGENT-SKILLS.md).
+Kila safu inajumuisha safu wima ya `rawUrl` ili ajenti waweze kuleta SKILL.md kamili mara moja. Sehemu ya `metadata.totalSkills` huakisi ukubwa wa katalogi (45 kwa sasa). Utekelezaji: `src/lib/a2a/skills/listCapabilities.ts`. Tazama pia [AGENT-SKILLS.md](./AGENT-SKILLS.md).
 
 ---
 

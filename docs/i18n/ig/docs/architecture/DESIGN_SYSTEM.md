@@ -81,30 +81,30 @@
 
 ## 2. Iwu
 
-1. Jiri token, ejila literal. Ewezuga ndị a e debere ụma: console terminal nke na-adị ọchịchịrị mgbe niile, ahịrị ReactFlow SVG
-   site na `STATUS_HEX` (`src/shared/constants/statusColors.ts`), yana palette agba nke otu dị iche iche
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) na
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
+1. Tokens, ọ bụghị literals. Ewezuga ndị a e debere n'ebumnuche: console terminal nke na-adị ọchịchịrị mgbe niile na ReactFlow
+   SVG strokes site na `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Atụmatụ routing na
+   palettes nke compression-layer na-eji tokens eserese nke kit site na `strategyColorVar` na
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
 2. Ejila aka gbanwee `packages/ui-kit/src`: jiri `scripts/dev/sync-ui-kit.sh <commit>` mekọrịta ya; ọnụ ụzọ
-   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) na-ada ma ọ bụrụ na ọbụna otu byte
-   dị iche na commit upstream e kpọgidere (ọ na-eji ịdọ aka ná ntị gafere mgbe clone upstream,
-   `UI_KIT_CLONE` ma ọ bụ `_references/cheaper-inference-ui-kit`, adịghị). Mgbe kit enweghị ihe,
-   mee ụzọ mgbapụ na adapter ma ọ bụ na ihuenyo ahụ ma rịọ upstream ka ọ tinye ya.
-3. Ndabara ederede kit bụ Bekee (`label = "Loading"`, `loadingLabel = "Loading table"`…) — site na
-   `useTranslations(...)` nyefee eriri ederede a tụgharịrị mgbe ọ bụla akụrụngwa kit na-egosipụta ederede.
-4. Utilities Tailwind na-aka klas akụrụngwa kit ike (kit na-ekwupụta
+   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) na-ada ma ọ bụrụ na byte ọ bụla
+   dị iche na upstream commit a kpọgidere (ọ na-amafe ya ma nye ịdọ aka ná ntị mgbe upstream clone,
+   `UI_KIT_CLONE` ma ọ bụ `_references/cheaper-inference-ui-kit`, adịghị). Mgbe ihe na-adịghị na kit,
+   chọta ụzọ ọzọ isi mee ya na adapter ma ọ bụ screen ma rịọ upstream ka ha tinye ya.
+3. Ndabara ederede kit dị n'asụsụ Bekee (`label = "Loading"`, `loadingLabel = "Loading table"`…) — nyefee
+   strings a tụgharịrị site na `useTranslations(...)` mgbe ọ bụla component kit na-egosipụta ederede.
+4. Tailwind utilities na-emeri classes component kit (kit na-ekwupụta
    `@layer theme, base, components, utilities`, iwu ya dịkwa na `components`) — jiri utilities maka
-   oghere na nhazi, ọ bụghị iji gbanwee agba akụrụngwa kit.
+   oghere na nhazi, ọ bụghị iji nye components kit agba ọzọ.
 5. Isiokwu: `.ci-heading` (Inter, enweghị tracking) maka aha peeji na ngalaba; `.ci-dashboard-display`
-   (Instrument Serif) naanị maka nnukwu ederede ngosi na-adịghị ọtụtụ, dịka koodu ọkwa dị na peeji njehie.
-6. `tests/unit/dashboard-kit-sweep.test.ts` na-echekwa nnabata kit: enweghị span ligature Material n'okpuru
+   (Instrument Serif) naanị maka nnukwu ederede ngosi na-adịghị ukwuu, dịka status code dị na peeji njehie.
+6. `tests/unit/dashboard-kit-sweep.test.ts` na-echekwa nnabata kit: enweghị Material ligature span n'okpuru
    `src/app` ma ọ bụ `src/shared/components`; n'ime osisi dashboard (`src/app/(dashboard)` na
-   `src/shared/components`) enweghị `<select>`, `<textarea>` ma ọ bụ `<table>` nkịtị, ọ dịghịkwa
-   `role="dialog"` e ji aka rụọ n'èzí ihe ndị e depụtara dị ka mwepu (alaka native nke adapter `Select`,
-   `RequestLoggerDetail`); `<button>` ma ọ bụ `<input>` nkịtị ọ bụla nọ ebe ahụ ga-enwerịrị comment nwere
-   `kit-exception:` (tinyere ihe kpatara ya) nke na-agwụkarị ahịrị 3 n'elu ya; hue palette na variant `dark:`
-   ga-adị naanị n'ime faịlụ ndị test depụtara.
-7. Nyochaa theme abụọ ahụ na viewport 390 px tupu PR (screenshots); `tests/e2e/a11y.spec.ts` na-agba
+   `src/shared/components`), enweghị `<select>`, `<textarea>` ma ọ bụ `<table>` raw, nakwa enweghị
+   `role="dialog"` e ji aka rụọ n'èzí ewezuga ndị edepụtara (native branch nke adapter `Select`,
+   `RequestLoggerDetail`); `<button>` ma ọ bụ `<input>` raw ọ bụla dị ebe ahụ chọrọ comment nwere
+   `kit-exception:` (ya na ihe kpatara ya) nke na-agwụcha n'ahịrị na-erughị ma ọ bụ hà 3 n'elu ya; palette hues na variants
+   `dark:` ga-adị naanị na faịlụ ndị test ahụ depụtara.
+7. Nyochaa themes abụọ ahụ na viewport 390 px tupu PR (screenshots); `tests/e2e/a11y.spec.ts` na-agba
    axe.
 
 ## 3. Ịgbakwunye ihuenyo

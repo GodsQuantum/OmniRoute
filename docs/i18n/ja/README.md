@@ -691,7 +691,7 @@ omniroute configure codex          # 次も利用可能：claude opencode qwen a
 
 </div>
 
-> 正規のチャット、メディア、検索、ローカル、クラウドエージェント、システムの各コレクション全体で **376 の登録済みプロバイダー**があり、そのうち **153 に `hasFree: true` の検出メタデータが付与されています**。チャットモデルレジストリには **239 プロバイダー / 3,059 の異なるプロバイダー・モデルペア / 1,475 の未加工モデル ID** が含まれています。また、個別の無料枠カタログには、**モデルごとの行が 471 件**、**継続利用可能なプールが 34 件**、および**継続利用可能またはキー不要の永久無料プロバイダーが 52 件**あります。これらの分母は設計上異なります。定義とプールの重複を除いた計算については、[プロバイダーリファレンス](docs/reference/PROVIDER_REFERENCE.md)および[無料枠](docs/reference/FREE_TIERS.md)を参照してください。
+> 正規のチャット、メディア、検索、ローカル、クラウドエージェント、システムの各コレクション全体で **376 の登録済みプロバイダー**があり、そのうち **153 に `hasFree: true` の検出メタデータが付与されています**。チャットモデルレジストリには **239 プロバイダー / 3,059 の異なるプロバイダー・モデルペア / 1,475 の未加工モデル ID** が含まれています。また、個別の無料枠カタログには、**モデルごとの行が 484 件**、**継続利用可能なプールが 34 件**、および**継続利用可能またはキー不要の永久無料プロバイダーが 52 件**あります。これらの分母は設計上異なります。定義とプールの重複を除いた計算については、[プロバイダーリファレンス](docs/reference/PROVIDER_REFERENCE.md)および[無料枠](docs/reference/FREE_TIERS.md)を参照してください。
 
 <div align="center">
 
@@ -1091,13 +1091,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` は、**公開済み**の安定版 SemVer のうち最も高いバージョンを指します。git の `main` は追跡しません。GitOps では `:X.Y.Z` に固定してください。[Docker リリースチャンネル](docs/guides/DOCKER_GUIDE.md#release-channels)を参照してください。このイメージでは **`OMNIROUTE_MEMORY_MB=1024`** に固定されています。これはダッシュボードと軽量なチャットには十分です。**コーディングエージェント**（Claude Code、Codex、Grok などからの `POST /v1/responses`）には、はるかに大きな V8 ヒープが必要です。そうでない場合、2 つの長いコンテキストが重複すると約 12 GiB でプロセスが `FATAL ERROR` になります。ネイティブバッファは V8 の外部に配置されるため、コンテナのサイズはヒープより大きく設定してください。
+`:latest` は、**公開済み**の安定版 SemVer のうち最も高いバージョンを指します。git の `main` は追跡しません。GitOps では `:X.Y.Z` に固定してください。[Docker リリースチャンネル](docs/guides/DOCKER_GUIDE.md#release-channels)を参照してください。イメージでは **`OMNIROUTE_MEMORY_MB=1024`** に固定されています。これはダッシュボードや軽量なチャットには十分です。**コーディングエージェント**（Claude Code、Codex、Grok などからの `POST /v1/responses`）では、より大きな V8 ヒープが必要です。そうしないと、長いコンテキストが 2 つ重複した際に約 12 GiB でプロセスが `FATAL ERROR` になります。ネイティブバッファは V8 の外部に配置されるため、コンテナのサイズはヒープより大きくしてください。
 
-| ワークロード                               | ヒープ（`-e OMNIROUTE_MEMORY_MB`） | コンテナ（`--memory`） |
-| ------------------------------------------ | ---------------------------------- | ---------------------- |
-| ダッシュボード／軽量なチャット             | `1024`（イメージのデフォルト）     | ≥2 g                   |
-| 1 つのコーディングエージェント             | `8192`                             | ≥10 g                  |
-| 2 つの長時間実行される同時 `/v1/responses` | `10240`–`12288`                    | ≥12–16 g               |
+| ワークロード                          | ヒープ（`-e OMNIROUTE_MEMORY_MB`） | コンテナ（`--memory`） |
+| ------------------------------------- | ---------------------------------- | ---------------------- |
+| ダッシュボード／軽量なチャット        | `1024`（イメージのデフォルト）     | 2 g 以上               |
+| 1 つのコーディングエージェント        | `8192`                             | 10 g 以上              |
+| 2 つの長い `/v1/responses` の同時実行 | `10240`–`12288`                    | 12～16 g 以上          |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1108,9 +1108,9 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 完全な表：[Docker ガイド — ランタイム RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents)。
 
 > **プレリリース Docker チャンネル：** `diegosouzapw/omniroute:next` と
-> `diegosouzapw/omniroute:next-web` は、現在のデフォルトの `release/v*`
-> ブランチを追跡します。これらの可変タグは、未リリースの修正をテストする目的にのみ使用するものであり、
-> **本番環境ではサポートされません**。詳しくは
+> `diegosouzapw/omniroute:next-web` は、現在デフォルトの `release/v*`
+> ブランチを追跡します。これらの可変タグは未リリースの修正をテストするためだけのものであり、
+> **本番環境ではサポートされません**。詳細は
 > [Docker リリースチャンネル](docs/guides/DOCKER_GUIDE.md#release-channels)を参照してください。
 
 **🥟 Bun**
@@ -1118,7 +1118,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 Bun ランタイムの検出により、標準の `bun install` とグローバルインストール（`bun install -g omniroute`）がサポートされています。
 
 - **組み込みの `bun:sqlite`**：OmniRoute は Bun 上で実行されている場合、Bun 組み込みの `bun:sqlite` ドライバーを使用し、Node.js では `better-sqlite3` または `sql.js` にフォールバックします。
-- **開発時の Webpack バンドラー自動選択**：開発環境（`bun run dev`）では Bun を自動的に検出し、ネイティブ V8 バインディングの非互換性を防ぐため、Turbopack を無効にして Webpack を使用します。本番ビルド（`bun run build`）では、Node とまったく同様に `OMNIROUTE_USE_TURBOPACK` に従います。デフォルトでは Turbopack を使用し、`OMNIROUTE_USE_TURBOPACK=0` を指定すると Webpack でビルドします（`Dockerfile.bun` では `--build-arg` として公開されています）。
+- **開発時の Webpack バンドラー自動選択**：開発環境（`bun run dev`）では Bun を自動検出し、ネイティブ V8 バインディングの非互換性を防ぐために Turbopack を無効化して Webpack を使用します。本番ビルド（`bun run build`）では Node とまったく同様に `OMNIROUTE_USE_TURBOPACK` に従います。デフォルトは Turbopack で、Webpack を使用してビルドするには `OMNIROUTE_USE_TURBOPACK=0` を指定します（`Dockerfile.bun` では `--build-arg` として公開されています）。
 - **専用の Bun Dockerfile**：ネイティブ Bun 本番デプロイ用のマルチステージ `Dockerfile.bun`（`docker build -f Dockerfile.bun -t omniroute:bun .`）。
 
 ```bash
@@ -1165,16 +1165,16 @@ devbox run npm run dev
 # 1. バインドマウントするデータディレクトリを準備
 mkdir -p data
 
-# 2. Linux + ローカルのルートレス Podman のみ（リモートの Podman Machine クライアントでは決して実行しないでください）：
+# 2. Linux + ローカルの rootless Podman のみ（リモート Podman Machine クライアントでは決して実行しないでください）：
 podman unshare chown 1000:1000 ./data
 
-# 3. ランタイムヒントを設定し、ローカルの Compose イメージをビルドして起動
+# 3. ランタイムのヒントを設定し、ローカルの Compose イメージをビルドして起動
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS または Windows では、Podman はリモートの Podman Machine を使用します。`podman unshare` を省略し、
-[トポロジー別のデータディレクトリに関するガイダンス](contrib/podman/README.md#data-directory-permissions-by-topology)に従ってください。
+macOS または Windows では、Podman はリモートの Podman Machine を使用します。`podman unshare` は省略し、
+[トポロジー固有のデータディレクトリに関するガイダンス](contrib/podman/README.md#data-directory-permissions-by-topology)に従ってください。
 
 📖 [Podman ガイド](contrib/podman/README.md) — Compose ビルド、Podman Machine、および
 Linux/systemd Quadlet のセットアップ。
@@ -1182,20 +1182,22 @@ Linux/systemd Quadlet のセットアップ。
 **⚡ より高速／軽量なインストール（ネイティブビルドを省略）**
 
 ネイティブ SQLite エンジン（`better-sqlite3`）は**オプション**の依存関係であるため、グローバル
-インストールがソースからのコンパイルでブロックされることはありません。プラットフォーム／Node に適合する
-ビルド済みバイナリがある場合はそれを使用し、ない場合は透過的に純粋な JS エンジン
-（Node 22+ では `node:sqlite`、それ以外では同梱の `sql.js` WASM）にフォールバックします。ビルドツールは不要です。
+インストールがソースからのコンパイルで停止することはありません。プラットフォーム／Node に一致する
+ビルド済みバイナリがある場合はそれを使用し、それ以外の場合は Pure JS エンジン
+（Node 22 以降では `node:sqlite`、それ以外では同梱の `sql.js` WASM）に透過的にフォールバックするため、ビルドツールは不要です。
 
-インストール後のネイティブウォームアップを完全に省略するには（CI、ヘッドレス環境、または低速なマシン）：
+インストール後の**ネイティブウォームアップ**を完全に省略するには、次のようにします（CI、ヘッドレス環境、または低速なマシン向け）。
+注：これによって省略されるのはネイティブ SQLite のウォームアップ手順（`scripts/postinstall.mjs`）のみです。
+バイナリのコピー／修復フック（`scripts/build/postinstall.mjs`）は通常どおり実行されます。
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 でも省略されます
 ```
 
-最速でインストールするには、**pnpm**（コンテンツアドレス方式のストア + ハードリンク — 上記参照）を推奨します。
+最速のインストールには **pnpm** を推奨します（コンテンツアドレスストア + ハードリンク — 上記を参照）。
 ダッシュボードを使用しないヘッドレスランタイムには、Docker の `base` プロファイル（上記）または
 [Termux ガイド](docs/guides/TERMUX_GUIDE.md)を使用してください。CLI と Web ダッシュボードは同じプロセスから
-1 つのポートで提供されるため、現時点では CLI 専用パッケージはありません。
+1 つのポートで提供されるため、現時点では CLI 専用のパッケージはありません。
 
 <br/>
 

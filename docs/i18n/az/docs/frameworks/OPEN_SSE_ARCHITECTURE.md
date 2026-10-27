@@ -489,10 +489,10 @@ Bu, aşağıdakıları emal edir:
 | Fayl                          | Təyinatı                                                 |
 | ----------------------------- | -------------------------------------------------------- |
 | `providerRegistry.ts`         | 376 provayderdən ibarət kataloq üzrə çat modeli reyestri |
-| `providerModels.ts`           | Model aliasları, format uyğunlaşdırılması                |
+| `providerModels.ts`           | Model aliasları, format uyğunlaşdırması                  |
 | `constants.ts`                | Taymautlar, limitlər, status kodları                     |
 | `defaultThinkingSignature.ts` | Standart Claude düşünmə imzası                           |
-| `modelStrip.ts` (xidmətlərdə) | Hər provayder üzrə sahələrin çıxarılması                 |
+| `modelStrip.ts` (xidmətlərdə) | Hər provayder üzrə sahələrin silinməsi                   |
 
 ### Provayder Reyestrinin Sxemi
 

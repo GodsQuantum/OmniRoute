@@ -491,7 +491,7 @@ Acesta gestionează:
 | `providerRegistry.ts`         | Registrul modelelor de chat din catalogul cu 376 de furnizori |
 | `providerModels.ts`           | Aliasuri de modele, maparea formatelor                        |
 | `constants.ts`                | Expirări, limite, coduri de stare                             |
-| `defaultThinkingSignature.ts` | Semnătura implicită de raționament Claude                     |
+| `defaultThinkingSignature.ts` | Semnătura implicită de gândire Claude                         |
 | `modelStrip.ts` (în servicii) | Eliminarea câmpurilor pentru fiecare furnizor                 |
 
 ### Schema registrului de furnizori
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Validarea Zod la încărcarea modulului garantează că toate configurațiile furnizorilor sunt valide.
+Validarea Zod la încărcarea modulului asigură că toate configurațiile furnizorilor sunt valide.
 
 ---
 

@@ -491,8 +491,8 @@ Ini mengendalikan:
 | `providerRegistry.ts`                | Daftar model sembang merentas katalog 376 penyedia |
 | `providerModels.ts`                  | Alias model, pemetaan format                       |
 | `constants.ts`                       | Tamat masa, had, kod status                        |
-| `defaultThinkingSignature.ts`        | Tandatangan pemikiran lalai Claude                 |
-| `modelStrip.ts` (dalam perkhidmatan) | Pembuangan medan mengikut penyedia                 |
+| `defaultThinkingSignature.ts`        | Tandatangan pemikiran Claude lalai                 |
+| `modelStrip.ts` (dalam perkhidmatan) | Penyingkiran medan mengikut penyedia               |
 
 ### Skema Daftar Penyedia
 

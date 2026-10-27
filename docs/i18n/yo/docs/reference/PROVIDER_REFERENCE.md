@@ -24,9 +24,9 @@
 - **Aṣoju awọsanma** — awọn aṣoju koodu ti n ṣiṣẹ pẹlu (Codex Cloud, Devin, Jules)
 - **Eto** — awọn olupese inu OmniRoute (loopback, ati bẹbẹ lọ)
 
-Awọn afi afikun: `aworan`, `fidio`, `agbajo`, `ile-iṣẹ`, `fi sii/tunto`, `ti ara ẹni`.
+Awọn afi afikun: `image` (aworan), `video` (fidio), `aggregator` (agbajo), `enterprise` (ile-iṣẹ), `embed/rerank` (fi sii/tunto), `self-hosted` (ti ara ẹni).
 
-`Ipe irinṣẹ` (nibiti o ti han): `abínibí` — API ipe iṣẹ gidi; `ti a farawe` — akojọpọ `awọn irinṣẹ` ti a farawe ni kiakia nipasẹ `webTools.ts` (awọn bulọọki `<tool>{...}</tool>` ti a ṣe atupale regex); `ko si` — `awọn irinṣẹ` ti wa ni sisọ silẹ ni idakẹjẹ lọwọlọwọ. Wo #7286.
+`Tool calling` (Ipe irinṣẹ) (nibiti o ti han): `native` (abínibí) — API ipe iṣẹ gidi; `emulated` (ti a farawe) — akojọpọ `tools` (awọn irinṣẹ) ti a farawe ni kiakia nipasẹ `webTools.ts` (awọn bulọọki `<tool>{...}</tool>` ti a ṣe atupale regex); `none` (ko si) — `tools` (awọn irinṣẹ) ti wa ni sisọ silẹ ni idakẹjẹ lọwọlọwọ. Wo #7286.
 
 Lo dasibodu ni `/dashboard/providers` lati mu ṣiṣẹ, tunto, ati idanwo olupese kọọkan.
 

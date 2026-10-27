@@ -13,30 +13,29 @@
 
 ## Hva det er
 
-OmniRoute registrerer 376 leverandører, inkludert 155 katalogoppføringer merket som **gratis/uten autentisering**
-(uten autentisering,
-OAuth med gratisnivå eller API-nøkkel med gratisnivå – se
-[veiledningen for gratisnivåer](../getting-started/FREE-TIERS-GUIDE.md) og den fullstendige
-[katalogen over gratisnivåer](../reference/FREE_TIERS.md)). Utfordringen: Gratisleverandører varierer
-enormt i modellkvalitet. En leverandør uten autentisering som tilbyr en banebrytende modell, er langt mer nyttig
-enn en som tilbyr en liten, eldre modell.
+OmniRoute registrerer 376 leverandører, inkludert 155 katalogoppføringer merket **gratis/uten autentisering**
+(uten autentisering, OAuth med gratisnivå, eller API-nøkkel med gratisnivå — se
+[guiden for gratisnivåer](../getting-started/FREE-TIERS-GUIDE.md) og hele
+[katalogen over gratisnivåer](../reference/FREE_TIERS.md)). Haken er at gratisleverandører varierer
+vilt i modellkvalitet. En leverandør uten autentisering som serverer en frontier-modell, er langt mer nyttig
+enn en som serverer en liten, eldre modell.
 
-**Rangering av gratisleverandører** besvarer spørsmålet «**hvilken gratisleverandør gir meg den beste modellen?**» ved å
-slå sammen katalogen til hver gratisleverandør med **folkebaserte kvalitetspoeng** fra
-**Arena AI-resultatlisten** (ELO basert på menneskelige preferanser, samme idé som ligger bak LMArena-
-chatbotarenaen). Leverandørene rangeres deretter etter styrken til deres **beste gratismodell**.
+**Free Provider Rankings** (rangering av gratisleverandører) svarer på «**hvilken gratistleverandør gir meg den beste modellen?**» ved å
+koble hver gratistleverandørs katalog med **crowdsourcede kvalitetspoeng** fra
+**Arena AI-ledertavlen** (ELO basert på menneskelige preferanser, den samme ideen bak
+LMArena-chatbotarenaen). Leverandørene rangeres deretter etter styrken til deres **beste gratis modell**.
 
 Rangeringen beregnes fra tre reelle kilder:
 
-1. Listene over gratisleverandører – `NOAUTH_PROVIDERS`, samt oppføringer i `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` merket med `hasFree`
+1. Gratisleverandørlistene — `NOAUTH_PROVIDERS`, pluss `OAUTH_PROVIDERS`- /
+   `APIKEY_PROVIDERS`-oppføringer flagget `hasFree`
    (`src/shared/constants/providers.ts`).
-2. Modellkatalogen til hver leverandør fra leverandørregisteret
+2. Hver leverandørs modellkatalog fra leverandørregisteret
    (`open-sse/config/providerRegistry.ts`).
-3. ELO-avledede poengsummer for oppgaveegnethet, lagret i DB-tabellen `model_intelligence` av
-   synkroniseringsmotoren for Arena ELO (`src/lib/arenaEloSync.ts`).
+3. ELO-avledede score for oppgavetilpasning, lagret i DB-tabellen `model_intelligence` av
+   Arena ELO-synkroniseringsmotoren (`src/lib/arenaEloSync.ts`).
 
-Sammenkoblingslogikken finnes i `src/lib/freeProviderRankings.ts`.
+Sammenkoblingslogikken ligger i `src/lib/freeProviderRankings.ts`.
 
 ---
 
@@ -122,23 +121,27 @@ oppgaveegnethet (se nedenfor). Leverandører uten modeller med poengsum utelates
 
 ## Slik fungerer poengsummene
 
-### Kilde: Arena AI-resultatliste
+### Kilde: Arena AI-resultattavlen
 
-Arena ELO-synkroniseringsmotoren (`src/lib/arenaEloSync.ts`) henter to resultatlister — `text`
-og `code` — fra API-et for Arena AI-resultatlisten
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Hver oppføring i resultatlisten
-inneholder modellnavn, leverandør, ELO-`score`, konfidensintervall og antall stemmer.
+Arena ELO-synkroniseringsmotoren (`src/lib/arenaEloSync.ts`) henter to resultattavler — `text`
+og `code` — fra API-et for Arena AI-resultattavlen
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Når dette API-et ikke returnerer
+noen brukbar resultattavle, bruker motoren det offisielle `lmarena-ai/leaderboard-dataset` fra
+Hugging Face datasets-serveren som reservekilde (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); `GET /api/intelligence/sync` rapporterer `activeSource`, `lastError` og
+`lastFailedAt`. Hver oppføring på resultattavlen
+inneholder et modellnavn, en leverandør, en ELO-`score`, et konfidensintervall og et antall stemmer.
 
-Kategoriene i resultatlisten tilordnes OmniRoute-oppgavekategorier:
+Resultattavlekategoriene tilordnes OmniRoute-oppgavekategorier:
 
-| Arena-resultatliste | OmniRoute-oppgavekategorier                       |
+| Arena-resultattavle | OmniRoute-oppgavekategorier                       |
 | ------------------- | ------------------------------------------------- |
 | `text`              | `default`, `review`, `documentation`, `debugging` |
 | `code`              | `coding`                                          |
 
-### Normalisering (oppgavetilpasningspoeng)
+### Normalisering (score for oppgaveegnethet)
 
-Rå ELO-poengsummer normaliseres per resultatliste til en **oppgavetilpasningsverdi i `[0.4, 0.98]`**:
+Rå ELO-poengsummer normaliseres per resultattavle til en **verdi for oppgaveegnethet i `[0.4, 0.98]`**:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
@@ -153,20 +156,20 @@ Hver oppføring får et konfidensnivå basert på antall Arena-stemmer:
 
 | Konfidens | Stemmer |
 | --------- | ------- |
-| `high`    | ≥ 5,000 |
-| `medium`  | ≥ 1,000 |
-| `low`     | < 1,000 |
+| `high`    | ≥ 5 000 |
+| `medium`  | ≥ 1 000 |
+| `low`     | < 1 000 |
 
 ### Lagring og aktualitet
 
 Normaliserte oppføringer skrives til DB-tabellen `model_intelligence` med
 `source = "arena_elo"` (`src/lib/db/modelIntelligence.ts`). Oppføringene **utløper etter
-7 dager**, slik at en leverandør som slutter å synkronisere, til slutt fjernes i stedet for
-å levere utdaterte data.
+7 dager**, slik at en leverandør som slutter å synkronisere, til slutt fjernes i stedet for å levere
+utdaterte data.
 
 Synkroniseringen kjører **som standard**:
 
-- Den kjører én gang ved serveroppstart og deretter med et periodisk tidsur
+- Den kjører én gang ved serveroppstart og deretter med et periodisk tidsintervall
   (`src/lib/arenaEloSync.ts`, koblet fra `src/instrumentation-node.ts`).
 - Den er **ikke-blokkerende og aldri fatal** — hvis hentingen fra oppstrømskilden mislykkes, fortsetter OmniRoute
   å kjøre, og rangeringene viser ganske enkelt de siste gyldige dataene (eller en tom tilstand).
@@ -174,47 +177,47 @@ Synkroniseringen kjører **som standard**:
 To miljøvariabler styrer den (dokumentert i
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Variabel                  | Standardverdi | Formål                                                     |
-| ------------------------- | ------------- | ---------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Sett til `false` for å velge bort utgående synkronisering. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24t) | Synkroniseringsintervall, i sekunder.                      |
+| Variabel                  | Standard       | Formål                                                           |
+| ------------------------- | -------------- | ---------------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`         | Sett til `false` for å deaktivere den utgående synkroniseringen. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 t) | Synkroniseringsintervall i sekunder.                             |
 
 ### Manuell synkronisering / status / tømming
 
-For driftsansvarlige tilbyr et autentisert administrasjonsendepunkt manuell kontroll
+For operatører tilbyr et autentisert administrasjonsendepunkt manuell kontroll
 (`src/app/api/intelligence/sync/route.ts` — krever administrasjonsautentisering):
 
 ```
-GET    /api/intelligence/sync          # gjeldende synkroniseringsstatus (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # utløser en manuell synkronisering; innhold: { "dryRun": true } for forhåndsvisning uten skriving
+GET    /api/intelligence/sync          # gjeldende synkroniseringsstatus (aktivert, siste synkronisering, neste synkronisering, intervall i ms)
+POST   /api/intelligence/sync          # utløser en manuell synkronisering; innhold: { "dryRun": true } for forhåndsvisning uten å skrive
 DELETE /api/intelligence/sync          # tømmer alle synkroniserte arena_elo-intelligensoppføringer
 ```
 
-Hvis rangeringssiden er tom, vil en manuell `POST /api/intelligence/sync` (eller ganske enkelt
-en omstart av serveren) fylle den på nytt.
+Hvis rangeringssiden er tom, fylles den på nytt med en manuell `POST /api/intelligence/sync` (eller ganske enkelt
+ved å starte serveren på nytt).
 
-### Samsvar mellom modeller og resultatlisten
+### Samsvar mellom modeller og resultattavlen
 
 Modell-ID-er i registeret og Arena-modellnavn samsvarer ikke alltid nøyaktig. Rangeringen bruker
 fleksibel samsvarskontroll (`findMatchingIntelligence` i `src/lib/freeProviderRankings.ts`):
 
 1. Nøyaktig samsvar med den normaliserte modell-ID-en.
-2. Samsvar etter fjerning av et avsluttende versjonssuffiks (f.eks. `kimi-k2.6` → `kimi-k2`).
-3. Prefikssamsvar (et modellnavn i resultatlisten er et prefiks i register-ID-en).
+2. Samsvar etter fjerning av et etterfølgende versjonssuffiks (f.eks. `kimi-k2.6` → `kimi-k2`).
+3. Prefikssamsvar (et modellnavn på resultattavlen er et prefiks for register-ID-en).
 
 På synkroniseringssiden fjernes kjente leverandørprefikser (`anthropic/`, `openai/`, `google/`, …),
-og et lite aliaskart utvider kanoniske navn til variantene OmniRoute bruker internt,
-slik at modellene kan finnes under alle navn.
+og et lite alias-kart utvider kanoniske navn til variantene OmniRoute bruker
+internt, slik at modellene kan finnes under alle navn.
 
 ### Slik rangeres en leverandør
 
-For hver gratisleverandør beregner motoren poengsummen til hver modell i katalogen, og deretter:
+For hver gratisleverandør beregner motoren poengsummen for hver modell i katalogen og deretter:
 
 - **Toppmodell** = leverandørens modell med høyest poengsum.
-- **Gjennomsnittspoeng** = gjennomsnittlig poengsum for alle leverandørens modeller med poengsum.
-- **Modeller** = hvor mange av leverandørens modeller som hadde en Arena-poengsum.
+- **Gjennomsnittlig poengsum** = gjennomsnittlig poengsum på tvers av alle leverandørens vurderte modeller.
+- **Modeller** = antallet av leverandørens modeller som hadde en Arena-poengsum.
 
-Leverandørene sorteres først etter **toppmodellens poengsum**, deretter etter gjennomsnittlig poengsum. Dette belønner en
+Leverandører sorteres først etter **poengsummen til toppmodellen**, deretter etter gjennomsnittlig poengsum. Dette belønner en
 leverandør som tilbyr minst én sterk gratismodell.
 
 ---

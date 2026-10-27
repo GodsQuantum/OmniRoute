@@ -624,7 +624,7 @@ kuhifadhiwa katika historia ya shell yako. → [Miunganisho ya CLI](docs/guides/
 
 </div>
 
-> **Watoa huduma 376 waliosajiliwa** katika mikusanyo sanifu ya gumzo, midia, utafutaji, ya ndani, mawakala wa wingu na mfumo, wakiwemo **153 wenye metadata ya ugunduzi ya `hasFree: true`**. Sajili ya modeli za gumzo inajumuisha **watoa huduma 239 / jozi 3,059 tofauti za mtoa huduma na modeli / vitambulisho ghafi 1,475 vya modeli**; katalogi tofauti ya bajeti zisizolipishwa ina **safu 471 kwa kila modeli**, **makundi 34 yanayojirudia** na **watoa huduma 52 wa kudumu bila malipo wenye mgao unaojirudia/wasiohitaji ufunguo**. Hivi ni vigawanyio tofauti kimakusudi; ufafanuzi na hesabu zilizoondolewa marudio ya makundi zinapatikana katika [Rejea ya Watoa Huduma](docs/reference/PROVIDER_REFERENCE.md) na [Viwango vya Bila Malipo](docs/reference/FREE_TIERS.md).
+> **Watoa huduma 376 waliosajiliwa** katika mikusanyo sanifu ya gumzo, midia, utafutaji, ya ndani, mawakala wa wingu na mfumo, wakiwemo **153 wenye metadata ya ugunduzi ya `hasFree: true`**. Sajili ya modeli za gumzo inajumuisha **watoa huduma 239 / jozi 3,059 tofauti za mtoa huduma na modeli / vitambulisho ghafi 1,475 vya modeli**; katalogi tofauti ya bajeti zisizolipishwa ina **safu 484 kwa kila modeli**, **makundi 34 yanayojirudia** na **watoa huduma 52 wa kudumu bila malipo wenye mgao unaojirudia/wasiohitaji ufunguo**. Hivi ni vigawanyio tofauti kimakusudi; ufafanuzi na hesabu zilizoondolewa marudio ya makundi zinapatikana katika [Rejea ya Watoa Huduma](docs/reference/PROVIDER_REFERENCE.md) na [Viwango vya Bila Malipo](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1023,11 +1023,11 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` hufuata toleo thabiti la juu zaidi la SemVer **lililochapishwa**. Haifuatilii `main` ya git. Bandika `:X.Y.Z` kwa GitOps. Tazama [Vituo vya Matoleo ya Docker](docs/guides/DOCKER_GUIDE.md#release-channels).Image hubandika **`OMNIROUTE_MEMORY_MB=1024`**. Hiyo inatosha kwa dashibodi na gumzo jepesi. **Mawakala wa uandishi wa msimbo** (`POST /v1/responses` kutoka Claude Code, Codex, Grok, …) wanahitaji heap kubwa zaidi ya V8, la sivyo mchakato hupata `FATAL ERROR` unapofikia takriban GiB 12 chini ya miktadha miwili mirefu inayopishana. Weka ukubwa wa kontena juu ya heap (bafa asilia huwa nje ya V8):
+`:latest` hufuata SemVer thabiti ya juu zaidi **iliyochapishwa**. Haifuatilii git `main`. Bandika `:X.Y.Z` kwa GitOps. Angalia [Vituo vya Matoleo ya Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Picha huweka **`OMNIROUTE_MEMORY_MB=1024`**. Hiyo inatosha kwa dashibodi na gumzo jepesi. **Mawakala wa uandishi wa msimbo** (`POST /v1/responses` kutoka Claude Code, Codex, Grok, …) wanahitaji heap kubwa zaidi ya V8, vinginevyo mchakato hupata `FATAL ERROR` unapofikia takribani GiB 12 chini ya miktadha miwili mirefu inayopishana. Weka ukubwa wa kontena juu ya heap (vihifadhi asilia vya muda vipo nje ya V8):
 
 | Mzigo wa kazi                                | Heap (`-e OMNIROUTE_MEMORY_MB`) | Kontena (`--memory`) |
 | -------------------------------------------- | ------------------------------- | -------------------- |
-| Dashibodi / gumzo jepesi                     | `1024` (chaguo-msingi la image) | ≥2 g                 |
+| Dashibodi / gumzo jepesi                     | `1024` (chaguo-msingi la picha) | ≥2 g                 |
 | Wakala mmoja wa uandishi wa msimbo           | `8192`                          | ≥10 g                |
 | `/v1/responses` mbili ndefu kwa wakati mmoja | `10240`–`12288`                 | ≥12–16 g             |
 
@@ -1041,17 +1041,17 @@ Jedwali kamili: [Mwongozo wa Docker — RAM ya wakati wa utekelezaji](docs/guide
 
 > **Kituo cha Docker cha matoleo ya awali:** `diegosouzapw/omniroute:next` na
 > `diegosouzapw/omniroute:next-web` hufuata tawi la sasa la chaguo-msingi `release/v*`.
-> Lebo hizi zinazoweza kubadilika zimekusudiwa tu kwa kujaribu marekebisho ambayo bado hayajatolewa na
-> **hazitumiki katika mazingira ya uzalishaji**. Tazama
+> Lebo hizi zinazoweza kubadilika zimekusudiwa tu kujaribu marekebisho ambayo bado hayajatolewa na
+> **hazitumiki katika mazingira ya uzalishaji**. Angalia
 > [Vituo vya Matoleo ya Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-`bun install` ya kawaida na usakinishaji wa kimataifa (`bun install -g omniroute`) vinaweza kutumika kupitia utambuzi wa mazingira ya utekelezaji ya Bun:
+`bun install` ya kawaida na usakinishaji wa kimataifa (`bun install -g omniroute`) vinatumika kupitia utambuzi wa mazingira ya utekelezaji ya Bun:
 
-- **`bun:sqlite` iliyojengewa ndani**: OmniRoute hutumia kiendeshaji cha Bun cha `bun:sqlite` kilichojengewa ndani inapoendeshwa chini ya Bun, na kurejea kwenye `better-sqlite3` katika Node.js au `sql.js`.
-- **Uteuzi otomatiki wa kifungashaji cha Webpack wakati wa usanidi**: Mazingira ya usanidi (`bun run dev`) hutambua Bun kiotomatiki na kuzima Turbopack ili kutumia Webpack, kwa lengo la kuzuia kutooana kwa vifungo asilia vya V8. Miundo ya uzalishaji (`bun run build`) hufuata `OMNIROUTE_USE_TURBOPACK` sawasawa na ilivyo kwenye Node: Turbopack kwa chaguo-msingi, `OMNIROUTE_USE_TURBOPACK=0` ili kujenga kwa Webpack (`Dockerfile.bun` huiwasilisha kama `--build-arg`).
-- **Dockerfile maalumu ya Bun**: `Dockerfile.bun` ya hatua nyingi kwa ajili ya upelekaji asilia wa uzalishaji wa Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` iliyojengewa ndani**: OmniRoute hutumia kiendeshaji cha `bun:sqlite` kilichojengewa ndani ya Bun inapotekelezwa chini ya Bun, na hurudi kutumia `better-sqlite3` kwenye Node.js au `sql.js`.
+- **Uteuzi wa kiotomatiki wa kifungashaji cha Webpack wakati wa utengenezaji**: Utengenezaji (`bun run dev`) hutambua Bun kiotomatiki na kulemaza Turbopack ili kutumia Webpack, kwa lengo la kuzuia kutooana kwa viunganishi asilia vya V8. Miundo ya uzalishaji (`bun run build`) hufuata `OMNIROUTE_USE_TURBOPACK` kikamilifu kama ilivyo kwenye Node: Turbopack kwa chaguo-msingi, `OMNIROUTE_USE_TURBOPACK=0` ili kujenga kwa Webpack (`Dockerfile.bun` huiwasilisha kama `--build-arg`).
+- **Dockerfile maalumu ya Bun**: `Dockerfile.bun` ya hatua nyingi kwa ajili ya uwekaji asilia wa Bun katika mazingira ya uzalishaji (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Sakinisha na uendeshe kwa Bun
@@ -1094,40 +1094,42 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Andaa saraka ya data iliyounganishwa kwa bind mount
+# 1. Andaa saraka ya data iliyounganishwa moja kwa moja
 mkdir -p data
 
-# 2. Kwa Linux + Podman ya ndani isiyo na root pekee (kamwe si kiteja cha mbali cha Podman Machine):
+# 2. Linux + Podman ya ndani isiyo na root pekee (kamwe si kiteja cha mbali cha Podman Machine):
 podman unshare chown 1000:1000 ./data
 
-# 3. Weka kidokezo cha mazingira ya utekelezaji, jenga image ya ndani ya Compose, kisha uanzishe
+# 3. Weka kidokezo cha mazingira ya utekelezaji, jenga picha ya ndani ya Compose, kisha uanzishe
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
 Kwenye macOS au Windows, Podman hutumia Podman Machine ya mbali: ruka `podman unshare` na
-ufuate [mwongozo wa saraka ya data unaolingana na topolojia](contrib/podman/README.md#data-directory-permissions-by-topology).
+ufuate [mwongozo wa saraka ya data unaozingatia topolojia](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Mwongozo wa Podman](contrib/podman/README.md) — Miundo ya Compose, Podman Machine, na
 usanidi wa Quadlet wa Linux/systemd.
 
 **⚡ Usakinishaji wa haraka zaidi / mwepesi zaidi (ruka ujenzi asilia)**
 
-Injini asilia ya SQLite (`better-sqlite3`) ni tegemezi la **hiari**, kwa hivyo usakinishaji wa
-kimataifa haukwami kamwe ukisubiri utungaji kutoka kwenye msimbo chanzo: hutumia faili jozi iliyojengwa tayari inapolingana
-na mfumo wako/Node, na vinginevyo hubadilika kwa uwazi hadi injini ya JavaScript safi
-(`node:sqlite` kwenye Node 22+, au `sql.js` WASM iliyofungashwa) — hakuna zana za ujenzi zinazohitajika.
+Injini asilia ya SQLite (`better-sqlite3`) ni utegemezi wa **hiari**, kwa hiyo usakinishaji wa
+kimataifa haukwami kamwe kwa kusubiri utungaji kutoka kwenye msimbo chanzo: hutumia faili tekelezi
+iliyojengwa mapema inapolingana na mfumo/Node wako, na vinginevyo hurudi kwa uwazi kutumia injini
+ya JavaScript pekee (`node:sqlite` kwenye Node 22+, au `sql.js` WASM iliyojumuishwa) — hakuna zana za ujenzi zinazohitajika.
 
-Ili kuruka kabisa uanzishaji asilia wa baada ya usakinishaji (CI, bila kiolesura cha picha, au mashine za polepole):
+Ili kuruka kabisa **upashaji-joto asilia** wa baada ya usakinishaji (CI, mifumo isiyo na kiolesura, au mashine polepole).
+Kumbuka: hii huruka tu hatua ya upashaji-joto wa SQLite asilia (`scripts/postinstall.mjs`); kishikio
+cha kunakili/kurekebisha faili tekelezi (`scripts/build/postinstall.mjs`) bado hutekelezwa kama kawaida:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 pia huiruka
 ```
 
-Kwa usakinishaji wa haraka zaidi, pendelea **pnpm** (hifadhi inayotegemea maudhui + viungo vigumu — tazama hapo juu).
-Kwa mazingira ya utekelezaji yasiyo na dashibodi wala kiolesura cha picha, tumia wasifu wa Docker wa `base` (hapo juu) au
-[mwongozo wa Termux](docs/guides/TERMUX_GUIDE.md). CLI na dashibodi ya wavuti huhudumiwa na
-mchakato uleule kwenye port moja, kwa hivyo kwa sasa hakuna package tofauti ya CLI pekee.
+Kwa usakinishaji wa haraka zaidi, pendelea **pnpm** (hifadhi inayotambuliwa kwa maudhui + viungo vigumu — angalia hapo juu).
+Kwa mazingira ya utekelezaji yasiyo na dashibodi wala kiolesura, tumia wasifu wa Docker wa `base` (hapo juu) au
+[mwongozo wa Termux](docs/guides/TERMUX_GUIDE.md). CLI na dashibodi ya wavuti zinatolewa na
+mchakato uleule kwenye port moja, kwa hiyo kwa sasa hakuna kifurushi tofauti cha CLI pekee.
 
 <br/>
 

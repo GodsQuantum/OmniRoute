@@ -486,15 +486,15 @@ Tas apstrādā:
 
 `open-sse/config/` satur konfigurācijas slāni:
 
-| Fails                          | Nolūks                                                         |
-| ------------------------------ | -------------------------------------------------------------- |
-| `providerRegistry.ts`          | Tērzēšanas modeļu reģistrs 376 pakalpojumu sniedzēju katalogam |
-| `providerModels.ts`            | Modeļu aizstājvārdi, formātu kartēšana                         |
-| `constants.ts`                 | Noildzes, ierobežojumi, statusa kodi                           |
-| `defaultThinkingSignature.ts`  | Noklusējuma Claude domāšanas paraksts                          |
-| `modelStrip.ts` (pakalpojumos) | Lauku noņemšana katram pakalpojumu sniedzējam                  |
+| Fails                          | Nolūks                                                 |
+| ------------------------------ | ------------------------------------------------------ |
+| `providerRegistry.ts`          | Tērzēšanas modeļu reģistrs 376 nodrošinātāju katalogam |
+| `providerModels.ts`            | Modeļu aizstājvārdi, formātu kartēšana                 |
+| `constants.ts`                 | Taimauti, ierobežojumi, statusa kodi                   |
+| `defaultThinkingSignature.ts`  | Noklusējuma Claude domāšanas paraksts                  |
+| `modelStrip.ts` (pakalpojumos) | Katram nodrošinātājam specifiska lauku noņemšana       |
 
-### Pakalpojumu sniedzēju reģistra shēma
+### Nodrošinātāju reģistra shēma
 
 ```ts
 interface ProviderConfig {
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Zod validācija moduļa ielādes laikā nodrošina, ka visas pakalpojumu sniedzēju konfigurācijas ir derīgas.
+Zod validācija moduļa ielādes laikā nodrošina, ka visas nodrošinātāju konfigurācijas ir derīgas.
 
 ---
 

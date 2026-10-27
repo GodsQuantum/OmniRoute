@@ -150,29 +150,29 @@ curl -X POST http://localhost:20128/a2a \
 
 ---
 
-## Saatavilla olevat taidot
+## Käytettävissä olevat taidot
 
-OmniRoute tarjoaa kuusi A2A-taitoa, jotka on kytketty `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`-käsittelijöihin. Jokainen taitomoduuli sijaitsee hakemistossa `src/lib/a2a/skills/`.
+OmniRoute tarjoaa 6 A2A-taitoa, jotka on kytketty kohdassa `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kukin taitomoduuli sijaitsee hakemistossa `src/lib/a2a/skills/`.
 
-| Taito                   | ID                   | Kuvaus                                                                                                                                                                                   | Tunnisteet                  | Esimerkit                                     |
-| :---------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- | :-------------------------------------------- |
-| Älykäs reititys         | `smart-routing`      | Reitittää kehotteen optimaaliselle palveluntarjoajalle tai yhdistelmälle käyttämällä OmniRouten yhdistelmämoottoria ja pisteytystä                                                       | reititys, palveluntarjoajat | "Reititä tämä kehote parhaan mallin kautta"   |
-| Kiintiöiden hallinta    | `quota-management`   | Raportoi palveluntarjoajakohtaisen kiintiötilan ja auttaa kutsujia päättämään, milloin kutsutiheyttä on rajoitettava tai palveluntarjoajaa vaihdettava                                   | kiintiö, palveluntarjoajat  | "Tarkista anthropicin kiintiö"                |
-| Palveluntarjoajien haku | `provider-discovery` | Luettelee asennetut palveluntarjoajat sekä niiden ominaisuudet, ilmaisen tason tiedot ja OAuth-tilan                                                                                     | palveluntarjoajat, haku     | "Mitä palveluntarjoajia on saatavilla?"       |
-| Kustannusanalyysi       | `cost-analysis`      | Arvioi pyynnön tai keskustelun kustannukset luettelon ja viimeaikaisen käytön perusteella                                                                                                | kustannukset, käyttö        | "Arvioi tämän keskustelun kustannukset"       |
-| Kuntoraportti           | `health-report`      | Koostaa kunkin palveluntarjoajan piirikatkaisijan, jäähdytysjakson ja lukituksen tilan                                                                                                   | kunto, vikasietoisuus       | "Näytä kaikkien palveluntarjoajien kuntotila" |
-| Ominaisuuksien luettelo | `list-capabilities`  | Palauttaa koko 45 kohdan Agent Skills -luettelon (23 API + 21 CLI + 1 määritys) markdown-taulukkona, joka sisältää SKILL.md-tiedostojen raaka-URL-osoitteet kontekstin lisäämistä varten | luettelo, haku, taidot      | "Luettele kaikki OmniRouten ominaisuudet"     |
+| Taito                   | ID                   | Kuvaus                                                                                                                                                                 | Tunnisteet                  | Esimerkit                                       |
+| :---------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- | :---------------------------------------------- |
+| Älykäs reititys         | `smart-routing`      | Reitittää kehotteen optimaalisen palveluntarjoajan tai yhdistelmän kautta käyttämällä OmniRouten yhdistelmämoottoria ja pisteytystä                                    | reititys, palveluntarjoajat | "Reititä tämä kehote parhaan mallin kautta"     |
+| Kiintiöiden hallinta    | `quota-management`   | Raportoi palveluntarjoajakohtaisen kiintiötilan ja auttaa kutsujia päättämään, milloin pyyntöjä on rajoitettava tai palveluntarjoajaa vaihdettava                      | kiintiö, palveluntarjoajat  | "Tarkista anthropicin kiintiö"                  |
+| Palveluntarjoajien haku | `provider-discovery` | Luettelee asennetut palveluntarjoajat sekä niiden ominaisuudet, maksuttoman tason tiedot ja OAuth-tilan                                                                | palveluntarjoajat, haku     | "Mitä palveluntarjoajia on käytettävissä?"      |
+| Kustannusanalyysi       | `cost-analysis`      | Arvioi pyynnön tai keskustelun kustannukset luettelon ja viimeaikaisen käytön perusteella                                                                              | kustannukset, käyttö        | "Arvioi tämän keskustelun kustannukset"         |
+| Terveysraportti         | `health-report`      | Koostaa palveluntarjoajakohtaisesti katkaisijan, jäähdytysjakson ja lukituksen tilan                                                                                   | terveys, vikasietoisuus     | "Näytä kaikkien palveluntarjoajien terveystila" |
+| Ominaisuuksien luettelo | `list-capabilities`  | Palauttaa koko 45 kohdan Agent Skills -luettelon (23 API + 21 CLI + 1 määritys) markdown-taulukkona sekä raakoina SKILL.md-URL-osoitteina kontekstin lisäämistä varten | luettelo, haku, taidot      | "Luettele kaikki OmniRouten ominaisuudet"       |
 
-> Agent Card on pidettävä yhdenmukaisena ajantasaisen 376 palveluntarjoajan luettelon kanssa. Palveluntarjoajien määrät sekä ilmaisuutta ja tunnistautumisen tarpeettomuutta koskevat metatiedot saadaan ajonaikaisesta rekisteristä.
+> Agent Card tulee pitää yhdenmukaisena ajantasaisen 376 palveluntarjoajan luettelon kanssa. Palveluntarjoajien määrät sekä maksuttomuutta ja tunnistautumattomuutta koskevat metatiedot haetaan ajonaikaisesta rekisteristä.
 
 ### `list-capabilities`-taidon tiedot
 
-`list-capabilities`-taito on erityisen hyödyllinen ulkoisille agenteille, joiden on selvitettävä OmniRouten tarjoamat ominaisuudet ennen API-kutsujen lähettämistä. Se palauttaa jäsennellyn markdown-taulukkoartefaktin:
+`list-capabilities`-taito on erityisen hyödyllinen ulkoisille agenteille, joiden täytyy selvittää OmniRouten tarjoamat ominaisuudet ennen API-kutsujen lähettämistä. Se palauttaa jäsennellyn markdown-taulukkoartefaktin:
 
 ```
-| ID | Nimi | Luokka | Alue | Päätepisteet/komennot | Raaka-URL |
+| ID | Nimi | Luokka | Alue | Päätepisteet/komennot | Raaka URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Todennus ja istunnot | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Todennus ja istunnot | api | todennus | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 

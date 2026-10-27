@@ -81,31 +81,32 @@
 
 ## 2. Reeglid
 
-1. Kasuta tookenite, mitte literaale. Teadlikult säilitatud erandid: alati tume konsooliterminal, ReactFlow' SVG
-   jooned `STATUS_HEX` kaudu (`src/shared/constants/statusColors.ts`) ning kategoorilised paletid
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ja
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Ära kunagi muuda kataloogi `packages/ui-kit/src` käsitsi: sünkrooni käsuga `scripts/dev/sync-ui-kit.sh <commit>`;
-   pre-commit-kontroll `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nurjub iga baidi korral,
-   mis erineb fikseeritud upstream-commiti sisust (kui upstream-kloon,
-   `UI_KIT_CLONE` või `_references/cheaper-inference-ui-kit`, puudub, jäetakse kontroll hoiatusega vahele). Kui komplektis midagi puudub,
-   lahenda see adapteris või ekraanil ja taotle selle lisamist upstreamis.
-3. Komplekti teksti vaikeväärtused on ingliskeelsed (`label = "Loading"`, `loadingLabel = "Loading table"`…) — edasta tõlgitud
-   stringid funktsioonist `useTranslations(...)` alati, kui komplekti komponent teksti renderdab.
-4. Tailwindi utiliidid on komplekti komponendiklasside suhtes ülimuslikud (komplekt deklareerib
-   `@layer theme, base, components, utilities` ja selle reeglid asuvad kihis `components`) — kasuta utiliite
+1. Tokenid, mitte kunagi literaalid. Taotluslikult säilitatud erandid: alati tume konsooliterminal ja ReactFlow
+   SVG-jooned `STATUS_HEX` kaudu (`src/shared/constants/statusColors.ts`). Marsruutimisstrateegia ja
+   tihenduskihi paletid kasutavad komplekti diagrammitokeneid funktsioonide `strategyColorVar` ja
+   `categoricalSlotFor` kaudu (`src/shared/utils/categoricalPalette.ts`).
+2. Ärge muutke `packages/ui-kit/src` kunagi käsitsi: sünkroonige käsuga `scripts/dev/sync-ui-kit.sh <commit>`;
+   commit'i-eelne kontroll `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nurjub iga baidi puhul,
+   mis erineb fikseeritud ülesvoolu commit'ist (kontroll jäetakse hoiatusega vahele, kui ülesvoolu kloon
+   `UI_KIT_CLONE` või `_references/cheaper-inference-ui-kit` puudub). Kui komplektis midagi puudub,
+   leidke adapteris või kuval ajutine lahendus ja paluge see ülesvoolu lisada.
+3. Komplekti teksti vaikeväärtused on ingliskeelsed (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kui
+   komplekti komponent renderdab teksti, edastage funktsioonist `useTranslations(...)` tõlgitud stringid.
+4. Tailwindi utiliidid alistavad komplekti komponentide klassid (komplekt deklareerib
+   `@layer theme, base, components, utilities` ja selle reeglid asuvad kihis `components`) — kasutage utiliite
    vahede ja paigutuse jaoks, mitte komplekti komponentide värvide muutmiseks.
-5. Pealkirjad: `.ci-heading` (Inter, ilma tähevahe muutmiseta) lehe- ja jaotisepealkirjade jaoks; `.ci-dashboard-display`
-   (Instrument Serif) ainult suure ja hõreda kuvateksti jaoks, näiteks vealehe olekukood.
+5. Pealkirjad: `.ci-heading` (Inter, ilma tähesammu muutmiseta) lehe- ja jaotispealkirjade jaoks;
+   `.ci-dashboard-display` (Instrument Serif) ainult suure ja hõreda esiletõstuteksti jaoks, näiteks
+   vealehe olekukood.
 6. `tests/unit/dashboard-kit-sweep.test.ts` kontrollib komplekti kasutuselevõttu: kataloogides
-   `src/app` ja `src/shared/components` ei tohi olla Materiali ligatuuri span-elemente; juhtpaneeli puus (`src/app/(dashboard)` ja
-   `src/shared/components`) ei tohi olla töötlemata `<select>`, `<textarea>` ega `<table>` elemente ega käsitsi loodud
-   `role="dialog"` atribuute väljaspool loetletud erandeid (`Select`-adapteri omalahenduse haru,
-   `RequestLoggerDetail`); iga sealne töötlemata `<button>` või `<input>` vajab põhjust sisaldavat kommentaari
-   `kit-exception:`, mis lõpeb kõige rohkem 3 rida enne elementi; paleti värvitoonid ja `dark:` variandid
-   on lubatud ainult testi loetletud failides.
-7. Kontrolli enne PR-i mõlemat teemat ja 390 px vaateava (ekraanipiltidega); `tests/e2e/a11y.spec.ts` käivitab
-   axe'i.
+   `src/app` ega `src/shared/components` ei tohi olla Materiali ligatuuriga elementi span; töölauapuus
+   (`src/app/(dashboard)` ja `src/shared/components`) ei tohi olla tooreid elemente `<select>`,
+   `<textarea>` ega `<table>` ning käsitsi loodud atribuuti `role="dialog"` väljaspool loetletud erandeid
+   (`Select`-adapteri omamaine haru, `RequestLoggerDetail`); iga sealne toores `<button>` või `<input>`
+   vajab põhjust sisaldavat kommentaari `kit-exception:`, mis lõpeb sellest kuni 3 rida eespool;
+   paletitoonid ja variandid `dark:` on lubatud ainult testi loetletud failides.
+7. Kontrollige enne PR-i mõlemat teemat ja 390 px vaateava (ekraanipiltidega); `tests/e2e/a11y.spec.ts`
+   käitab axe'i.
 
 ## 3. Ekraani lisamine
 

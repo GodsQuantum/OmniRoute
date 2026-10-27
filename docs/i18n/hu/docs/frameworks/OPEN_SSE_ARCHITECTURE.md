@@ -486,15 +486,15 @@ Ez a következőket kezeli:
 
 Az `open-sse/config/` tartalmazza a konfigurációs réteget:
 
-| Fájl                                  | Rendeltetés                                              |
-| ------------------------------------- | -------------------------------------------------------- |
-| `providerRegistry.ts`                 | Chatmodell-nyilvántartás a 376 szolgáltatós katalógushoz |
-| `providerModels.ts`                   | Modellálnevek, formátumleképezés                         |
-| `constants.ts`                        | Időtúllépések, korlátok, állapotkódok                    |
-| `defaultThinkingSignature.ts`         | Alapértelmezett Claude-gondolkodási aláírás              |
-| `modelStrip.ts` (a services mappában) | Szolgáltatónkénti mezőeltávolítás                        |
+| Fájl                                     | Rendeltetés                                                          |
+| ---------------------------------------- | -------------------------------------------------------------------- |
+| `providerRegistry.ts`                    | Csevegésimodell-regiszter a 376 szolgáltatót tartalmazó katalógushoz |
+| `providerModels.ts`                      | Modellaliasok, formátumleképezés                                     |
+| `constants.ts`                           | Időtúllépések, korlátok, állapotkódok                                |
+| `defaultThinkingSignature.ts`            | Alapértelmezett Claude-gondolkodási aláírás                          |
+| `modelStrip.ts` (a services könyvtárban) | Szolgáltatónkénti mezőeltávolítás                                    |
 
-### A szolgáltatói nyilvántartás sémája
+### A szolgáltatói regiszter sémája
 
 ```ts
 interface ProviderConfig {
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-A modul betöltésekor végrehajtott Zod-validáció biztosítja, hogy minden szolgáltatói konfiguráció érvényes legyen.
+A modul betöltésekor végzett Zod-validáció biztosítja, hogy minden szolgáltatói konfiguráció érvényes legyen.
 
 ---
 

@@ -24,13 +24,29 @@
 
 ## 2. નિયમો
 
-1. લિટરલ્સ નહીં, ટોકન્સ. હેતુપૂર્વક રાખેલા અપવાદો: હંમેશાં ડાર્ક રહેતું કન્સોલ ટર્મિનલ, `STATUS_HEX` (`src/shared/constants/statusColors.ts`) મારફતે ReactFlow SVG સ્ટ્રોક્સ, તેમજ કેટેગોરિકલ પેલેટ્સ `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) અને `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. `packages/ui-kit/src` ને ક્યારેય હાથેથી પેચ કરશો નહીં: `scripts/dev/sync-ui-kit.sh <commit>` વડે સિંક કરો; પ્રી-કમિટ ગેટ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) પિન કરેલા અપસ્ટ્રીમ કમિટથી કોઈપણ બાઇટ અલગ હોય તો નિષ્ફળ જાય છે (અપસ્ટ્રીમ ક્લોન, `UI_KIT_CLONE` અથવા `_references/cheaper-inference-ui-kit`, હાજર ન હોય ત્યારે તે ચેતવણી સાથે સ્કિપ કરે છે). કિટમાં કંઈક ન હોય ત્યારે, એડેપ્ટર અથવા સ્ક્રીનમાં તેનો વૈકલ્પિક ઉપાય કરો અને અપસ્ટ્રીમ પાસે તેની વિનંતી કરો.
-3. કિટ ટેક્સ્ટના ડિફૉલ્ટ અંગ્રેજીમાં છે (`label = "Loading"`, `loadingLabel = "Loading table"`…) — જ્યારે પણ કોઈ કિટ કમ્પોનન્ટ ટેક્સ્ટ રેન્ડર કરે ત્યારે `useTranslations(...)` માંથી અનુવાદિત સ્ટ્રિંગ્સ પાસ કરો.
-4. Tailwind યુટિલિટીઝ કિટ કમ્પોનન્ટ ક્લાસિસ કરતાં પ્રાધાન્ય ધરાવે છે (કિટ `@layer theme, base, components, utilities` જાહેર કરે છે અને તેના નિયમો `components` માં રહે છે) — સ્પેસિંગ અને લેઆઉટ માટે યુટિલિટીઝ વાપરો, કિટ કમ્પોનન્ટ્સને ફરી રંગવા માટે નહીં.
-5. હેડિંગ્સ: પેજ અને સેક્શન ટાઇટલ્સ માટે `.ci-heading` (Inter, ટ્રેકિંગ વિના); `.ci-dashboard-display` (Instrument Serif) માત્ર એરર-પેજ સ્ટેટસ કોડ જેવા મોટા અને વિરલ ડિસ્પ્લે ટેક્સ્ટ માટે.
-6. `tests/unit/dashboard-kit-sweep.test.ts` કિટ અપનાવવાની પ્રક્રિયાનું રક્ષણ કરે છે: `src/app` અથવા `src/shared/components` હેઠળ કોઈ Material લિગેચર span નહીં; ડૅશબોર્ડ ટ્રીમાં (`src/app/(dashboard)` અને `src/shared/components`) કોઈ રૉ `<select>`, `<textarea>` અથવા `<table>` નહીં અને સૂચિબદ્ધ અપવાદો (`Select` એડેપ્ટરની નેટિવ બ્રાન્ચ, `RequestLoggerDetail`) સિવાય હાથેથી બનાવેલું `role="dialog"` નહીં; ત્યાંના દરેક રૉ `<button>` અથવા `<input>` માટે તેના વધુમાં વધુ 3 લાઇન ઉપર સમાપ્ત થતી અને કારણ સહિત `kit-exception:` ધરાવતી કૉમેન્ટ જરૂરી છે; પેલેટ હ્યુઝ અને `dark:` વેરિઅન્ટ્સ ફક્ત ટેસ્ટમાં સૂચિબદ્ધ ફાઇલોમાં જ માન્ય છે.
-7. PR પહેલાં બંને થીમ્સ અને 390 px વ્યૂપોર્ટને ચકાસો (સ્ક્રીનશૉટ્સ); `tests/e2e/a11y.spec.ts` axe ચલાવે છે.
+1. ટોકન્સ, લિટરલ્સ ક્યારેય નહીં. હેતુપૂર્વક રાખેલા અપવાદો: હંમેશાં-ડાર્ક કન્સોલ ટર્મિનલ અને `STATUS_HEX` (`src/shared/constants/statusColors.ts`) મારફતે ReactFlow
+   SVG સ્ટ્રોક્સ. રાઉટિંગ વ્યૂહરચના અને કમ્પ્રેશન-લેયર પેલેટ્સ `strategyColorVar` અને
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) મારફતે કિટ ચાર્ટ ટોકન્સનો ઉપયોગ કરે છે.
+2. `packages/ui-kit/src` ને ક્યારેય હાથથી પૅચ ન કરો: `scripts/dev/sync-ui-kit.sh <commit>` વડે સિંક કરો; કોઈપણ બાઇટ
+   પિન કરેલા અપસ્ટ્રીમ કમિટથી અલગ હોય તો પ્રી-કમિટ ગેટ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`)
+   નિષ્ફળ જાય છે (અપસ્ટ્રીમ ક્લોન, `UI_KIT_CLONE` અથવા `_references/cheaper-inference-ui-kit`, હાજર ન હોય ત્યારે
+   તે ચેતવણી સાથે સ્કિપ કરે છે). જ્યારે કિટમાં કંઈક ઉપલબ્ધ ન હોય, ત્યારે ઍડેપ્ટર અથવા સ્ક્રીનમાં તેનો વૈકલ્પિક
+   ઉપાય કરો અને અપસ્ટ્રીમ પાસે તેની વિનંતી કરો.
+3. કિટ ટેક્સ્ટના ડિફૉલ્ટ્સ અંગ્રેજીમાં છે (`label = "Loading"`, `loadingLabel = "Loading table"`…) — જ્યારે પણ કોઈ કિટ કમ્પોનન્ટ ટેક્સ્ટ રેન્ડર કરે,
+   ત્યારે `useTranslations(...)`માંથી અનુવાદિત સ્ટ્રિંગ્સ પાસ કરો.
+4. Tailwind યુટિલિટીઝને કિટ કમ્પોનન્ટ ક્લાસિસ કરતાં અગ્રતા મળે છે (કિટ
+   `@layer theme, base, components, utilities` જાહેર કરે છે અને તેના નિયમો `components`માં રહે છે) — સ્પેસિંગ અને
+   લેઆઉટ માટે યુટિલિટીઝનો ઉપયોગ કરો, કિટ કમ્પોનન્ટ્સને ફરી રંગ આપવા માટે નહીં.
+5. હેડિંગ્સ: પેજ અને સેક્શન ટાઇટલ્સ માટે `.ci-heading` (Inter, ટ્રૅકિંગ વિના); `.ci-dashboard-display`
+   (Instrument Serif)નો ઉપયોગ માત્ર મોટા, વિરલ ડિસ્પ્લે ટેક્સ્ટ માટે કરો, જેમ કે એરર-પેજ સ્ટેટસ કોડ.
+6. `tests/unit/dashboard-kit-sweep.test.ts` કિટ અપનાવવાની પ્રક્રિયાને સુરક્ષિત રાખે છે: `src/app` અથવા
+   `src/shared/components` હેઠળ કોઈ Material લિગેચર સ્પાન નહીં; ડૅશબોર્ડ ટ્રીમાં (`src/app/(dashboard)` અને
+   `src/shared/components`) કોઈ રૉ `<select>`, `<textarea>` અથવા `<table>` નહીં અને સૂચિબદ્ધ અપવાદો
+   (`Select` ઍડેપ્ટરની નેટિવ બ્રાન્ચ, `RequestLoggerDetail`)ની બહાર હાથથી બનાવેલું
+   `role="dialog"` નહીં; ત્યાંના દરેક રૉ `<button>` અથવા `<input>` માટે તેના વધુમાં વધુ 3 લાઇન ઉપર સમાપ્ત થતી,
+   કારણ સહિત `kit-exception:` ધરાવતી કૉમેન્ટ જરૂરી છે; પેલેટ હ્યૂઝ અને `dark:` વેરિઅન્ટ્સ માત્ર ટેસ્ટમાં
+   સૂચિબદ્ધ ફાઇલોમાં જ હોવા જોઈએ.
+7. PR પહેલાં બંને થીમ્સ અને 390 px વ્યૂપોર્ટ ચકાસો (સ્ક્રીનશૉટ્સ); `tests/e2e/a11y.spec.ts` axe ચલાવે છે.
 
 ## 3. સ્ક્રીન ઉમેરવી
 

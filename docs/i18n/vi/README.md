@@ -691,7 +691,7 @@ không xuất hiện trong lịch sử shell của bạn. → [Tích hợp CLI](
 
 </div>
 
-> **376 nhà cung cấp đã đăng ký** trong các bộ sưu tập chuẩn về trò chuyện, phương tiện, tìm kiếm, cục bộ, tác nhân đám mây và hệ thống, bao gồm **153 nhà cung cấp có siêu dữ liệu khám phá `hasFree: true`**. Sổ đăng ký mô hình trò chuyện bao gồm **239 nhà cung cấp / 3.059 cặp nhà cung cấp-mô hình riêng biệt / 1.475 ID mô hình thô**; danh mục ngân sách miễn phí riêng biệt có **471 hàng theo từng mô hình**, **34 nhóm định kỳ** và **52 nhà cung cấp miễn phí vĩnh viễn theo hình thức định kỳ/không cần khóa**. Theo thiết kế, các số liệu này sử dụng các mẫu số khác nhau; các định nghĩa và phép tính đã loại bỏ trùng lặp theo nhóm có trong [Tài liệu tham khảo về nhà cung cấp](docs/reference/PROVIDER_REFERENCE.md) và [Các gói miễn phí](docs/reference/FREE_TIERS.md).
+> **376 nhà cung cấp đã đăng ký** trong các bộ sưu tập chuẩn về trò chuyện, phương tiện, tìm kiếm, cục bộ, tác nhân đám mây và hệ thống, bao gồm **153 nhà cung cấp có siêu dữ liệu khám phá `hasFree: true`**. Sổ đăng ký mô hình trò chuyện bao gồm **239 nhà cung cấp / 3.059 cặp nhà cung cấp-mô hình riêng biệt / 1.475 ID mô hình thô**; danh mục ngân sách miễn phí riêng biệt có **484 hàng theo từng mô hình**, **34 nhóm định kỳ** và **52 nhà cung cấp miễn phí vĩnh viễn theo hình thức định kỳ/không cần khóa**. Theo thiết kế, các số liệu này sử dụng các mẫu số khác nhau; các định nghĩa và phép tính đã loại bỏ trùng lặp theo nhóm có trong [Tài liệu tham khảo về nhà cung cấp](docs/reference/PROVIDER_REFERENCE.md) và [Các gói miễn phí](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1087,7 +1087,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` luôn trỏ đến phiên bản SemVer ổn định **đã phát hành** cao nhất. Thẻ này không theo dõi nhánh git `main`. Hãy ghim `:X.Y.Z` khi dùng GitOps. Xem [Các kênh phát hành Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Image ghim **`OMNIROUTE_MEMORY_MB=1024`**. Mức này đủ cho bảng điều khiển và các cuộc trò chuyện nhẹ. **Các tác nhân lập trình** (`POST /v1/responses` từ Claude Code, Codex, Grok, …) cần heap V8 lớn hơn nhiều, nếu không tiến trình sẽ gặp `FATAL ERROR` ở mức khoảng 12 GiB khi có hai ngữ cảnh dài chồng lấn. Hãy đặt giới hạn bộ nhớ container cao hơn heap (các bộ đệm native nằm ngoài V8):
+`:latest` trỏ đến phiên bản SemVer ổn định **đã phát hành** cao nhất. Thẻ này không theo dõi nhánh git `main`. Hãy ghim `:X.Y.Z` cho GitOps. Xem [Các kênh phát hành Docker](docs/guides/DOCKER_GUIDE.md#release-channels).Image ghim **`OMNIROUTE_MEMORY_MB=1024`**. Mức này đủ cho bảng điều khiển và trò chuyện nhẹ. **Các tác nhân lập trình** (`POST /v1/responses` từ Claude Code, Codex, Grok, …) cần heap V8 lớn hơn nhiều, nếu không tiến trình sẽ gặp `FATAL ERROR` ở khoảng 12 GiB khi có hai ngữ cảnh dài chồng lấn. Hãy cấp dung lượng container lớn hơn heap (các bộ đệm native nằm ngoài V8):
 
 | Khối lượng công việc              | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
 | --------------------------------- | ------------------------------- | ---------------------- |
@@ -1111,11 +1111,11 @@ Bảng đầy đủ: [Hướng dẫn Docker — RAM khi chạy](docs/guides/DOCK
 
 **🥟 Bun**
 
-`bun install` tiêu chuẩn và cài đặt toàn cục (`bun install -g omniroute`) được hỗ trợ thông qua cơ chế phát hiện runtime Bun:
+Lệnh `bun install` tiêu chuẩn và cài đặt toàn cục (`bun install -g omniroute`) được hỗ trợ thông qua cơ chế phát hiện runtime Bun:
 
-- **`bun:sqlite` tích hợp sẵn**: OmniRoute sử dụng driver `bun:sqlite` tích hợp sẵn của Bun khi chạy trên Bun và chuyển sang `better-sqlite3` trên Node.js hoặc `sql.js` nếu cần.
-- **Tự động chọn trình đóng gói Webpack trong môi trường phát triển**: Chế độ phát triển (`bun run dev`) tự động phát hiện Bun và tắt Turbopack để chuyển sang Webpack, nhằm ngăn các vấn đề không tương thích với liên kết native V8. Các bản dựng production (`bun run build`) tuân theo `OMNIROUTE_USE_TURBOPACK` chính xác như trên Node: mặc định dùng Turbopack, đặt `OMNIROUTE_USE_TURBOPACK=0` để dựng bằng Webpack (`Dockerfile.bun` cung cấp biến này dưới dạng `--build-arg`).
-- **Dockerfile riêng cho Bun**: `Dockerfile.bun` nhiều giai đoạn dành cho các bản triển khai production Bun native (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` tích hợp sẵn**: OmniRoute sử dụng driver `bun:sqlite` tích hợp sẵn của Bun khi chạy trên Bun và chuyển sang `better-sqlite3` trên Node.js hoặc `sql.js` khi cần.
+- **Tự động chọn trình đóng gói Webpack trong môi trường dev**: Môi trường phát triển (`bun run dev`) tự động phát hiện Bun và vô hiệu hóa Turbopack để dùng Webpack, nhằm ngăn chặn các vấn đề không tương thích với binding V8 native. Các bản build production (`bun run build`) tuân theo `OMNIROUTE_USE_TURBOPACK` giống hệt như trên Node: mặc định dùng Turbopack, đặt `OMNIROUTE_USE_TURBOPACK=0` để build bằng Webpack (`Dockerfile.bun` cung cấp biến này dưới dạng `--build-arg`).
+- **Dockerfile chuyên dụng cho Bun**: `Dockerfile.bun` nhiều giai đoạn dành cho triển khai production bằng Bun native (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Cài đặt và chạy bằng Bun
@@ -1153,7 +1153,7 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Hướng dẫn Docker](docs/guides/DOCKER_GUIDE.md) — Các profile Compose, Caddy HTTPS, tunnel Cloudflare.
+📖 [Hướng dẫn Docker](docs/guides/DOCKER_GUIDE.md) — Các profile Compose, Caddy HTTPS, đường hầm Cloudflare.
 
 **🦭 Podman**
 
@@ -1161,36 +1161,38 @@ devbox run npm run dev
 # 1. Chuẩn bị thư mục dữ liệu được bind mount
 mkdir -p data
 
-# 2. Chỉ dành cho Linux + Podman rootless cục bộ (không bao giờ dùng trên máy khách Podman Machine từ xa):
+# 2. Chỉ dành cho Linux + Podman rootless cục bộ (không bao giờ dùng với máy khách Podman Machine từ xa):
 podman unshare chown 1000:1000 ./data
 
-# 3. Đặt gợi ý runtime, dựng image Compose cục bộ và khởi động
+# 3. Đặt gợi ý runtime, build image Compose cục bộ và khởi động
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
 Trên macOS hoặc Windows, Podman sử dụng Podman Machine từ xa: hãy bỏ qua `podman unshare` và
-làm theo [hướng dẫn về thư mục dữ liệu dành riêng cho từng cấu trúc triển khai](contrib/podman/README.md#data-directory-permissions-by-topology).
+làm theo [hướng dẫn về thư mục dữ liệu dành riêng cho từng mô hình kết nối](contrib/podman/README.md#data-directory-permissions-by-topology).
 
-📖 [Hướng dẫn Podman](contrib/podman/README.md) — Các bản dựng Compose, Podman Machine và
-thiết lập Quadlet Linux/systemd.
+📖 [Hướng dẫn Podman](contrib/podman/README.md) — Build bằng Compose, Podman Machine và
+thiết lập Quadlet trên Linux/systemd.
 
-**⚡ Cài đặt nhanh hơn / gọn nhẹ hơn (bỏ qua bước dựng native)**
+**⚡ Cài đặt nhanh hơn / gọn nhẹ hơn (bỏ qua bước build native)**
 
 Công cụ SQLite native (`better-sqlite3`) là một dependency **tùy chọn**, vì vậy quá trình cài đặt
-toàn cục không bao giờ bị chặn do phải biên dịch từ mã nguồn: hệ thống sử dụng binary dựng sẵn khi có
-bản phù hợp với nền tảng/Node của bạn, nếu không sẽ tự động chuyển sang công cụ JavaScript thuần
-(`node:sqlite` trên Node 22+, nếu không thì dùng `sql.js` WASM đi kèm) — không yêu cầu công cụ dựng.
+toàn cục không bao giờ bị chặn do phải biên dịch từ mã nguồn: hệ thống sử dụng binary dựng sẵn khi có bản phù hợp
+với nền tảng/Node của bạn; nếu không, nó sẽ tự động chuyển sang công cụ thuần JS
+(`node:sqlite` trên Node 22+, nếu không thì dùng `sql.js` WASM đi kèm) — không cần công cụ build.
 
-Để bỏ qua hoàn toàn bước khởi động native sau khi cài đặt (CI, môi trường headless hoặc máy chậm):
+Để bỏ qua hoàn toàn bước **khởi động native** sau khi cài đặt (CI, hệ thống headless hoặc máy chậm).
+Lưu ý: thao tác này chỉ bỏ qua bước khởi động SQLite native (`scripts/postinstall.mjs`); hook
+sao chép/sửa chữa binary (`scripts/build/postinstall.mjs`) vẫn chạy bình thường:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 cũng bỏ qua bước này
 ```
 
-Để cài đặt nhanh nhất, hãy ưu tiên **pnpm** (kho lưu trữ định địa chỉ theo nội dung + liên kết cứng — xem phần trên).
-Để sử dụng runtime headless không có bảng điều khiển, hãy dùng profile Docker `base` (ở trên) hoặc
-[hướng dẫn Termux](docs/guides/TERMUX_GUIDE.md). CLI và bảng điều khiển web được cung cấp bởi cùng một
+Để cài đặt nhanh nhất, nên dùng **pnpm** (kho lưu trữ định địa chỉ theo nội dung + hard link — xem bên trên).
+Đối với runtime headless không có bảng điều khiển, hãy dùng profile Docker `base` (ở trên) hoặc
+[hướng dẫn Termux](docs/guides/TERMUX_GUIDE.md). CLI và bảng điều khiển web được phục vụ bởi cùng một
 tiến trình trên một cổng, vì vậy hiện chưa có package riêng chỉ dành cho CLI.
 
 <br/>

@@ -81,31 +81,13 @@
 
 ## 2. כללים
 
-1. אסימונים, לעולם לא ליטרלים. החריגים נשמרו במכוון: מסוף הקונסולה הכהה תמיד, קווי המתאר של ReactFlow SVG
-   דרך `STATUS_HEX` ‏(`src/shared/constants/statusColors.ts`), ופלטות הצבעים הקטגוריאליות
-   `STRATEGY_COLORS` ‏(`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ו-
-   `LAYER_COLORS` ‏(`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. לעולם אין לתקן ידנית את `packages/ui-kit/src`: יש לסנכרן באמצעות `scripts/dev/sync-ui-kit.sh <commit>`; שער
-   ה-pre-commit ‏`npm run check:ui-kit-snapshot` ‏(`.husky/pre-commit`) נכשל אם בית כלשהו שונה
-   מה-commit המקובע במאגר המקור (הוא מדלג עם אזהרה כאשר שיבוט המקור,
-   `UI_KIT_CLONE` או `_references/cheaper-inference-ui-kit`, חסר). כאשר חסר משהו בערכה,
-   יש לעקוף זאת במתאם או במסך ולבקש זאת מצוות המקור.
-3. ברירות המחדל של הטקסט בערכה הן באנגלית (`label = "Loading"`, `loadingLabel = "Loading table"`…) — יש להעביר מחרוזות
-   מתורגמות מ-`useTranslations(...)` בכל פעם שרכיב מהערכה מציג טקסט.
-4. כלי השירות של Tailwind גוברים על המחלקות של רכיבי הערכה (הערכה מצהירה על
-   `@layer theme, base, components, utilities` והכללים שלה נמצאים ב-`components`) — יש להשתמש בכלי שירות עבור
-   ריווח ופריסה, ולא כדי לצבוע מחדש רכיבים מהערכה.
-5. כותרות: `.ci-heading` ‏(Inter, ללא ריווח אותיות) עבור כותרות עמודים ומקטעים; `.ci-dashboard-display`
-   ‏(Instrument Serif) רק עבור טקסט תצוגה גדול ודליל, כגון קוד הסטטוס בעמוד השגיאה.
-6. `tests/unit/dashboard-kit-sweep.test.ts` מגן על הטמעת הערכה: אין רכיב span עם ליגטורת Material תחת
-   `src/app` או `src/shared/components`; בעץ לוח הבקרה (`src/app/(dashboard)` ו-
-   `src/shared/components`) אין `<select>`, ‏`<textarea>` או `<table>` גולמיים, ואין
-   `role="dialog"` שנבנה ידנית מחוץ לחריגים הרשומים (הענף המקורי של מתאם `Select`,
-   `RequestLoggerDetail`); לכל `<button>` או `<input>` גולמי שם נדרשת הערה המכילה
-   `kit-exception:` (עם הסיבה) שמסתיימת לכל היותר 3 שורות מעליו; גוני פלטה ווריאנטים של `dark:`
-   מותרים רק בקבצים המפורטים בבדיקה.
-7. יש לאמת את שתי ערכות הנושא ואת אזור התצוגה ברוחב 390 px לפני PR (באמצעות צילומי מסך); `tests/e2e/a11y.spec.ts` מריץ
-   axe.
+1. אסימונים, לעולם לא ערכים ליטרליים. חריגים שנשמרו במכוון: מסוף הקונסולה הכהה תמיד וקווי ה-SVG של ReactFlow באמצעות `STATUS_HEX` (`src/shared/constants/statusColors.ts`). פלטות אסטרטגיית הניתוב ושכבת הדחיסה משתמשות באסימוני התרשימים של הערכה באמצעות `strategyColorVar` ו-`categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. לעולם אין לשנות ידנית את `packages/ui-kit/src`: יש לסנכרן באמצעות `scripts/dev/sync-ui-kit.sh <commit>`; שער ה-pre-commit‏ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) נכשל אם בית כלשהו שונה מה-commit המקובע במקור (הוא מדלג עם אזהרה כאשר עותק המקור, `UI_KIT_CLONE` או `_references/cheaper-inference-ui-kit`, אינו קיים). כאשר חסר משהו בערכה, יש לעקוף זאת במתאם או במסך ולבקש אותו מצוות המקור.
+3. ברירות המחדל לטקסט בערכה הן באנגלית (`label = "Loading"`, `loadingLabel = "Loading table"`…) — יש להעביר מחרוזות מתורגמות מ-`useTranslations(...)` בכל פעם שרכיב ערכה מציג טקסט.
+4. כלי העזר של Tailwind גוברים על מחלקות רכיבי הערכה (הערכה מצהירה על `@layer theme, base, components, utilities` והכללים שלה נמצאים ב-`components`) — יש להשתמש בכלי עזר למרווחים ולפריסה, ולא כדי לשנות את צבעי רכיבי הערכה.
+5. כותרות: `.ci-heading` ‏(Inter, ללא ריווח אותיות) לכותרות עמודים ומקטעים; `.ci-dashboard-display` ‏(Instrument Serif) רק לטקסט תצוגה גדול ודליל, כגון קוד הסטטוס בעמוד השגיאה.
+6. `tests/unit/dashboard-kit-sweep.test.ts` מגן על אימוץ הערכה: אין span של ליגטורות Material תחת `src/app` או `src/shared/components`; בעץ לוח המחוונים (`src/app/(dashboard)` ו-`src/shared/components`) אין `<select>`,‏ `<textarea>` או `<table>` גולמיים, ואין `role="dialog"` שנבנה ידנית מחוץ לחריגים הרשומים (הענף המקורי של מתאם `Select`,‏ `RequestLoggerDetail`); לכל `<button>` או `<input>` גולמי שם נדרשת הערה המכילה `kit-exception:` (עם הסיבה), שמסתיימת לכל היותר 3 שורות מעליו; גוני פלטה וגרסאות `dark:` מותרים רק בקבצים שהבדיקה מפרטת.
+7. יש לאמת את שתי ערכות הנושא ואת אזור התצוגה ברוחב 390 פיקסלים לפני PR (צילומי מסך); `tests/e2e/a11y.spec.ts` מריץ את axe.
 
 ## 3. הוספת מסך
 

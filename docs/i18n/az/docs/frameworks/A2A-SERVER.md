@@ -145,31 +145,31 @@ curl -X POST http://localhost:20128/a2a \
 
 ## Mövcud Bacarıqlar
 
-OmniRoute, `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS` daxilində əlaqələndirilmiş 6 A2A bacarığını təqdim edir. Hər bacarıq modulu `src/lib/a2a/skills/` daxilində yerləşir.
+OmniRoute `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS` daxilində əlaqələndirilmiş 6 A2A bacarığını təqdim edir. Hər bacarıq modulu `src/lib/a2a/skills/` daxilində yerləşir.
 
-| Bacarıq                     | ID                   | Təsvir                                                                                                                                                                             | Teqlər                         | Nümunələr                                         |
-| :-------------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- | :------------------------------------------------ |
-| Ağıllı Marşrutlaşdırma      | `smart-routing`      | OmniRoute-un kombinasiya mühərriki və qiymətləndirməsindən istifadə edərək sorğunu optimal provayderdən/kombinasiyadan keçirir                                                     | marşrutlaşdırma, provayderlər  | "Bu sorğunu ən yaxşı model vasitəsilə yönləndir"  |
-| Kvotanın İdarə Edilməsi     | `quota-management`   | Hər provayder üzrə kvota vəziyyətini bildirir, çağıran tərəflərə nə zaman məhdudlaşdırma/keçid etməli olduqlarına qərar verməyə kömək edir                                         | kvota, provayderlər            | "anthropic üçün kvotanı yoxla"                    |
-| Provayderlərin Aşkarlanması | `provider-discovery` | Quraşdırılmış provayderləri imkanları, pulsuz səviyyə göstəriciləri və OAuth statusu ilə birlikdə siyahıya alır                                                                    | provayderlər, aşkarlama        | "Hansı provayderlər mövcuddur?"                   |
-| Xərc Təhlili                | `cost-analysis`      | Kataloq və son istifadəyə əsasən sorğunun/söhbətin xərcini təxmin edir                                                                                                             | xərc, istifadə                 | "Bu söhbətin xərcini təxmin et"                   |
-| Sağlamlıq Hesabatı          | `health-report`      | Hər provayder üzrə dövrə açarı, soyuma müddəti və bloklanma vəziyyətini birləşdirir                                                                                                | sağlamlıq, dayanıqlılıq        | "Bütün provayderlərin sağlamlıq statusunu göstər" |
-| İmkanları Siyahıla          | `list-capabilities`  | Kontekst yeridilməsi üçün xam SKILL.md URL-ləri ilə birlikdə tam 45 elementlik Agent Bacarıqları kataloqunu (23 API + 21 CLI + 1 konfiqurasiya) markdown cədvəli şəklində qaytarır | kataloq, aşkarlama, bacarıqlar | "Bütün OmniRoute imkanlarını siyahıla"            |
+| Bacarıq                     | ID                   | Təsvir                                                                                                                                                                 | Teqlər                         | Nümunələr                                           |
+| :-------------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- | :-------------------------------------------------- |
+| Ağıllı Marşrutlaşdırma      | `smart-routing`      | OmniRoute-un kombinasiya mühərriki və qiymətləndirməsindən istifadə edərək sorğunu optimal provayderə/kombinasiyaya yönləndirir                                        | marşrutlaşdırma, provayderlər  | "Bu sorğunu ən yaxşı model vasitəsilə yönləndir"    |
+| Kvotanın İdarə Edilməsi     | `quota-management`   | Hər provayder üzrə kvota vəziyyətini bildirir, çağıran tərəflərə məhdudlaşdırma/keçid vaxtını müəyyən etməyə kömək edir                                                | kvota, provayderlər            | "anthropic üçün kvotanı yoxla"                      |
+| Provayderlərin Aşkarlanması | `provider-discovery` | Quraşdırılmış provayderləri imkanları, pulsuz səviyyə göstəriciləri və OAuth statusu ilə birlikdə siyahıya alır                                                        | provayderlər, aşkarlama        | "Hansı provayderlər mövcuddur?"                     |
+| Xərc Təhlili                | `cost-analysis`      | Kataloq və son istifadəyə əsasən sorğunun/söhbətin xərcini təxmin edir                                                                                                 | xərc, istifadə                 | "Bu söhbətin xərcini təxmin et"                     |
+| Sağlamlıq Hesabatı          | `health-report`      | Hər provayder üzrə dövrə açarı, gözləmə müddəti və bloklama vəziyyətini ümumiləşdirir                                                                                  | sağlamlıq, dayanıqlılıq        | "Bütün provayderlərin sağlamlıq vəziyyətini göstər" |
+| İmkanların Siyahısı         | `list-capabilities`  | Kontekst inyeksiyası üçün xam SKILL.md URL-ləri olan tam 45 elementlik Agent Bacarıqları kataloqunu (23 API + 21 CLI + 1 konfiqurasiya) markdown cədvəli kimi qaytarır | kataloq, aşkarlama, bacarıqlar | "Bütün OmniRoute imkanlarını siyahıya al"           |
 
-> Agent Kartı aktual 376 provayderlik kataloqla uyğun saxlanılmalıdır; provayderlərin sayı və pulsuz/autentifikasiya tələb etməyən seçimlərə dair metadata icra zamanı reyestrdən əldə edilir.
+> Agent Kartı fəaliyyətdə olan 376 provayderlik kataloqla uyğun saxlanmalıdır; provayder sayı və pulsuz/autentifikasiyasız metadata icra zamanı reyestrdən əldə edilir.
 
 ### `list-capabilities` Bacarığının Təfərrüatları
 
-`list-capabilities` bacarığı API çağırışları göndərməzdən əvvəl OmniRoute-un nələri təqdim etdiyini aşkar etməli olan xarici agentlər üçün xüsusilə faydalıdır. O, strukturlaşdırılmış markdown cədvəli artefaktı qaytarır:
+`list-capabilities` bacarığı API çağırışları göndərməzdən əvvəl OmniRoute-un təqdim etdiyi imkanları aşkarlamalı olan xarici agentlər üçün xüsusilə faydalıdır. O, strukturlaşdırılmış markdown cədvəl artefaktı qaytarır:
 
 ```
-| ID | Ad | Kateqoriya | Sahə | Son nöqtələr/Əmrlər | Xam URL |
+| ID | Ad | Kateqoriya | Sahə | Son Nöqtələr/Əmrlər | Xam URL |
 | --- | --- | --- | --- | --- | --- |
 | omni-auth | Autentifikasiya və Sessiyalar | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Hər sətirdə `rawUrl` sütunu yer alır ki, agentlər dərhal tam SKILL.md faylını əldə edə bilsinlər. `metadata.totalSkills` sahəsi kataloqun ölçüsünü əks etdirir (hazırda 45). İcra: `src/lib/a2a/skills/listCapabilities.ts`. Həmçinin [AGENT-SKILLS.md](./AGENT-SKILLS.md) sənədinə baxın.
+Hər sətir `rawUrl` sütununu ehtiva edir ki, agentlər tam SKILL.md faylını dərhal əldə edə bilsinlər. `metadata.totalSkills` sahəsi kataloqun ölçüsünü əks etdirir (hazırda 45). İmplementasiya: `src/lib/a2a/skills/listCapabilities.ts`. Həmçinin [AGENT-SKILLS.md](./AGENT-SKILLS.md) sənədinə baxın.
 
 ---
 

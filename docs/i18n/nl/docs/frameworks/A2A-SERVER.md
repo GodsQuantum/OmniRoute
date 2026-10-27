@@ -152,31 +152,31 @@ curl -X POST http://localhost:20128/a2a \
 
 ## Beschikbare skills
 
-OmniRoute stelt 6 A2A-skills beschikbaar die zijn gekoppeld in `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Elke skillmodule bevindt zich in `src/lib/a2a/skills/`.
+OmniRoute biedt 6 A2A-skills die zijn gekoppeld in `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Elke skillmodule bevindt zich in `src/lib/a2a/skills/`.
 
-| Skill                   | ID                   | Beschrijving                                                                                                                                                        | Tags                        | Voorbeelden                                    |
-| :---------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------- | :--------------------------------------------- |
-| Slimme routering        | `smart-routing`      | Routeert een prompt via de optimale provider/combinatie met behulp van OmniRoute's combinatie-engine en scoresysteem                                                | routering, providers        | "Routeer deze prompt via het beste model"      |
-| Quotabeheer             | `quota-management`   | Rapporteert de quotastatus per provider en helpt aanroepers bepalen wanneer ze moeten beperken of overschakelen                                                     | quota, providers            | "Controleer het quota voor anthropic"          |
-| Providerdetectie        | `provider-discovery` | Geeft een overzicht van geïnstalleerde providers met mogelijkheden, gratis niveaus en OAuth-status                                                                  | providers, detectie         | "Welke providers zijn beschikbaar?"            |
-| Kostenanalyse           | `cost-analysis`      | Schat de kosten van een verzoek of gesprek op basis van de catalogus en het recente gebruik                                                                         | kosten, gebruik             | "Schat de kosten van dit gesprek"              |
-| Gezondheidsrapport      | `health-report`      | Aggregeert de status van circuitbreakers, afkoelperioden en blokkeringen per provider                                                                               | gezondheid, veerkracht      | "Toon de gezondheidsstatus van alle providers" |
-| Mogelijkheden weergeven | `list-capabilities`  | Retourneert de volledige catalogus met 45 Agent Skills (23 API + 21 CLI + 1 configuratie) als een markdown-tabel met onbewerkte SKILL.md-URL's voor contextinjectie | catalogus, detectie, skills | "Geef alle mogelijkheden van OmniRoute weer"   |
+| Skill                   | ID                   | Beschrijving                                                                                                                                                              | Tags                        | Voorbeelden                               |
+| :---------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------- | :---------------------------------------- |
+| Slimme routering        | `smart-routing`      | Routeert een prompt via de optimale provider/combinatie met behulp van OmniRoute's combinatie-engine en scoresysteem                                                      | routering, providers        | "Routeer deze prompt via het beste model" |
+| Quotabeheer             | `quota-management`   | Rapporteert de quotastatus per provider en helpt aanroepers bepalen wanneer ze moeten beperken/overschakelen                                                              | quota, providers            | "Controleer het quota voor anthropic"     |
+| Providerdetectie        | `provider-discovery` | Geeft een overzicht van geïnstalleerde providers met mogelijkheden, gratis niveaus en OAuth-status                                                                        | providers, detectie         | "Welke providers zijn beschikbaar?"       |
+| Kostenanalyse           | `cost-analysis`      | Schat de kosten van een aanvraag/gesprek op basis van de catalogus en recent gebruik                                                                                      | kosten, gebruik             | "Schat de kosten van dit gesprek"         |
+| Statusrapport           | `health-report`      | Aggregeert de status van stroomonderbrekers, afkoelperiodes en blokkeringen per provider                                                                                  | status, veerkracht          | "Toon de status van alle providers"       |
+| Mogelijkheden weergeven | `list-capabilities`  | Retourneert de volledige Agent Skills-catalogus met 45 items (23 API + 21 CLI + 1 configuratie) als een markdown-tabel met onbewerkte SKILL.md-URL's voor contextinjectie | catalogus, detectie, skills | "Geef alle OmniRoute-mogelijkheden weer"  |
 
-> De Agent Card moet afgestemd blijven op de actuele catalogus van 376 providers; provideraantallen en metadata over gratis gebruik en gebruik zonder authenticatie zijn afkomstig uit het runtimeregister.
+> De Agent Card moet synchroon worden gehouden met de actuele catalogus van 376 providers; aantallen providers en metadata over gratis/zonder authenticatie worden opgehaald uit het runtimeregister.
 
 ### Details van de skill `list-capabilities`
 
-De skill `list-capabilities` is bijzonder nuttig voor externe agents die moeten ontdekken wat OmniRoute beschikbaar stelt voordat ze API-aanroepen verzenden. De skill retourneert een gestructureerd markdown-tabelartefact:
+De skill `list-capabilities` is met name nuttig voor externe agents die moeten ontdekken wat OmniRoute beschikbaar stelt voordat ze API-aanroepen verzenden. De skill retourneert een gestructureerd markdown-tabelartefact:
 
 ```
-| ID | Name | Category | Area | Endpoints/Commands | Raw URL |
+| ID | Naam | Categorie | Gebied | Eindpunten/opdrachten | Onbewerkte URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Auth & Sessions | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Authenticatie en sessies | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Elke rij bevat de kolom `rawUrl`, zodat agents onmiddellijk het volledige SKILL.md-bestand kunnen ophalen. Het veld `metadata.totalSkills` weerspiegelt de omvang van de catalogus (momenteel 45). Implementatie: `src/lib/a2a/skills/listCapabilities.ts`. Zie ook [AGENT-SKILLS.md](./AGENT-SKILLS.md).
+Elke rij bevat de kolom `rawUrl`, zodat agents direct de volledige SKILL.md kunnen ophalen. Het veld `metadata.totalSkills` komt overeen met de omvang van de catalogus (momenteel 45). Implementatie: `src/lib/a2a/skills/listCapabilities.ts`. Zie ook [AGENT-SKILLS.md](./AGENT-SKILLS.md).
 
 ---
 
@@ -215,7 +215,7 @@ Het JSON-RPC-eindpunt `/a2a` is het canonieke A2A-toegangspunt. De onderstaande 
    };
    ```
 
-3. **Maak de skill beschikbaar in de Agent Card:** voeg in `src/app/.well-known/agent.json/route.ts` het volgende toe aan de `skills`-array:
+3. **Maak beschikbaar in de Agent Card:** voeg in `src/app/.well-known/agent.json/route.ts` het volgende toe aan de array `skills`:
 
    ```json
    {
@@ -223,13 +223,13 @@ Het JSON-RPC-eindpunt `/a2a` is het canonieke A2A-toegangspunt. De onderstaande 
      "name": "Uw skill",
      "description": "Korte, intentiegerichte beschrijving",
      "tags": ["routering", "quotum"],
-     "examples": ["Voorbeeld van een aanroep in natuurlijke taal"]
+     "examples": ["Voorbeeldaanroep in natuurlijke taal"]
    }
    ```
 
-4. **Schrijf tests:** `tests/unit/a2a-<your-skill>.test.ts`. Test zowel het succesvolle pad als het foutpad.
+4. **Schrijf tests:** `tests/unit/a2a-<your-skill>.test.ts`. Test het succesvolle pad en het foutpad.
 
-5. **Documenteer** de nieuwe skill in de tabel `Beschikbare skills` van dit bestand.
+5. **Documenteer** de nieuwe skill in de tabel `Available Skills` van dit bestand.
 
 ---
 

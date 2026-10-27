@@ -80,30 +80,30 @@
 
 ## 2. Qaydalar
 
-1. Literal dəyərlərdən deyil, tokenlərdən istifadə edin. Məqsədli şəkildə saxlanılan istisnalar: həmişə tünd olan konsol terminalı, `STATUS_HEX` (`src/shared/constants/statusColors.ts`) vasitəsilə ReactFlow SVG
-   xətləri və `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) və
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`) kateqoriyalı rəng palitraları.
-2. `packages/ui-kit/src` daxilində heç vaxt əl ilə dəyişiklik etməyin: `scripts/dev/sync-ui-kit.sh <commit>` vasitəsilə sinxronlaşdırın;
-   pre-commit yoxlaması `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sabitlənmiş upstream commit-dən
-   bir bayt belə fərqləndikdə uğursuz olur (upstream klonu,
-   `UI_KIT_CLONE` və ya `_references/cheaper-inference-ui-kit` mövcud olmadıqda xəbərdarlıqla ötürülür). Kitdə nəsə çatışmadıqda,
-   adapterdə və ya ekranda alternativ həll tətbiq edin və bunun upstream-də əlavə edilməsini istəyin.
+1. Literal dəyərlər deyil, tokenlər istifadə edin. Məqsədli şəkildə saxlanılan istisnalar: həmişə tünd konsol terminalı və
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) vasitəsilə ReactFlow SVG xətləri. Marşrutlaşdırma strategiyası və
+   sıxılma qatı palitraları `strategyColorVar` və
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) vasitəsilə kitin diaqram tokenlərindən istifadə edir.
+2. `packages/ui-kit/src` daxilində heç vaxt əl ilə dəyişiklik etməyin: `scripts/dev/sync-ui-kit.sh <commit>` ilə sinxronlaşdırın;
+   pre-commit yoxlaması `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sabitlənmiş yuxarı axın commitindən
+   bir bayt belə fərqləndikdə uğursuz olur (yuxarı axın klonu,
+   `UI_KIT_CLONE` və ya `_references/cheaper-inference-ui-kit` mövcud olmadıqda xəbərdarlıq göstərərək yoxlamanı ötürür). Kitdə nəsə çatışmadıqda,
+   adapterdə və ya ekranda müvəqqəti həll tətbiq edin və bunun yuxarı axında əlavə edilməsini istəyin.
 3. Kit mətnlərinin standart dəyərləri ingiliscədir (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit komponenti mətn göstərdikdə
-   `useTranslations(...)` vasitəsilə tərcümə edilmiş sətirlər ötürün.
-4. Tailwind utilitləri kit komponentinin siniflərindən üstündür (kit
-   `@layer theme, base, components, utilities` elan edir və onun qaydaları `components` daxilindədir) — kit komponentlərinin
-   rəngini dəyişmək üçün deyil, məsafə və düzülüş üçün utilitlərdən istifadə edin.
-5. Başlıqlar: səhifə və bölmə başlıqları üçün `.ci-heading` (Inter, hərf aralığı olmadan); yalnız xəta səhifəsinin status kodu kimi
-   böyük və seyrək nümayiş mətnləri üçün `.ci-dashboard-display`
-   (Instrument Serif).
+   `useTranslations(...)` vasitəsilə tərcümə edilmiş sətirləri ötürün.
+4. Tailwind utilitləri kit komponentinin siniflərini üstələyir (kit
+   `@layer theme, base, components, utilities` elan edir və onun qaydaları `components` qatında yerləşir) — kit komponentlərinin
+   rəngini dəyişmək üçün deyil, aralıqlar və tərtibat üçün utilitlərdən istifadə edin.
+5. Başlıqlar: səhifə və bölmə başlıqları üçün `.ci-heading` (Inter, hərf aralığı olmadan); `.ci-dashboard-display`
+   (Instrument Serif) yalnız xəta səhifəsinin status kodu kimi böyük və seyrək təqdimat mətnləri üçün istifadə edilməlidir.
 6. `tests/unit/dashboard-kit-sweep.test.ts` kitin tətbiqinə nəzarət edir: `src/app` və ya `src/shared/components` altında
-   Material liqatura span-ı olmamalıdır; dashboard ağacında (`src/app/(dashboard)` və
-   `src/shared/components`) xam `<select>`, `<textarea>` və ya `<table>`, eləcə də siyahıda göstərilən istisnalar (`Select` adapterinin native qolu,
-   `RequestLoggerDetail`) xaricində əl ilə hazırlanmış
-   `role="dialog"` olmamalıdır; oradakı hər bir xam `<button>` və ya `<input>` üçün ondan ən çox 3 sətir yuxarıda bitən və
-   `kit-exception:` ehtiva edən səbəb şərhi olmalıdır; palitra çalarlarına və `dark:` variantlarına yalnız testdə sadalanan fayllarda
-   icazə verilir.
-7. PR-dən əvvəl hər iki temanı və 390 px baxış sahəsini yoxlayın (ekran görüntüləri); `tests/e2e/a11y.spec.ts`
+   Material liqaturalı span olmamalıdır; idarəetmə paneli ağacında (`src/app/(dashboard)` və
+   `src/shared/components`) xam `<select>`, `<textarea>` və ya `<table>`, həmçinin sadalanmış istisnalar xaricində
+   əl ilə hazırlanmış `role="dialog"` olmamalıdır (istisnalar: `Select` adapterinin yerli budağı,
+   `RequestLoggerDetail`); oradakı hər xam `<button>` və ya `<input>` üçün ondan ən çox 3 sətir yuxarıda bitən və səbəblə birlikdə
+   `kit-exception:` ehtiva edən şərh olmalıdır; palitra çalarlarına və `dark:` variantlarına
+   yalnız testdə sadalanan fayllarda icazə verilir.
+7. PR-dan əvvəl hər iki temanı və 390 px görünüş sahəsini yoxlayın (ekran görüntüləri); `tests/e2e/a11y.spec.ts`
    axe yoxlamasını işə salır.
 
 ## 3. Ekran əlavə etmək

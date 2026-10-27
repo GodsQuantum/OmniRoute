@@ -14,31 +14,21 @@
 
 ## Bu nima
 
-OmniRoute 376 ta provayderni roʻyxatdan oʻtkazadi, jumladan, **bepul/autentifikatsiyasiz** deb belgilangan 155 ta katalog yozuvini
-(autentifikatsiyasiz,
-bepul darajadagi OAuth yoki bepul darajadagi API kaliti —
-[Bepul darajalar qoʻllanmasi](../getting-started/FREE-TIERS-GUIDE.md) va toʻliq
-[Bepul darajalar katalogi](../reference/FREE_TIERS.md)ga qarang). Ammo bir jihat bor: bepul provayderlarning model sifati
-keskin farq qiladi. Eng ilgʻor modelni taqdim etuvchi autentifikatsiyasiz provayder
-kichik, eskirgan modelni taqdim etuvchidan ancha foydaliroq.
+OmniRoute 376 ta provayderni ro'yxatdan o'tkazadi, shulardan 155 ta katalog yozuvi **free/no-auth** deb belgilangan (no-auth, bepul darajali OAuth yoki bepul darajali API kalit — qarang: [Bepul darajalar qo'llanmasi](../getting-started/FREE-TIERS-GUIDE.md) va to'liq [Bepul darajalar katalogi](../reference/FREE_TIERS.md)). Lekin bitta nozik jihat bor: bepul provayderlar model sifati bo'yicha keskin farq qiladi. Ilg'or (frontier) modelni taqdim etuvchi no-auth provayder kichik eskirgan modelni taqdim etuvchi provayderdan ancha foydaliroq.
 
-**Bepul provayderlar reytingi** har bir bepul provayder katalogini
-**Arena AI reyting jadvali**dagi **jamoa tomonidan shakllantirilgan sifat ballari** bilan birlashtirish orqali
-“**qaysi bepul provayder menga eng yaxshi modelni taqdim etadi?**” degan savolga javob beradi
-(inson afzalliklariga asoslangan ELO, LMArena chatbot arenasidagi gʻoya bilan bir xil).
-Soʻng provayderlar oʻzlarining **eng yaxshi bepul modeli** kuchiga qarab tartiblanadi.
+**Bepul provayderlar reytingi** "**qaysi bepul provayder menga eng yaxshi modelni beradi?**" savoliga javob beradi: har bir bepul provayderning katalogini **Arena AI leaderboard**dan olingan **ommaviy (crowd-sourced) sifat ballari** (inson afzalliklariga asoslangan ELO — LMArena chatbot arenasining asosidagi g'oya bilan bir xil) bilan birlashtirish orqali. Keyin provayderlar o'zlarining **eng yaxshi bepul modeli** kuchi bo'yicha tartiblanadi.
 
-Reyting uchta haqiqiy manba asosida hisoblanadi:
+Reyting uchta haqiqiy manbadan hisoblanadi:
 
-1. Bepul provayderlar roʻyxatlari — `NOAUTH_PROVIDERS`, shuningdek, `hasFree` bilan belgilangan
-   `OAUTH_PROVIDERS` / `APIKEY_PROVIDERS` yozuvlari
+1. Bepul provayderlar ro'yxatlari — `NOAUTH_PROVIDERS`, shuningdek `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS` ichidagi `hasFree` deb belgilangan yozuvlar
    (`src/shared/constants/providers.ts`).
-2. Provayderlar reyestridagi har bir provayderning model katalogi
-   (`open-sse/config/providerRegistry.ts`).
-3. Arena ELO sinxronlash mexanizmi (`src/lib/arenaEloSync.ts`) tomonidan
-   `model_intelligence` maʼlumotlar bazasi jadvalida saqlanadigan ELO asosidagi vazifaga moslik ballari.
+2. Provayder reyestrida
+   (`open-sse/config/providerRegistry.ts`) saqlanadigan har bir provayderning model katalogi.
+3. Arena ELO sinxronlash mexanizmi (`src/lib/arenaEloSync.ts`) tomonidan `model_intelligence`
+   DB jadvalida saqlanadigan ELO asosidagi vazifaga-muvofiqlik ballari.
 
-Birlashtirish mantigʻi `src/lib/freeProviderRankings.ts` faylida joylashgan.
+Birlashtirish (join) mantig'i `src/lib/freeProviderRankings.ts` faylida joylashgan.
 
 ---
 
@@ -130,10 +120,14 @@ javobdan chiqarib tashlanadi.
 
 ### Manba: Arena AI reyting jadvali
 
-Arena ELO sinxronlash mexanizmi (`src/lib/arenaEloSync.ts`) Arena AI reyting jadvali API manzilidan
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) ikkita reyting jadvalini — `text`
-va `code` — oladi. Har bir reyting yozuvi model nomi, taʼminotchi, ELO `score`, ishonch oraligʻi
-va ovozlar sonini oʻz ichiga oladi.
+Arena ELO sinxronlash mexanizmi (`src/lib/arenaEloSync.ts`) Arena AI reyting jadvali API’sidan
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) ikkita reyting jadvalini —
+`text` va `code` — oladi. Ushbu API foydalanishga yaroqli jadvalni qaytarmasa, mexanizm
+Hugging Face datasets-server’dagi rasmiy `lmarena-ai/leaderboard-dataset` manbasiga
+(`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`, `coding` → `code`) o‘tadi;
+`GET /api/intelligence/sync` esa `activeSource`, `lastError` va `lastFailedAt` haqida
+hisobot beradi. Reyting jadvalidagi har bir yozuv model nomi, ishlab chiqaruvchi, ELO
+`score`, ishonch oralig‘i va ovozlar sonini o‘z ichiga oladi.
 
 Reyting jadvali toifalari OmniRoute vazifa toifalariga quyidagicha mos keladi:
 
@@ -142,21 +136,21 @@ Reyting jadvali toifalari OmniRoute vazifa toifalariga quyidagicha mos keladi:
 | `text`                | `default`, `review`, `documentation`, `debugging` |
 | `code`                | `coding`                                          |
 
-### Normalizatsiya (vazifaga moslik bali)
+### Normallashtirish (vazifaga moslik balli)
 
-Dastlabki ELO ballari har bir reyting jadvali uchun **`[0.4, 0.98]` oraligʻidagi vazifaga moslik qiymatiga** normalizatsiya qilinadi:
+Xom ELO ballari har bir reyting jadvali bo‘yicha **`[0.4, 0.98]` oralig‘idagi vazifaga moslik qiymatiga** normallashtiriladi:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
 Ball hech qachon `0` yoki `1` ga yetmaydi, bu esa foydalanuvchi tomonidan qayta belgilash uchun
-zaxira qoldiradi. Bu API javobida koʻrinadigan `score` maydoni va boshqaruv panelida
-koʻrsatiladigan belgidir.
+zaxira qoldiradi. Bu API javobida ko‘rinadigan `score` maydoni va boshqaruv panelida
+ko‘rsatiladigan yorliqdir.
 
 ### Ishonchlilik
 
-Har bir yozuv Arena ovozlari soniga qarab ishonchlilik darajasini oladi:
+Har bir yozuvga Arena’dagi ovozlar soni asosida ishonchlilik darajasi beriladi:
 
 | Ishonchlilik | Ovozlar |
 | ------------ | ------- |
@@ -164,68 +158,68 @@ Har bir yozuv Arena ovozlari soniga qarab ishonchlilik darajasini oladi:
 | `medium`     | ≥ 1,000 |
 | `low`        | < 1,000 |
 
-### Saqlash va maʼlumotlarning dolzarbligi
+### Saqlash va ma’lumotlarning yangiligi
 
-Normalizatsiya qilingan yozuvlar `source = "arena_elo"` bilan `model_intelligence`
-maʼlumotlar bazasi jadvaliga yoziladi (`src/lib/db/modelIntelligence.ts`). Yozuvlarning amal
-qilish muddati **7 kundan soʻng tugaydi**, shu sababli sinxronlashni toʻxtatgan taʼminotchi
-eskirgan maʼlumotlarni taqdim etish oʻrniga, oxir-oqibat roʻyxatdan chiqib ketadi.
+Normallashtirilgan yozuvlar `source = "arena_elo"` bilan `model_intelligence` DB jadvaliga
+yoziladi (`src/lib/db/modelIntelligence.ts`). Yozuvlarning **amal qilish muddati 7 kundan
+keyin tugaydi**, shuning uchun sinxronlashni to‘xtatgan provayder eskirgan ma’lumotlarni
+taqdim etishda davom etish o‘rniga, vaqt o‘tishi bilan ro‘yxatdan chiqariladi.
 
 Sinxronlash **standart holatda yoqilgan**:
 
-- U server ishga tushganda bir marta, keyin esa davriy taymer boʻyicha ishga tushadi
+- U server ishga tushganda bir marta, so‘ngra davriy taymer bo‘yicha ishlaydi
   (`src/lib/arenaEloSync.ts`, `src/instrumentation-node.ts` orqali ulangan).
-- U **bloklamaydi va hech qachon jiddiy xatoga sabab boʻlmaydi** — agar yuqori oqimdan maʼlumot
-  olish muvaffaqiyatsiz tugasa, OmniRoute ishlashda davom etadi va reytinglar shunchaki oxirgi
-  muvaffaqiyatli maʼlumotlarni (yoki boʻsh holatni) koʻrsatadi.
+- U **bloklamaydi va hech qachon halokatli xatoga sabab bo‘lmaydi** — agar yuqori oqimdagi
+  ma’lumotlarni olish muvaffaqiyatsiz tugasa, OmniRoute ishlashda davom etadi va reytinglar
+  shunchaki oxirgi yaroqli ma’lumotlarni (yoki bo‘sh holatni) ko‘rsatadi.
 
-Uni ikkita muhit oʻzgaruvchisi boshqaradi
+Uni ikkita muhit o‘zgaruvchisi boshqaradi
 ([`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md) faylida hujjatlashtirilgan):
 
-| Oʻzgaruvchi               | Standart      | Maqsad                                                  |
-| ------------------------- | ------------- | ------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | Tashqi sinxronlashdan voz kechish uchun `false` qiling. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Sinxronlash oraligʻi, soniyalarda.                      |
+| O‘zgaruvchi               | Standart qiymat | Maqsad                                                           |
+| ------------------------- | --------------- | ---------------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`          | Tashqi sinxronlashdan voz kechish uchun `false` qilib belgilang. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)   | Sinxronlash oralig‘i, soniyalarda.                               |
 
-### Qoʻlda sinxronlash / holat / tozalash
+### Qo‘lda sinxronlash / holat / tozalash
 
-Operatorlar uchun autentifikatsiyalangan boshqaruv endpointi qoʻlda boshqarish imkonini beradi
-(`src/app/api/intelligence/sync/route.ts` — boshqaruv autentifikatsiyasini talab qiladi):
+Operatorlar uchun autentifikatsiya qilingan boshqaruv endpoint’i qo‘lda boshqarish
+imkonini beradi (`src/app/api/intelligence/sync/route.ts` — boshqaruv autentifikatsiyasini talab qiladi):
 
 ```
 GET    /api/intelligence/sync          # joriy sinxronlash holati (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # qoʻlda sinxronlashni ishga tushirish; yozmasdan koʻrib chiqish uchun tana: { "dryRun": true }
-DELETE /api/intelligence/sync          # barcha sinxronlangan arena_elo tahliliy maʼlumot yozuvlarini tozalash
+POST   /api/intelligence/sync          # qo‘lda sinxronlashni boshlash; yozmasdan ko‘rib chiqish uchun tana: { "dryRun": true }
+DELETE /api/intelligence/sync          # barcha sinxronlangan arena_elo tahliliy yozuvlarini tozalash
 ```
 
-Agar reytinglar sahifasi boʻsh boʻlsa, qoʻlda `POST /api/intelligence/sync` soʻrovini yuborish
-(yoki serverni shunchaki qayta ishga tushirish) uni qayta toʻldiradi.
+Agar reytinglar sahifasi bo‘sh bo‘lsa, qo‘lda bajarilgan `POST /api/intelligence/sync`
+(yoki shunchaki serverni qayta ishga tushirish) uni qayta to‘ldiradi.
 
 ### Modellarni reyting jadvaliga moslashtirish
 
-Reyestrdagi model IDlari va Arenadagi model nomlari har doim ham aynan mos kelavermaydi.
-Reyting moslashuvchan moslashtirishdan foydalanadi (`src/lib/freeProviderRankings.ts`
-faylidagi `findMatchingIntelligence`):
+Reyestrdagi model ID’lari va Arena model nomlari har doim ham aynan mos kelmaydi. Reyting
+moslashuvchan moslashtirishdan foydalanadi (`src/lib/freeProviderRankings.ts` faylidagi
+`findMatchingIntelligence`):
 
-1. Normalizatsiya qilingan model IDsi boʻyicha aniq moslik.
-2. Oxirdagi versiya suffiksi olib tashlangandan keyingi moslik (masalan, `kimi-k2.6` → `kimi-k2`).
-3. Prefiks boʻyicha moslik (reyting jadvalidagi model nomi reyestr IDsi uchun prefiks boʻlsa).
+1. Normallashtirilgan model ID’i bo‘yicha aniq moslik.
+2. Oxiridagi versiya suffiksi olib tashlangandan keyingi moslik (masalan, `kimi-k2.6` → `kimi-k2`).
+3. Prefiks bo‘yicha moslik (reyting jadvalidagi model nomi reyestr ID’ining prefiksi bo‘ladi).
 
-Sinxronlash tomonida maʼlum taʼminotchi prefikslari (`anthropic/`, `openai/`, `google/`, …)
-olib tashlanadi va kichik taxalluslar xaritasi kanonik nomlarni OmniRoute ichkarida
-foydalanadigan variantlarga kengaytiradi, shu sababli modellarni istalgan nom bilan topish
-mumkin boʻlib qoladi.
+Sinxronlash tomonida ma’lum ishlab chiqaruvchi prefikslari (`anthropic/`, `openai/`,
+`google/`, …) olib tashlanadi va kichik taxalluslar xaritasi kanonik nomlarni OmniRoute
+ichki tizimda foydalanadigan variantlarga kengaytiradi, shu sababli modellarni istalgan
+nom ostida topish mumkin bo‘ladi.
 
-### Taʼminotchi qanday reytinglanadi
+### Provayder qanday tartiblanadi
 
-Mexanizm har bir bepul taʼminotchi katalogidagi barcha modellarni baholaydi, soʻng:
+Har bir bepul provayder uchun mexanizm uning katalogidagi har bir modelni baholaydi, so‘ngra:
 
-- **Eng yaxshi model** = taʼminotchining eng yuqori ball olgan modeli.
-- **Oʻrtacha ball** = taʼminotchining ball olgan barcha modellari boʻyicha oʻrtacha ball.
-- **Modellar** = taʼminotchining Arena bali mavjud modellari soni.
+- **Eng yaxshi model** = provayderning eng yuqori ball olgan modeli.
+- **O‘rtacha ball** = ushbu provayderning ball berilgan barcha modellari bo‘yicha o‘rtacha ball.
+- **Modellar** = provayder modellarining qanchasida Arena balli mavjudligi.
 
-Taʼminotchilar avval **eng yaxshi model bali**, soʻngra oʻrtacha ball boʻyicha saralanadi.
-Bu kamida bitta kuchli bepul modelni taqdim etadigan taʼminotchini ragʻbatlantiradi.
+Provayderlar avval **eng yaxshi model balli**, so‘ngra o‘rtacha ball bo‘yicha saralanadi.
+Bu kamida bitta kuchli bepul modelni taqdim etadigan provayderni yuqoriroq baholaydi.
 
 ---
 

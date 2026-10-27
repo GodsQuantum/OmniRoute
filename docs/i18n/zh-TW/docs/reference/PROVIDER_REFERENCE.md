@@ -26,7 +26,7 @@
 
 其他標籤：`image`、`video`、`aggregator`、`enterprise`、`embed/rerank`、`self-hosted`。
 
-`工具呼叫`（若有顯示）：`native` — 真正的函式呼叫 API；`emulated` — `tools` 陣列透過 `webTools.ts` 以提示詞模擬（使用正規表示式剖析 `<tool>{...}</tool>` 區塊）；`none` — 目前會直接捨棄 `tools`，且不顯示任何提示。請參閱 #7286。
+`Tool calling` (工具呼叫)（若有顯示）：`native` — 真正的函式呼叫 API；`emulated` — `tools` 陣列透過 `webTools.ts` 以提示詞模擬（使用正規表示式剖析 `<tool>{...}</tool>` 區塊）；`none` — 目前會直接捨棄 `tools`，且不顯示任何提示。請參閱 #7286。
 
 請使用 `/dashboard/providers` 的儀表板來啟用、設定及測試各個提供者。
 

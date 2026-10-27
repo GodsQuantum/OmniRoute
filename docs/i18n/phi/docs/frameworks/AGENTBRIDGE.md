@@ -16,34 +16,34 @@ Ang AgentBridge ay ang MITM (Man-in-the-Middle) proxy ng OmniRoute na humaharang
 
 ### Ano ang AgentBridge?
 
-Kapag nagsagawa ng API call ang isang IDE agent (hal., GitHub Copilot, Cursor, Claude Code), direkta itong kumokonekta sa upstream AI provider (OpenAI, Anthropic, atbp.). Transparent na hinaharang ng AgentBridge ang koneksyong iyon sa antas ng TLS — nang hindi nangangailangan ng anumang pagbabago sa configuration ng agent — at muling isinusulat ang request sa pamamagitan ng OmniRoute.
+Kapag ang isang IDE agent (hal., GitHub Copilot, Cursor, Claude Code) ay gumagawa ng API call, direkta itong kumokonekta sa upstream AI provider (OpenAI, Anthropic, atbp.). Hinaharang ng AgentBridge ang koneksyong iyon nang transparent sa antas ng TLS — nang hindi nangangailangan ng anumang pagbabago sa configuration ng agent — at muling isinulat ang request sa pamamagitan ng OmniRoute.
 
-Nangangahulugan itong maaari mong:
+Ibig sabihin nito, maaari mong:
 
-- **Ilipat ang anumang agent sa anumang provider**: Nakikipag-ugnayan ba ang Copilot sa OpenAI? I-redirect ito sa Anthropic Claude, Gemini, o alinman sa 376 provider ng OmniRoute.
-- **Maglapat ng mga model mapping**: `gemini-3-flash` → `claude-sonnet-4.7` nang transparent sa antas ng handler.
-- **Subaybayan ang lahat ng traffic ng agent**: inilalathala sa [Traffic Inspector](./TRAFFIC_INSPECTOR.md) ang bawat naharang na request.
-- **Ilapat ang resilience ng OmniRoute**: gumagana rin para sa traffic ng IDE agent ang combo routing, mga circuit breaker, fallback, at pagsubaybay sa gastos.
+- **I-reroute ang anumang agent sa anumang provider**: Ang Copilot ay nakikipag-usap sa OpenAI? I-redirect ito sa Anthropic Claude, Gemini, o alinman sa 376 provider ng OmniRoute.
+- **Mag-apply ng model mappings**: `gemini-3-flash` → `claude-sonnet-4.7` nang transparent sa antas ng handler.
+- **Obserbahan ang lahat ng traffic ng agent**: ang bawat naharang na request ay nai-publish sa [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
+- **I-apply ang resilience ng OmniRoute**: gumagana rin ang combo routing, circuit breakers, fallbacks, at cost tracking para sa traffic ng IDE agent.
 
 ### Posisyon kumpara sa merkado
 
-| Feature                 | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| ----------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity             |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot          |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)              |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex            |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE              |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries          |    —    |    ✓     |        —        |             ✓             |
-| Claude Code             |    —    |    —     |        ✓        |             ✓             |
-| Open Code               |    —    |    —     |        ✓        |             ✓             |
-| Trae                    |    —    |    —     |        —        |    🔍 Iniimbestigahan     |
-| Dashboard UI            |    ✓    |    ✗     |        ✗        |             ✓             |
-| Traffic Inspector       |    ✗    |    ✗     |        ✓        |             ✓             |
-| OmniRoute routing       |    ✗    |    ✗     |        ✗        |             ✓             |
-| UI ng model mapping     |    ✗    |    ✗     |        ✗        |             ✓             |
-| Listahan ng bypass      |    ✗    |    ✗     |        ✓        |             ✓             |
-| Upstream CA certificate |    ✗    |    ✗     |        ✓        |             ✓             |
+| Tampok               | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| -------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity          |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot       |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)           |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex         |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE           |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries       |    —    |    ✓     |        —        |             ✓             |
+| Claude Code          |    —    |    —     |        ✓        |             ✓             |
+| Open Code            |    —    |    —     |        ✓        |             ✓             |
+| Trae                 |    —    |    —     |        —        |    🔍 Iniimbestigahan     |
+| Dashboard UI         |    ✓    |    ✗     |        ✗        |             ✓             |
+| Traffic Inspector    |    ✗    |    ✗     |        ✓        |             ✓             |
+| Routing ng OmniRoute |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI ng model mapping  |    ✗    |    ✗     |        ✗        |             ✓             |
+| Listahan ng bypass   |    ✗    |    ✗     |        ✓        |             ✓             |
+| Upstream CA cert     |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -543,16 +543,16 @@ Kumpletong mga OpenAPI schema: `docs/openapi.yaml` → tag na `AgentBridge`.
 
 Ang Trae ay isang medyo bagong AI coding assistant. Bago magpatupad ng handler:
 
-1. Tukuyin ang binary/extension sa mga marketplace ng VS Code / JetBrains o bilang standalone app
-2. Kunin ang traffic gamit ang mitmproxy upang matuklasan ang mga API host at anyo ng mga endpoint
+1. Tukuyin ang binary/extension sa mga marketplace ng VS Code / JetBrains o bilang standalone na app
+2. Kunan ang traffic gamit ang mitmproxy upang matuklasan ang mga API host at anyo ng endpoint
 3. Tukuyin ang mekanismo ng authentication
 4. Suriin kung itutuloy o hindi batay sa TOS at kung gaano kadaling matuklasan ang API
 
-Hanggang sa makumpleto ang pagsisiyasat, nagpapakita ang Trae card sa dashboard ng badge na "Sinisiyasat" na may link na "Iulat ang pagiging posible." Ang handler stub sa `src/mitm/handlers/trae.ts` ay naglalabas ng structured na error na `Hindi pa naipapatupad`.
+Hangga't hindi natatapos ang pagsisiyasat, nagpapakita ang Trae card sa dashboard ng badge na "Sinisiyasat" na may link na "Iulat ang pagiging magagamit." Ang handler stub sa `src/mitm/handlers/trae.ts` ay nagti-throw ng structured na error na `Not yet implemented`.
 
 ### Mga backlog agent (kailangan ang MITM — walang suporta para sa custom base URL)
 
-Hindi sinusuportahan ng mga sumusunod na tool ang mga custom base URL sa kanilang mga kasalukuyang bersyon, kaya MITM lamang ang paraan ng interception. Nakabinbin pa ang pagtatasa sa pagiging posible:
+Hindi sinusuportahan ng mga sumusunod na tool ang mga custom base URL sa kanilang mga kasalukuyang bersyon, kaya MITM lamang ang paraan ng interception. Nakabinbin pa ang pagsusuri sa pagiging magagamit:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)

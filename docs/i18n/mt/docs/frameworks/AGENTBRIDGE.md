@@ -16,7 +16,7 @@ AgentBridge huwa l-proxy MITM (Man-in-the-Middle) ta' OmniRoute li jinterċetta 
 
 ### X'inhu AgentBridge?
 
-Meta aġent ta' IDE (eż., GitHub Copilot, Cursor, Claude Code) jagħmel sejħa API, huwa jikkonnettja direttament mal-fornitur upstream tal-AI (OpenAI, Anthropic, eċċ.). AgentBridge jinterċetta dik il-konnessjoni b'mod trasparenti fil-livell TLS — mingħajr ma jeħtieġ ebda bidla fil-konfigurazzjoni tal-aġent — u jerġa' jikteb it-talba permezz ta' OmniRoute.
+Meta aġent tal-IDE (eż., GitHub Copilot, Cursor, Claude Code) jagħmel sejħa API, huwa jikkonnettja direttament mal-fornitur tal-AI upstream (OpenAI, Anthropic, eċċ.). AgentBridge jinterċetta dik il-konnessjoni b'mod trasparenti fil-livell TLS — mingħajr ma jeħtieġ ebda bidla fil-konfigurazzjoni tal-aġent — u jerġa' jikteb it-talba permezz ta' OmniRoute.
 
 Dan ifisser li tista':
 
@@ -25,7 +25,7 @@ Dan ifisser li tista':
 - **Tissorvelja t-traffiku kollu tal-aġenti**: kull talba interċettata tiġi ppubblikata fit-[Traffic Inspector](./TRAFFIC_INSPECTOR.md).
 - **Tapplika r-reżiljenza ta' OmniRoute**: ir-routing ikkombinat, is-circuit breakers, il-fallbacks, u t-traċċar tal-ispejjeż jaħdmu wkoll għat-traffiku tal-aġenti tal-IDE.
 
-### Pożizzjonament fis-suq
+### Pożizzjonament meta mqabbel mas-suq
 
 | Karatteristika                         | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
 | -------------------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
@@ -547,18 +547,18 @@ Skemi OpenAPI sħaħ: `docs/openapi.yaml` → tag `AgentBridge`.
 
 ### Investigazzjoni ta' Trae
 
-Trae huwa assistent tal-kodifikazzjoni bl-IA relattivament ġdid. Qabel ma jiġi implimentat handler:
+Trae huwa assistent tal-ipprogrammar bl-IA relattivament ġdid. Qabel ma jiġi implimentat handler:
 
-1. Identifika l-binary/extension fis-swieq ta' VS Code / JetBrains jew bħala app awtonoma
-2. Aqbad it-traffiku b'mitmproxy biex tiskopri l-hosts tal-API u l-istrutturi tal-endpoints
-3. Iddetermina l-mekkaniżmu ta' awtentikazzjoni
+1. Identifika l-binarju/estensjoni fis-swieq ta' VS Code / JetBrains jew bħala app awtonoma
+2. Aqbad it-traffiku b'mitmproxy biex tiskopri l-hosts tal-API u l-forom tal-endpoints
+3. Iddetermina l-mekkaniżmu tal-awtentikazzjoni
 4. Evalwa jekk għandux jitkompla jew le abbażi tat-TOS u kemm l-API tista' tiġi skoperta
 
-Sakemm titlesta l-investigazzjoni, il-kard ta' Trae fid-dashboard turi badge "Taħt investigazzjoni" b'link "Irrapporta l-vijabbiltà". L-istub tal-handler f'`src/mitm/handlers/trae.ts` jitfa' żball strutturat `Għadu mhux implimentat`.
+Sakemm titlesta l-investigazzjoni, il-kard ta' Trae fid-dashboard turi badge "Qed tiġi investigata" b'link "Irrapporta l-vijabbiltà". L-istub tal-handler f'`src/mitm/handlers/trae.ts` jitfa' żball strutturat `Not yet implemented`.
 
 ### Aġenti fil-backlog (MITM meħtieġ — ebda appoġġ għal URL bażi personalizzat)
 
-L-għodod li ġejjin ma jappoġġjawx URLs bażi personalizzati fil-verżjonijiet attwali tagħhom, u għalhekk MITM huwa l-uniku mod ta' interċettazzjoni. Il-valutazzjoni tal-vijabbiltà għadha pendenti:
+L-għodod li ġejjin ma jappoġġjawx URLs bażi personalizzati fil-verżjonijiet attwali tagħhom, u b'hekk MITM huwa l-unika rotta għall-interċettazzjoni. L-evalwazzjoni tal-vijabbiltà għadha pendenti:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)

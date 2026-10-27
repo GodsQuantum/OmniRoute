@@ -26,7 +26,7 @@
 
 附加标签：`image`、`video`、`aggregator`、`enterprise`、`embed/rerank`、`self-hosted`。
 
-`工具调用`（若显示）：`native` — 真正的函数调用 API；`emulated` — 通过 `webTools.ts` 对 `tools` 数组进行提示词模拟（使用正则表达式解析 `<tool>{...}</tool>` 块）；`none` — 当前会静默丢弃 `tools`。参见 #7286。
+`Tool calling` (工具调用)（若显示）：`native` — 真正的函数调用 API；`emulated` — 通过 `webTools.ts` 对 `tools` 数组进行提示词模拟（使用正则表达式解析 `<tool>{...}</tool>` 块）；`none` — 当前会静默丢弃 `tools`。参见 #7286。
 
 使用 `/dashboard/providers` 中的控制面板启用、配置和测试各个提供者。
 

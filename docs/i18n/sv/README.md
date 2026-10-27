@@ -699,7 +699,7 @@ från din skalhistorik. → [CLI-integrationer](docs/guides/CLI-INTEGRATIONS.md)
 
 </div>
 
-> **376 registrerade leverantörer** i de kanoniska samlingarna för chatt, media, sökning, lokala tjänster, molnagenter och system, inklusive **153 med identifieringsmetadata `hasFree: true`**. Chattmodellregistret omfattar **239 leverantörer / 3 059 unika par av leverantör och modell / 1 475 råa modell-ID:n**. Den separata katalogen över kostnadsfria budgetar har **471 rader per modell**, **34 återkommande pooler** och **52 återkommande/nyckellösa leverantörer som är kostnadsfria för alltid**. Dessa nämnare skiljer sig avsiktligt åt; definitioner och pooldeduplicerade beräkningar finns i [Leverantörsreferensen](docs/reference/PROVIDER_REFERENCE.md) och [Kostnadsfria nivåer](docs/reference/FREE_TIERS.md).
+> **376 registrerade leverantörer** i de kanoniska samlingarna för chatt, media, sökning, lokala tjänster, molnagenter och system, inklusive **153 med identifieringsmetadata `hasFree: true`**. Chattmodellregistret omfattar **239 leverantörer / 3 059 unika par av leverantör och modell / 1 475 råa modell-ID:n**. Den separata katalogen över kostnadsfria budgetar har **484 rader per modell**, **34 återkommande pooler** och **52 återkommande/nyckellösa leverantörer som är kostnadsfria för alltid**. Dessa nämnare skiljer sig avsiktligt åt; definitioner och pooldeduplicerade beräkningar finns i [Leverantörsreferensen](docs/reference/PROVIDER_REFERENCE.md) och [Kostnadsfria nivåer](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1098,13 +1098,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` följer den högsta **publicerade** stabila SemVer-versionen. Den följer inte git `main`. Lås till `:X.Y.Z` för GitOps. Se [Docker-utgivningskanaler](docs/guides/DOCKER_GUIDE.md#release-channels). Avbildningen låser **`OMNIROUTE_MEMORY_MB=1024`**. Det räcker för kontrollpanelen och enklare chatt. **Kodningsagenter** (`POST /v1/responses` från Claude Code, Codex, Grok, …) behöver en mycket större V8-heap, annars får processen ett `FATAL ERROR` vid cirka 12 GiB med två överlappande långa kontexter. Dimensionera containern större än heapen (inbyggda buffertar ligger utanför V8):
+`:latest` följer den högsta **publicerade** stabila SemVer-versionen. Den följer inte git `main`. Lås till `:X.Y.Z` för GitOps. Se [Docker-utgivningskanaler](docs/guides/DOCKER_GUIDE.md#release-channels).Avbildningen anger **`OMNIROUTE_MEMORY_MB=1024`**. Det räcker för instrumentpanelen och en lätt chatt. **Kodningsagenter** (`POST /v1/responses` från Claude Code, Codex, Grok, …) behöver en betydligt större V8-heap, annars får processen `FATAL ERROR` vid cirka 12 GiB med två överlappande långa kontexter. Dimensionera containern större än heapen (inbyggda buffertar ligger utanför V8):
 
-| Arbetsbelastning                    | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
-| ----------------------------------- | ------------------------------- | ---------------------- |
-| Kontrollpanel/enklare chatt         | `1024` (avbildningens standard) | ≥2 g                   |
-| En kodningsagent                    | `8192`                          | ≥10 g                  |
-| Två samtidiga långa `/v1/responses` | `10240`–`12288`                 | ≥12–16 g               |
+| Arbetsbelastning                    | Heap (`-e OMNIROUTE_MEMORY_MB`)  | Container (`--memory`) |
+| ----------------------------------- | -------------------------------- | ---------------------- |
+| Instrumentpanel/lätt chatt          | `1024` (standard i avbildningen) | ≥2 g                   |
+| En kodningsagent                    | `8192`                           | ≥10 g                  |
+| Två samtidiga långa `/v1/responses` | `10240`–`12288`                  | ≥12–16 g               |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1116,17 +1116,17 @@ Fullständig tabell: [Docker-guide — RAM vid körning](docs/guides/DOCKER_GUID
 
 > **Docker-kanal för förhandsversioner:** `diegosouzapw/omniroute:next` och
 > `diegosouzapw/omniroute:next-web` följer den aktuella standardgrenen `release/v*`.
-> Dessa föränderliga taggar är endast avsedda för att testa ännu ej utgivna korrigeringar och
-> **stöds inte för produktion**. Se
+> Dessa föränderliga taggar är endast avsedda för testning av ännu ej utgivna korrigeringar och
+> **stöds inte i produktion**. Se
 > [Docker-utgivningskanaler](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Standardinstallation med `bun install` och global installation (`bun install -g omniroute`) stöds via detektering av Bun-körmiljön:
+Standardkommandot `bun install` och global installation (`bun install -g omniroute`) stöds via identifiering av Bun-körmiljön:
 
-- **Inbyggd `bun:sqlite`**: OmniRoute använder Buns inbyggda `bun:sqlite`-drivrutin när det körs under Bun och återgår till `better-sqlite3` på Node.js eller `sql.js`.
-- **Automatiskt val av Webpack-paketerare vid utveckling**: Utvecklingsläget (`bun run dev`) identifierar automatiskt Bun och inaktiverar Turbopack till förmån för Webpack för att förhindra inkompatibilitet med inbyggda V8-bindningar. Produktionsbyggen (`bun run build`) följer `OMNIROUTE_USE_TURBOPACK` exakt som på Node: Turbopack som standard, `OMNIROUTE_USE_TURBOPACK=0` för att bygga med Webpack (`Dockerfile.bun` exponerar detta som ett `--build-arg`).
-- **Dedikerad Dockerfile för Bun**: `Dockerfile.bun` i flera steg för produktionsdistributioner med inbyggd Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Inbyggd `bun:sqlite`**: OmniRoute använder Buns inbyggda `bun:sqlite`-drivrutin när det körs under Bun och använder annars `better-sqlite3` på Node.js eller `sql.js`.
+- **Automatiskt val av Webpack-paketerare under utveckling**: Utvecklingsläget (`bun run dev`) identifierar automatiskt Bun och inaktiverar Turbopack till förmån för Webpack för att förhindra inkompatibilitet med inbyggda V8-bindningar. Produktionsbyggen (`bun run build`) följer `OMNIROUTE_USE_TURBOPACK` exakt som på Node: Turbopack som standard, `OMNIROUTE_USE_TURBOPACK=0` för att bygga med Webpack (`Dockerfile.bun` exponerar det som ett `--build-arg`).
+- **Dedikerad Dockerfile för Bun**: `Dockerfile.bun` med flera steg för produktionsdistributioner med Bun som körmiljö (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Installera och kör med Bun
@@ -1169,40 +1169,42 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Förbered datakatalogen som ska bind-monteras
+# 1. Förbered datakatalogen som monteras med bind mount
 mkdir -p data
 
 # 2. Endast Linux + lokal rootless Podman (aldrig en fjärrklient för Podman Machine):
 podman unshare chown 1000:1000 ./data
 
-# 3. Ange körmiljötips, bygg den lokala Compose-avbildningen och starta
+# 3. Ange körmiljötipset, bygg den lokala Compose-avbildningen och starta
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
 På macOS eller Windows använder Podman en fjärransluten Podman Machine: hoppa över `podman unshare` och
-följ den [topologispecifika vägledningen för datakataloger](contrib/podman/README.md#data-directory-permissions-by-topology).
+följ de [topologispecifika anvisningarna för datakatalogen](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Podman-guide](contrib/podman/README.md) — Compose-byggen, Podman Machine och
-konfiguration av Quadlet för Linux/systemd.
+Quadlet-konfiguration för Linux/systemd.
 
 **⚡ Snabbare/resurssnålare installation (hoppa över det inbyggda bygget)**
 
 Den inbyggda SQLite-motorn (`better-sqlite3`) är ett **valfritt** beroende, så en global
-installation blockeras aldrig av kompilering från källkod: den använder en förkompilerad binärfil när någon matchar
-din plattform/Node och återgår annars transparent till en ren JS-motor
-(`node:sqlite` på Node 22+, annars medföljande `sql.js` WASM) — inga byggverktyg krävs.
+installation blockeras aldrig av kompilering från källkod: den använder en förkompilerad binärfil när en sådan matchar
+din plattform/Node och använder annars automatiskt en ren JS-motor
+(`node:sqlite` på Node 22+, annars den medföljande `sql.js` WASM) — inga byggverktyg krävs.
 
-Så här hoppar du helt över den inbyggda uppvärmningen efter installationen (CI, headless eller långsamma datorer):
+För att hoppa över den **inbyggda uppvärmningen** efter installationen helt (CI, headless eller långsamma datorer).
+Obs! Detta hoppar endast över uppvärmningssteget för inbyggd SQLite (`scripts/postinstall.mjs`);
+hooken för kopiering/reparation av binärfiler (`scripts/build/postinstall.mjs`) körs fortfarande som vanligt:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 hoppar också över den
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 hoppar också över det
 ```
 
-För de snabbaste installationerna bör du använda **pnpm** (innehållsadresserat lager + hårda länkar — se ovan).
-För en headless-körmiljö utan kontrollpanel använder du Docker-profilen `base` (ovan) eller
-[Termux-guiden](docs/guides/TERMUX_GUIDE.md). CLI-verktyget och webbkontrollpanelen tillhandahålls av samma
-process på en port, så det finns för närvarande inget separat paket enbart för CLI.
+För snabbast installationer bör du föredra **pnpm** (innehållsadresserat lager + hårda länkar — se ovan).
+För en headless-körmiljö utan instrumentpanel använder du Docker-profilen `base` (ovan) eller
+[Termux-guiden](docs/guides/TERMUX_GUIDE.md). CLI:t och webbinstrumentpanelen betjänas av samma
+process på en port, så det finns i dag inget separat paket enbart för CLI.
 
 <br/>
 

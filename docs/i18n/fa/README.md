@@ -691,7 +691,7 @@ omniroute configure codex          # همچنین: claude opencode qwen aider go
 
 </div>
 
-> **376 ارائهدهنده ثبتشده** در مجموعههای مرجع چت، رسانه، جستوجو، محلی، عامل ابری و سیستمی، شامل **153 ارائهدهنده دارای فراداده اکتشافی `hasFree: true`**. رجیستری مدلهای چت شامل **239 ارائهدهنده / 3,059 جفت متمایز ارائهدهنده-مدل / 1,475 شناسه خام مدل** است؛ کاتالوگ جداگانه سهمیه رایگان نیز **471 ردیف بهازای هر مدل**، **34 مخزن تکرارشونده** و **52 ارائهدهنده رایگان همیشگیِ تکرارشونده/بدون کلید** دارد. این مخرجها عمداً متفاوتاند؛ تعاریف و محاسبات پس از حذف موارد تکراری مخزن در [مرجع ارائهدهندگان](docs/reference/PROVIDER_REFERENCE.md) و [سطوح رایگان](docs/reference/FREE_TIERS.md) موجودند.
+> **376 ارائهدهنده ثبتشده** در مجموعههای مرجع چت، رسانه، جستوجو، محلی، عامل ابری و سیستمی، شامل **153 ارائهدهنده دارای فراداده اکتشافی `hasFree: true`**. رجیستری مدلهای چت شامل **239 ارائهدهنده / 3,059 جفت متمایز ارائهدهنده-مدل / 1,475 شناسه خام مدل** است؛ کاتالوگ جداگانه سهمیه رایگان نیز **484 ردیف بهازای هر مدل**، **34 مخزن تکرارشونده** و **52 ارائهدهنده رایگان همیشگیِ تکرارشونده/بدون کلید** دارد. این مخرجها عمداً متفاوتاند؛ تعاریف و محاسبات پس از حذف موارد تکراری مخزن در [مرجع ارائهدهندگان](docs/reference/PROVIDER_REFERENCE.md) و [سطوح رایگان](docs/reference/FREE_TIERS.md) موجودند.
 
 <div align="center">
 
@@ -1078,7 +1078,7 @@ Ollama tags:      http://localhost:20128/vscode/YOUR_KEY/api/tags
 
 <br/>
 
-## 📦 روشهای بیشتر نصب — Docker، کد منبع، pnpm، Arch
+## 📦 روشهای بیشتر نصب — Docker، سورس، pnpm، Arch
 
 **🐳 Docker**
 
@@ -1087,13 +1087,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` بالاترین نسخهٔ پایدار SemVer **منتشرشده** را دنبال میکند. این برچسب git `main` را دنبال نمیکند. برای GitOps، نسخه را روی `:X.Y.Z` ثابت کنید. به [کانالهای انتشار Docker](docs/guides/DOCKER_GUIDE.md#release-channels) مراجعه کنید. ایمیج مقدار **`OMNIROUTE_MEMORY_MB=1024`** را ثابت تنظیم میکند. این مقدار برای داشبورد و یک گفتوگوی سبک کافی است. **عاملهای کدنویسی** (`POST /v1/responses` از Claude Code، Codex، Grok و …) به heap بسیار بزرگتری برای V8 نیاز دارند؛ در غیر این صورت، با دو context طولانی همپوشان، پردازش در حدود ۱۲ گیگابایت با `FATAL ERROR` مواجه میشود. اندازهٔ کانتینر را بیشتر از heap در نظر بگیرید (بافرهای native خارج از V8 قرار دارند):
+`:latest` بالاترین نسخهٔ پایدار SemVer **منتشرشده** را دنبال میکند. این برچسب git `main` را دنبال نمیکند. برای GitOps، نسخه را بهشکل `:X.Y.Z` ثابت کنید. [کانالهای انتشار Docker](docs/guides/DOCKER_GUIDE.md#release-channels) را ببینید. این ایمیج مقدار **`OMNIROUTE_MEMORY_MB=1024`** را ثابت میکند. این مقدار برای داشبورد و گفتوگویی سبک کافی است. **عاملهای کدنویسی** (`POST /v1/responses` از Claude Code، Codex، Grok و …) به heap بسیار بزرگتری برای V8 نیاز دارند؛ در غیر این صورت، با همپوشانی دو context طولانی، فرایند در حدود ۱۲ GiB با خطای `FATAL ERROR` متوقف میشود. اندازهٔ کانتینر را بیشتر از heap در نظر بگیرید (بافرهای native خارج از V8 قرار دارند):
 
-| بار کاری                         | Heap (`-e OMNIROUTE_MEMORY_MB`) | کانتینر (`--memory`) |
-| -------------------------------- | ------------------------------- | -------------------- |
-| داشبورد / گفتوگوی سبک            | `1024` (پیشفرض ایمیج)           | ≥2 g                 |
-| یک عامل کدنویسی                  | `8192`                          | ≥10 g                |
-| دو `/v1/responses` طولانی همزمان | `10240`–`12288`                 | ≥12–16 g             |
+| بار کاری                           | Heap (`-e OMNIROUTE_MEMORY_MB`) | کانتینر (`--memory`) |
+| ---------------------------------- | ------------------------------- | -------------------- |
+| داشبورد / گفتوگوی سبک              | `1024` (پیشفرض ایمیج)           | ≥2 g                 |
+| یک عامل کدنویسی                    | `8192`                          | ≥10 g                |
+| دو `/v1/responses` طولانی و همزمان | `10240`–`12288`                 | ≥12–16 g             |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1111,10 +1111,10 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 **🥟 Bun**
 
-دستور استاندارد `bun install` و نصب سراسری (`bun install -g omniroute`) از طریق تشخیص runtime مربوط به Bun پشتیبانی میشوند:
+دستور استاندارد `bun install` و نصب سراسری (`bun install -g omniroute`) از طریق تشخیص محیط اجرای Bun پشتیبانی میشوند:
 
-- **`bun:sqlite` داخلی**: هنگام اجرا تحت Bun، ‏OmniRoute از درایور داخلی `bun:sqlite` متعلق به Bun استفاده میکند و در Node.js یا `sql.js` به `better-sqlite3` بازمیگردد.
-- **انتخاب خودکار bundler مبتنی بر Webpack در محیط توسعه**: محیط توسعه (`bun run dev`) بهطور خودکار Bun را تشخیص میدهد و برای جلوگیری از ناسازگاریهای binding بومی V8، ‏Turbopack را به نفع Webpack غیرفعال میکند. buildهای production (`bun run build`) دقیقاً مانند Node از `OMNIROUTE_USE_TURBOPACK` پیروی میکنند: بهصورت پیشفرض Turbopack و با `OMNIROUTE_USE_TURBOPACK=0`، ساخت با Webpack انجام میشود (`Dockerfile.bun` آن را بهصورت یک `--build-arg` ارائه میکند).
+- **`bun:sqlite` داخلی**: هنگام اجرا تحت Bun، ‏OmniRoute از درایور داخلی `bun:sqlite` متعلق به Bun استفاده میکند و در Node.js به `better-sqlite3` یا `sql.js` بازمیگردد.
+- **انتخاب خودکار bundler وبپک در محیط توسعه**: حالت توسعه (`bun run dev`) بهطور خودکار Bun را تشخیص میدهد و برای جلوگیری از ناسازگاریهای binding بومی V8، ‏Turbopack را بهنفع Webpack غیرفعال میکند. buildهای production (`bun run build`) دقیقاً مانند Node از `OMNIROUTE_USE_TURBOPACK` پیروی میکنند: بهطور پیشفرض Turbopack و برای build با Webpack، مقدار `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` آن را بهصورت یک `--build-arg` در دسترس قرار میدهد).
 - **Dockerfile اختصاصی Bun**: فایل چندمرحلهای `Dockerfile.bun` برای استقرارهای production بومی Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
@@ -1123,7 +1123,7 @@ bun install
 bun run dev
 ```
 
-**🛠️ از کد منبع**
+**🛠️ از سورس**
 
 ```bash
 cp .env.example .env && npm install
@@ -1153,45 +1153,47 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [راهنمای Docker](docs/guides/DOCKER_GUIDE.md) — پروفایلهای Compose، ‏Caddy HTTPS و tunnelهای Cloudflare.
+📖 [راهنمای Docker](docs/guides/DOCKER_GUIDE.md) — پروفایلهای Compose، ‏Caddy HTTPS و تونلهای Cloudflare.
 
 **🦭 Podman**
 
 ```bash
-# ۱. دایرکتوری دادهٔ bind-mounted را آماده کنید
+# ۱. آمادهسازی پوشهٔ دادهٔ bind-mounted
 mkdir -p data
 
-# ۲. فقط Linux + Podman محلی و rootless (هرگز یک کلاینت remote از Podman Machine نباشد):
+# ۲. فقط Linux + Podman محلی rootless (هرگز روی کلاینت راهدور Podman Machine اجرا نکنید):
 podman unshare chown 1000:1000 ./data
 
-# ۳. راهنمای runtime را تنظیم کنید، ایمیج محلی Compose را بسازید و اجرا کنید
+# ۳. تنظیم راهنمای محیط اجرا، ساخت ایمیج محلی Compose و راهاندازی
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-در macOS یا Windows، ‏Podman از یک Podman Machine از راه دور استفاده میکند: از `podman unshare` صرفنظر کنید و
-[راهنمای دایرکتوری داده متناسب با توپولوژی](contrib/podman/README.md#data-directory-permissions-by-topology) را دنبال کنید.
+در macOS یا Windows، ‏Podman از یک Podman Machine راهدور استفاده میکند: از `podman unshare` صرفنظر کنید و
+[راهنمای پوشهٔ داده ویژهٔ توپولوژی](contrib/podman/README.md#data-directory-permissions-by-topology) را دنبال کنید.
 
-📖 [راهنمای Podman](contrib/podman/README.md) — ساختهای Compose، ‏Podman Machine و
+📖 [راهنمای Podman](contrib/podman/README.md) — buildهای Compose، ‏Podman Machine و
 راهاندازی Quadlet در Linux/systemd.
 
-**⚡ نصب سریعتر / سبکتر (صرفنظر از build بومی)**
+**⚡ نصب سریعتر / سبکتر (صرفنظر کردن از build بومی)**
 
-موتور بومی SQLite ‏(`better-sqlite3`) یک وابستگی **اختیاری** است؛ بنابراین نصب سراسری
-هرگز منتظر کامپایل از کد منبع نمیماند: اگر binary ازپیشساختهشدهای با
-پلتفرم/Node شما سازگار باشد، از آن استفاده میکند و در غیر این صورت، بهطور شفاف به یک موتور pure-JS
-(`node:sqlite` در Node 22+، و در غیر این صورت `sql.js` WASM همراه بسته) بازمیگردد — بدون نیاز به ابزارهای build.
+موتور بومی SQLite (`better-sqlite3`) یک وابستگی **اختیاری** است، بنابراین نصب
+سراسری هرگز برای کامپایل از سورس متوقف نمیماند: اگر باینری ازپیشساختهشدهای با
+پلتفرم/Node شما سازگار باشد از آن استفاده میکند و در غیر این صورت بهصورت شفاف به یک موتور pure-JS
+بازمیگردد (`node:sqlite` در Node 22+، و در غیر این صورت `sql.js` WASM همراه بسته) — بدون نیاز به ابزارهای build.
 
-برای صرفنظر کامل از آمادهسازی بومی پس از نصب (در CI، محیطهای headless یا دستگاههای کند):
+برای صرفنظر کامل از **آمادهسازی اولیهٔ بومی** پس از نصب (در CI، سیستمهای headless یا دستگاههای کند).
+توجه: این کار فقط مرحلهٔ آمادهسازی اولیهٔ SQLite بومی (`scripts/postinstall.mjs`) را رد میکند؛
+hook کپی/ترمیم باینری (`scripts/build/postinstall.mjs`) همچنان بهطور معمول اجرا میشود:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 نیز از آن صرفنظر میکند
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # مقدار CI=1 نیز باعث صرفنظر از آن میشود
 ```
 
-برای سریعترین نصبها، **pnpm** را ترجیح دهید (ذخیرهسازی content-addressed + لینکهای سخت — بخش بالا را ببینید).
-برای runtime بدون داشبورد و headless، از پروفایل Docker با نام `base` (در بالا) یا
+برای سریعترین نصبها، **pnpm** را ترجیح دهید (ذخیرهگاه content-addressed و hard linkها — بخش بالا را ببینید).
+برای محیط اجرای headless و بدون داشبورد، از پروفایل Docker با نام `base` (در بالا) یا
 [راهنمای Termux](docs/guides/TERMUX_GUIDE.md) استفاده کنید. CLI و داشبورد وب توسط
-همان پردازش و روی یک پورت ارائه میشوند؛ بنابراین در حال حاضر بستهٔ جداگانهای فقط برای CLI وجود ندارد.
+یک فرایند و روی یک پورت ارائه میشوند، بنابراین در حال حاضر بستهٔ جداگانهای که فقط شامل CLI باشد وجود ندارد.
 
 <br/>
 

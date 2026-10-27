@@ -75,31 +75,13 @@
 
 ## 2. விதிகள்
 
-1. நேரடி மதிப்புகள் அல்ல, டோக்கன்களையே பயன்படுத்தவும். வேண்டுமென்றே வைத்திருக்கும் விதிவிலக்குகள்: எப்போதும் இருண்டிருக்கும் கன்சோல் டெர்மினல், `STATUS_HEX` (`src/shared/constants/statusColors.ts`) வழியான ReactFlow SVG
-   ஸ்ட்ரோக்குகள், மற்றும் வகைப்படுத்தப்பட்ட வண்ணத் தொகுப்புகளான
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) மற்றும்
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. `packages/ui-kit/src`-ஐ ஒருபோதும் கைமுறையாக மாற்ற வேண்டாம்: `scripts/dev/sync-ui-kit.sh <commit>` மூலம் ஒத்திசைக்கவும்;
-   பின் செய்யப்பட்ட மேல்நிலை commit-இலிருந்து ஏதேனும் ஒரு byte வேறுபட்டாலும் pre-commit தடை
-   `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) தோல்வியடையும் (மேல்நிலை clone,
-   `UI_KIT_CLONE` அல்லது `_references/cheaper-inference-ui-kit`, இல்லாதபோது எச்சரிக்கையுடன் இது தவிர்க்கப்படும்). kit-இல் ஏதாவது இல்லையெனில்,
-   adapter அல்லது திரையில் மாற்றுவழியைப் பயன்படுத்தி, அதை மேல்நிலையில் சேர்க்கக் கோரவும்.
-3. Kit உரையின் இயல்புநிலைகள் ஆங்கிலத்தில் உள்ளன (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kit component உரையை render செய்யும் போதெல்லாம்
-   `useTranslations(...)`-இலிருந்து மொழிபெயர்க்கப்பட்ட சரங்களை அனுப்பவும்.
-4. Tailwind utilities, kit component class-களைவிட முன்னுரிமை பெறும் (kit
-   `@layer theme, base, components, utilities` என அறிவிக்கிறது, மேலும் அதன் விதிகள் `components`-இல் உள்ளன) — இடைவெளி மற்றும்
-   layout-க்கு utilities-ஐப் பயன்படுத்தவும்; kit component-களின் வண்ணத்தை மாற்ற அவற்றைப் பயன்படுத்த வேண்டாம்.
-5. தலைப்புகள்: பக்கம் மற்றும் பிரிவுத் தலைப்புகளுக்கு `.ci-heading` (Inter, tracking இல்லாமல்); பிழைப் பக்க status code போன்ற பெரிய, அரிதாகப் பயன்படுத்தப்படும் display உரைக்கு மட்டும் `.ci-dashboard-display`
-   (Instrument Serif).
-6. `tests/unit/dashboard-kit-sweep.test.ts`, kit பயன்பாட்டைப் பாதுகாக்கிறது: `src/app` அல்லது
-   `src/shared/components`-இன் கீழ் Material ligature span இருக்கக்கூடாது; dashboard tree-இல் (`src/app/(dashboard)` மற்றும்
-   `src/shared/components`) மூல `<select>`, `<textarea>` அல்லது `<table>` இருக்கக்கூடாது, மேலும் பட்டியலிடப்பட்ட விதிவிலக்குகளுக்கு வெளியே கைமுறையாக உருவாக்கப்பட்ட
-   `role="dialog"` இருக்கக்கூடாது (`Select` adapter-இன் native கிளை,
-   `RequestLoggerDetail`); அங்குள்ள ஒவ்வொரு மூல `<button>` அல்லது `<input>`-க்கும்
-   அதற்கான காரணத்துடன் `kit-exception:` அடங்கிய comment, அதற்கு அதிகபட்சம் 3 வரிகள் மேலே முடிவடையும் வகையில் இருக்க வேண்டும்; palette hue-களும் `dark:` variant-களும்
-   சோதனை பட்டியலிடும் கோப்புகளில் மட்டுமே இருக்க வேண்டும்.
-7. PR-க்கு முன் இரு theme-களையும் 390 px viewport-ஐயும் சரிபார்க்கவும் (screenshot-கள்); `tests/e2e/a11y.spec.ts`,
-   axe-ஐ இயக்குகிறது.
+1. நேரடி மதிப்புகள் அல்ல, டோக்கன்களைப் பயன்படுத்தவும். நோக்கத்துடன் வைக்கப்பட்டுள்ள விதிவிலக்குகள்: எப்போதும் இருண்டிருக்கும் கன்சோல் டெர்மினல் மற்றும் `STATUS_HEX` (`src/shared/constants/statusColors.ts`) வழியான ReactFlow SVG ஸ்ட்ரோக்குகள். ரூட்டிங் உத்தி மற்றும் சுருக்க அடுக்கு வண்ணத் தொகுப்புகள் `strategyColorVar` மற்றும் `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) வழியாக கிட்டின் சார்ட் டோக்கன்களைப் பயன்படுத்துகின்றன.
+2. `packages/ui-kit/src`-ஐ ஒருபோதும் கைமுறையாகத் திருத்த வேண்டாம்: `scripts/dev/sync-ui-kit.sh <commit>` மூலம் ஒத்திசைக்கவும்; பின் செய்யப்பட்ட upstream commit-இலிருந்து ஏதேனும் ஒரு பைட் வேறுபட்டாலும் pre-commit சரிபார்ப்பு `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) தோல்வியடையும் (upstream clone, `UI_KIT_CLONE` அல்லது `_references/cheaper-inference-ui-kit`, இல்லாதபோது எச்சரிக்கையுடன் இது தவிர்க்கப்படும்). கிட்டில் ஏதேனும் இல்லையெனில், adapter அல்லது திரையில் மாற்றுவழியைப் பயன்படுத்தி, அதை upstream-இல் கோரவும்.
+3. கிட்டின் இயல்புநிலை உரைகள் ஆங்கிலத்தில் உள்ளன (`label = "Loading"`, `loadingLabel = "Loading table"`…) — கிட்டின் component உரையை render செய்யும் போதெல்லாம் `useTranslations(...)`-இலிருந்து மொழிபெயர்க்கப்பட்ட சரங்களை வழங்கவும்.
+4. கிட்டின் component class-களை விட Tailwind utility-களே முன்னுரிமை பெறுகின்றன (கிட் `@layer theme, base, components, utilities` என அறிவிக்கிறது; அதன் விதிகள் `components`-இல் உள்ளன) — இடைவெளி மற்றும் layout-க்கு utility-களைப் பயன்படுத்தவும்; கிட்டின் component-களுக்கு மீண்டும் வண்ணமிட அவற்றைப் பயன்படுத்த வேண்டாம்.
+5. தலைப்புகள்: பக்கம் மற்றும் பிரிவுத் தலைப்புகளுக்கு `.ci-heading` (Inter, tracking இல்லை); பிழைப் பக்க status code போன்ற பெரிய, இடைவெளி மிகுந்த display உரைக்கு மட்டும் `.ci-dashboard-display` (Instrument Serif).
+6. `tests/unit/dashboard-kit-sweep.test.ts` கிட்டின் பயன்பாட்டைப் பாதுகாக்கிறது: `src/app` அல்லது `src/shared/components`-இன் கீழ் Material ligature span இருக்கக்கூடாது; dashboard tree-இல் (`src/app/(dashboard)` மற்றும் `src/shared/components`) raw `<select>`, `<textarea>` அல்லது `<table>` இருக்கக்கூடாது; பட்டியலிடப்பட்ட விதிவிலக்குகளுக்கு வெளியே (`Select` adapter-இன் native branch, `RequestLoggerDetail`) கைமுறையாக உருவாக்கப்பட்ட `role="dialog"` இருக்கக்கூடாது; அங்குள்ள ஒவ்வொரு raw `<button>` அல்லது `<input>`-க்கும், அதற்குக் கூடுதலாக 3 வரிகளுக்கு மேல் இல்லாமல் முன்பாக முடியும் காரணத்துடன் கூடிய `kit-exception:` என்ற comment தேவை; palette hue-களும் `dark:` variant-களும் சோதனை பட்டியலிடும் கோப்புகளில் மட்டுமே இருக்க வேண்டும்.
+7. PR-க்கு முன் இரண்டு theme-களையும் 390 px viewport-ஐயும் சரிபார்க்கவும் (screenshot-கள்); `tests/e2e/a11y.spec.ts` axe-ஐ இயக்குகிறது.
 
 ## 3. ஒரு திரையைச் சேர்த்தல்
 

@@ -26,7 +26,7 @@ Jami provayderlar: **376**. Quyidagi toifalar boʻyicha taqsimotni koʻring.
 
 Qoʻshimcha teglar: `image`, `video`, `aggregator`, `enterprise`, `embed/rerank`, `self-hosted`.
 
-`Vositalarni chaqirish` (koʻrsatilgan joylarda): `native` — haqiqiy funksiyalarni chaqirish API-si; `emulated` — `tools` massivi `webTools.ts` orqali prompt yordamida emulyatsiya qilinadi (muntazam ifoda bilan tahlil qilinadigan `<tool>{...}</tool>` bloklari); `none` — hozirda `tools` hech qanday ogohlantirishsiz tashlab yuboriladi. #7286 ga qarang.
+`Tool calling` (Vositalarni chaqirish) (koʻrsatilgan joylarda): `native` — haqiqiy funksiyalarni chaqirish API-si; `emulated` — `tools` massivi `webTools.ts` orqali prompt yordamida emulyatsiya qilinadi (muntazam ifoda bilan tahlil qilinadigan `<tool>{...}</tool>` bloklari); `none` — hozirda `tools` hech qanday ogohlantirishsiz tashlab yuboriladi. #7286 ga qarang.
 
 Har bir provayderni yoqish, sozlash va sinash uchun `/dashboard/providers` manzilidagi boshqaruv panelidan foydalaning.
 

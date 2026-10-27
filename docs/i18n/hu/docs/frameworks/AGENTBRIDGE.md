@@ -16,34 +16,34 @@ Az AgentBridge az OmniRoute MITM (Man-in-the-Middle, közbeékelődéses) proxyj
 
 ### Mi az AgentBridge?
 
-Amikor egy IDE-ügynök (például GitHub Copilot, Cursor vagy Claude Code) API-hívást indít, közvetlenül kapcsolódik a felsőbb szintű AI-szolgáltatóhoz (OpenAI, Anthropic stb.). Az AgentBridge TLS-szinten, transzparens módon elfogja ezt a kapcsolatot — az ügynök konfigurációjának módosítása nélkül —, és az OmniRoute-on keresztül irányítja át a kérést.
+Amikor egy IDE-ügynök (pl. GitHub Copilot, Cursor, Claude Code) API-hívást indít, közvetlenül az upstream AI-szolgáltatóhoz (OpenAI, Anthropic stb.) csatlakozik. Az AgentBridge transzparens módon, TLS-szinten elfogja ezt a kapcsolatot — az ügynök konfigurációjának bármilyen módosítása nélkül —, és a kérést az OmniRoute-on keresztül átírja.
 
-Ez a következőket teszi lehetővé:
+Ez lehetővé teszi, hogy:
 
-- **Bármely ügynök átirányítása bármely szolgáltatóhoz**: A Copilot az OpenAI-jal kommunikál? Irányítsa át az Anthropic Claude-hoz, a Geminihez vagy az OmniRoute 376 szolgáltatójának bármelyikéhez.
-- **Modellleképezések alkalmazása**: `gemini-3-flash` → `claude-sonnet-4.7` transzparens módon, a kezelő szintjén.
-- **Az ügynökök teljes forgalmának megfigyelése**: minden elfogott kérés megjelenik a [Forgalomvizsgálóban](./TRAFFIC_INSPECTOR.md).
-- **Az OmniRoute hibatűrésének alkalmazása**: a kombinált útválasztás, az áramkör-megszakítók, a tartalék útvonalak és a költségkövetés az IDE-ügynökök forgalmával is működnek.
+- **Bármely ügynököt bármely szolgáltatóhoz átirányítson**: A Copilot az OpenAI felé kommunikál? Irányítsa át az Anthropic Claude-hoz, a Geminihez vagy az OmniRoute 376 szolgáltatója közül bármelyikhez.
+- **Modell-hozzárendeléseket alkalmazzon**: `gemini-3-flash` → `claude-sonnet-4.7` transzparensen, handler-szinten.
+- **Az összes ügynökforgalmat megfigyelje**: minden elfogott kérés megjelenik a [Forgalomfigyelőben](./TRAFFIC_INSPECTOR.md).
+- **Kihasználja az OmniRoute hibatűrését**: a combo routing, a circuit breakerek, a fallback-mechanizmusok és a költségkövetés az IDE-ügynökök forgalmára is működnek.
 
-### Piaci pozicionálás
+### Pozicionálás a piaccal szemben
 
-| Funkció                           | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| --------------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity                       |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot                    |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)                        |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex                      |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE                        |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries                    |    —    |    ✓     |        —        |             ✓             |
-| Claude Code                       |    —    |    —     |        ✓        |             ✓             |
-| Open Code                         |    —    |    —     |        ✓        |             ✓             |
-| Trae                              |    —    |    —     |        —        |    🔍 Vizsgálat alatt     |
-| Vezérlőpult felhasználói felülete |    ✓    |    ✗     |        ✗        |             ✓             |
-| Forgalomvizsgáló                  |    ✗    |    ✗     |        ✓        |             ✓             |
-| OmniRoute-útválasztás             |    ✗    |    ✗     |        ✗        |             ✓             |
-| Modellleképezési felület          |    ✗    |    ✗     |        ✗        |             ✓             |
-| Megkerülési lista                 |    ✗    |    ✗     |        ✓        |             ✓             |
-| Felsőbb szintű CA-tanúsítvány     |    ✗    |    ✗     |        ✓        |             ✓             |
+| Funkció                 | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| ----------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity             |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot          |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)              |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex            |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE              |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries          |    —    |    ✓     |        —        |             ✓             |
+| Claude Code             |    —    |    —     |        ✓        |             ✓             |
+| Open Code               |    —    |    —     |        ✓        |             ✓             |
+| Trae                    |    —    |    —     |        —        |    🔍 Vizsgálat alatt     |
+| Vezérlőpult UI          |    ✓    |    ✗     |        ✗        |             ✓             |
+| Forgalomfigyelő         |    ✗    |    ✗     |        ✓        |             ✓             |
+| OmniRoute-útválasztás   |    ✗    |    ✗     |        ✗        |             ✓             |
+| Modell-hozzárendelés UI |    ✗    |    ✗     |        ✗        |             ✓             |
+| Kihagyási lista         |    ✗    |    ✗     |        ✓        |             ✓             |
+| Upstream CA-tanúsítvány |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -535,24 +535,24 @@ Teljes OpenAPI-sémák: `docs/openapi.yaml` → `AgentBridge` címke.
 
 ## §8 Ütemterv
 
-### A Trae vizsgálata
+### Trae-vizsgálat
 
-A Trae egy viszonylag új MI-alapú kódolási asszisztens. A kezelő implementálása előtt:
+A Trae egy viszonylag új, MI-alapú kódolási asszisztens. A kezelő implementálása előtt:
 
-1. Azonosítsa a bináris fájlt/bővítményt a VS Code / JetBrains piacterein vagy önálló alkalmazásként
-2. Rögzítse a forgalmat a mitmproxy segítségével az API-gazdagépek és a végpontok felépítésének felderítéséhez
-3. Határozza meg a hitelesítési mechanizmust
-4. Mérlegelje a folytatás vagy leállítás lehetőségét a szolgáltatási feltételek és az API feltérképezhetősége alapján
+1. Azonosítani kell a bináris fájlt/bővítményt a VS Code / JetBrains piacterein vagy önálló alkalmazásként
+2. A forgalmat mitmproxy segítségével kell rögzíteni az API-gazdagépek és a végpontok szerkezetének feltárásához
+3. Meg kell határozni a hitelesítési mechanizmust
+4. Az ÁSZF és az API feltérképezhetősége alapján dönteni kell a folytatásról vagy a leállításról
 
-A vizsgálat befejezéséig az irányítópulton lévő Trae-kártyán a „Vizsgálat alatt” jelvény és egy „Életképesség jelentése” hivatkozás látható. A `src/mitm/handlers/trae.ts` fájlban lévő kezelőváz egy strukturált `Még nincs implementálva` hibát dob.
+A vizsgálat befejezéséig az irányítópult Trae-kártyáján a „Vizsgálat alatt” jelvény és egy „Életképesség jelentése” hivatkozás jelenik meg. A `src/mitm/handlers/trae.ts` helyen található kezelőváz strukturált `Not yet implemented` hibát dob.
 
-### Hátralékban lévő ügynökök (MITM szükséges — egyéni alap-URL nem támogatott)
+### Hátralékban lévő ügynökök (MITM szükséges — az egyéni alap-URL nem támogatott)
 
-A következő eszközök jelenlegi verziói nem támogatják az egyéni alap-URL-eket, így a MITM az egyetlen elfogási lehetőség. Az életképességi felmérés még folyamatban van:
+A következő eszközök jelenlegi verziói nem támogatják az egyéni alap-URL-eket, így a MITM az egyetlen elfogási lehetőség. Az életképesség értékelése még folyamatban van:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
 - **Amazon Q / Kiro CLI** (AWS Bedrock — a Kiro IDE-től különálló eszköz)
 - **Cowork** (Anthropic asztali alkalmazás)
 
-Megjegyzés: A GitHub Copilot CLI ≥v1.0.19 támogatja a `COPILOT_PROVIDER_BASE_URL` változót — ennél az eszköznél a MITM helyett közvetlen konfigurációt használjon.
+Megjegyzés: A GitHub Copilot CLI ≥v1.0.19 támogatja a `COPILOT_PROVIDER_BASE_URL` változót — ennél az eszköznél MITM helyett közvetlen konfigurációt használjon.

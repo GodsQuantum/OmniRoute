@@ -699,7 +699,7 @@ historije vaše ljuske. → [CLI integracije](docs/guides/CLI-INTEGRATIONS.md)
 
 </div>
 
-> **376 registrovanih pružalaca** u kanonskim kolekcijama za razgovor, medije, pretragu, lokalne sisteme, agente u oblaku i sistemske funkcije, uključujući **153 s metapodacima za otkrivanje `hasFree: true`**. Registar modela za razgovor obuhvata **239 pružalaca / 3.059 različitih parova pružalac-model / 1.475 sirovih ID-ova modela**; zasebni katalog besplatnih kvota ima **471 red po modelu**, **34 obnavljajuća skupa resursa** i **52 pružaoca koji su trajno besplatni s obnavljajućim kvotama ili bez ključa**. Ovo su namjerno različiti nazivnici; definicije i izračuni s uklonjenim duplikatima skupova resursa nalaze se u dokumentima [Referenca pružalaca](docs/reference/PROVIDER_REFERENCE.md) i [Besplatni paketi](docs/reference/FREE_TIERS.md).
+> **376 registrovanih pružalaca** u kanonskim kolekcijama za razgovor, medije, pretragu, lokalne sisteme, agente u oblaku i sistemske funkcije, uključujući **153 s metapodacima za otkrivanje `hasFree: true`**. Registar modela za razgovor obuhvata **239 pružalaca / 3.059 različitih parova pružalac-model / 1.475 sirovih ID-ova modela**; zasebni katalog besplatnih kvota ima **484 red po modelu**, **34 obnavljajuća skupa resursa** i **52 pružaoca koji su trajno besplatni s obnavljajućim kvotama ili bez ključa**. Ovo su namjerno različiti nazivnici; definicije i izračuni s uklonjenim duplikatima skupova resursa nalaze se u dokumentima [Referenca pružalaca](docs/reference/PROVIDER_REFERENCE.md) i [Besplatni paketi](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 

@@ -700,7 +700,7 @@ zapisywaniu sekretów w historii powłoki. → [Integracje CLI](docs/guides/CLI-
 
 </div>
 
-> **376 zarejestrowanych dostawców** w kanonicznych kolekcjach czatu, multimediów, wyszukiwania, usług lokalnych, agentów chmurowych i systemowych, w tym **153 z metadanymi wykrywania `hasFree: true`**. Rejestr modeli czatu obejmuje **239 dostawców / 3 059 unikatowych par dostawca-model / 1 475 nieprzetworzonych identyfikatorów modeli**; osobny katalog bezpłatnych limitów zawiera **471 wpisów dla poszczególnych modeli**, **34 pule odnawialne** oraz **52 dostawców oferujących odnawialny lub niewymagający klucza bezpłatny dostęp bezterminowy**. Są to celowo różne mianowniki; definicje i obliczenia z deduplikacją pul znajdują się w dokumentach [Informacje o dostawcach](docs/reference/PROVIDER_REFERENCE.md) oraz [Bezpłatne poziomy](docs/reference/FREE_TIERS.md).
+> **376 zarejestrowanych dostawców** w kanonicznych kolekcjach czatu, multimediów, wyszukiwania, usług lokalnych, agentów chmurowych i systemowych, w tym **153 z metadanymi wykrywania `hasFree: true`**. Rejestr modeli czatu obejmuje **239 dostawców / 3 059 unikatowych par dostawca-model / 1 475 nieprzetworzonych identyfikatorów modeli**; osobny katalog bezpłatnych limitów zawiera **484 wpisów dla poszczególnych modeli**, **34 pule odnawialne** oraz **52 dostawców oferujących odnawialny lub niewymagający klucza bezpłatny dostęp bezterminowy**. Są to celowo różne mianowniki; definicje i obliczenia z deduplikacją pul znajdują się w dokumentach [Informacje o dostawcach](docs/reference/PROVIDER_REFERENCE.md) oraz [Bezpłatne poziomy](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1096,13 +1096,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` wskazuje najwyższą **opublikowaną** stabilną wersję SemVer. Nie śledzi gałęzi git `main`. W przypadku GitOps przypnij `:X.Y.Z`. Zobacz [Kanały wydań Docker](docs/guides/DOCKER_GUIDE.md#release-channels).Obraz ustawia na stałe **`OMNIROUTE_MEMORY_MB=1024`**. To wystarcza dla panelu i lekkiego czatu. **Agenci programistyczni** (`POST /v1/responses` z Claude Code, Codex, Grok, …) wymagają znacznie większej sterty V8, w przeciwnym razie proces kończy się błędem `FATAL ERROR` przy około 12 GiB w przypadku dwóch nakładających się długich kontekstów. Przydziel kontenerowi więcej pamięci niż rozmiar sterty (bufory natywne znajdują się poza V8):
+`:latest` wskazuje najwyższą **opublikowaną** stabilną wersję SemVer. Nie śledzi gałęzi git `main`. W przypadku GitOps przypnij `:X.Y.Z`. Zobacz [Kanały wydań Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Obraz ustawia **`OMNIROUTE_MEMORY_MB=1024`**. To wystarcza dla panelu i lekkiego czatu. **Agenci programistyczni** (`POST /v1/responses` z Claude Code, Codex, Grok, …) wymagają znacznie większej sterty V8; w przeciwnym razie proces kończy się błędem `FATAL ERROR` przy około 12 GiB podczas nakładania się dwóch długich kontekstów. Ustaw rozmiar kontenera powyżej rozmiaru sterty (bufory natywne znajdują się poza V8):
 
-| Obciążenie                             | Sterta (`-e OMNIROUTE_MEMORY_MB`) | Kontener (`--memory`) |
-| -------------------------------------- | --------------------------------- | --------------------- |
-| Panel / lekki czat                     | `1024` (domyślna wartość obrazu)  | ≥2 g                  |
-| Jeden agent programistyczny            | `8192`                            | ≥10 g                 |
-| Dwa równoczesne długie `/v1/responses` | `10240`–`12288`                   | ≥12–16 g              |
+| Obciążenie                            | Sterta (`-e OMNIROUTE_MEMORY_MB`) | Kontener (`--memory`) |
+| ------------------------------------- | --------------------------------- | --------------------- |
+| Panel / lekki czat                    | `1024` (domyślna wartość obrazu)  | ≥2 g                  |
+| Jeden agent programistyczny           | `8192`                            | ≥10 g                 |
+| Dwa równoległe długie `/v1/responses` | `10240`–`12288`                   | ≥12–16 g              |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1112,27 +1112,27 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 Pełna tabela: [Przewodnik po Dockerze — pamięć RAM środowiska uruchomieniowego](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **Kanał przedpremierowy Dockera:** `diegosouzapw/omniroute:next` oraz
+> **Kanał przedpremierowych wydań Docker:** `diegosouzapw/omniroute:next` i
 > `diegosouzapw/omniroute:next-web` śledzą bieżącą domyślną gałąź `release/v*`.
-> Te zmienne tagi są przeznaczone wyłącznie do testowania niewydanych poprawek i
+> Te zmienne tagi są przeznaczone wyłącznie do testowania nieopublikowanych poprawek i
 > **nie są obsługiwane w środowisku produkcyjnym**. Zobacz
 > [Kanały wydań Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Standardowe polecenie `bun install` oraz instalacja globalna (`bun install -g omniroute`) są obsługiwane dzięki wykrywaniu środowiska uruchomieniowego Bun:
+Standardowe `bun install` i instalacja globalna (`bun install -g omniroute`) są obsługiwane dzięki wykrywaniu środowiska uruchomieniowego Bun:
 
-- **Wbudowany `bun:sqlite`**: podczas działania w środowisku Bun OmniRoute używa wbudowanego sterownika `bun:sqlite`, a w środowisku Node.js korzysta awaryjnie z `better-sqlite3` lub `sql.js`.
-- **Automatyczny wybór narzędzia pakującego Webpack w środowisku deweloperskim**: tryb deweloperski (`bun run dev`) automatycznie wykrywa Bun i wyłącza Turbopack na rzecz Webpack, aby zapobiec niezgodnościom natywnych powiązań V8. Kompilacje produkcyjne (`bun run build`) stosują `OMNIROUTE_USE_TURBOPACK` dokładnie tak samo jak w Node: domyślnie Turbopack, a `OMNIROUTE_USE_TURBOPACK=0` pozwala budować za pomocą Webpack (`Dockerfile.bun` udostępnia tę opcję jako `--build-arg`).
+- **Wbudowany `bun:sqlite`**: podczas działania w środowisku Bun OmniRoute korzysta z wbudowanego sterownika `bun:sqlite`, a w Node.js używa rezerwowo `better-sqlite3` lub `sql.js`.
+- **Automatyczny wybór bundlera Webpack w środowisku deweloperskim**: tryb deweloperski (`bun run dev`) automatycznie wykrywa Bun i wyłącza Turbopack na rzecz Webpack, aby zapobiec niezgodnościom natywnych powiązań V8. Kompilacje produkcyjne (`bun run build`) używają `OMNIROUTE_USE_TURBOPACK` dokładnie tak samo jak w Node: domyślnie Turbopack, a `OMNIROUTE_USE_TURBOPACK=0` pozwala kompilować za pomocą Webpack (`Dockerfile.bun` udostępnia tę opcję jako `--build-arg`).
 - **Dedykowany plik Dockerfile dla Bun**: wieloetapowy `Dockerfile.bun` do natywnych wdrożeń produkcyjnych Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
-# Zainstaluj i uruchom za pomocą Bun
+# Instalacja i uruchomienie za pomocą Bun
 bun install
 bun run dev
 ```
 
-**🛠️ Z kodu źródłowego**
+**🛠️ Ze źródeł**
 
 ```bash
 cp .env.example .env && npm install
@@ -1154,7 +1154,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Korzystanie z płatków Nix
+# Korzystanie z Nix flakes
 nix develop
 npm run dev
 
@@ -1167,10 +1167,10 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Przygotuj katalog danych montowany przez dowiązanie
+# 1. Przygotuj katalog danych montowany przez bind mount
 mkdir -p data
 
-# 2. Tylko Linux + lokalny Podman bez roota (nigdy zdalny klient Podman Machine):
+# 2. Tylko Linux + lokalny Podman w trybie rootless (nigdy zdalny klient Podman Machine):
 podman unshare chown 1000:1000 ./data
 
 # 3. Ustaw wskazówkę dotyczącą środowiska uruchomieniowego, zbuduj lokalny obraz Compose i uruchom
@@ -1179,27 +1179,31 @@ podman compose --profile base up -d --build
 ```
 
 W systemie macOS lub Windows Podman korzysta ze zdalnej maszyny Podman Machine: pomiń `podman unshare` i
-postępuj zgodnie z [instrukcjami dotyczącymi katalogu danych właściwymi dla danej topologii](contrib/podman/README.md#data-directory-permissions-by-topology).
+postępuj zgodnie z [wytycznymi dotyczącymi katalogu danych właściwymi dla danej topologii](contrib/podman/README.md#data-directory-permissions-by-topology).
 
-📖 [Przewodnik po Podmanie](contrib/podman/README.md) — kompilacje Compose, Podman Machine oraz
+📖 [Przewodnik po Podman](contrib/podman/README.md) — kompilacje Compose, Podman Machine oraz
 konfiguracja Quadlet dla Linux/systemd.
 
-**⚡ Szybsza / lżejsza instalacja (pominięcie kompilacji natywnej)**
+**⚡ Szybsza / lżejsza instalacja (z pominięciem natywnej kompilacji)**
 
-Natywny silnik SQLite (`better-sqlite3`) jest zależnością **opcjonalną**, dlatego instalacja
-globalna nigdy nie jest blokowana przez kompilację z kodu źródłowego: używa wstępnie skompilowanego pliku binarnego, gdy jest on zgodny
-z Twoją platformą/Node, a w przeciwnym razie w sposób przezroczysty przełącza się na silnik oparty wyłącznie na JS
-(`node:sqlite` w Node 22+, w innym przypadku dołączony `sql.js` WASM) — narzędzia kompilacyjne nie są wymagane.
+Natywny silnik SQLite (`better-sqlite3`) jest **opcjonalną** zależnością, dlatego instalacja
+globalna nigdy nie blokuje się na kompilowaniu ze źródeł: używa wstępnie skompilowanego pliku
+binarnego, jeśli pasuje on do używanej platformy/Node, a w przeciwnym razie automatycznie
+przełącza się na silnik napisany wyłącznie w JS (`node:sqlite` w Node 22+, w pozostałych
+przypadkach dołączony `sql.js` WASM) — narzędzia kompilacyjne nie są wymagane.
 
-Aby całkowicie pominąć natywne przygotowanie po instalacji (CI, środowiska bez interfejsu graficznego lub wolne maszyny):
+Aby całkowicie pominąć **natywne przygotowanie** po instalacji (CI, środowiska bez interfejsu
+graficznego lub wolne maszyny), użyj poniższego polecenia. Uwaga: pomija ono tylko etap
+przygotowania natywnego SQLite (`scripts/postinstall.mjs`); mechanizm kopiowania/naprawy
+plików binarnych (`scripts/build/postinstall.mjs`) nadal działa normalnie:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 również je pomija
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 również pomija ten etap
 ```
 
 Aby uzyskać najszybszą instalację, wybierz **pnpm** (magazyn adresowany zawartością + dowiązania twarde — patrz wyżej).
-Aby korzystać ze środowiska bez panelu i interfejsu graficznego, użyj profilu Docker `base` (powyżej) lub
-[przewodnika po Termux](docs/guides/TERMUX_GUIDE.md). Interfejs CLI i panel internetowy są obsługiwane przez ten
+W przypadku środowiska bez panelu i interfejsu graficznego użyj profilu Docker `base` (powyżej) lub
+[przewodnika po Termux](docs/guides/TERMUX_GUIDE.md). CLI i panel internetowy są obsługiwane przez ten
 sam proces na jednym porcie, dlatego obecnie nie istnieje osobny pakiet zawierający wyłącznie CLI.
 
 <br/>

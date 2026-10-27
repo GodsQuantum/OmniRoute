@@ -691,7 +691,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
 
 </div>
 
-> 정식 채팅, 미디어, 검색, 로컬, 클라우드 에이전트 및 시스템 컬렉션 전반에 걸쳐 **376개의 등록된 제공업체**가 있으며, 이 중 **153개에는 `hasFree: true` 검색 메타데이터가 포함**되어 있습니다. 채팅 모델 레지스트리는 **239개 제공업체 / 3,059개의 고유한 제공업체-모델 쌍 / 1,475개의 원시 모델 ID**를 포함하며, 별도의 무료 예산 카탈로그에는 **모델별 행 471개**, **반복 제공 풀 34개**, **반복 제공/키 불필요 영구 무료 제공업체 52개**가 있습니다. 이는 의도적으로 서로 다른 분모를 사용합니다. 정의와 풀 중복을 제거한 계산 방식은 [제공업체 참조](docs/reference/PROVIDER_REFERENCE.md) 및 [무료 등급](docs/reference/FREE_TIERS.md)에서 확인할 수 있습니다.
+> 정식 채팅, 미디어, 검색, 로컬, 클라우드 에이전트 및 시스템 컬렉션 전반에 걸쳐 **376개의 등록된 제공업체**가 있으며, 이 중 **153개에는 `hasFree: true` 검색 메타데이터가 포함**되어 있습니다. 채팅 모델 레지스트리는 **239개 제공업체 / 3,059개의 고유한 제공업체-모델 쌍 / 1,475개의 원시 모델 ID**를 포괄하며, 별도의 무료 예산 카탈로그에는 **모델별 행 484개**, **반복 제공 풀 34개**, **반복 제공/키 불필요 영구 무료 제공업체 52개**가 있습니다. 이는 의도적으로 서로 다른 분모를 사용합니다. 정의와 풀 중복을 제거한 계산은 [제공업체 레퍼런스](docs/reference/PROVIDER_REFERENCE.md)와 [무료 티어](docs/reference/FREE_TIERS.md)에서 확인할 수 있습니다.
 
 <div align="center">
 
@@ -724,7 +724,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
   </tr>
 </table>
 
-<sub>…그리고 350개 이상 — 모든 아이콘은 대시보드의 제공업체 카탈로그에서 실시간으로 불러옵니다. 📖 [제공업체 참조](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…그 외 350개 이상 — 모든 아이콘은 대시보드의 제공업체 카탈로그에서 실시간으로 불러옵니다. 📖 [제공업체 레퍼런스](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
@@ -732,7 +732,7 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
 
 <table>
   <tr>
-    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>토큰 한도 없음</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="OpenCode Zen"/><br/><b>OpenCode Zen</b><br/><sub>DeepSeek V4, Nemotron 3<br/>토큰 제한 없음</sub></td>
     <td align="center" width="150"><img src="./public/providers/cli-generic.svg" width="42" alt="Kilo Code"/><br/><b>Kilo Code</b><br/><sub>자동 라우터, Tencent Hy3<br/>영구 무료</sub></td>
     <td align="center" width="150"><img src="./public/providers/requesty.svg" width="42" alt="Requesty"/><br/><b>Requesty</b><br/><sub>GPT-OSS 120B, Nemotron<br/>영구 무료</sub></td>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/siliconcloud-color.svg" width="42" alt="SiliconFlow"/><br/><b>SiliconFlow</b><br/><sub>DeepSeek V3.2 / R1<br/>무료 등급</sub></td>
@@ -742,14 +742,14 @@ omniroute configure codex          # 다음 도구도 지원: claude opencode qw
   <tr>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="42" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Qwen3-Max, Kimi-K2<br/>무제한 무료</sub></td>
     <td align="center" width="150"><img src="./public/providers/pollinations.svg" width="42" alt="Pollinations"/><br/><b>Pollinations</b><br/><sub>GPT, Llama, Claude<br/>키 불필요</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50개 이상의 모델<br/>일일 뉴런 10K개</sub></td>
-    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>무료 약 40 RPM</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>일회성 $5 크레딧; 카드 필요</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50개 이상의 모델<br/>일일 10K 뉴런</sub></td>
+    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>무료로 약 40 RPM</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>일회성 $5 크레딧, 카드 필요</sub></td>
     <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free 모델<br/>+$10 → 더 높은 RPM</sub></td>
   </tr>
 </table>
 
-📖 전체 머신 리더블 카탈로그 → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
+📖 전체 기계 판독 가능 카탈로그 → [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
 
 <br/>
 </div>
@@ -1086,13 +1086,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest`는 **게시된** 안정 SemVer 중 가장 높은 버전을 따릅니다. git `main`을 추적하지 않습니다. GitOps에서는 `:X.Y.Z`로 버전을 고정하세요. [Docker 릴리스 채널](docs/guides/DOCKER_GUIDE.md#release-channels)을 참조하세요. 이미지에는 **`OMNIROUTE_MEMORY_MB=1024`**가 고정 설정되어 있습니다. 대시보드와 가벼운 채팅에는 충분합니다. **코딩 에이전트**(Claude Code, Codex, Grok 등에서 보내는 `POST /v1/responses`)에는 훨씬 더 큰 V8 힙이 필요하며, 긴 컨텍스트 두 개가 겹치면 약 12 GiB에서 프로세스에 `FATAL ERROR`가 발생합니다. 네이티브 버퍼는 V8 외부에 있으므로 컨테이너 크기를 힙보다 크게 설정하세요.
+`:latest`는 **게시된** 안정 버전 중 가장 높은 SemVer를 따릅니다. git `main`을 추적하지 않습니다. GitOps에서는 `:X.Y.Z`로 고정하세요. [Docker 릴리스 채널](docs/guides/DOCKER_GUIDE.md#release-channels)을 참조하세요. 이미지에는 **`OMNIROUTE_MEMORY_MB=1024`**가 고정되어 있습니다. 이는 대시보드와 가벼운 채팅에는 충분합니다. **코딩 에이전트**(Claude Code, Codex, Grok 등에서 보내는 `POST /v1/responses`)는 훨씬 더 큰 V8 힙이 필요하며, 그렇지 않으면 긴 컨텍스트 두 개가 겹칠 때 약 12 GiB에서 프로세스에 `FATAL ERROR`가 발생합니다. 네이티브 버퍼는 V8 외부에 있으므로 컨테이너 크기를 힙보다 크게 설정하세요.
 
-| 워크로드                               | 힙 (`-e OMNIROUTE_MEMORY_MB`) | 컨테이너 (`--memory`) |
-| -------------------------------------- | ----------------------------- | --------------------- |
-| 대시보드 / 가벼운 채팅                 | `1024` (이미지 기본값)        | ≥2 g                  |
-| 코딩 에이전트 하나                     | `8192`                        | ≥10 g                 |
-| 동시 실행되는 긴 `/v1/responses` 두 개 | `10240`–`12288`               | ≥12–16 g              |
+| 워크로드                                 | 힙 (`-e OMNIROUTE_MEMORY_MB`) | 컨테이너 (`--memory`) |
+| ---------------------------------------- | ----------------------------- | --------------------- |
+| 대시보드 / 가벼운 채팅                   | `1024` (이미지 기본값)        | ≥2 g                  |
+| 코딩 에이전트 하나                       | `8192`                        | ≥10 g                 |
+| 동시에 실행되는 긴 `/v1/responses` 두 개 | `10240`–`12288`               | ≥12–16 g              |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1102,19 +1102,19 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 전체 표: [Docker 가이드 — 런타임 RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **사전 릴리스 Docker 채널:** `diegosouzapw/omniroute:next` 및
-> `diegosouzapw/omniroute:next-web`은 현재 기본 `release/v*`
+> **시험판 Docker 채널:** `diegosouzapw/omniroute:next` 및
+> `diegosouzapw/omniroute:next-web`는 현재 기본 `release/v*`
 > 브랜치를 따릅니다. 이러한 가변 태그는 릴리스되지 않은 수정 사항을 테스트하는 용도로만 제공되며
-> **프로덕션 환경에서는 지원되지 않습니다**. 자세한 내용은
+> **프로덕션에서는 지원되지 않습니다**. 자세한 내용은
 > [Docker 릴리스 채널](docs/guides/DOCKER_GUIDE.md#release-channels)을 참조하세요.
 
 **🥟 Bun**
 
-Bun 런타임 감지를 통해 표준 `bun install` 및 전역 설치(`bun install -g omniroute`)를 지원합니다.
+Bun 런타임 감지를 통해 표준 `bun install` 및 전역 설치(`bun install -g omniroute`)가 지원됩니다.
 
 - **내장 `bun:sqlite`**: OmniRoute는 Bun에서 실행될 때 Bun의 내장 `bun:sqlite` 드라이버를 사용하며, Node.js에서는 `better-sqlite3` 또는 `sql.js`로 대체됩니다.
-- **개발 환경에서 자동 Webpack 번들러 선택**: 개발(`bun run dev`) 시 Bun을 자동으로 감지하고 네이티브 V8 바인딩 비호환성을 방지하기 위해 Turbopack을 비활성화하고 Webpack을 사용합니다. 프로덕션 빌드(`bun run build`)는 Node와 마찬가지로 `OMNIROUTE_USE_TURBOPACK`을 정확히 따릅니다. 기본값은 Turbopack이며, Webpack으로 빌드하려면 `OMNIROUTE_USE_TURBOPACK=0`을 사용합니다(`Dockerfile.bun`에서는 이를 `--build-arg`로 노출합니다).
-- **전용 Bun Dockerfile**: 네이티브 Bun 프로덕션 배포를 위한 다단계 `Dockerfile.bun`입니다(`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **개발 환경에서 자동 Webpack 번들러 선택**: 개발(`bun run dev`) 시 Bun을 자동으로 감지하고, 네이티브 V8 바인딩 비호환성을 방지하기 위해 Turbopack을 비활성화하고 Webpack을 사용합니다. 프로덕션 빌드(`bun run build`)는 Node에서와 마찬가지로 `OMNIROUTE_USE_TURBOPACK`을 정확히 따릅니다. 기본값은 Turbopack이며, Webpack으로 빌드하려면 `OMNIROUTE_USE_TURBOPACK=0`을 사용합니다(`Dockerfile.bun`에서는 이를 `--build-arg`로 노출합니다).
+- **전용 Bun Dockerfile**: 네이티브 Bun 프로덕션 배포를 위한 멀티 스테이지 `Dockerfile.bun`입니다(`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Bun으로 설치 및 실행
@@ -1176,27 +1176,29 @@ Linux/systemd Quadlet 설정.
 
 **⚡ 더 빠르고 가벼운 설치(네이티브 빌드 건너뛰기)**
 
-네이티브 SQLite 엔진(`better-sqlite3`)은 **선택적** 의존성이므로 전역
-설치가 소스 컴파일로 인해 중단되는 일은 없습니다. 플랫폼/Node에 맞는 사전 빌드 바이너리가 있으면
+네이티브 SQLite 엔진(`better-sqlite3`)은 **선택적** 의존성이므로 전역 설치가
+소스 컴파일 때문에 중단되는 일은 없습니다. 플랫폼/Node와 일치하는 사전 빌드된 바이너리가 있으면
 이를 사용하고, 그렇지 않으면 순수 JS 엔진(Node 22 이상에서는 `node:sqlite`, 그 외에는 번들된
 `sql.js` WASM)으로 투명하게 대체되므로 빌드 도구가 필요하지 않습니다.
 
-설치 후 네이티브 워밍업을 완전히 건너뛰려면(CI, 헤드리스 또는 느린 머신):
+설치 후 **네이티브 워밍업**을 완전히 건너뛰려면 다음을 사용하세요(CI, 헤드리스 또는 느린 머신).
+참고: 이는 네이티브 SQLite 워밍업 단계(`scripts/postinstall.mjs`)만 건너뜁니다.
+바이너리 복사/복구 훅(`scripts/build/postinstall.mjs`)은 계속 정상적으로 실행됩니다.
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1도 이를 건너뜁니다
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1로 설정해도 건너뜁니다
 ```
 
-가장 빠른 설치를 위해서는 **pnpm**을 권장합니다(콘텐츠 주소 지정 저장소 + 하드 링크 — 위 내용 참조).
-대시보드가 없는 헤드리스 런타임에는 위의 Docker `base` 프로필이나
-[Termux 가이드](docs/guides/TERMUX_GUIDE.md)를 사용하세요. CLI와 웹 대시보드는 동일한 프로세스가
-하나의 포트에서 제공하므로 현재 별도의 CLI 전용 패키지는 없습니다.
+가장 빠른 설치를 위해서는 **pnpm**을 권장합니다(콘텐츠 주소 기반 저장소 + 하드 링크 — 위 내용 참조).
+대시보드가 없는 헤드리스 런타임에는 위의 Docker `base` 프로필 또는
+[Termux 가이드](docs/guides/TERMUX_GUIDE.md)를 사용하세요. CLI와 웹 대시보드는 하나의 포트에서
+동일한 프로세스로 제공되므로 현재 별도의 CLI 전용 패키지는 없습니다.
 
 <br/>
 
 <div align="center">
 
-# 🎬 OmniRoute 실행 모습
+# 🎬 실제로 작동하는 OmniRoute
 
 </div>
 

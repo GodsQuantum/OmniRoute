@@ -490,7 +490,7 @@ U quyidagilarni boshqaradi:
 | ----------------------------- | -------------------------------------------------------- |
 | `providerRegistry.ts`         | 376 ta provayder katalogi asosidagi chat modeli reyestri |
 | `providerModels.ts`           | Model taxalluslari, formatlarni moslashtirish            |
-| `constants.ts`                | Kutish vaqtlari, cheklovlar, holat kodlari               |
+| `constants.ts`                | Taym-autlar, cheklovlar, holat kodlari                   |
 | `defaultThinkingSignature.ts` | Standart Claude fikrlash imzosi                          |
 | `modelStrip.ts` (xizmatlarda) | Har bir provayder uchun maydonlarni olib tashlash        |
 
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Modul yuklanishidagi Zod validatsiyasi barcha provayder konfiguratsiyalari yaroqli bo‘lishini ta’minlaydi.
+Modul yuklanishidagi Zod validatsiyasi barcha provayder konfiguratsiyalarining to‘g‘riligini ta’minlaydi.
 
 ---
 

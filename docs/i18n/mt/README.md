@@ -691,7 +691,7 @@ mill-istorja tax-shell tiegħek. → [Integrazzjonijiet tas-CLI](docs/guides/CLI
 
 </div>
 
-> **376 fornitur irreġistrat** fil-kollezzjonijiet kanoniċi taċ-chat, tal-midja, tat-tiftix, lokali, tal-aġenti tal-cloud u tas-sistema, inklużi **153 li għandhom metadata ta’ skoperta `hasFree: true`**. Ir-reġistru tal-mudelli taċ-chat ikopri **239 fornitur / 3,059 par distint ta’ fornitur-mudell / 1,475 ID mhux ipproċessat ta’ mudell**; il-katalgu separat tal-baġits bla ħlas għandu **471 ringiela għal kull mudell**, **34 pool rikorrenti** u **52 fornitur rikorrenti/mingħajr ċavetta li jibqgħu bla ħlas għal dejjem**. Dawn jużaw denominaturi differenti apposta; id-definizzjonijiet u l-kalkoli b’pools deduplikati jinsabu fir-[Referenza tal-Fornituri](docs/reference/PROVIDER_REFERENCE.md) u fil-[Livelli Bla Ħlas](docs/reference/FREE_TIERS.md).
+> **376 fornitur irreġistrat** fil-kollezzjonijiet kanoniċi taċ-chat, tal-midja, tat-tiftix, lokali, tal-aġenti tal-cloud u tas-sistema, inklużi **153 li għandhom metadata ta’ skoperta `hasFree: true`**. Ir-reġistru tal-mudelli taċ-chat ikopri **239 fornitur / 3,059 par distint ta’ fornitur-mudell / 1,475 ID mhux ipproċessat ta’ mudell**; il-katalgu separat tal-baġits bla ħlas għandu **484 ringiela għal kull mudell**, **34 pool rikorrenti** u **52 fornitur rikorrenti/mingħajr ċavetta li jibqgħu bla ħlas għal dejjem**. Dawn jużaw denominaturi differenti apposta; id-definizzjonijiet u l-kalkoli b’pools deduplikati jinsabu fir-[Referenza tal-Fornituri](docs/reference/PROVIDER_REFERENCE.md) u fil-[Livelli Bla Ħlas](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1081,7 +1081,7 @@ Uża dawn biss għal klijenti li ma jistgħux inqabbdu `Authorization: Bearer ..
 
 <br/>
 
-## 📦 Aktar metodi ta’ installazzjoni — Docker, sors, pnpm, Arch
+## 📦 Aktar metodi ta’ installazzjoni — Docker, kodiċi sors, pnpm, Arch
 
 **🐳 Docker**
 
@@ -1090,11 +1090,11 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` isegwi l-ogħla SemVer stabbli **ppubblikat**. Ma jsegwix il-`main` ta’ git. Uża `:X.Y.Z` għal GitOps. Ara [Kanali tar-Rilaxxi ta’ Docker](docs/guides/DOCKER_GUIDE.md#release-channels). L-immaġni tissettja **`OMNIROUTE_MEMORY_MB=1024`**. Dan huwa biżżejjed għad-dashboard u għal chat ħafif. **Aġenti tal-kodifikazzjoni** (`POST /v1/responses` minn Claude Code, Codex, Grok, …) jeħtieġu heap V8 ferm akbar, inkella l-proċess jagħti `FATAL ERROR` madwar 12 GiB meta jkun hemm żewġ kuntesti twal li jikkoinċidu. Issettja d-daqs tal-container ogħla mill-heap (il-buffers nattivi jinsabu barra minn V8):
+`:latest` isegwi l-ogħla verżjoni stabbli SemVer **ippubblikata**. Ma jsegwix il-`main` ta’ git. Uża verżjoni fissa `:X.Y.Z` għal GitOps. Ara [Il-Kanali tar-Rilaxx ta’ Docker](docs/guides/DOCKER_GUIDE.md#release-channels). L-immaġni tiffissa **`OMNIROUTE_MEMORY_MB=1024`**. Dan huwa biżżejjed għad-dashboard u għal chat ħafif. **L-aġenti tal-kodifikazzjoni** (`POST /v1/responses` minn Claude Code, Codex, Grok, …) jeħtieġu heap V8 ferm akbar, inkella l-proċess jagħti `FATAL ERROR` f’madwar 12 GiB taħt żewġ kuntesti twal li jikkoinċidu. Issettja d-daqs tal-container ogħla mill-heap (il-buffers nattivi jinsabu barra minn V8):
 
 | Tagħbija tax-xogħol                  | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
 | ------------------------------------ | ------------------------------- | ---------------------- |
-| Dashboard / chat ħafif               | `1024` (default tal-immaġni)    | ≥2 g                   |
+| Dashboard / chat ħafif               | `1024` (predefinit tal-immaġni) | ≥2 g                   |
 | Aġent wieħed tal-kodifikazzjoni      | `8192`                          | ≥10 g                  |
 | Żewġ `/v1/responses` twal simultanji | `10240`–`12288`                 | ≥12–16 g               |
 
@@ -1104,21 +1104,21 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-It-tabella sħiħa: [Gwida ta’ Docker — RAM waqt it-tħaddim](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+Tabella sħiħa: [Gwida ta’ Docker — RAM waqt it-tħaddim](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **Kanal ta’ Docker għall-verżjonijiet preliminari:** `diegosouzapw/omniroute:next` u
-> `diegosouzapw/omniroute:next-web` isegwu l-fergħa default attwali `release/v*`.
-> Dawn it-tags mutabbli huma maħsuba biss għall-ittestjar ta’ tiswijiet li għadhom ma ġewx
-> rilaxxati u **mhumiex appoġġjati għall-produzzjoni**. Ara
-> [Kanali tar-Rilaxxi ta’ Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
+> **Kanal ta’ Docker għal verżjonijiet ta’ qabel ir-rilaxx:** `diegosouzapw/omniroute:next` u
+> `diegosouzapw/omniroute:next-web` isegwu l-fergħa predefinita attwali `release/v*`.
+> Dawn it-tags li jistgħu jinbidlu huma maħsuba biss għall-ittestjar ta’ soluzzjonijiet li għadhom ma ġewx rilaxxati u
+> **mhumiex appoġġjati għall-produzzjoni**. Ara
+> [Il-Kanali tar-Rilaxx ta’ Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
 L-`bun install` standard u l-installazzjoni globali (`bun install -g omniroute`) huma appoġġjati permezz tal-identifikazzjoni tar-runtime Bun:
 
-- **`bun:sqlite` inkorporat**: OmniRoute juża d-driver `bun:sqlite` inkorporat ta’ Bun meta jitħaddem taħt Bun, u jaqleb għal `better-sqlite3` fuq Node.js jew `sql.js`.
-- **Għażla awtomatika tal-bundler Webpack fl-iżvilupp**: L-iżvilupp (`bun run dev`) jidentifika awtomatikament lil Bun u jiddiżattiva Turbopack favur Webpack biex jiġu evitati inkompatibbiltajiet mal-bindings nattivi ta’ V8. Il-builds tal-produzzjoni (`bun run build`) isegwu `OMNIROUTE_USE_TURBOPACK` eżattament bħal fuq Node: Turbopack b’mod default, jew `OMNIROUTE_USE_TURBOPACK=0` biex tibni b’Webpack (`Dockerfile.bun` jesponih bħala `--build-arg`).
-- **Dockerfile apposta għal Bun**: `Dockerfile.bun` b’diversi stadji għal deployments tal-produzzjoni nattivi ta’ Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` integrat**: OmniRoute juża d-driver `bun:sqlite` integrat ta’ Bun meta jkun qed jaħdem taħt Bun, u jaqleb għal `better-sqlite3` fuq Node.js jew `sql.js`.
+- **Għażla awtomatika tal-bundler Webpack fl-iżvilupp**: L-iżvilupp (`bun run dev`) jidentifika awtomatikament lil Bun u jiddiżattiva Turbopack favur Webpack biex jipprevjeni inkompatibbiltajiet mal-bindings nattivi ta’ V8. Il-builds tal-produzzjoni (`bun run build`) isegwu `OMNIROUTE_USE_TURBOPACK` eżattament bħal fuq Node: Turbopack b’mod predefinit, `OMNIROUTE_USE_TURBOPACK=0` biex tibni b’Webpack (`Dockerfile.bun` jesponih bħala `--build-arg`).
+- **Dockerfile iddedikat għal Bun**: `Dockerfile.bun` b’diversi stadji għal deployments nattivi ta’ Bun fil-produzzjoni (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Installa u ħaddem b’Bun
@@ -1126,7 +1126,7 @@ bun install
 bun run dev
 ```
 
-**🛠️ Mis-sors**
+**🛠️ Mill-kodiċi sors**
 
 ```bash
 cp .env.example .env && npm install
@@ -1148,7 +1148,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Bl-użu ta’ Nix flakes
+# Bl-użu ta’ flakes ta’ Nix
 nix develop
 npm run dev
 
@@ -1161,40 +1161,42 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Ipprepara d-direttorju tad-data bind-mounted
+# 1. Ipprepara d-direttorju tad-data mmuntat b’bind mount
 mkdir -p data
 
-# 2. Linux + Podman lokali rootless biss (qatt klijent remot ta’ Podman Machine):
+# 2. Linux + Podman rootless lokali biss (qatt client remot ta’ Podman Machine):
 podman unshare chown 1000:1000 ./data
 
-# 3. Issettja l-ħjiel tar-runtime, ibni l-immaġni lokali ta’ Compose, u ibda
+# 3. Issettja l-indikazzjoni tar-runtime, ibni l-immaġni Compose lokali, u ibda
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
 Fuq macOS jew Windows, Podman juża Podman Machine remota: aqbeż `podman unshare` u
-segwi l-[gwida tad-direttorju tad-data speċifika għat-topoloġija](contrib/podman/README.md#data-directory-permissions-by-topology).
+segwi l-[gwida għad-direttorju tad-data speċifika għat-topoloġija](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Gwida ta’ Podman](contrib/podman/README.md) — Builds ta’ Compose, Podman Machine, u
 konfigurazzjoni ta’ Quadlet għal Linux/systemd.
 
-**⚡ Installazzjoni aktar veloċi / ħafifa (aqbeż il-build nattiva)**
+**⚡ Installazzjoni aktar veloċi / eħfef (aqbeż il-build nattiv)**
 
-L-engine nattiv ta’ SQLite (`better-sqlite3`) huwa dipendenza **mhux obbligatorja**, għalhekk installazzjoni
-globali qatt ma teħel waqt il-kompilazzjoni mis-sors: tuża binary mibnija minn qabel meta jkun hemm waħda kompatibbli
-mal-pjattaforma/Node tiegħek, u inkella taqleb b’mod trasparenti għal engine JavaScript pur
-(`node:sqlite` fuq Node 22+, inkella l-WASM `sql.js` inkluż) — mingħajr il-ħtieġa ta’ għodod tal-build.
+Il-magna SQLite nattiva (`better-sqlite3`) hija dipendenza **fakultattiva**, għalhekk installazzjoni
+globali qatt ma teħel waqt il-kompilazzjoni mill-kodiċi sors: tuża binarju mibni minn qabel meta wieħed ikun jaqbel
+mal-pjattaforma/Node tiegħek, u inkella taqleb b’mod trasparenti għal magna pure-JS
+(`node:sqlite` fuq Node 22+, inkella l-WASM `sql.js` inkluż) — l-ebda għodda tal-build mhija meħtieġa.
 
-Biex taqbeż għalkollox it-tħejjija nattiva ta’ wara l-installazzjoni (CI, ambjenti headless, jew magni kajmana):
+Biex taqbeż kompletament it-**tisħin nattiv** ta’ wara l-installazzjoni (CI, sistemi mingħajr interfaċċa grafika, jew magni bil-mod).
+Nota: dan jaqbeż biss il-pass tat-tisħin nattiv ta’ SQLite (`scripts/postinstall.mjs`); il-hook
+għall-ikkupjar/tiswija tal-binarju (`scripts/build/postinstall.mjs`) jibqa’ jaħdem bħas-soltu:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 jaqbiżha wkoll
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 jaqbżu wkoll
 ```
 
 Għall-aktar installazzjonijiet veloċi, ippreferi **pnpm** (ħażna indirizzata skont il-kontenut + hard links — ara hawn fuq).
-Għal runtime headless mingħajr dashboard, uża l-profil `base` ta’ Docker (hawn fuq) jew il-
+Għal runtime mingħajr dashboard u mingħajr interfaċċa grafika, uża l-profil `base` ta’ Docker (hawn fuq) jew il-
 [gwida ta’ Termux](docs/guides/TERMUX_GUIDE.md). Is-CLI u d-dashboard tal-web jiġu servuti mill-
-istess proċess fuq port wieħed, għalhekk bħalissa m’hemm l-ebda pakkett separat għas-CLI biss.
+istess proċess fuq port wieħed, għalhekk illum m’hemmx pakkett separat għas-CLI biss.
 
 <br/>
 

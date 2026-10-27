@@ -10,15 +10,15 @@ _Sist oppdatert: 2026-06-28_
 
 ## Sammendrag
 
-OmniRoute er en lokal AI-rutingsgateway og et kontrollpanel bygget med Next.js.
+OmniRoute er en lokal AI-rutingsgateway og et kontrollpanel bygget på Next.js.
 Den tilbyr ett enkelt OpenAI-kompatibelt endepunkt (`/v1/*`) og ruter trafikk på tvers av flere oppstrømsleverandører med oversettelse, reservebytte, tokenfornyelse og bruksregistrering.
 
 Kjernefunksjoner:
 
 - OpenAI-kompatibelt API-grensesnitt for CLI/verktøy (376 leverandører, 156 eksekveringsmoduler)
-- Oversettelse av forespørsler og svar mellom leverandørformater
+- Oversettelse av forespørsler/svar mellom leverandørformater
 - Reservebytte for modellkombinasjoner (sekvens med flere modeller)
-- Strukturerte kombinasjonstrinn (`provider + model + connection`) med kjøretidsrekkefølge basert på `compositeTiers`
+- Strukturerte kombinasjonstrinn (`provider + model + connection`) med kjøretidsrekkefølge etter `compositeTiers`
 - Reservebytte på kontonivå (flere kontoer per leverandør)
 - Forhåndskontroll av kvoter og kvotebevisst P2C-kontovalg i hovedflyten for chat
 - Administrasjon av leverandørtilkoblinger med OAuth og API-nøkler (27 OAuth-leverandørmoduler)
@@ -31,32 +31,32 @@ Kjernefunksjoner:
 - Nettsøk via `/v1/search` (20 leverandører)
 - Moderering via `/v1/moderations`
 - Omrangering via `/v1/rerank`
-- Tolking av Think-tagger (`<think>...</think>`) for resonneringsmodeller
+- Tolking av tenketagger (`<think>...</think>`) for resonneringsmodeller
 - Rensing av svar for streng kompatibilitet med OpenAI SDK
-- Normalisering av roller (developer→system, system→user) for kompatibilitet på tvers av leverandører
+- Rollenormalisering (developer→system, system→user) for kompatibilitet på tvers av leverandører
 - Konvertering av strukturerte utdata (json_schema → Gemini responseSchema)
-- Lokal lagring av leverandører, nøkler, aliaser, kombinasjoner, innstillinger og priser (122 databasemoduler)
-- Sporing av bruk og kostnader samt logging av forespørsler
+- Lokal persistens for leverandører, nøkler, aliaser, kombinasjoner, innstillinger og prising (122 databasemoduler)
+- Registrering av bruk/kostnader og logging av forespørsler
 - Valgfri skysynkronisering for synkronisering av tilstand mellom flere enheter
-- Tillatelsesliste/blokkeringsliste for IP-adresser til tilgangskontroll for API-et
-- Administrasjon av tenkebudsjett (direkteoverføring/automatisk/egendefinert/adaptivt)
-- Global innsetting av systeminstruks
-- Øktsporing og fingeravtrykksregistrering
+- Tillatelsesliste/blokkeringsliste for IP-adresser for tilgangskontroll til API-et
+- Administrasjon av tenkebudsjett (direkte videresending/automatisk/egendefinert/adaptivt)
+- Global innsetting av systemprompt
+- Øktsporing og fingeravtrykksgenerering
 - Forbedret hastighetsbegrensning per konto med leverandørspesifikke profiler
-- Kretsbrytermønster for leverandørrobusthet
-- Beskyttelse mot overbelastning ved samtidige forespørsler med mutex-låsing
-- Signaturbasert dedupliseringsbuffer for forespørsler
-- Domenelag: kostnadsregler, reservepolicy, utestengingspolicy
-- Context Relay: sammendrag ved øktoverføring for kontinuitet ved kontorotasjon
-- Lagring av domenetilstand (SQLite-hurtigbuffer med samtidig skriving for reservebytter, budsjetter, utestenginger og kretsbrytere)
-- Policymotor for sentralisert evaluering av forespørsler (utestenging → budsjett → reservebytte)
+- Kretsbrytermønster for robusthet hos leverandører
+- Beskyttelse mot samtidige forespørselsstormer med mutex-låsing
+- Signaturbasert hurtigbuffer for deduplisering av forespørsler
+- Domenelag: kostnadsregler, reservepolicy, sperrepolicy
+- Context Relay: sammendrag for overlevering av økter som sikrer kontinuitet ved kontorotasjon
+- Persistens av domenetilstand (SQLite-hurtigbuffer med direkte gjennomskriving for reservevalg, budsjetter, sperrer og kretsbrytere)
+- Policymotor for sentralisert evaluering av forespørsler (sperre → budsjett → reservevalg)
 - Forespørselstelemetri med aggregering av p50/p95/p99-latens
 - Telemetri for kombinasjonsmål og historisk tilstand for kombinasjonsmål via `combo_execution_key` / `combo_step_id`
 - Korrelasjons-ID (X-Request-Id) for ende-til-ende-sporing
-- Revisjonslogging for samsvar med mulighet for å velge bort per API-nøkkel
+- Revisjonslogging for samsvar med mulighet for bortvalg per API-nøkkel
 - Evalueringsrammeverk for kvalitetssikring av LLM-er
-- Tilstandskontrollpanel med sanntidsstatus for leverandørenes kretsbrytere
-- MCP-server (110 verktøy) med 3 transportmekanismer (stdio/SSE/Streamable HTTP)
+- Tilstandskontrollpanel med kretsbryterstatus for leverandører i sanntid
+- MCP-server (110 verktøy) med 3 transportmekanismer (stdio/SSE/strømmebar HTTP)
 - A2A-server (JSON-RPC 2.0 + SSE) med ferdigheter og oppgavelivssyklus
 - Minnesystem (uttrekking, innsetting, gjenfinning, oppsummering)
 - Ferdighetssystem (register, eksekveringsmotor, sandkasse, innebygde ferdigheter)
@@ -69,18 +69,18 @@ Kjernefunksjoner:
 - Handling for reparasjon av OAuth-miljø
 - WebSocket-bro for OpenAI-kompatible WS-klienter (`/v1/ws`)
 - Administrasjon av synkroniseringstokener (utstedelse/tilbakekalling, nedlasting av ETag-versjonert konfigurasjonspakke)
-- GLM Thinking (`glmt`) som en fullverdig forhåndsinnstilling for leverandør
-- Hybrid tokenopptelling (leverandørbasert `/messages/count_tokens` med estimat som reserve)
-- Automatisk oppretting av modellaliaser (30+ normaliseringer på tvers av proxy-dialekter ved oppstart)
+- GLM Thinking (`glmt`) som fullverdig forhåndsinnstilling for leverandør
+- Hybrid tokenopptelling (leverandørbasert `/messages/count_tokens` med estimering som reserve)
+- Automatisk oppretting av modellaliaser (30+ normaliseringer mellom proxy-dialekter ved oppstart)
 - Sikker utgående henting med SSRF-beskyttelse, blokkering av private URL-er og konfigurerbare nye forsøk
-- Nedkjølingsbevisste nye forsøk for chat med konfigurerbare `requestRetry` og `maxRetryIntervalSec`
+- Nedkjølingsbevisste nye chatforsøk med konfigurerbare `requestRetry` og `maxRetryIntervalSec`
 - Validering av kjøretidsmiljø med Zod ved oppstart
-- Samsvarsrevisjon v2 med paginering, CRUD-hendelser for leverandører og logging av validering som er blokkert av SSRF
+- Revisjonslogging for samsvar v2 med paginering, CRUD-hendelser for leverandører og valideringslogging av SSRF-blokkering
 
 Primær kjøretidsmodell:
 
-- Next.js-appruter under `src/app/api/*` implementerer både kontrollpanel-API-er og kompatibilitets-API-er
-- En delt SSE-/rutingskjerne i `src/sse/*` + `open-sse/*` håndterer leverandøreksekvering, oversettelse, strømming, reservebytte og bruk
+- Next.js-app-ruter under `src/app/api/*` implementerer både API-er for kontrollpanelet og kompatibilitets-API-er
+- En delt kjerne for SSE/ruting i `src/sse/*` + `open-sse/*` håndterer leverandøreksekvering, oversettelse, strømming, reservebytte og bruk
 
 ## Referansediagrammer
 
@@ -1102,11 +1102,11 @@ bakoverkompatibilitet. Den gjeldende kjøretidskontrakten bruker:
 - SQLite-skjemamigreringer og kroker for automatisk oppgradering ved oppstart
 - kompatibilitetsbane for migrering fra eldre JSON → SQLite
 
-## 6) SSRF-/utgående URL-beskyttelse
+## 6) SSRF / beskyttelse for utgående URL-er
 
-- `src/shared/network/outboundUrlGuard.ts` blokkerer alle private mål-URL-er, tilbakekoblings-URL-er og lokale koblings-URL-er før de når leverandørutførerne
-- Ruter for oppdagelse og validering av leverandørmodeller bruker `src/shared/network/safeOutboundFetch.ts`, som anvender beskyttelsen før hver utgående forespørsel
-- Beskyttelsesfeil vises som `URL_GUARD_BLOCKED` med HTTP 422 og logges i revisjonssporet for samsvar via `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) bruker `src/shared/network/outboundUrlGuard.ts` på chatteforespørsler som sendes gjennom `BaseExecutor.execute()`. I modus kun for offentlige adresser (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` med det private flagget deaktivert) blokkeres private verter, tilbakekoblingsverter og 169.254.0.0/16. I alle andre moduser blokkeres verter for skymetadata. Vertsnavnet eller IP-litteralen kontrolleres slik den er skrevet, før eventuelle DNS-oppslag. Innebygde lokale leverandører omgår kontrollen.
+- Ruter for oppdagelse og validering av leverandørmodeller bruker `src/shared/network/safeOutboundFetch.ts`, som utfører kontrollen før hver utgående forespørsel
+- Feil fra kontrollen vises som `URL_GUARD_BLOCKED` med HTTP 503 (`getSafeOutboundFetchErrorStatus`; ruten for modelloppdagelse returnerer 400), og reelle SSRF-blokkeringer under validering logges i revisjonssporet som `provider.validation.ssrf_blocked`-hendelser
 
 ## Observerbarhet og driftssignaler
 

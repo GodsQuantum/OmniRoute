@@ -691,7 +691,7 @@ omniroute configure codex          # متاح أيضًا: claude opencode qwen a
 
 </div>
 
-> **376 مزوّدًا مسجّلًا** عبر مجموعات الدردشة والوسائط والبحث والمزوّدين المحليين ووكلاء السحابة والنظام المعتمدة، بما في ذلك **153 مزوّدًا يحمل بيانات تعريف الاكتشاف `hasFree: true`**. يغطي سجل نماذج الدردشة **239 مزوّدًا / 3,059 زوجًا مميزًا من المزوّد والنموذج / 1,475 معرّف نموذج أولي**؛ ويحتوي كتالوج الميزانيات المجانية المنفصل على **471 صفًا خاصًا بالنماذج**، و**34 حصة دورية**، و**52 مزوّدًا مجانيًا إلى الأبد بحصص دورية أو دون مفتاح**. صُممت هذه الإحصاءات بمقامات مختلفة؛ وتتوفر التعريفات والحسابات بعد إزالة تكرار الحصص في [مرجع المزوّدين](docs/reference/PROVIDER_REFERENCE.md) و[المستويات المجانية](docs/reference/FREE_TIERS.md).
+> **376 مزوّدًا مسجّلًا** عبر مجموعات الدردشة والوسائط والبحث والمزوّدين المحليين ووكلاء السحابة والنظام المعتمدة، بما في ذلك **153 مزوّدًا يحمل بيانات تعريف الاكتشاف `hasFree: true`**. يغطي سجل نماذج الدردشة **239 مزوّدًا / 3,059 زوجًا مميزًا من المزوّد والنموذج / 1,475 معرّف نموذج أولي**؛ ويحتوي كتالوج الميزانيات المجانية المنفصل على **484 صفًا خاصًا بالنماذج**، و**34 حصة دورية**، و**52 مزوّدًا مجانيًا إلى الأبد بحصص دورية أو دون مفتاح**. صُممت هذه الإحصاءات بمقامات مختلفة؛ وتتوفر التعريفات والحسابات بعد إزالة تكرار الحصص في [مرجع المزوّدين](docs/reference/PROVIDER_REFERENCE.md) و[المستويات المجانية](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1087,13 +1087,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-يتبع الوسم `:latest` أعلى إصدار SemVer مستقر **منشور**. ولا يتتبع فرع git المسمى `main`. ثبّت الوسم على `:X.Y.Z` لاستخدام GitOps. راجع [قنوات إصدارات Docker](docs/guides/DOCKER_GUIDE.md#release-channels).تثبّت الصورة قيمة **`OMNIROUTE_MEMORY_MB=1024`**. وهذا يكفي للوحة التحكم ومحادثة خفيفة. تحتاج **وكلاء البرمجة** (`POST /v1/responses` من Claude Code وCodex وGrok وغيرها) إلى كومة V8 أكبر بكثير، وإلا فستنتهي العملية برسالة `FATAL ERROR` عند نحو 12 GiB في ظل سياقين طويلين متداخلين. خصّص للحاوية حجمًا أكبر من الكومة (إذ توجد المخازن المؤقتة الأصلية خارج V8):
+يتبع `:latest` أعلى إصدار SemVer مستقر **منشور**. ولا يتتبع فرع git ‏`main`. ثبّت الإصدار باستخدام `:X.Y.Z` مع GitOps. راجع [قنوات إصدار Docker](docs/guides/DOCKER_GUIDE.md#release-channels).تثبّت الصورة القيمة **`OMNIROUTE_MEMORY_MB=1024`**. وهذا يكفي للوحة المعلومات ودردشة خفيفة. تحتاج **وكلاء البرمجة** (`POST /v1/responses` من Claude Code وCodex وGrok وغيرها) إلى مساحة كومة V8 أكبر بكثير، وإلا تتوقف العملية بسبب `FATAL ERROR` عند نحو 12 غيغابايت في حال وجود سياقين طويلين متداخلين. خصّص للحاوية ذاكرة أكبر من الكومة (إذ توجد المخازن المؤقتة الأصلية خارج V8):
 
-| حمل العمل                                 | الكومة (`-e OMNIROUTE_MEMORY_MB`) | الحاوية (`--memory`) |
-| ----------------------------------------- | --------------------------------- | -------------------- |
-| لوحة التحكم / محادثة خفيفة                | `1024` (القيمة الافتراضية للصورة) | ≥2 g                 |
-| وكيل برمجة واحد                           | `8192`                            | ≥10 g                |
-| طلبان طويلان متزامنان إلى `/v1/responses` | `10240`–`12288`                   | ≥12–16 g             |
+| عبء العمل                            | الكومة (`-e OMNIROUTE_MEMORY_MB`) | الحاوية (`--memory`) |
+| ------------------------------------ | --------------------------------- | -------------------- |
+| لوحة المعلومات / دردشة خفيفة         | `1024` (القيمة الافتراضية للصورة) | ≥2 غيغابايت          |
+| وكيل برمجة واحد                      | `8192`                            | ≥10 غيغابايت         |
+| طلبا `/v1/responses` طويلان متزامنان | `10240`–`12288`                   | ≥12–16 غيغابايت      |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1104,18 +1104,18 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 الجدول الكامل: [دليل Docker — ذاكرة RAM في وقت التشغيل](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **قناة Docker للإصدارات التجريبية:** يتبع `diegosouzapw/omniroute:next` و
-> `diegosouzapw/omniroute:next-web` فرع `release/v*` الافتراضي الحالي.
+> `diegosouzapw/omniroute:next-web` الفرع الافتراضي الحالي `release/v*`.
 > هذه الوسوم القابلة للتغيير مخصصة فقط لاختبار الإصلاحات غير المنشورة،
-> وهي **غير مدعومة للاستخدام في بيئات الإنتاج**. راجع
-> [قنوات إصدارات Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
+> وهي **غير مدعومة للاستخدام في بيئة الإنتاج**. راجع
+> [قنوات إصدار Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-يُدعم كل من `bun install` القياسي والتثبيت العام (`bun install -g omniroute`) من خلال اكتشاف بيئة تشغيل Bun:
+يُدعم كل من `bun install` القياسي والتثبيت العام (`bun install -g omniroute`) عبر اكتشاف بيئة تشغيل Bun:
 
-- **`bun:sqlite` المضمّن**: يستخدم OmniRoute مشغّل `bun:sqlite` المضمّن في Bun عند التشغيل ضمن Bun، مع الرجوع إلى `better-sqlite3` على Node.js أو إلى `sql.js`.
-- **الاختيار التلقائي لأداة Webpack في التطوير**: يكتشف وضع التطوير (`bun run dev`) بيئة Bun تلقائيًا ويعطّل Turbopack لصالح Webpack لمنع حالات عدم التوافق مع روابط V8 الأصلية. تتبع إصدارات الإنتاج (`bun run build`) قيمة `OMNIROUTE_USE_TURBOPACK` تمامًا كما في Node: يُستخدم Turbopack افتراضيًا، ويمكن استخدام `OMNIROUTE_USE_TURBOPACK=0` للبناء باستخدام Webpack (ويتيحه `Dockerfile.bun` كوسيطة `--build-arg`).
-- **ملف Dockerfile مخصص لـ Bun**: ملف `Dockerfile.bun` متعدد المراحل لعمليات نشر Bun الأصلية في الإنتاج (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` المضمّن**: يستخدم OmniRoute برنامج تشغيل Bun المضمّن `bun:sqlite` عند التشغيل ضمن Bun، مع الرجوع إلى `better-sqlite3` على Node.js أو `sql.js`.
+- **الاختيار التلقائي لحازم Webpack أثناء التطوير**: يكتشف وضع التطوير (`bun run dev`) بيئة Bun تلقائيًا ويعطّل Turbopack لصالح Webpack لتجنب حالات عدم التوافق مع روابط V8 الأصلية. تتبع إصدارات الإنتاج (`bun run build`) القيمة `OMNIROUTE_USE_TURBOPACK` تمامًا كما في Node: يُستخدم Turbopack افتراضيًا، أو `OMNIROUTE_USE_TURBOPACK=0` للبناء باستخدام Webpack (يتيحها `Dockerfile.bun` كوسيطة `--build-arg`).
+- **ملف Dockerfile مخصص لـ Bun**: ملف `Dockerfile.bun` متعدد المراحل لعمليات نشر Bun الأصلية في بيئة الإنتاج (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # التثبيت والتشغيل باستخدام Bun
@@ -1145,7 +1145,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# باستخدام رقائق Nix
+# باستخدام Nix flakes
 nix develop
 npm run dev
 
@@ -1158,46 +1158,48 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. تحضير دليل البيانات المرتبط
+# 1. تحضير دليل البيانات المثبّت بالربط
 mkdir -p data
 
-# 2. لنظام Linux مع Podman محلي دون صلاحيات الجذر فقط (وليس عميل Podman Machine بعيدًا مطلقًا):
+# 2. لنظام Linux مع Podman محلي بلا صلاحيات جذر فقط (وليس مع عميل Podman Machine بعيد مطلقًا):
 podman unshare chown 1000:1000 ./data
 
-# 3. تعيين تلميح بيئة التشغيل، وبناء صورة Compose المحلية، ثم بدء التشغيل
+# 3. تعيين تلميح بيئة التشغيل، وبناء صورة Compose المحلية، ثم التشغيل
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-على macOS أو Windows، يستخدم Podman جهاز Podman Machine بعيدًا: تخطَّ `podman unshare`
-واتبع [إرشادات دليل البيانات الخاصة بالبنية](contrib/podman/README.md#data-directory-permissions-by-topology).
+على macOS أو Windows، يستخدم Podman جهاز Podman Machine بعيدًا: تجاوز `podman unshare`
+واتبع [إرشادات دليل البيانات الخاصة بكل بنية تشغيل](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [دليل Podman](contrib/podman/README.md) — عمليات بناء Compose، وPodman Machine،
 وإعداد Quadlet لنظام Linux/systemd.
 
-**⚡ تثبيت أسرع / أقل استهلاكًا للموارد (تخطي البناء الأصلي)**
+**⚡ تثبيت أسرع / أخف (تجاوز البناء الأصلي)**
 
-محرك SQLite الأصلي (`better-sqlite3`) هو تبعية **اختيارية**، ولذلك لا يتعطل التثبيت
-العام مطلقًا بسبب الترجمة من المصدر: إذ يستخدم ملفًا ثنائيًا مبنيًا مسبقًا عند توفر ملف
-متوافق مع منصتك/Node، وإلا فإنه يرجع بشفافية إلى محرك JavaScript خالص
-(`node:sqlite` على Node 22+، أو `sql.js` WASM المضمّن بخلاف ذلك) — دون الحاجة إلى أدوات بناء.
+يُعد محرك SQLite الأصلي (`better-sqlite3`) تبعية **اختيارية**، ولذلك لا يتوقف
+التثبيت العام أبدًا انتظارًا للترجمة من المصدر: فهو يستخدم ملفًا ثنائيًا مسبق البناء عند توفر ملف متوافق
+مع منصتك/Node، وإلا يرجع بشفافية إلى محرك JavaScript خالص
+(`node:sqlite` على Node 22 والإصدارات الأحدث، أو `sql.js` WASM المضمّن خلاف ذلك) — دون الحاجة إلى أدوات بناء.
 
-لتخطي التهيئة الأصلية اللاحقة للتثبيت بالكامل (في CI أو البيئات دون واجهة رسومية أو الأجهزة البطيئة):
+لتجاوز **التهيئة الأصلية** اللاحقة للتثبيت بالكامل (في CI أو البيئات بلا واجهة رسومية أو الأجهزة البطيئة).
+ملاحظة: لا يتجاوز هذا سوى خطوة تهيئة SQLite الأصلية (`scripts/postinstall.mjs`)؛ أما
+خطاف نسخ/إصلاح الملف الثنائي (`scripts/build/postinstall.mjs`) فيستمر في العمل كالمعتاد:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # يؤدي CI=1 أيضًا إلى تخطيها
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # تؤدي CI=1 أيضًا إلى تجاوزها
 ```
 
-لأسرع عمليات تثبيت، يُفضّل استخدام **pnpm** (مخزن معنون بالمحتوى + روابط صلبة — راجع أعلاه).
-ولاستخدام بيئة تشغيل دون لوحة تحكم أو واجهة رسومية، استخدم ملف تعريف Docker المسمى `base` (أعلاه) أو
-[دليل Termux](docs/guides/TERMUX_GUIDE.md). تُقدَّم واجهة سطر الأوامر ولوحة تحكم الويب بواسطة
-العملية نفسها عبر منفذ واحد، ولذلك لا توجد حاليًا حزمة منفصلة لواجهة سطر الأوامر فقط.
+لأسرع عمليات التثبيت، يُفضّل استخدام **pnpm** (مخزن معنْون بالمحتوى + روابط ثابتة — راجع أعلاه).
+ولبيئة تشغيل بلا لوحة معلومات ودون واجهة رسومية، استخدم ملف تعريف Docker ‏`base` (أعلاه) أو
+[دليل Termux](docs/guides/TERMUX_GUIDE.md). تُقدَّم واجهة سطر الأوامر ولوحة معلومات الويب بواسطة
+العملية نفسها عبر منفذ واحد، لذا لا توجد حاليًا حزمة منفصلة خاصة بواجهة سطر الأوامر فقط.
 
 <br/>
 
 <div align="center">
 
-# 🎬 OmniRoute قيد التشغيل
+# 🎬 OmniRoute أثناء العمل
 
 </div>
 

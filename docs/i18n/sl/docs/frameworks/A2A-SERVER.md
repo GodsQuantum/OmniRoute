@@ -154,20 +154,20 @@ curl -X POST http://localhost:20128/a2a \
 
 OmniRoute ponuja 6 veščin A2A, povezanih v `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Vsak modul veščine je v `src/lib/a2a/skills/`.
 
-| Veščina               | ID                   | Opis                                                                                                                                                 | Oznake                       | Primeri                                   |
-| :-------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------- | :---------------------------------------- |
-| Pametno usmerjanje    | `smart-routing`      | Usmeri poziv prek optimalnega ponudnika oziroma kombinacije z uporabo mehanizma kombinacij in ocenjevanja OmniRoute                                  | usmerjanje, ponudniki        | "Usmeri ta poziv prek najboljšega modela" |
-| Upravljanje kvot      | `quota-management`   | Poroča o stanju kvot posameznih ponudnikov in klicateljem pomaga pri odločitvi, kdaj omejiti hitrost ali zamenjati ponudnika                         | kvote, ponudniki             | "Preveri kvoto za anthropic"              |
-| Odkrivanje ponudnikov | `provider-discovery` | Navede nameščene ponudnike skupaj z njihovimi zmožnostmi, oznakami brezplačne ravni in stanjem OAuth                                                 | ponudniki, odkrivanje        | "Kateri ponudniki so na voljo?"           |
-| Analiza stroškov      | `cost-analysis`      | Oceni strošek zahteve oziroma pogovora na podlagi kataloga in nedavne uporabe                                                                        | stroški, uporaba             | "Oceni strošek tega pogovora"             |
-| Poročilo o stanju     | `health-report`      | Združi stanje odklopnika, obdobja ohlajanja in zaklepa za vsakega ponudnika                                                                          | stanje, odpornost            | "Prikaži stanje vseh ponudnikov"          |
-| Seznam zmožnosti      | `list-capabilities`  | Vrne celoten katalog 45 veščin agentov (23 API + 21 CLI + 1 konfiguracija) kot tabelo markdown z neobdelanimi URL-ji SKILL.md za vstavitev konteksta | katalog, odkrivanje, veščine | "Navedi vse zmožnosti OmniRoute"          |
+| Veščina               | ID                   | Opis                                                                                                                                                         | Oznake                       | Primeri                                   |
+| :-------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------- | :---------------------------------------- |
+| Pametno usmerjanje    | `smart-routing`      | Usmeri poziv prek optimalnega ponudnika/kombinacije z uporabo mehanizma za kombinacije in ocenjevanja OmniRoute                                              | usmerjanje, ponudniki        | "Usmeri ta poziv prek najboljšega modela" |
+| Upravljanje kvot      | `quota-management`   | Poroča o stanju kvote za posameznega ponudnika in klicateljem pomaga pri odločitvi, kdaj omejiti promet ali zamenjati ponudnika                              | kvote, ponudniki             | "Preveri kvoto za anthropic"              |
+| Odkrivanje ponudnikov | `provider-discovery` | Navede nameščene ponudnike z njihovimi zmogljivostmi, oznakami brezplačne ravni in stanjem OAuth                                                             | ponudniki, odkrivanje        | "Kateri ponudniki so na voljo?"           |
+| Analiza stroškov      | `cost-analysis`      | Oceni strošek zahteve/pogovora na podlagi kataloga in nedavne uporabe                                                                                        | stroški, uporaba             | "Oceni strošek tega pogovora"             |
+| Poročilo o stanju     | `health-report`      | Združi stanje odklopnika, obdobja ohlajanja in zaklepa za posameznega ponudnika                                                                              | stanje, odpornost            | "Prikaži stanje vseh ponudnikov"          |
+| Seznam zmogljivosti   | `list-capabilities`  | Vrne celoten katalog Agent Skills s 45 vnosi (23 API + 21 CLI + 1 konfiguracija) kot tabelo markdown z neobdelanimi URL-ji SKILL.md za vstavljanje konteksta | katalog, odkrivanje, veščine | "Navedi vse zmogljivosti OmniRoute"       |
 
-> Kartica agenta mora ostati usklajena z aktivnim katalogom 376 ponudnikov; število ponudnikov in metapodatki o brezplačnem dostopu oziroma dostopu brez preverjanja pristnosti izvirajo iz registra izvajalnega okolja.
+> Kartica agenta mora ostati usklajena z aktivnim katalogom 376 ponudnikov; število ponudnikov in metapodatki o brezplačni uporabi oziroma uporabi brez preverjanja pristnosti izvirajo iz registra izvajalnega okolja.
 
 ### Podrobnosti veščine `list-capabilities`
 
-Veščina `list-capabilities` je posebej uporabna za zunanje agente, ki morajo pred pošiljanjem klicev API odkriti, kaj ponuja OmniRoute. Vrne strukturiran artefakt v obliki tabele markdown:
+Veščina `list-capabilities` je posebej uporabna za zunanje agente, ki morajo pred pošiljanjem klicev API odkriti, kaj ponuja OmniRoute. Vrne strukturiran artefakt tabele markdown:
 
 ```
 | ID | Name | Category | Area | Endpoints/Commands | Raw URL |
@@ -201,7 +201,7 @@ Končna točka JSON-RPC `/a2a` je kanonična vstopna točka A2A. Spodnje končne
 
 1. **Ustvarite datoteko veščine:** `src/lib/a2a/skills/<your-skill>.ts`
 
-   Izvozite asinhrono funkcijo `(task: A2ATask) => Promise<{ artifacts, metadata }>`. Upoštevajte obliko obstoječih veščin, kot je `smartRouting.ts`.
+   Izvozite asinhrono funkcijo `(task: A2ATask) => Promise<{ artifacts, metadata }>`. Upoštevajte strukturo obstoječih veščin, kot je `smartRouting.ts`.
 
 2. **Registrirajte obravnavalnik:** v `src/lib/a2a/taskExecution.ts` dodajte vnos v `A2A_SKILL_HANDLERS`:
 
@@ -215,21 +215,21 @@ Končna točka JSON-RPC `/a2a` je kanonična vstopna točka A2A. Spodnje končne
    };
    ```
 
-3. **Objavite na kartici agenta:** v `src/app/.well-known/agent.json/route.ts` dodajte v polje `skills`:
+3. **Objavite v kartici agenta:** v `src/app/.well-known/agent.json/route.ts` dodajte v polje `skills`:
 
    ```json
    {
      "id": "your-skill",
-     "name": "Your Skill",
-     "description": "Brief, intent-focused description",
-     "tags": ["routing", "quota"],
-     "examples": ["Sample natural-language invocation"]
+     "name": "Vaša veščina",
+     "description": "Kratek opis, osredotočen na namen",
+     "tags": ["usmerjanje", "kvota"],
+     "examples": ["Primer poziva v naravnem jeziku"]
    }
    ```
 
-4. **Napišite teste:** `tests/unit/a2a-<your-skill>.test.ts`. Pokrijte uspešno pot in pot z napako.
+4. **Napišite teste:** `tests/unit/a2a-<your-skill>.test.ts`. Pokrijte uspešno izvedbo in pot z napako.
 
-5. **Dokumentirajte** novo veščino v tabeli `Razpoložljive veščine` v tej datoteki.
+5. **Dokumentirajte** novo veščino v tabeli `Available Skills` v tej datoteki.
 
 ---
 

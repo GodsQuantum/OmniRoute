@@ -152,31 +152,31 @@ curl -X POST http://localhost:20128/a2a \
 
 ## Ƙwarewar da Ake da Su
 
-OmniRoute yana samar da ƙwarewar A2A guda 6 da aka haɗa a cikin `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kowane tsarin ƙwarewa yana cikin `src/lib/a2a/skills/`.
+OmniRoute yana samar da ƙwarewar A2A guda 6 waɗanda aka haɗa a cikin `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kowane tsarin ƙwarewa yana cikin `src/lib/a2a/skills/`.
 
-| Ƙwarewa                       | ID                   | Bayani                                                                                                                                                                             | Alamomi                          | Misalai                                             |
-| :---------------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------- | :-------------------------------------------------- |
-| Wayayyen Zaɓin Hanya          | `smart-routing`      | Yana tura umarni ta hanyar mafi dacewar mai samarwa/haɗin masu samarwa ta amfani da injin haɗin OmniRoute + tantance maki                                                          | zaɓin hanya, masu samarwa        | "Tura wannan umarni ta hanyar mafi kyawun samfurin" |
-| Gudanar da Ƙayyadadden Amfani | `quota-management`   | Yana bayar da rahoton matsayin ƙayyadadden amfani na kowane mai samarwa, yana taimaka wa masu kira su yanke shawarar lokacin rage gudu/canjawa                                     | ƙayyadadden amfani, masu samarwa | "Duba ƙayyadadden amfani na anthropic"              |
-| Gano Masu Samarwa             | `provider-discovery` | Yana lissafa masu samarwa da aka girka tare da iyawarsu, alamomin matakin kyauta, da matsayin OAuth                                                                                | masu samarwa, ganowa             | "Waɗanne masu samarwa ne ake da su?"                |
-| Nazarin Kuɗi                  | `cost-analysis`      | Yana ƙiyasta kuɗin buƙata/tattaunawa bisa ga kundin bayanai + amfanin kwanan nan                                                                                                   | kuɗi, amfani                     | "Ƙiyasta kuɗin wannan tattaunawar"                  |
-| Rahoton Lafiya                | `health-report`      | Yana tattara matsayin mai katse da'ira, lokacin dakatawa, da kullewa na kowane mai samarwa                                                                                         | lafiya, juriya                   | "Nuna matsayin lafiyar duk masu samarwa"            |
-| Lissafa Iyawa                 | `list-capabilities`  | Yana mayar da cikakken kundin Ƙwarewar Wakili mai shigarwa 45 (API 23 + CLI 21 + saiti 1) a matsayin teburin markdown tare da ɗanyen URL na SKILL.md don shigar da mahallin bayani | kundi, ganowa, ƙwarewa           | "Lissafa dukkan iyawar OmniRoute"                   |
+| Ƙwarewa                       | ID                   | Bayani                                                                                                                                                                    | Alamomi                          | Misalai                                     |
+| :---------------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------- | :------------------------------------------ |
+| Kaifin Zaɓin Hanya            | `smart-routing`      | Yana tura umarni ta hanyar mafi dacewar mai samarwa/haɗin masu samarwa ta amfani da injin haɗa-hadar OmniRoute + tsarin ƙididdigewa                                       | zaɓin hanya, masu samarwa        | "Tura wannan umarni ta mafi kyawun samfuri" |
+| Gudanar da Ƙayyadadden Amfani | `quota-management`   | Yana bayar da rahoton matsayin ƙayyadadden amfani na kowane mai samarwa, yana taimaka wa masu kira su yanke shawarar lokacin rage gudu/canjawa                            | ƙayyadadden amfani, masu samarwa | "Duba ƙayyadadden amfani na anthropic"      |
+| Gano Masu Samarwa             | `provider-discovery` | Yana jera masu samarwa da aka girka tare da iyawarsu, alamomin matakin kyauta, da matsayin OAuth                                                                          | masu samarwa, ganowa             | "Waɗanne masu samarwa ne ake da su?"        |
+| Nazarin Kuɗi                  | `cost-analysis`      | Yana ƙiyasta kuɗin buƙata/tattaunawa bisa kundin bayanai + amfani na baya-bayan nan                                                                                       | kuɗi, amfani                     | "Ƙiyasta kuɗin wannan tattaunawar"          |
+| Rahoton Lafiya                | `health-report`      | Yana tattara matsayin circuit breaker, cooldown, da lockout na kowane mai samarwa                                                                                         | lafiya, juriya                   | "Nuna matsayin lafiyar duk masu samarwa"    |
+| Jerin Iyawa                   | `list-capabilities`  | Yana dawo da cikakken kundin Agent Skills mai bayanai 45 (API 23 + CLI 21 + config 1) a matsayin teburin markdown tare da ɗanyen URL na SKILL.md don saka mahallin bayani | kundi, ganowa, ƙwarewa           | "Jera dukkan iyawar OmniRoute"              |
 
-> Ya kamata a kiyaye Katin Wakili ya dace da kundin masu samarwa 376 da ake amfani da shi kai tsaye; ana samo adadin masu samarwa da bayanan kyauta/mara-buƙatar-tantancewa daga rajistar lokacin aiki.
+> Ya kamata a ci gaba da daidaita Agent Card da kundin masu samarwa 376 mai aiki; ana samo adadin masu samarwa da bayanan kyauta/marasa buƙatar tantancewa daga runtime registry.
 
 ### Cikakken Bayanin Ƙwarewar `list-capabilities`
 
-Ƙwarewar `list-capabilities` tana da amfani musamman ga wakilai na waje waɗanda suke buƙatar gano abin da OmniRoute yake samarwa kafin aika kiran API. Tana mayar da kayan teburin markdown mai tsari:
+Ƙwarewar `list-capabilities` tana da amfani musamman ga wakilai na waje waɗanda ke buƙatar gano abubuwan da OmniRoute ke samarwa kafin aika kiran API. Tana dawo da kayan aiki na teburin markdown mai tsari:
 
 ```
-| ID | Name | Category | Area | Endpoints/Commands | Raw URL |
+| ID | Suna | Rukuni | Fanni | Endpoints/Umarni | Ɗanyen URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Auth & Sessions | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Tantancewa & Zama | api | tantancewa | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Kowane layi yana ƙunshe da ginshiƙin `rawUrl` domin wakilai su iya ɗauko cikakken SKILL.md nan take. Filin `metadata.totalSkills` yana nuna girman kundin (45 a yau). Aiwatarwa: `src/lib/a2a/skills/listCapabilities.ts`. Duba kuma [AGENT-SKILLS.md](./AGENT-SKILLS.md).
+Kowane layi ya ƙunshi ginshiƙin `rawUrl` domin wakilai su iya ɗauko cikakken SKILL.md nan take. Filin `metadata.totalSkills` yana nuna girman kundin (45 a yau). Aiwatarwa: `src/lib/a2a/skills/listCapabilities.ts`. Duba kuma [AGENT-SKILLS.md](./AGENT-SKILLS.md).
 
 ---
 
@@ -266,7 +266,7 @@ an gabatar → ana aiki → an kammala
 
 ---
 
-## Misalan Haɗewa
+## Misalan Haɗa Tsaruka
 
 ### Python (requests)
 

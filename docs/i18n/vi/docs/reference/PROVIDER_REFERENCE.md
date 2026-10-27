@@ -26,7 +26,7 @@ Tổng số nhà cung cấp: **376**. Xem phân loại theo danh mục bên dư�
 
 Các thẻ bổ sung: `image`, `video`, `aggregator`, `enterprise`, `embed/rerank`, `self-hosted`.
 
-`Gọi công cụ` (nếu được hiển thị): `native` — API gọi hàm thực; `emulated` — mảng `tools` được mô phỏng qua prompt bằng `webTools.ts` (các khối `<tool>{...}</tool>` được phân tích bằng biểu thức chính quy); `none` — `tools` hiện bị âm thầm loại bỏ. Xem #7286.
+`Tool calling` (Gọi công cụ) (nếu được hiển thị): `native` — API gọi hàm thực; `emulated` — mảng `tools` được mô phỏng qua prompt bằng `webTools.ts` (các khối `<tool>{...}</tool>` được phân tích bằng biểu thức chính quy); `none` — `tools` hiện bị âm thầm loại bỏ. Xem #7286.
 
 Sử dụng bảng điều khiển tại `/dashboard/providers` để bật, cấu hình và kiểm thử từng nhà cung cấp.
 

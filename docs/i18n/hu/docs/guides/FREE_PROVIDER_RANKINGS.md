@@ -14,27 +14,29 @@
 
 ## Mi ez?
 
-Az OmniRoute 376 szolgáltatót regisztrál, köztük 155 olyan katalógusbejegyzést, amely **ingyenes/hitelesítés nélküli** megjelölésű
+Az OmniRoute 376 providert regisztrál, köztük 155 katalógusbejegyzést, amelyek **ingyenes/hitelesítés nélküli** megjelölést kaptak
 (hitelesítés nélküli,
 ingyenes szintű OAuth vagy ingyenes szintű API-kulcs — lásd az
-[Ingyenes szintek útmutatóját](../getting-started/FREE-TIERS-GUIDE.md) és a teljes
-[Ingyenes szintek jegyzékét](../reference/FREE_TIERS.md)). A bökkenő: az ingyenes szolgáltatók
-modellminősége rendkívül eltérő. Egy élvonalbeli modellt kínáló, hitelesítés nélküli szolgáltató sokkal hasznosabb,
-mint egy kisebb, elavult modellt kínáló szolgáltató.
+[Ingyenes szintek útmutatója](../getting-started/FREE-TIERS-GUIDE.md) című dokumentumot és a teljes
+[Ingyenes szintek könyvtárat](../reference/FREE_TIERS.md)). A bökkenő: az ingyenes providerek
+modellminősége rendkívül változó. Egy hitelesítés nélküli provider, amely egy élvonalbeli
+modellt szolgáltat, sokkal hasznosabb, mint egy, amely egy kis, elavult modellt kínál.
 
-Az **Ingyenes szolgáltatók rangsora** arra a kérdésre ad választ, hogy „**melyik ingyenes szolgáltató kínálja számomra a legjobb modellt?**” úgy, hogy
-az egyes ingyenes szolgáltatók katalógusát összekapcsolja az
-**Arena AI ranglistáról** származó, **közösségi forrásból gyűjtött minőségi pontszámokkal** (emberi preferenciákon alapuló ELO, ugyanaz az elv, amelyet az LMArena
-chatbot-aréna is alkalmaz). A szolgáltatók rangsorolása ezután a **legjobb ingyenes modelljük** képességei alapján történik.
+A **Free Provider Rankings** arra a kérdésre válaszol, hogy "**melyik ingyenes provider adja a legjobb modellt?**",
+ehhez az egyes ingyenes providerek katalógusát összekapcsolja a
+**közösségi alapú minőségi pontszámokkal** az
+**Arena AI ranglistáról** (emberi preferencián alapuló ELO, ugyanaz az elv, mint az LMArena
+chatbot-arénában). A providerek ezután a **legjobb ingyenes modelljük** erőssége alapján kerülnek sorrendbe.
 
-A rangsor három valós forrásból kerül kiszámításra:
+A rangsor három valódi forrásból számítódik:
 
-1. Az ingyenes szolgáltatók listái — `NOAUTH_PROVIDERS`, valamint az `OAUTH_PROVIDERS` /
-   `APIKEY_PROVIDERS` `hasFree` jelöléssel ellátott bejegyzései
+1. Az ingyenes providerek listái — `NOAUTH_PROVIDERS`, valamint az `OAUTH_PROVIDERS` /
+   `APIKEY_PROVIDERS` bejegyzések, amelyek `hasFree` jelöléssel rendelkeznek
    (`src/shared/constants/providers.ts`).
-2. Az egyes szolgáltatók modellkatalógusa a szolgáltatói nyilvántartásból
+2. Az egyes providerek modellkatalógusa a provider-regiszterből
    (`open-sse/config/providerRegistry.ts`).
-3. Az ELO-ból származtatott, feladatilleszkedést jelző pontszámok, amelyeket az Arena ELO szinkronizációs motor tárol a `model_intelligence` adatbázistáblában
+3. Az ELO-ból származtatott feladat-alkalmassági pontszámok, amelyeket a `model_intelligence`
+   adatbázistábla tárol, az Arena ELO szinkronizáló motor által
    (`src/lib/arenaEloSync.ts`).
 
 Az összekapcsolási logika a `src/lib/freeProviderRankings.ts` fájlban található.
@@ -126,35 +128,41 @@ szolgáltatók kimaradnak a válaszból.
 
 ---
 
-## A pontszámok működése
+## Hogyan működnek a pontszámok
 
 ### Forrás: Arena AI ranglista
 
 Az Arena ELO szinkronizációs motor (`src/lib/arenaEloSync.ts`) két ranglistát — `text`
-és `code` — kér le az Arena AI ranglista API-jából
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Minden ranglistabejegyzés
-tartalmazza a modell nevét, szolgáltatóját, ELO-`score` értékét, konfidenciaintervallumát és a szavazatok számát.
+és `code` — kér le az Arena AI ranglista-API-jából
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`). Ha az API nem ad vissza
+használható ranglistát, a motor a Hugging Face datasets-serveren található hivatalos
+`lmarena-ai/leaderboard-dataset` adatkészletet használja tartalék forrásként
+(`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
+`coding` → `code`); a `GET /api/intelligence/sync` jelenti az `activeSource`, `lastError` és
+`lastFailedAt` értékeket. Minden ranglistabejegyzés
+tartalmazza a modell nevét, szolgáltatóját, ELO-`score` értékét, konfidenciaintervallumát és szavazatszámát.
 
-A ranglistakategóriák az OmniRoute feladatkategóriáihoz a következőképpen kapcsolódnak:
+A ranglistakategóriák megfeleltetése az OmniRoute feladatkategóriáinak:
 
 | Arena-ranglista | OmniRoute-feladatkategóriák                       |
 | --------------- | ------------------------------------------------- |
 | `text`          | `default`, `review`, `documentation`, `debugging` |
 | `code`          | `coding`                                          |
 
-### Normalizálás (feladathoz való illeszkedés pontszáma)
+### Normalizálás (feladathoz való illeszkedési pontszám)
 
-A nyers ELO-pontszámokat ranglistánként egy **`[0.4, 0.98]` tartományba eső feladatilleszkedési értékre** normalizálja a rendszer:
+A nyers ELO-pontszámokat ranglistánként egy **`[0.4, 0.98]` tartományba eső feladathoz való illeszkedési értékké** normalizáljuk:
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-A pontszám soha nem éri el a `0` vagy `1` értéket, így marad mozgástér a felhasználói felülbírálások számára. Ez az API-válaszban látható `score` mező, valamint az irányítópulton megjelenített címke.
+A pontszám soha nem éri el a `0` vagy `1` értéket, így marad mozgástér a felhasználói felülbírálások számára. Ez az API-válaszban látható
+`score` mező, valamint az irányítópulton megjelenített címke.
 
 ### Megbízhatóság
 
-Minden bejegyzés megbízhatósági szintet kap az Arena-szavazatok száma alapján:
+Minden bejegyzés az Arena szavazatszáma alapján kap megbízhatósági szintet:
 
 | Megbízhatóság | Szavazatok |
 | ------------- | ---------- |
@@ -164,25 +172,25 @@ Minden bejegyzés megbízhatósági szintet kap az Arena-szavazatok száma alapj
 
 ### Tárolás és frissesség
 
-A normalizált bejegyzések a `model_intelligence` adatbázistáblába kerülnek
+A normalizált bejegyzések a `model_intelligence` adatbázistáblába kerülnek,
 `source = "arena_elo"` értékkel (`src/lib/db/modelIntelligence.ts`). A bejegyzések **7 nap után
-lejárnak**, így egy olyan szolgáltató, amelynek szinkronizálása leáll, idővel eltűnik, ahelyett, hogy
+lejárnak**, így az a szolgáltató, amelynek szinkronizálása leáll, idővel eltűnik, ahelyett hogy
 elavult adatokat szolgáltatna.
 
 A szinkronizálás **alapértelmezés szerint be van kapcsolva**:
 
-- Egyszer lefut a kiszolgáló indításakor, majd rendszeres időközönként újra
-  (`src/lib/arenaEloSync.ts`, bekötve innen: `src/instrumentation-node.ts`).
-- **Nem blokkoló, és soha nem okoz végzetes hibát** — ha a külső lekérés sikertelen, az OmniRoute tovább
-  fut, a rangsorok pedig egyszerűen az utolsó helyes adatokat mutatják (vagy üres állapotot).
+- Egyszer lefut a kiszolgáló indításakor, majd rendszeres időzítő alapján ismétlődik
+  (`src/lib/arenaEloSync.ts`, a bekötés helye: `src/instrumentation-node.ts`).
+- **Nem blokkoló, és soha nem okoz végzetes hibát** — ha a külső forrás lekérése sikertelen, az OmniRoute tovább
+  működik, a rangsorok pedig egyszerűen az utolsó érvényes adatokat mutatják (vagy üres állapotot).
 
 Két környezeti változó szabályozza (dokumentáció:
 [`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md)):
 
-| Változó                   | Alapértelmezett érték | Cél                                                          |
-| ------------------------- | --------------------- | ------------------------------------------------------------ |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`                | A külső szinkronizálás letiltásához állítsa `false` értékre. |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h)         | Szinkronizálási időköz másodpercben.                         |
+| Változó                   | Alapértelmezés   | Cél                                                              |
+| ------------------------- | ---------------- | ---------------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`           | Állítsa `false` értékre a kimenő szinkronizálás kikapcsolásához. |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24 óra) | Szinkronizálási időköz másodpercben.                             |
 
 ### Kézi szinkronizálás / állapot / törlés
 
@@ -190,36 +198,37 @@ Az üzemeltetők számára egy hitelesítést igénylő felügyeleti végpont bi
 (`src/app/api/intelligence/sync/route.ts` — felügyeleti hitelesítést igényel):
 
 ```
-GET    /api/intelligence/sync          # aktuális szinkronizálási állapot (enabled, lastSync, nextSync, intervalMs)
+GET    /api/intelligence/sync          # jelenlegi szinkronizálási állapot (enabled, lastSync, nextSync, intervalMs)
 POST   /api/intelligence/sync          # kézi szinkronizálás indítása; törzs: { "dryRun": true } az írás nélküli előnézethez
 DELETE /api/intelligence/sync          # az összes szinkronizált arena_elo intelligenciabejegyzés törlése
 ```
 
 Ha a rangsoroldal üres, egy kézi `POST /api/intelligence/sync` kérés (vagy egyszerűen
-a kiszolgáló újraindítása) újra feltölti azt.
+a kiszolgáló újraindítása) újra feltölti.
 
 ### Modellek párosítása a ranglistával
 
-A nyilvántartás modellazonosítói és az Arena modellnevei nem mindig egyeznek meg pontosan. A rangsorolás
+A nyilvántartásban szereplő modellazonosítók és az Arena modellnevei nem mindig egyeznek meg pontosan. A rangsorolás
 rugalmas párosítást használ (`findMatchingIntelligence` a `src/lib/freeProviderRankings.ts` fájlban):
 
 1. Pontos egyezés a normalizált modellazonosítóval.
-2. Egyezés a záró verzióutótag eltávolítása után (például `kimi-k2.6` → `kimi-k2`).
-3. Előtag szerinti egyezés (a ranglistán szereplő modellnév a nyilvántartási azonosító előtagja).
+2. Egyezés a verziót jelölő záró utótag eltávolítása után (például `kimi-k2.6` → `kimi-k2`).
+3. Prefixegyezés (a ranglistán szereplő modellnév a nyilvántartásbeli azonosító prefixe).
 
-A szinkronizálás során az ismert szolgáltatói előtagokat (`anthropic/`, `openai/`, `google/`, …)
-eltávolítja a rendszer, egy kis álnévtérkép pedig kibővíti a kanonikus neveket az OmniRoute által
-belsőleg használt változatokra, így a modellek bármely név alatt megtalálhatók maradnak.
+A szinkronizálási oldalon az ismert szolgáltatói prefixeket (`anthropic/`, `openai/`, `google/`, …)
+eltávolítjuk, egy kis aliasleképezés pedig kibővíti a kanonikus neveket az OmniRoute által
+belsőleg használt változatokra, így a modellek bármelyik néven megtalálhatók maradnak.
 
 ### A szolgáltatók rangsorolása
 
-A motor minden ingyenes szolgáltató katalógusának minden modelljét pontozza, majd:
+A motor minden ingyenes szolgáltató esetében pontozza a katalógusában szereplő összes modellt, majd:
 
 - **Legjobb modell** = a szolgáltató legmagasabb pontszámú modellje.
-- **Átlagos pontszám** = a szolgáltató összes pontozott modellje pontszámának átlaga.
+- **Átlagpontszám** = a szolgáltató összes pontozott modelljének átlagos pontszáma.
 - **Modellek** = a szolgáltató Arena-pontszámmal rendelkező modelljeinek száma.
 
-A szolgáltatókat először a **legjobb modell pontszáma**, majd az átlagos pontszám alapján rendezi a rendszer. Ez előnyben részesíti azokat a szolgáltatókat, amelyek legalább egy erős ingyenes modellt kínálnak.
+A szolgáltatókat először a **legjobb modell pontszáma**, majd az átlagpontszám alapján rendezzük. Ez előnyben részesíti azt a
+szolgáltatót, amely legalább egy erős ingyenes modellt kínál.
 
 ---
 

@@ -691,7 +691,7 @@ nonākt čaulas vēsturē. → [CLI integrācijas](docs/guides/CLI-INTEGRATIONS.
 
 </div>
 
-> **376 reģistrēti pakalpojumu sniedzēji** kanoniskajās tērzēšanas, multivides, meklēšanas, lokālo, mākoņa aģentu un sistēmu kolekcijās, tostarp **153 ar `hasFree: true` atklāšanas metadatiem**. Tērzēšanas modeļu reģistrs aptver **239 pakalpojumu sniedzējus / 3,059 unikālus pakalpojumu sniedzēja un modeļa pārus / 1,475 neapstrādātus modeļu ID**; atsevišķajā bezmaksas budžeta katalogā ir **471 ieraksts atsevišķiem modeļiem**, **34 periodiski atjaunojami resursu kopumi** un **52 periodiski atjaunojami / bez atslēgas bezmaksas pakalpojumu sniedzēji bez termiņa ierobežojuma**. Šiem rādītājiem pēc būtības ir atšķirīgi saucēji; definīcijas un aprēķini ar novērstu resursu kopumu dublēšanos ir pieejami sadaļās [Pakalpojumu sniedzēju uzziņa](docs/reference/PROVIDER_REFERENCE.md) un [Bezmaksas līmeņi](docs/reference/FREE_TIERS.md).
+> **376 reģistrēti pakalpojumu sniedzēji** kanoniskajās tērzēšanas, multivides, meklēšanas, lokālo, mākoņa aģentu un sistēmu kolekcijās, tostarp **153 ar `hasFree: true` atklāšanas metadatiem**. Tērzēšanas modeļu reģistrs aptver **239 pakalpojumu sniedzējus / 3,059 unikālus pakalpojumu sniedzēja un modeļa pārus / 1,475 neapstrādātus modeļu ID**; atsevišķajā bezmaksas budžeta katalogā ir **484 ieraksts atsevišķiem modeļiem**, **34 periodiski atjaunojami resursu kopumi** un **52 periodiski atjaunojami / bez atslēgas bezmaksas pakalpojumu sniedzēji bez termiņa ierobežojuma**. Šiem rādītājiem pēc būtības ir atšķirīgi saucēji; definīcijas un aprēķini ar novērstu resursu kopumu dublēšanos ir pieejami sadaļās [Pakalpojumu sniedzēju uzziņa](docs/reference/PROVIDER_REFERENCE.md) un [Bezmaksas līmeņi](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1090,7 +1090,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` seko augstākajai **publicētajai** stabilajai SemVer versijai. Tas neseko git zaram `main`. GitOps vajadzībām piesaistiet `:X.Y.Z`. Skatiet [Docker laidienu kanālus](docs/guides/DOCKER_GUIDE.md#release-channels). Attēlā ir iestatīts **`OMNIROUTE_MEMORY_MB=1024`**. Ar to pietiek informācijas panelim un nelielai tērzēšanai. **Programmēšanas aģentiem** (`POST /v1/responses` no Claude Code, Codex, Grok, …) ir nepieciešama daudz lielāka V8 kaudze, citādi process beidzas ar `FATAL ERROR` pie aptuveni 12 GiB, ja pārklājas divi gari konteksti. Konteinera atmiņu iestatiet lielāku par kaudzi (vietējie buferi atrodas ārpus V8):
+`:latest` seko jaunākajai **publicētajai** stabilajai SemVer versijai. Tas neseko git `main`. GitOps vajadzībām fiksējiet `:X.Y.Z`. Skatiet [Docker laidienu kanāli](docs/guides/DOCKER_GUIDE.md#release-channels). Attēlā ir fiksēts **`OMNIROUTE_MEMORY_MB=1024`**. Ar to pietiek informācijas panelim un nelielai tērzēšanai. **Programmēšanas aģentiem** (`POST /v1/responses` no Claude Code, Codex, Grok, …) nepieciešama daudz lielāka V8 kaudze, pretējā gadījumā process beidzas ar `FATAL ERROR` pie aptuveni 12 GiB, ja pārklājas divi gari konteksti. Konteineram piešķiriet vairāk atmiņas nekā kaudzei (vietējie buferi atrodas ārpus V8):
 
 | Darba slodze                             | Kaudze (`-e OMNIROUTE_MEMORY_MB`) | Konteiners (`--memory`) |
 | ---------------------------------------- | --------------------------------- | ----------------------- |
@@ -1110,15 +1110,15 @@ Pilna tabula: [Docker ceļvedis — izpildlaika RAM](docs/guides/DOCKER_GUIDE.md
 > `diegosouzapw/omniroute:next-web` seko pašreizējam noklusējuma `release/v*`
 > zaram. Šie mainīgie tagi ir paredzēti tikai neizlaistu labojumu testēšanai un
 > **netiek atbalstīti produkcijas vidē**. Skatiet
-> [Docker laidienu kanālus](docs/guides/DOCKER_GUIDE.md#release-channels).
+> [Docker laidienu kanāli](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Standarta `bun install` un globālā instalēšana (`bun install -g omniroute`) tiek atbalstīta, izmantojot Bun izpildvides noteikšanu:
+Standarta `bun install` un globālā instalēšana (`bun install -g omniroute`) tiek atbalstīta, nosakot Bun izpildvidi:
 
 - **Iebūvētais `bun:sqlite`**: darbojoties Bun vidē, OmniRoute izmanto Bun iebūvēto `bun:sqlite` draiveri, bet Node.js vidē atkāpjas uz `better-sqlite3` vai `sql.js`.
-- **Automātiska Webpack komplektētāja atlase izstrādes laikā**: izstrādes režīms (`bun run dev`) automātiski nosaka Bun un atspējo Turbopack par labu Webpack, lai novērstu nesaderību ar vietējiem V8 saistījumiem. Produkcijas būvējumi (`bun run build`) precīzi ievēro `OMNIROUTE_USE_TURBOPACK` tāpat kā Node vidē: pēc noklusējuma Turbopack, bet `OMNIROUTE_USE_TURBOPACK=0`, lai būvētu ar Webpack (`Dockerfile.bun` to nodrošina kā `--build-arg`).
-- **Atsevišķs Bun Dockerfile**: vairākposmu `Dockerfile.bun` vietējiem Bun produkcijas izvietojumiem (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Automātiska Webpack komplektētāja izvēle izstrādes vidē**: izstrādes režīms (`bun run dev`) automātiski nosaka Bun un atspējo Turbopack par labu Webpack, lai novērstu nesaderību ar vietējiem V8 saistījumiem. Produkcijas būvējumi (`bun run build`) precīzi ievēro `OMNIROUTE_USE_TURBOPACK` tāpat kā Node vidē: pēc noklusējuma Turbopack, bet `OMNIROUTE_USE_TURBOPACK=0`, lai būvētu ar Webpack (`Dockerfile.bun` to nodrošina kā `--build-arg`).
+- **Īpašs Bun Dockerfile**: vairākposmu `Dockerfile.bun` vietējai Bun izvietošanai produkcijas vidē (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Instalēšana un palaišana ar Bun
@@ -1173,28 +1173,30 @@ podman compose --profile base up -d --build
 ```
 
 macOS vai Windows vidē Podman izmanto attālu Podman Machine: izlaidiet `podman unshare` un
-ievērojiet [konkrētajai topoloģijai paredzētos norādījumus par datu direktoriju](contrib/podman/README.md#data-directory-permissions-by-topology).
+ievērojiet [topoloģijai specifiskos norādījumus par datu direktoriju](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Podman ceļvedis](contrib/podman/README.md) — Compose būvējumi, Podman Machine un
 Linux/systemd Quadlet iestatīšana.
 
 **⚡ Ātrāka / kompaktāka instalēšana (izlaižot vietējo būvēšanu)**
 
-Vietējais SQLite dzinis (`better-sqlite3`) ir **neobligāta** atkarība, tādēļ globāla
-instalēšana nekad netiek bloķēta, gaidot kompilēšanu no pirmkoda: tā izmanto iepriekš kompilētu bināro failu, ja tāds atbilst
-jūsu platformai/Node, bet citādi nemanāmi pāriet uz tīru JS dzini
-(`node:sqlite` Node 22+ vidē, pretējā gadījumā uz komplektācijā iekļauto `sql.js` WASM) — būvēšanas rīki nav nepieciešami.
+Vietējais SQLite dzinis (`better-sqlite3`) ir **neobligāta** atkarība, tāpēc globālā
+instalēšana nekad neaizkavējas, kompilējot no pirmkoda: tā izmanto iepriekš kompilētu bināro failu, ja tāds atbilst
+jūsu platformai/Node, bet pretējā gadījumā nemanāmi pāriet uz tīru JS dzini
+(`node:sqlite` ar Node 22+, citādi komplektā iekļauto `sql.js` WASM) — būvēšanas rīki nav nepieciešami.
 
-Lai pilnībā izlaistu vietējo pēcieinstalēšanas iesildīšanu (CI, bezgrafikas vai lēnās iekārtās):
+Lai pilnībā izlaistu **vietējo iesildīšanu** pēc instalēšanas (CI, bezgrafikas vai lēnās iekārtās).
+Piezīme: tas izlaiž tikai vietējā SQLite iesildīšanas darbību (`scripts/postinstall.mjs`);
+binārā faila kopēšanas/labošanas āķis (`scripts/build/postinstall.mjs`) joprojām darbojas kā parasti:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Arī CI=1 to izlaiž
 ```
 
-Visātrākai instalēšanai dodiet priekšroku **pnpm** (pēc satura adresēta krātuve + cietās saites — skatiet iepriekš).
-Izpildvidei bez informācijas paneļa un grafiskās saskarnes izmantojiet Docker `base` profilu (iepriekš) vai
-[Termux ceļvedi](docs/guides/TERMUX_GUIDE.md). CLI un tīmekļa informācijas paneli nodrošina viens un tas pats
-process vienā portā, tādēļ pašlaik nav atsevišķas, tikai CLI paredzētas pakotnes.
+Ātrākai instalēšanai dodiet priekšroku **pnpm** (pēc satura adresēta krātuve + cietās saites — skatiet iepriekš).
+Darbībai bez informācijas paneļa un grafiskās saskarnes izmantojiet Docker `base` profilu (iepriekš) vai
+[Termux ceļvedi](docs/guides/TERMUX_GUIDE.md). CLI un tīmekļa informācijas paneli apkalpo viens un tas pats
+process vienā portā, tāpēc pašlaik nav atsevišķas tikai CLI paredzētas pakotnes.
 
 <br/>
 

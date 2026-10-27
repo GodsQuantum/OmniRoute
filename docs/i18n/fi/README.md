@@ -700,7 +700,7 @@ komentotulkkisi historiasta. → [CLI-integraatiot](docs/guides/CLI-INTEGRATIONS
 
 </div>
 
-> **376 rekisteröityä palveluntarjoajaa** ensisijaisissa keskustelu-, media-, haku-, paikallis-, pilviagentti- ja järjestelmäkokoelmissa, joista **153 sisältää `hasFree: true` -hakumetatiedon**. Keskustelumallien rekisteri kattaa **239 palveluntarjoajaa / 3 059 erillistä palveluntarjoajan ja mallin yhdistelmää / 1 475 käsittelemätöntä mallitunnusta**. Erillisessä ilmaiskäyttökiintiöiden luettelossa on **471 mallikohtaista riviä**, **34 uusiutuvaa resurssipoolia** ja **52 uusiutuvan tai avaimettoman maksuttoman käytön pysyvästi tarjoavaa palveluntarjoajaa**. Näissä käytetään tarkoituksella eri nimittäjiä; määritelmät ja resurssipoolien päällekkäisyydet poistavat laskelmat löytyvät [palveluntarjoajien viitteestä](docs/reference/PROVIDER_REFERENCE.md) ja [ilmaiskäyttötasoista](docs/reference/FREE_TIERS.md).
+> **376 rekisteröityä palveluntarjoajaa** ensisijaisissa keskustelu-, media-, haku-, paikallis-, pilviagentti- ja järjestelmäkokoelmissa, joista **153 sisältää `hasFree: true` -hakumetatiedon**. Keskustelumallien rekisteri kattaa **239 palveluntarjoajaa / 3 059 erillistä palveluntarjoajan ja mallin yhdistelmää / 1 475 käsittelemätöntä mallitunnusta**. Erillisessä ilmaiskäyttökiintiöiden luettelossa on **484 mallikohtaista riviä**, **34 uusiutuvaa resurssipoolia** ja **52 uusiutuvan tai avaimettoman maksuttoman käytön pysyvästi tarjoavaa palveluntarjoajaa**. Näissä käytetään tarkoituksella eri nimittäjiä; määritelmät ja resurssipoolien päällekkäisyydet poistavat laskelmat löytyvät [palveluntarjoajien viitteestä](docs/reference/PROVIDER_REFERENCE.md) ja [ilmaiskäyttötasoista](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1096,9 +1096,9 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` seuraa korkeinta **julkaistua** vakaata SemVer-versiota. Se ei seuraa git-haaraa `main`. Kiinnitä GitOps-käyttöä varten versioon `:X.Y.Z`. Katso [Docker-julkaisukanavat](docs/guides/DOCKER_GUIDE.md#release-channels). Levykuva määrittää arvoksi **`OMNIROUTE_MEMORY_MB=1024`**. Se riittää hallintapaneelille ja kevyeen keskusteluun. **Koodausagentit** (Claude Coden, Codexin, Grokin jne. tekemät `POST /v1/responses` -pyynnöt) tarvitsevat huomattavasti suuremman V8-keon, tai prosessi päätyy `FATAL ERROR` -virheeseen noin 12 GiB:n kohdalla kahden päällekkäisen pitkän kontekstin aikana. Mitoita säilö kekoa suuremmaksi (natiivipuskurit sijaitsevat V8:n ulkopuolella):
+`:latest` seuraa korkeinta **julkaistua** vakaata SemVer-versiota. Se ei seuraa git-haaraa `main`. Kiinnitä GitOps-käytössä versioon `:X.Y.Z`. Katso [Dockerin julkaisukanavat](docs/guides/DOCKER_GUIDE.md#release-channels). Levykuva määrittää arvoksi **`OMNIROUTE_MEMORY_MB=1024`**. Se riittää hallintapaneelille ja kevyeen keskusteluun. **Koodausagentit** (Claude Coden, Codexin, Grokin ym. tekemät `POST /v1/responses` -pyynnöt) tarvitsevat huomattavasti suuremman V8-keon, tai prosessi päättyy `FATAL ERROR` -virheeseen noin 12 GiB:n kohdalla kahden pitkän, osittain päällekkäisen kontekstin aikana. Mitoita säilö kekoa suuremmaksi (natiivipuskurit sijaitsevat V8:n ulkopuolella):
 
-| Kuormitus                                          | Keko (`-e OMNIROUTE_MEMORY_MB`) | Säilö (`--memory`) |
+| Työkuorma                                          | Keko (`-e OMNIROUTE_MEMORY_MB`) | Säilö (`--memory`) |
 | -------------------------------------------------- | ------------------------------- | ------------------ |
 | Hallintapaneeli / kevyt keskustelu                 | `1024` (levykuvan oletusarvo)   | ≥2 g               |
 | Yksi koodausagentti                                | `8192`                          | ≥10 g              |
@@ -1110,21 +1110,21 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-Koko taulukko: [Docker-opas — käytönaikainen RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+Koko taulukko: [Docker-opas — ajonaikainen RAM-muisti](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **Dockerin esijulkaisukanava:** `diegosouzapw/omniroute:next` ja
 > `diegosouzapw/omniroute:next-web` seuraavat nykyistä oletusarvoista `release/v*`-
 > haaraa. Nämä muuttuvat tunnisteet on tarkoitettu vain julkaisemattomien korjausten testaamiseen,
 > eikä niitä **tueta tuotantokäytössä**. Katso
-> [Docker-julkaisukanavat](docs/guides/DOCKER_GUIDE.md#release-channels).
+> [Dockerin julkaisukanavat](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Tavallista `bun install` -asennusta ja yleistä asennusta (`bun install -g omniroute`) tuetaan Bun-ympäristön automaattisen tunnistuksen avulla:
+Tavallista `bun install` -asennusta ja globaalia asennusta (`bun install -g omniroute`) tuetaan Bun-ajonaikaisen ympäristön tunnistuksen avulla:
 
-- **Sisäänrakennettu `bun:sqlite`**: OmniRoute käyttää Bunin sisäänrakennettua `bun:sqlite`-ajuria Bun-ympäristössä ja käyttää varajärjestelmänä `better-sqlite3`:a Node.js-ympäristössä tai `sql.js`:ää.
-- **Webpack-paketoijan automaattinen valinta kehityksessä**: Kehitysympäristö (`bun run dev`) tunnistaa Bunin automaattisesti ja poistaa Turbopackin käytöstä Webpackin hyväksi natiivien V8-sidosten yhteensopimattomuuksien estämiseksi. Tuotantokoontiversiot (`bun run build`) noudattavat muuttujaa `OMNIROUTE_USE_TURBOPACK` täsmälleen samoin kuin Nodessa: oletuksena käytetään Turbopackia ja arvolla `OMNIROUTE_USE_TURBOPACK=0` koonti tehdään Webpackilla (`Dockerfile.bun` tuo sen saataville `--build-arg`-argumenttina).
-- **Erillinen Bun-Dockerfile**: Monivaiheinen `Dockerfile.bun` natiiveihin Bun-tuotantokäyttöönottoihin (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Sisäänrakennettu `bun:sqlite`**: OmniRoute käyttää Bunin sisäänrakennettua `bun:sqlite`-ajuria Bunissa suoritettaessa ja käyttää varavaihtoehtona `better-sqlite3`-ajuria Node.js:ssä tai `sql.js`:ää.
+- **Webpack-paketoijan automaattinen valinta kehityksessä**: Kehitysympäristö (`bun run dev`) tunnistaa Bunin automaattisesti ja poistaa Turbopackin käytöstä Webpackin hyväksi, jotta natiivien V8-sidosten yhteensopivuusongelmat vältetään. Tuotantokoontiversiot (`bun run build`) noudattavat `OMNIROUTE_USE_TURBOPACK`-asetusta täsmälleen samoin kuin Nodessa: oletuksena Turbopack, tai `OMNIROUTE_USE_TURBOPACK=0`, kun koontiin käytetään Webpackia (`Dockerfile.bun` tuo sen saataville `--build-arg`-argumenttina).
+- **Erillinen Bun-Dockerfile**: Monivaiheinen `Dockerfile.bun` natiiveja Bun-tuotantokäyttöönottoja varten (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Asenna ja suorita Bunilla
@@ -1167,38 +1167,40 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Valmistele liitoskohtaan sidottava datahakemisto
+# 1. Valmistele liitospisteeseen sidottu datahakemisto
 mkdir -p data
 
-# 2. Vain Linux ja paikallinen pääkäyttäjätön Podman (ei koskaan Podman Machine -etäasiakas):
+# 2. Vain Linux ja paikallinen pääkäyttäjätön Podman (ei koskaan Podman Machinen etäasiakasohjelmassa):
 podman unshare chown 1000:1000 ./data
 
-# 3. Aseta ajoympäristövihje, koosta paikallinen Compose-levykuva ja käynnistä
+# 3. Määritä ajonaikainen vihje, koosta paikallinen Compose-levykuva ja käynnistä
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS- tai Windows-järjestelmässä Podman käyttää Podman Machine -etäympäristöä: ohita `podman unshare` ja
-noudata [topologiakohtaisia datahakemiston ohjeita](contrib/podman/README.md#data-directory-permissions-by-topology).
+macOS- tai Windows-järjestelmässä Podman käyttää Podman Machinea etäyhteydellä: ohita `podman unshare` ja
+noudata [topologiakohtaisia datahakemisto-ohjeita](contrib/podman/README.md#data-directory-permissions-by-topology).
 
 📖 [Podman-opas](contrib/podman/README.md) — Compose-koonnit, Podman Machine ja
 Linux/systemd Quadlet -määritys.
 
 **⚡ Nopeampi / kevyempi asennus (ohita natiivikoonti)**
 
-Natiivi SQLite-moottori (`better-sqlite3`) on **valinnainen** riippuvuus, joten yleinen
-asennus ei koskaan pysähdy odottamaan lähdekoodista kääntämistä: se käyttää esikäännettyä binääritiedostoa, kun sellainen vastaa
-alustaasi ja Node-versiotasi, ja muussa tapauksessa siirtyy läpinäkyvästi puhdasta JavaScriptiä käyttävään moottoriin
-(`node:sqlite` Node 22+:ssa, muussa tapauksessa pakettiin sisältyvä `sql.js` WASM) — koontityökaluja ei tarvita.
+Natiivi SQLite-moottori (`better-sqlite3`) on **valinnainen** riippuvuus, joten globaali
+asennus ei koskaan jää odottamaan lähdekoodista kääntämistä: se käyttää valmiiksi käännettyä binaaria, kun sellainen vastaa
+alustaasi/Node-versiotasi, ja muussa tapauksessa siirtyy läpinäkyvästi täysin JavaScript-pohjaiseen moottoriin
+(`node:sqlite` Node 22+:ssa, muutoin mukana toimitettu `sql.js` WASM) — koontityökaluja ei tarvita.
 
-Voit ohittaa asennuksen jälkeisen natiivin esilämmityksen kokonaan (CI-ympäristöt, käyttöliittymättömät ympäristöt tai hitaat laitteet):
+Voit ohittaa asennuksen jälkeisen **natiivin esilämmityksen** kokonaan (CI-ympäristöt sekä ilman näyttöä toimivat tai hitaat koneet).
+Huomautus: tämä ohittaa vain natiivin SQLiten esilämmitysvaiheen (`scripts/postinstall.mjs`);
+binaarin kopiointi-/korjauskoukku (`scripts/build/postinstall.mjs`) suoritetaan edelleen normaalisti:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Myös CI=1 ohittaa sen
 ```
 
-Nopeimpiin asennuksiin kannattaa käyttää **pnpm**:ää (sisältöosoitteinen varasto + kovat linkit — katso edellä).
-Käytä ilman hallintapaneelia toimivaan käyttöliittymättömään ajoympäristöön Dockerin `base`-profiilia (edellä) tai
+Käytä nopeimpiin asennuksiin ensisijaisesti **pnpm**:ää (sisältöosoitteinen säilö + kiinteät linkit — katso edellä).
+Jos haluat ilman hallintapaneelia toimivan, palvelinkäyttöön tarkoitetun ympäristön, käytä Dockerin `base`-profiilia (edellä) tai
 [Termux-opasta](docs/guides/TERMUX_GUIDE.md). CLI ja verkkohallintapaneeli tarjotaan saman
 prosessin kautta yhdessä portissa, joten erillistä vain CLI:n sisältävää pakettia ei tällä hetkellä ole.
 

@@ -26,7 +26,7 @@ Toplam sağlayıcı sayısı: **376**. Aşağıdaki kategori dökümüne bakın.
 
 Ek etiketler: `image`, `video`, `aggregator`, `enterprise`, `embed/rerank`, `self-hosted`.
 
-`Araç çağırma` (gösterildiği yerlerde): `native` — gerçek işlev çağırma API'si; `emulated` — `tools` dizisi, `webTools.ts` aracılığıyla istem tabanlı olarak taklit edilir (regex ile ayrıştırılan `<tool>{...}</tool>` blokları); `none` — `tools` şu anda herhangi bir uyarı verilmeden yok sayılır. Bkz. #7286.
+`Tool calling` (Araç çağırma) (gösterildiği yerlerde): `native` — gerçek işlev çağırma API'si; `emulated` — `tools` dizisi, `webTools.ts` aracılığıyla istem tabanlı olarak taklit edilir (regex ile ayrıştırılan `<tool>{...}</tool>` blokları); `none` — `tools` şu anda herhangi bir uyarı verilmeden yok sayılır. Bkz. #7286.
 
 Her sağlayıcıyı etkinleştirmek, yapılandırmak ve test etmek için `/dashboard/providers` adresindeki kontrol panelini kullanın.
 

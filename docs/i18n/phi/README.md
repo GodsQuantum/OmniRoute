@@ -691,7 +691,7 @@ sa iyong shell history. → [Mga Integrasyon ng CLI](docs/guides/CLI-INTEGRATION
 
 </div>
 
-> **376 nakarehistrong provider** sa mga kanonikal na koleksiyon ng chat, media, paghahanap, lokal, cloud-agent, at system, kabilang ang **153 na may `hasFree: true` na metadata para sa pagtuklas**. Saklaw ng registry ng chat model ang **239 na provider / 3,059 na natatanging pares ng provider-model / 1,475 raw model ID**; ang hiwalay na catalog ng libreng budget ay may **471 row bawat model**, **34 umuulit na pool**, at **52 umuulit/keyless na provider na libre magpakailanman**. Sadyang magkakaiba ang mga denominator na ito; makikita ang mga depinisyon at kalkulasyong nag-aalis ng duplikasyon sa pool sa [Sanggunian ng Provider](docs/reference/PROVIDER_REFERENCE.md) at [Mga Libreng Tier](docs/reference/FREE_TIERS.md).
+> **376 nakarehistrong provider** sa mga kanonikal na koleksiyon ng chat, media, paghahanap, lokal, cloud-agent, at system, kabilang ang **153 na may `hasFree: true` na metadata para sa pagtuklas**. Saklaw ng registry ng chat model ang **239 na provider / 3,059 na natatanging pares ng provider-model / 1,475 raw model ID**; ang hiwalay na catalog ng libreng budget ay may **484 row bawat model**, **34 umuulit na pool**, at **52 umuulit/keyless na provider na libre magpakailanman**. Sadyang magkakaiba ang mga denominator na ito; makikita ang mga depinisyon at kalkulasyong nag-aalis ng duplikasyon sa pool sa [Sanggunian ng Provider](docs/reference/PROVIDER_REFERENCE.md) at [Mga Libreng Tier](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1087,11 +1087,11 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-Sinusundan ng `:latest` ang pinakamataas na **na-publish** na stable na SemVer. Hindi nito sinusubaybayan ang git `main`. I-pin ang `:X.Y.Z` para sa GitOps. Tingnan ang [Mga Channel ng Release ng Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Naka-pin sa image ang **`OMNIROUTE_MEMORY_MB=1024`**. Sapat iyon para sa dashboard at magaan na chat. Nangangailangan ang mga **coding agent** (`POST /v1/responses` mula sa Claude Code, Codex, Grok, …) ng mas malaking V8 heap, kung hindi ay magkakaroon ng `FATAL ERROR` ang proseso sa ~12 GiB kapag may dalawang magkapatong na mahabang context. Maglaan sa container ng higit sa laki ng heap (nasa labas ng V8 ang mga native buffer):
+Sinusundan ng `:latest` ang pinakamataas na **na-publish** na stable na SemVer. Hindi nito sinusubaybayan ang git `main`. I-pin ang `:X.Y.Z` para sa GitOps. Tingnan ang [Mga Release Channel ng Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Naka-pin sa image ang **`OMNIROUTE_MEMORY_MB=1024`**. Sapat iyon para sa dashboard at magaang chat. Ang mga **coding agent** (`POST /v1/responses` mula sa Claude Code, Codex, Grok, …) ay nangangailangan ng mas malaking V8 heap, kung hindi ay magkakaroon ang proseso ng `FATAL ERROR` sa humigit-kumulang 12 GiB kapag nagsasapawan ang dalawang mahabang context. Maglaan ng container na mas malaki kaysa sa heap (nasa labas ng V8 ang mga native buffer):
 
 | Workload                                   | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
 | ------------------------------------------ | ------------------------------- | ---------------------- |
-| Dashboard / magaan na chat                 | `1024` (default ng image)       | ≥2 g                   |
+| Dashboard / magaang chat                   | `1024` (default ng image)       | ≥2 g                   |
 | Isang coding agent                         | `8192`                          | ≥10 g                  |
 | Dalawang sabay na mahabang `/v1/responses` | `10240`–`12288`                 | ≥12–16 g               |
 
@@ -1103,22 +1103,22 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 Buong talahanayan: [Gabay sa Docker — runtime RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
-> **Pre-release na channel ng Docker:** Sinusundan ng `diegosouzapw/omniroute:next` at
-> `diegosouzapw/omniroute:next-web` ang kasalukuyang default na branch na `release/v*`.
-> Ang mga nababagong tag na ito ay inilaan lamang para sa pagsubok ng mga hindi pa
-> nailalabas na pag-aayos at **hindi sinusuportahan para sa production**. Tingnan ang
-> [Mga Channel ng Release ng Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
+> **Pre-release na Docker channel:** sinusundan ng `diegosouzapw/omniroute:next` at
+> `diegosouzapw/omniroute:next-web` ang kasalukuyang default na `release/v*`
+> branch. Ang mga mutable tag na ito ay para lamang sa pagsubok ng mga hindi pa inilalabas na pag-aayos at
+> **hindi sinusuportahan para sa production**. Tingnan ang
+> [Mga Release Channel ng Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Sinusuportahan ang karaniwang `bun install` at global na pag-install (`bun install -g omniroute`) sa pamamagitan ng pagtukoy sa Bun runtime:
+Sinusuportahan ang karaniwang `bun install` at global installation (`bun install -g omniroute`) sa pamamagitan ng Bun runtime detection:
 
 - **Built-in na `bun:sqlite`**: Ginagamit ng OmniRoute ang built-in na `bun:sqlite` driver ng Bun kapag tumatakbo sa Bun, at bumabalik sa `better-sqlite3` sa Node.js o `sql.js`.
-- **Awtomatikong pagpili ng Webpack bundler sa dev**: Awtomatikong tinutukoy ng development (`bun run dev`) ang Bun at dini-disable ang Turbopack pabor sa Webpack upang maiwasan ang mga incompatibility sa native V8 binding. Eksaktong sinusunod ng mga production build (`bun run build`) ang `OMNIROUTE_USE_TURBOPACK` gaya sa Node: Turbopack bilang default, `OMNIROUTE_USE_TURBOPACK=0` upang mag-build gamit ang Webpack (inilalantad ito ng `Dockerfile.bun` bilang `--build-arg`).
-- **Nakalaang Bun Dockerfile**: Multi-stage na `Dockerfile.bun` para sa mga native na Bun production deployment (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Awtomatikong pagpili ng Webpack bundler sa dev**: Awtomatikong nade-detect ng development (`bun run dev`) ang Bun at dini-disable ang Turbopack pabor sa Webpack upang maiwasan ang mga incompatibility sa native V8 binding. Eksaktong sinusunod ng mga production build (`bun run build`) ang `OMNIROUTE_USE_TURBOPACK` tulad sa Node: Turbopack bilang default, `OMNIROUTE_USE_TURBOPACK=0` upang mag-build gamit ang Webpack (inilalantad ito ng `Dockerfile.bun` bilang `--build-arg`).
+- **Nakalaang Bun Dockerfile**: Multi-stage na `Dockerfile.bun` para sa mga native Bun production deployment (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
-# Mag-install at patakbuhin gamit ang Bun
+# Mag-install at magpatakbo gamit ang Bun
 bun install
 bun run dev
 ```
@@ -1164,7 +1164,7 @@ mkdir -p data
 # 2. Para lamang sa Linux + lokal na rootless Podman (huwag kailanman sa remote na Podman Machine client):
 podman unshare chown 1000:1000 ./data
 
-# 3. Itakda ang runtime hint, buuin ang lokal na Compose image, at simulan
+# 3. Itakda ang runtime hint, i-build ang lokal na Compose image, at simulan
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
@@ -1175,14 +1175,16 @@ sundin ang [gabay sa data directory na partikular sa topology](contrib/podman/RE
 📖 [Gabay sa Podman](contrib/podman/README.md) — Mga Compose build, Podman Machine, at
 pag-setup ng Linux/systemd Quadlet.
 
-**⚡ Mas mabilis / mas magaan na pag-install (laktawan ang native build)**
+**⚡ Mas mabilis / mas magaang pag-install (laktawan ang native build)**
 
-Ang native na SQLite engine (`better-sqlite3`) ay isang **opsyonal** na dependency, kaya ang global na
-pag-install ay hindi kailanman mahahadlangan ng pag-compile mula sa source: gumagamit ito ng prebuilt binary kapag may tumutugma
+Ang native SQLite engine (`better-sqlite3`) ay isang **opsyonal** na dependency, kaya ang global
+install ay hindi kailanman nahaharang sa pag-compile mula sa source: gumagamit ito ng prebuilt binary kapag may tumutugma
 sa iyong platform/Node, at kung wala ay awtomatikong bumabalik sa isang pure-JS engine
 (`node:sqlite` sa Node 22+, o kung hindi ay ang kasamang `sql.js` WASM) — walang kinakailangang build tool.
 
-Upang ganap na laktawan ang native warm-up pagkatapos ng pag-install (CI, headless, o mababagal na machine):
+Upang ganap na laktawan ang **native warm-up** pagkatapos ng pag-install (CI, headless, o mababagal na machine).
+Tandaan: nilalaktawan lamang nito ang native SQLite warm-up step (`scripts/postinstall.mjs`); normal pa ring
+tumatakbo ang binary-copy/repair hook (`scripts/build/postinstall.mjs`):
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Nilalaktawan din ito ng CI=1
@@ -1190,8 +1192,8 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Nilalaktawan din ito n
 
 Para sa pinakamabilis na pag-install, piliin ang **pnpm** (content-addressed store + mga hard link — tingnan sa itaas).
 Para sa headless runtime na walang dashboard, gamitin ang Docker `base` profile (sa itaas) o ang
-[gabay sa Termux](docs/guides/TERMUX_GUIDE.md). Inihahatid ng iisang proseso sa iisang port ang CLI at web dashboard,
-kaya walang hiwalay na CLI-only package sa kasalukuyan.
+[gabay sa Termux](docs/guides/TERMUX_GUIDE.md). Ang CLI at web dashboard ay inihahatid ng
+iisang proseso sa iisang port, kaya walang hiwalay na CLI-only package sa kasalukuyan.
 
 <br/>
 

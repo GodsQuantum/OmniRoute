@@ -81,29 +81,13 @@
 
 ## 2. 規則
 
-1. 使用設計權杖，絕不使用字面值。刻意保留的例外：固定為深色的主控台終端、透過 `STATUS_HEX` (`src/shared/constants/statusColors.ts`) 設定的 ReactFlow SVG
-   筆畫，以及分類調色盤
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) 和
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`)。
-2. 絕不手動修補 `packages/ui-kit/src`：請使用 `scripts/dev/sync-ui-kit.sh <commit>` 同步；若有任何位元組
-   與固定的上游提交不同，預先提交閘門 `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) 就會失敗
-   （若上游複製版本 `UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit` 不存在，則會顯示警告並
-   略過）。當套件缺少某項功能時，請在轉接器或畫面中採取替代作法，並向上游提出需求。
-3. 套件的文字預設值為英文（`label = "Loading"`、`loadingLabel = "Loading table"`……）——每當套件元件
-   轉譯文字時，請傳入來自 `useTranslations(...)` 的翻譯字串。
-4. Tailwind 公用類別的優先順序高於套件元件類別（套件宣告
-   `@layer theme, base, components, utilities`，而其規則位於 `components`）——請使用公用類別處理
-   間距與版面配置，不要用它們重新設定套件元件的顏色。
-5. 標題：頁面與區段標題使用 `.ci-heading`（Inter，無字距調整）；`.ci-dashboard-display`
-   （Instrument Serif）僅用於大型、稀疏的展示文字，例如錯誤頁面的狀態碼。
-6. `tests/unit/dashboard-kit-sweep.test.ts` 會守護套件的採用情況：`src/app` 或
-   `src/shared/components` 下不得有 Material 連字 span；儀表板樹狀目錄（`src/app/(dashboard)` 和
-   `src/shared/components`）中不得有原始 `<select>`、`<textarea>` 或 `<table>`，也不得在列出的
-   例外之外自行實作 `role="dialog"`（例外包括 `Select` 轉接器的原生分支、
-   `RequestLoggerDetail`）；其中每個原始 `<button>` 或 `<input>` 的上方至多 3 行內，都必須有一則
-   包含 `kit-exception:`（以及原因）的註解；調色盤色相與 `dark:` 變體只能出現在測試列出的檔案中。
-7. PR 前請驗證兩種主題與 390 px 視窗寬度（附螢幕擷取畫面）；`tests/e2e/a11y.spec.ts` 會執行
-   axe。
+1. 使用權杖，絕不使用常值。刻意保留的例外：永遠採用深色的主控台終端，以及透過 `STATUS_HEX`（`src/shared/constants/statusColors.ts`）設定的 ReactFlow SVG 筆畫。路由策略與壓縮層調色盤透過 `strategyColorVar` 和 `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）使用套件的圖表權杖。
+2. 絕不可手動修改 `packages/ui-kit/src`：請使用 `scripts/dev/sync-ui-kit.sh <commit>` 同步；若有任何位元組與鎖定的上游提交不同，預先提交閘門 `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）便會失敗（若缺少上游複製版本 `UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit`，則會顯示警告並略過）。若套件缺少某項功能，請在轉接器或畫面中採取替代做法，並向上游提出需求。
+3. 套件文字的預設值為英文（`label = "Loading"`、`loadingLabel = "Loading table"`……）——只要套件元件會呈現文字，就應從 `useTranslations(...)` 傳入翻譯後的字串。
+4. Tailwind 工具類別的優先順序高於套件元件類別（套件宣告了 `@layer theme, base, components, utilities`，且其規則位於 `components`）——請使用工具類別處理間距與版面配置，不要用來重新設定套件元件的顏色。
+5. 標題：頁面與區段標題使用 `.ci-heading`（Inter，不使用字距）；只有錯誤頁面狀態碼這類大型、疏朗的展示文字才使用 `.ci-dashboard-display`（Instrument Serif）。
+6. `tests/unit/dashboard-kit-sweep.test.ts` 負責確保套件的採用情況：`src/app` 或 `src/shared/components` 下不得有 Material 連字 span；儀表板目錄樹（`src/app/(dashboard)` 和 `src/shared/components`）中不得有原始 `<select>`、`<textarea>` 或 `<table>`，且除列出的例外（`Select` 轉接器的原生分支、`RequestLoggerDetail`）外，不得有自行實作的 `role="dialog"`；該處每個原始 `<button>` 或 `<input>` 上方最多 3 行內都必須有包含 `kit-exception:`（並附上原因）的註解；調色盤色相與 `dark:` 變體只能出現在測試所列出的檔案中。
+7. 提交 PR 前，請透過螢幕截圖驗證兩種主題與 390 px 的視窗寬度；`tests/e2e/a11y.spec.ts` 會執行 axe。
 
 ## 3. 新增畫面
 

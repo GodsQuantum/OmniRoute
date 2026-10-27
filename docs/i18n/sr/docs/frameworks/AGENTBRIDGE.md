@@ -12,38 +12,38 @@ AgentBridge је OmniRoute-ов MITM (Man-in-the-Middle) прокси који �
 
 ---
 
-## §1 Преглед
+## §1 Pregled
 
-### Шта је AgentBridge?
+### Šta je AgentBridge?
 
-Када IDE агент (нпр. GitHub Copilot, Cursor, Claude Code) упути API позив, он се директно повезује са изворним AI провајдером (OpenAI, Anthropic итд.). AgentBridge транспарентно пресреће ту везу на TLS нивоу — без потребе за било каквом променом конфигурације агента — и преусмерава захтев кроз OmniRoute.
+Kada IDE agent (npr. GitHub Copilot, Cursor, Claude Code) uputi API poziv, on se povezuje direktno sa izvornim AI provajderom (OpenAI, Anthropic, itd.). AgentBridge presreće tu vezu transparentno na TLS nivou — bez potrebe za bilo kakvom izmenom konfiguracije agenta — i preusmerava zahtev kroz OmniRoute.
 
-То значи да можете:
+Ovo znači da možete:
 
-- **Преусмерити било који агент на било ког провајдера**: Copilot комуницира са OpenAI-јем? Преусмерите га на Anthropic Claude, Gemini или било ког од 376 провајдера које подржава OmniRoute.
-- **Применити мапирања модела**: `gemini-3-flash` → `claude-sonnet-4.7` транспарентно на нивоу обрађивача.
-- **Надгледати сав саобраћај агената**: сваки пресретнути захтев објављује се у [Инспектору саобраћаја](./TRAFFIC_INSPECTOR.md).
-- **Применити отпорност система OmniRoute**: комбиновано рутирање, прекидачи кола, резервне опције и праћење трошкова функционишу и за саобраћај IDE агената.
+- **Preusmeriti bilo kog agenta na bilo kog provajdera**: Copilot komunicira sa OpenAI? Preusmerite ga na Anthropic Claude, Gemini ili bilo kog od 376 provajdera koje OmniRoute podržava.
+- **Primeniti mapiranja modela**: `gemini-3-flash` → `claude-sonnet-4.7` transparentno na nivou obrađivača.
+- **Posmatrati sav saobraćaj agenata**: svaki presretnuti zahtev se objavljuje u [Traffic Inspector](./TRAFFIC_INSPECTOR.md).
+- **Primeniti otpornost OmniRoute-a**: kombinovano rutiranje, prekidači kola, rezervne varijante i praćenje troškova funkcionišu i za saobraćaj IDE agenata.
 
-### Позиционирање у односу на тржиште
+### Pozicioniranje u odnosu na tržište
 
-| Функционалност                          | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
-| --------------------------------------- | :-----: | :------: | :-------------: | :-----------------------: |
-| Antigravity                             |    ✓    |    ✓     |        —        |             ✓             |
-| GitHub Copilot                          |    ✓    |    ✓     |        —        |             ✓             |
-| Kiro (AWS)                              |    ✓    |    ✓     |        —        |             ✓             |
-| OpenAI Codex                            |    —    |    ✓     |        —        |             ✓             |
-| Cursor IDE                              |    ✓    |    ✓     |        —        |             ✓             |
-| Zed Industries                          |    —    |    ✓     |        —        |             ✓             |
-| Claude Code                             |    —    |    —     |        ✓        |             ✓             |
-| Open Code                               |    —    |    —     |        ✓        |             ✓             |
-| Trae                                    |    —    |    —     |        —        |      🔍 Истражује се      |
-| Кориснички интерфејс контролне табле    |    ✓    |    ✗     |        ✗        |             ✓             |
-| Инспектор саобраћаја                    |    ✗    |    ✗     |        ✓        |             ✓             |
-| OmniRoute рутирање                      |    ✗    |    ✗     |        ✗        |             ✓             |
-| Кориснички интерфејс за мапирање модела |    ✗    |    ✗     |        ✗        |             ✓             |
-| Листа за заобилажење                    |    ✗    |    ✗     |        ✓        |             ✓             |
-| Изворни CA сертификат                   |    ✗    |    ✗     |        ✓        |             ✓             |
+| Funkcija               | 9router | anti-api | llm-interceptor | **OmniRoute AgentBridge** |
+| ---------------------- | :-----: | :------: | :-------------: | :-----------------------: |
+| Antigravity            |    ✓    |    ✓     |        —        |             ✓             |
+| GitHub Copilot         |    ✓    |    ✓     |        —        |             ✓             |
+| Kiro (AWS)             |    ✓    |    ✓     |        —        |             ✓             |
+| OpenAI Codex           |    —    |    ✓     |        —        |             ✓             |
+| Cursor IDE             |    ✓    |    ✓     |        —        |             ✓             |
+| Zed Industries         |    —    |    ✓     |        —        |             ✓             |
+| Claude Code            |    —    |    —     |        ✓        |             ✓             |
+| Open Code              |    —    |    —     |        ✓        |             ✓             |
+| Trae                   |    —    |    —     |        —        |      🔍 Istražuje se      |
+| Kontrolna tabla (UI)   |    ✓    |    ✗     |        ✗        |             ✓             |
+| Traffic Inspector      |    ✗    |    ✗     |        ✓        |             ✓             |
+| OmniRoute rutiranje    |    ✗    |    ✗     |        ✗        |             ✓             |
+| UI za mapiranje modela |    ✗    |    ✗     |        ✗        |             ✓             |
+| Lista zaobilaženja     |    ✗    |    ✗     |        ✓        |             ✓             |
+| Upstream CA sertifikat |    ✗    |    ✗     |        ✓        |             ✓             |
 
 ---
 
@@ -547,22 +547,22 @@ ipconfig /flushdns
 
 ### Истраживање алата Trae
 
-Trae је релативно нов помоћник за програмирање заснован на вештачкој интелигенцији. Пре имплементације обрађивача:
+Trae је релативно нов AI помоћник за програмирање. Пре имплементације обрађивача:
 
-1. Идентификујте бинарну датотеку/проширење на VS Code / JetBrains продавницама или као самосталну апликацију
-2. Снимите саобраћај помоћу mitmproxy да бисте открили API хостове и структуре крајњих тачака
-3. Утврдите механизам аутентификације
-4. Процените да ли наставити или одустати на основу услова коришћења и могућности откривања API-ја
+1. Идентификовати бинарну датотеку/проширење на VS Code / JetBrains продавницама додатака или као самосталну апликацију
+2. Снимити саобраћај помоћу mitmproxy алата ради откривања API хостова и структуре крајњих тачака
+3. Утврдити механизам аутентификације
+4. Проценити да ли треба наставити на основу услова коришћења и могућности откривања API-ја
 
-Док се истраживање не заврши, Trae картица на контролној табли приказује ознаку „Истраживање је у току“ са везом „Пријави одрживост“. Костур обрађивача у `src/mitm/handlers/trae.ts` пријављује структурирану грешку `Још није имплементирано`.
+Док се истраживање не заврши, Trae картица на контролној табли приказује ознаку „Истраживање је у току“ са везом „Пријави одрживост“. Костур обрађивача у `src/mitm/handlers/trae.ts` баца структурисану грешку `Not yet implemented`.
 
-### Агенти у листи задатака (MITM је обавезан — нема подршке за прилагођени основни URL)
+### Агенти на листи чекања (MITM је обавезан — нема подршке за прилагођени основни URL)
 
-Следећи алати у својим тренутним верзијама не подржавају прилагођене основне URL-ове, због чега је MITM једини начин пресретања. Процена одрживости је на чекању:
+Следећи алати у својим тренутним верзијама не подржавају прилагођене основне URL-ове, због чега је MITM једини начин пресретања. Процена одрживости је у току:
 
 - **Windsurf** (Codeium/Cognition)
 - **Amp** (Sourcegraph)
-- **Amazon Q / Kiro CLI** (AWS Bedrock — одвојено од Kiro IDE)
+- **Amazon Q / Kiro CLI** (AWS Bedrock — одвојено од Kiro IDE-а)
 - **Cowork** (Anthropic десктоп апликација)
 
 Напомена: GitHub Copilot CLI ≥v1.0.19 подржава `COPILOT_PROVIDER_BASE_URL` — за тај алат користите директну конфигурацију уместо MITM-а.

@@ -492,7 +492,7 @@ Dabei werden folgende Elemente verarbeitet:
 | `providerModels.ts`           | Modellaliase, Formatzuordnung                         |
 | `constants.ts`                | Zeitüberschreitungen, Grenzwerte, Statuscodes         |
 | `defaultThinkingSignature.ts` | Standardmäßige Claude-Denksignatur                    |
-| `modelStrip.ts` (in Diensten) | Anbieterspezifisches Entfernen von Feldern            |
+| `modelStrip.ts` (in Services) | Anbieterspezifisches Entfernen von Feldern            |
 
 ### Schema der Anbieter-Registry
 

@@ -152,18 +152,18 @@ curl -X POST http://localhost:20128/a2a \
 
 ## Ħiliet Disponibbli
 
-OmniRoute jesponi 6 ħiliet A2A konnessi f’`src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kull modulu ta’ ħila jinsab f’`src/lib/a2a/skills/`.
+OmniRoute jesponi 6 ħiliet A2A marbuta f’`src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Kull modulu ta’ ħila jinsab f’`src/lib/a2a/skills/`.
 
 | Ħila                   | ID                   | Deskrizzjoni                                                                                                                                                                                      | Tikketti                  | Eżempji                                      |
 | :--------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------ | :------------------------------------------- |
-| Rotot Intelliġenti     | `smart-routing`      | Jgħaddi prompt mill-aħjar fornitur/kombinazzjoni permezz tal-magna tal-kombinazzjonijiet u s-sistema ta’ punteġġ ta’ OmniRoute                                                                    | rotot, fornituri          | "Għaddi dan il-prompt mill-aħjar mudell"     |
-| Ġestjoni tal-Kwota     | `quota-management`   | Jirrapporta l-istat tal-kwota għal kull fornitur u jgħin lil min isejjaħ jiddeċiedi meta jillimita/jibdel                                                                                         | kwota, fornituri          | "Iċċekkja l-kwota għal anthropic"            |
-| Skoperta ta’ Fornituri | `provider-discovery` | Jelenka l-fornituri installati bil-kapaċitajiet, l-indikaturi tal-livell bla ħlas u l-istat ta’ OAuth                                                                                             | fornituri, skoperta       | "Liema fornituri huma disponibbli?"          |
-| Analiżi tal-Ispejjeż   | `cost-analysis`      | Jistma l-ispiża ta’ talba/konverżazzjoni abbażi tal-katalgu u l-użu reċenti                                                                                                                       | spiża, użu                | "Stima l-ispiża għal din il-konverżazzjoni"  |
-| Rapport tas-Saħħa      | `health-report`      | Jaggruppa l-istat tas-circuit breaker, tal-cooldown u tal-lockout għal kull fornitur                                                                                                              | saħħa, reżiljenza         | "Uri l-istat tas-saħħa tal-fornituri kollha" |
+| Routing Intelliġenti   | `smart-routing`      | Jidderieġi prompt permezz tal-aħjar fornitur/kombinazzjoni bl-użu tal-magna tal-kombinazzjonijiet u s-sistema ta’ punteġġ ta’ OmniRoute                                                           | routing, fornituri        | "Idderieġi dan il-prompt bl-aħjar mudell"    |
+| Ġestjoni tal-Kwota     | `quota-management`   | Jirrapporta l-istat tal-kwota għal kull fornitur u jgħin lil min isejjaħ jiddeċiedi meta jillimita jew jaqleb                                                                                     | kwota, fornituri          | "Iċċekkja l-kwota għal anthropic"            |
+| Skoperta tal-Fornituri | `provider-discovery` | Jelenka l-fornituri installati flimkien mal-kapaċitajiet, l-indikaturi tal-livell bla ħlas u l-istat OAuth                                                                                        | fornituri, skoperta       | "Liema fornituri huma disponibbli?"          |
+| Analiżi tal-Ispejjeż   | `cost-analysis`      | Jistma l-ispiża ta’ talba/konverżazzjoni abbażi tal-katalgu u l-użu riċenti                                                                                                                       | spiża, użu                | "Stima l-ispiża għal din il-konverżazzjoni"  |
+| Rapport tas-Saħħa      | `health-report`      | Jaggreġa l-istat tas-circuit breaker, tal-cooldown u tal-lockout għal kull fornitur                                                                                                               | saħħa, reżiljenza         | "Uri l-istat tas-saħħa tal-fornituri kollha" |
 | Elenka l-Kapaċitajiet  | `list-capabilities`  | Jirritorna l-katalgu sħiħ ta’ 45 entrata tal-Ħiliet tal-Aġent (23 API + 21 CLI + konfigurazzjoni waħda) bħala tabella markdown b’URLs mhux ipproċessati ta’ SKILL.md għall-injezzjoni tal-kuntest | katalgu, skoperta, ħiliet | "Elenka l-kapaċitajiet kollha ta’ OmniRoute" |
 
-> L-Agent Card għandha tinżamm allinjata mal-katalgu attiv ta’ 376 fornitur; l-għadd tal-fornituri u l-metadata dwar dawk bla ħlas/mingħajr awtentikazzjoni jinkisbu mir-reġistru waqt it-tħaddim.
+> Il-Karta tal-Aġent għandha tinżamm allinjata mal-katalgu attiv ta’ 376 fornitur; l-għadd tal-fornituri u l-metadata dwar aċċess bla ħlas/mingħajr awtentikazzjoni jittieħdu mir-reġistru waqt it-tħaddim.
 
 ### Dettalji tal-Ħila `list-capabilities`
 
@@ -172,11 +172,11 @@ Il-ħila `list-capabilities` hija partikolarment utli għal aġenti esterni li j
 ```
 | ID | Isem | Kategorija | Qasam | Endpoints/Kmandi | URL Mhux Ipproċessat |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Awtentikazzjoni u Sessjonijiet | api | awtentikazzjoni | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Awtentikazzjoni u Sessjonijiet | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
-Kull ringiela tinkludi l-kolonna `rawUrl` sabiex l-aġenti jkunu jistgħu minnufih jiksbu l-SKILL.md sħiħ. Il-qasam `metadata.totalSkills` jirrifletti d-daqs tal-katalgu (45 illum). Implimentazzjoni: `src/lib/a2a/skills/listCapabilities.ts`. Ara wkoll [AGENT-SKILLS.md](./AGENT-SKILLS.md).
+Kull ringiela tinkludi l-kolonna `rawUrl` sabiex l-aġenti jkunu jistgħu minnufih iniżżlu l-SKILL.md sħiħ. Il-kamp `metadata.totalSkills` jirrifletti d-daqs tal-katalgu (45 illum). Implimentazzjoni: `src/lib/a2a/skills/listCapabilities.ts`. Ara wkoll [AGENT-SKILLS.md](./AGENT-SKILLS.md).
 
 ---
 
@@ -197,39 +197,39 @@ Il-punt ta' dħul JSON-RPC `/a2a` huwa l-punt A2A kanoniku. L-estremitajiet REST
 
 ---
 
-## Żieda ta' Ħila Ġdida
+## Żieda ta’ Ħila Ġdida
 
-1. **Ħoloq tal-ħila:** `src/lib/a2a/skills/<ħila-ġdida>.ts`
+1. **Oħloq il-fajl tal-ħila:** `src/lib/a2a/skills/<your-skill>.ts`
 
-   Esporta funzjoni asinkrona `(task: A2ATask) => Promise<{ artifacts, metadata }>`. Segwi l-forma ta' ħiliet eżistenti bħal `smartRouting.ts`.
+   Esporta funzjoni asinkronika `(task: A2ATask) => Promise<{ artifacts, metadata }>`. Segwi l-istruttura ta’ ħiliet eżistenti bħal `smartRouting.ts`.
 
-2. **Irreġistra l-handlur:** f'`src/lib/a2a/taskExecution.ts`, żid dħul għal `A2A_SKILL_HANDLERS`:
+2. **Irreġistra l-handler:** f’`src/lib/a2a/taskExecution.ts`, żid entrata ma’ `A2A_SKILL_HANDLERS`:
 
    ```typescript
    export const A2A_SKILL_HANDLERS = {
      // ...ħiliet eżistenti
-     "ħila-ġdida": async (task) => {
-       const skillModule = await import("./skills/skillGdida");
-       return skillModule.executeSkillGdida(task);
+     "your-skill": async (task) => {
+       const skillModule = await import("./skills/yourSkill");
+       return skillModule.executeYourSkill(task);
      },
    };
    ```
 
-3. **Agħmilha disponibbli fil-Kard tal-Aġent:** f'`src/app/.well-known/agent.json/route.ts`, appendi għall-kunsinna `skills`:
+3. **Esponiha fl-Agent Card:** f’`src/app/.well-known/agent.json/route.ts`, żid mal-array `skills`:
 
    ```json
    {
-     "id": "ħila-ġdida",
-     "name": "Ħila Ġdida",
-     "description": "Deskrizzjoni qasira, iffukata l-intenzjoni",
+     "id": "your-skill",
+     "name": "Your Skill",
+     "description": "Brief, intent-focused description",
      "tags": ["routing", "quota"],
-     "examples": ["Eżempju ta' sejħa bil-lingwa naturali"]
+     "examples": ["Sample natural-language invocation"]
    }
    ```
 
-4. **Ikteb testijiet:** `tests/unit/a2a-<ħila-ġdida>.test.ts`. Ħu ħsieb it-triq ferħana + it-triq tal-żbalji.
+4. **Ikteb it-testijiet:** `tests/unit/a2a-<your-skill>.test.ts`. Għatti l-fluss ta’ suċċess u l-fluss ta’ żball.
 
-5. **Dokumenta** l-ħila ġdida fil-tabella `Available Skills` ta' dan il-fajl.
+5. **Iddokumenta** l-ħila l-ġdida fit-tabella `Available Skills` ta’ dan il-fajl.
 
 ---
 

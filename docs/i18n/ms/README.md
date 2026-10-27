@@ -691,7 +691,7 @@ disimpan dalam sejarah shell anda. → [Integrasi CLI](docs/guides/CLI-INTEGRATI
 
 </div>
 
-> **376 penyedia berdaftar** merentas koleksi kanonik sembang, media, carian, setempat, ejen awan dan sistem, termasuk **153 yang membawa metadata penemuan `hasFree: true`**. Daftar model sembang merangkumi **239 penyedia / 3,059 pasangan penyedia-model yang berbeza / 1,475 ID model mentah**; katalog bajet percuma yang berasingan mempunyai **471 baris bagi setiap model**, **34 kelompok berulang** dan **52 penyedia percuma selama-lamanya yang berulang/tanpa kunci**. Penyebut ini berbeza mengikut reka bentuk; definisi dan pengiraan yang dinyahduplikasi mengikut kelompok tersedia dalam [Rujukan Penyedia](docs/reference/PROVIDER_REFERENCE.md) dan [Peringkat Percuma](docs/reference/FREE_TIERS.md).
+> **376 penyedia berdaftar** merentas koleksi kanonik sembang, media, carian, setempat, ejen awan dan sistem, termasuk **153 yang membawa metadata penemuan `hasFree: true`**. Daftar model sembang merangkumi **239 penyedia / 3,059 pasangan penyedia-model yang berbeza / 1,475 ID model mentah**; katalog bajet percuma yang berasingan mempunyai **484 baris bagi setiap model**, **34 kelompok berulang** dan **52 penyedia percuma selama-lamanya yang berulang/tanpa kunci**. Penyebut ini berbeza mengikut reka bentuk; definisi dan pengiraan yang dinyahduplikasi mengikut kelompok tersedia dalam [Rujukan Penyedia](docs/reference/PROVIDER_REFERENCE.md) dan [Peringkat Percuma](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1078,7 +1078,7 @@ Gunakan ini hanya untuk klien yang tidak dapat melampirkan `Authorization: Beare
 
 <br/>
 
-## 📦 Lebih banyak kaedah pemasangan — Docker, sumber, pnpm, Arch
+## 📦 Kaedah pemasangan lain — Docker, sumber, pnpm, Arch
 
 **🐳 Docker**
 
@@ -1087,7 +1087,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` mengikuti versi stabil SemVer **yang diterbitkan** tertinggi. Ia tidak menjejaki `main` git. Tetapkan `:X.Y.Z` untuk GitOps. Lihat [Saluran Keluaran Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Imej tersebut menetapkan **`OMNIROUTE_MEMORY_MB=1024`**. Itu mencukupi untuk papan pemuka dan sembang ringan. **Ejen pengekodan** (`POST /v1/responses` daripada Claude Code, Codex, Grok, …) memerlukan heap V8 yang jauh lebih besar atau proses akan mengalami `FATAL ERROR` pada sekitar 12 GiB apabila dua konteks panjang bertindih. Saizkan bekas melebihi heap (penimbal natif berada di luar V8):
+`:latest` mengikuti SemVer stabil **yang diterbitkan** dengan versi tertinggi. Ia tidak menjejaki `main` git. Tetapkan `:X.Y.Z` untuk GitOps. Lihat [Saluran Keluaran Docker](docs/guides/DOCKER_GUIDE.md#release-channels). Imej tersebut menetapkan **`OMNIROUTE_MEMORY_MB=1024`**. Itu mencukupi untuk papan pemuka dan sembang ringan. **Ejen pengekodan** (`POST /v1/responses` daripada Claude Code, Codex, Grok, …) memerlukan heap V8 yang jauh lebih besar atau proses akan mengalami `FATAL ERROR` pada sekitar 12 GiB apabila dua konteks panjang bertindih. Saizkan bekas melebihi saiz heap (penimbal natif berada di luar V8):
 
 | Beban kerja                          | Heap (`-e OMNIROUTE_MEMORY_MB`) | Bekas (`--memory`) |
 | ------------------------------------ | ------------------------------- | ------------------ |
@@ -1105,17 +1105,17 @@ Jadual penuh: [Panduan Docker — RAM masa jalan](docs/guides/DOCKER_GUIDE.md#ru
 
 > **Saluran Docker prakeluaran:** `diegosouzapw/omniroute:next` dan
 > `diegosouzapw/omniroute:next-web` mengikuti cabang `release/v*` lalai semasa.
-> Tag boleh ubah ini hanya bertujuan untuk menguji pembaikan yang belum dikeluarkan dan
-> **tidak disokong untuk penggunaan produksi**. Lihat
+> Tag boleh ubah ini hanya ditujukan untuk menguji pembaikan yang belum dikeluarkan dan
+> **tidak disokong untuk pengeluaran**. Lihat
 > [Saluran Keluaran Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
 `bun install` standard dan pemasangan global (`bun install -g omniroute`) disokong melalui pengesanan masa jalan Bun:
 
-- **`bun:sqlite` terbina dalam**: OmniRoute menggunakan pemacu `bun:sqlite` terbina dalam Bun apabila dijalankan di bawah Bun, dengan kembali menggunakan `better-sqlite3` pada Node.js atau `sql.js`.
-- **Pemilihan pembundel Webpack secara automatik dalam pembangunan**: Pembangunan (`bun run dev`) mengesan Bun secara automatik dan menyahdayakan Turbopack untuk menggunakan Webpack bagi mengelakkan ketidakserasian pengikatan V8 natif. Binaan produksi (`bun run build`) mengikuti `OMNIROUTE_USE_TURBOPACK` sama seperti pada Node: Turbopack secara lalai, `OMNIROUTE_USE_TURBOPACK=0` untuk membina dengan Webpack (`Dockerfile.bun` menyediakannya sebagai `--build-arg`).
-- **Dockerfile Bun khusus**: `Dockerfile.bun` berbilang peringkat untuk pelaksanaan produksi Bun natif (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` terbina dalam**: OmniRoute menggunakan pemacu `bun:sqlite` terbina dalam Bun apabila dijalankan di bawah Bun, dengan beralih kepada `better-sqlite3` pada Node.js atau `sql.js`.
+- **Pemilihan penggabung Webpack secara automatik dalam persekitaran pembangunan**: Pembangunan (`bun run dev`) mengesan Bun secara automatik dan menyahdayakan Turbopack untuk menggunakan Webpack bagi mengelakkan ketidakserasian pengikatan V8 natif. Binaan pengeluaran (`bun run build`) mengikuti `OMNIROUTE_USE_TURBOPACK` sama seperti pada Node: Turbopack secara lalai, `OMNIROUTE_USE_TURBOPACK=0` untuk membina dengan Webpack (`Dockerfile.bun` mendedahkannya sebagai `--build-arg`).
+- **Dockerfile khusus untuk Bun**: `Dockerfile.bun` berbilang peringkat untuk penggunaan pengeluaran Bun natif (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Pasang dan jalankan dengan Bun
@@ -1145,7 +1145,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Menggunakan Nix flakes
+# Menggunakan flake Nix
 nix develop
 npm run dev
 
@@ -1161,10 +1161,10 @@ devbox run npm run dev
 # 1. Sediakan direktori data yang dilekapkan melalui bind
 mkdir -p data
 
-# 2. Linux + Podman rootless tempatan sahaja (jangan sekali-kali gunakan klien Podman Machine jauh):
+# 2. Linux + Podman tanpa root setempat sahaja (jangan sekali-kali gunakan klien Podman Machine jauh):
 podman unshare chown 1000:1000 ./data
 
-# 3. Tetapkan petunjuk masa jalan, bina imej Compose tempatan dan mulakan
+# 3. Tetapkan petunjuk masa jalan, bina imej Compose setempat dan mulakannya
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
@@ -1175,14 +1175,16 @@ ikuti [panduan direktori data khusus topologi](contrib/podman/README.md#data-dir
 📖 [Panduan Podman](contrib/podman/README.md) — Binaan Compose, Podman Machine dan
 persediaan Quadlet Linux/systemd.
 
-**⚡ Pemasangan lebih pantas / ringan (langkau binaan natif)**
+**⚡ Pemasangan lebih pantas / lebih ringan (langkau binaan natif)**
 
 Enjin SQLite natif (`better-sqlite3`) ialah kebergantungan **pilihan**, jadi pemasangan
-global tidak akan tersekat kerana pengkompilan daripada sumber: ia menggunakan binari prabina apabila
-tersedia yang sepadan dengan platform/Node anda, dan jika tidak, akan beralih secara telus kepada enjin JavaScript tulen
-(`node:sqlite` pada Node 22+, jika tidak, WASM `sql.js` yang disertakan) — tiada alat binaan diperlukan.
+global tidak akan tersekat ketika mengkompil daripada sumber: ia menggunakan perduaan prabina apabila tersedia
+untuk platform/Node anda, dan jika tidak, ia akan beralih secara telus kepada enjin JavaScript tulen
+(`node:sqlite` pada Node 22+, atau WASM `sql.js` yang disertakan) — alat binaan tidak diperlukan.
 
-Untuk melangkau sepenuhnya pemanasan natif selepas pemasangan (CI, tanpa paparan atau mesin perlahan):
+Untuk melangkau sepenuhnya **pemanasan natif** selepas pemasangan (CI, tanpa paparan atau mesin perlahan).
+Nota: ini hanya melangkau langkah pemanasan SQLite natif (`scripts/postinstall.mjs`); cangkuk
+salin/baiki perduaan (`scripts/build/postinstall.mjs`) masih berjalan seperti biasa:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 turut melangkaunya
@@ -1190,7 +1192,7 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 turut melangkauny
 
 Untuk pemasangan terpantas, utamakan **pnpm** (storan beralamat kandungan + pautan keras — lihat di atas).
 Untuk masa jalan tanpa papan pemuka dan tanpa paparan, gunakan profil Docker `base` (di atas) atau
-[Panduan Termux](docs/guides/TERMUX_GUIDE.md). CLI dan papan pemuka web disediakan oleh
+[panduan Termux](docs/guides/TERMUX_GUIDE.md). CLI dan papan pemuka web disediakan oleh
 proses yang sama pada satu port, jadi buat masa ini tiada pakej CLI sahaja yang berasingan.
 
 <br/>

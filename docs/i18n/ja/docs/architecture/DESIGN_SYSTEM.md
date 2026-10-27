@@ -24,30 +24,29 @@
 
 ## 2. ルール
 
-1. リテラルではなく、トークンを使用します。意図的に維持されている例外は、常にダーク表示のコンソールターミナル、ReactFlow の SVG
-   ストロークで使用する `STATUS_HEX`（`src/shared/constants/statusColors.ts`）、およびカテゴリカルパレットの
-   `STRATEGY_COLORS`（`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`）と
-   `LAYER_COLORS`（`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`）です。
-2. `packages/ui-kit/src` を手動で変更しないでください。`scripts/dev/sync-ui-kit.sh <commit>` で同期します。
-   pre-commit ゲートの `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）は、固定された upstream コミットと
-   1 バイトでも異なる場合に失敗します（upstream のクローンである
-   `UI_KIT_CLONE` または `_references/cheaper-inference-ui-kit` が存在しない場合は、警告を出してスキップします）。
-   kit に必要なものがない場合は、アダプターまたは画面側で回避し、upstream に対応を依頼してください。
-3. kit のテキストのデフォルト値は英語です（`label = "Loading"`、`loadingLabel = "Loading table"` など）。kit コンポーネントが
-   テキストをレンダリングする場合は、必ず `useTranslations(...)` から翻訳済み文字列を渡してください。
-4. Tailwind ユーティリティは kit コンポーネントのクラスより優先されます（kit は
-   `@layer theme, base, components, utilities` を宣言し、そのルールは `components` に配置されています）。余白やレイアウトには
-   ユーティリティを使用し、kit コンポーネントの色を変更するためには使用しないでください。
+1. リテラルではなく、トークンを使用します。意図的に維持している例外は、常にダークテーマのコンソールターミナルと、`STATUS_HEX`（`src/shared/constants/statusColors.ts`）を介した ReactFlow の
+   SVG ストロークです。ルーティング戦略と圧縮レイヤーのパレットでは、`strategyColorVar` と
+   `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）を介してキットのチャートトークンを使用します。
+2. `packages/ui-kit/src` を手動で修正しないでください。`scripts/dev/sync-ui-kit.sh <commit>` で同期します。
+   pre-commit ゲートの `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）は、固定されたアップストリームコミットと
+   1 バイトでも異なると失敗します（アップストリームのクローンである
+   `UI_KIT_CLONE` または `_references/cheaper-inference-ui-kit` が存在しない場合は、警告を表示してスキップします）。キットに必要なものがない場合は、
+   アダプターまたは画面側で回避策を講じ、アップストリームに対応を依頼してください。
+3. キットのテキストのデフォルト値は英語です（`label = "Loading"`、`loadingLabel = "Loading table"` など）。キットコンポーネントがテキストをレンダリングする場合は、必ず `useTranslations(...)` から翻訳済みの
+   文字列を渡してください。
+4. Tailwind ユーティリティはキットコンポーネントのクラスより優先されます（キットは
+   `@layer theme, base, components, utilities` を宣言し、そのルールは `components` にあります）。ユーティリティは
+   余白やレイアウトに使用し、キットコンポーネントの色変更には使用しないでください。
 5. 見出し：ページおよびセクションのタイトルには `.ci-heading`（Inter、字間調整なし）を使用します。`.ci-dashboard-display`
-   （Instrument Serif）は、エラーページのステータスコードなど、大きく余白の多いディスプレイテキストにのみ使用します。
-6. `tests/unit/dashboard-kit-sweep.test.ts` は kit の採用状況を検証します。
-   `src/app` または `src/shared/components` 配下では Material のリガチャ span を禁止します。ダッシュボードツリー
-   （`src/app/(dashboard)` および `src/shared/components`）では、生の `<select>`、`<textarea>`、`<table>`、
-   および列挙された例外（`Select` アダプターのネイティブ分岐、`RequestLoggerDetail`）以外での自作
-   `role="dialog"` を禁止します。そこにある生の `<button>` または `<input>` には、それぞれの要素から 3 行以内の上方で終わる、
-   理由付きの `kit-exception:` を含むコメントが必要です。パレットの色相と `dark:` バリアントは、
-   テストで列挙されたファイル内でのみ使用できます。
-7. PR の前に両方のテーマと 390 px のビューポートを確認し、スクリーンショットを取得してください。`tests/e2e/a11y.spec.ts` では
+   （Instrument Serif）は、エラーページのステータスコードのような、大きく余白の多いディスプレイテキストにのみ使用します。
+6. `tests/unit/dashboard-kit-sweep.test.ts` はキットの採用状況をチェックします。`src/app` または `src/shared/components` 配下では
+   Material のリガチャ用 span を禁止します。ダッシュボードツリー（`src/app/(dashboard)` および
+   `src/shared/components`）では、生の `<select>`、`<textarea>`、`<table>`、および列挙された例外（`Select` アダプターのネイティブ分岐、
+   `RequestLoggerDetail`）以外の独自実装の
+   `role="dialog"` を禁止します。同範囲にある生の `<button>` または `<input>` には、それぞれの要素から最大 3 行上までの位置に、理由を添えた
+   `kit-exception:` を含むコメントが必要です。パレットの色相と `dark:` バリアントは、
+   テストで列挙されているファイル内でのみ使用できます。
+7. PR の前に、両方のテーマと 390 px のビューポートをスクリーンショットで確認してください。`tests/e2e/a11y.spec.ts` では
    axe が実行されます。
 
 ## 3. 画面の追加

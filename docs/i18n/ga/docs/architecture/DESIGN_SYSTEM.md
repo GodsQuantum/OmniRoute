@@ -81,31 +81,13 @@
 
 ## 2. Rialacha
 
-1. Tóicíní, ní luachanna liteartha riamh. Eisceachtaí a coinníodh d’aon ghnó: teirminéal an chonsóil atá dorcha i gcónaí, stríoca SVG ReactFlow
-   trí `STATUS_HEX` (`src/shared/constants/statusColors.ts`), agus na pailéid chatagóireacha
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) agus
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Ná paisteáil `packages/ui-kit/src` de láimh riamh: sioncronaigh le `scripts/dev/sync-ui-kit.sh <commit>`; teipeann
-   ar an ngeata réamh-churtha `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) má tá aon bheart
-   éagsúil ón gcur réamhtheachtach pionnáilte (scipeálann sé le rabhadh nuair nach bhfuil an clón réamhtheachtach,
-   `UI_KIT_CLONE` nó `_references/cheaper-inference-ui-kit`, ar fáil). Nuair atá rud éigin in easnamh ón trealamh,
-   téigh timpeall air sa chuibheoir nó sa scáileán agus iarr é ón bhfoireann réamhtheachtach.
-3. Is i mBéarla atá réamhshocruithe téacs an trealaimh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — cuir teaghráin aistrithe
-   ó `useTranslations(...)` ar fáil aon uair a rindreálann comhpháirt trealaimh téacs.
-4. Bíonn tosaíocht ag fóntais Tailwind ar aicmí comhpháirteanna an trealaimh (fógraíonn an trealamh
-   `@layer theme, base, components, utilities` agus tá a rialacha in `components`) — úsáid fóntais don
-   spásáil agus don leagan amach, ní chun dath comhpháirteanna an trealaimh a athrú.
-5. Ceannteidil: `.ci-heading` (Inter, gan spásáil litreacha) do theidil leathanaigh agus rannáin; `.ci-dashboard-display`
-   (Instrument Serif) do théacs taispeána mór neamhphlódaithe amháin, amhail cód stádais an leathanaigh earráide.
-6. Cosnaíonn `tests/unit/dashboard-kit-sweep.test.ts` glacadh an trealaimh: gan aon span ligature Material faoi
-   `src/app` ná `src/shared/components`; i gcrann na deaise (`src/app/(dashboard)` agus
-   `src/shared/components`) gan aon `<select>`, `<textarea>` ná `<table>` amh agus gan aon
-   `role="dialog"` lámhdhéanta lasmuigh de na heisceachtaí liostaithe (brainse dúchasach an chuibheora `Select`,
-   `RequestLoggerDetail`); teastaíonn nóta ina bhfuil `kit-exception:` (agus an chúis leis) ó gach `<button>` nó `<input>`
-   amh ansin, agus caithfidh sé críochnú 3 líne ar a mhéad os a chionn; ní cheadaítear imreacha pailéid ná athraithigh
-   `dark:` ach amháin sna comhaid atá liostaithe sa tástáil.
-7. Deimhnigh an dá théama agus an t-amharcphort 390 px roimh PR (gabhálacha scáileáin); ritheann
-   `tests/e2e/a11y.spec.ts` axe.
+1. Comharthaí, ní luachanna liteartha. Eisceachtaí a coinníodh d’aon ghnó: teirminéal an chonsóil atá dorcha i gcónaí agus stríoca SVG ReactFlow trí `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Úsáideann pailéid na straitéise ródúcháin agus na sraithe comhbhrúcháin comharthaí cairte an trealaimh trí `strategyColorVar` agus `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Ná paisteáil `packages/ui-kit/src` de láimh riamh: sioncronaigh le `scripts/dev/sync-ui-kit.sh <commit>`; teipeann ar an ngeata réamh-churtha `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) má tá aon bheart difriúil ón tiomantas réamhtheachtach pionnáilte (scipeálann sé le rabhadh nuair atá an clón réamhtheachtach, `UI_KIT_CLONE` nó `_references/cheaper-inference-ui-kit`, ar iarraidh). Nuair nach bhfuil rud éigin sa trealamh, téigh timpeall air san oiriúntóir nó sa scáileán agus iarr é ón bhfoireann réamhtheachtach.
+3. Is i mBéarla atá réamhshocruithe téacs an trealaimh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — tabhair teaghráin aistrithe ó `useTranslations(...)` gach uair a rindreálann comhpháirt trealaimh téacs.
+4. Bíonn forlámhas ag fóntais Tailwind ar aicmí comhpháirteanna an trealaimh (dearbhaíonn an trealamh `@layer theme, base, components, utilities` agus tá a rialacha in `components`) — úsáid fóntais le haghaidh spásála agus leagain amach, ní chun dath eile a chur ar chomhpháirteanna an trealaimh.
+5. Ceannteidil: `.ci-heading` (Inter, gan spásáil idir litreacha) le haghaidh teidil leathanaigh agus rannóige; `.ci-dashboard-display` (Instrument Serif) le haghaidh téacs mór taispeána nach bhfuil dlúth ach amháin, amhail cód stádais an leathanaigh earráide.
+6. Cosnaíonn `tests/unit/dashboard-kit-sweep.test.ts` glacadh an trealaimh: gan aon réise ligature Material faoi `src/app` ná `src/shared/components`; i gcrann an deais (`src/app/(dashboard)` agus `src/shared/components`), gan aon `<select>`, `<textarea>` ná `<table>` amh, agus gan aon `role="dialog"` lámhdhéanta lasmuigh de na heisceachtaí liostaithe (brainse dúchasach an oiriúntóra `Select`, `RequestLoggerDetail`); teastaíonn nóta tráchta ina bhfuil `kit-exception:` (mar aon leis an gcúis) ó gach `<button>` nó `<input>` amh ansin, agus ní mór don nóta críochnú 3 líne ar a mhéad os a chionn; ní cheadaítear líonna pailéid ná malairtí `dark:` ach amháin sna comhaid atá liostaithe sa tástáil.
+7. Fíoraigh an dá théama agus an t-amharcphort 390 px roimh PR (gabhálacha scáileáin); ritheann `tests/e2e/a11y.spec.ts` axe.
 
 ## 3. Scáileán a chur leis
 

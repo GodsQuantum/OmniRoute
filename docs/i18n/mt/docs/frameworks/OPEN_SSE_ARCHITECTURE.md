@@ -489,7 +489,7 @@ Dan jittratta:
 | Fajl                           | Għan                                                          |
 | ------------------------------ | ------------------------------------------------------------- |
 | `providerRegistry.ts`          | Reġistru tal-mudelli taċ-chat fuq il-katalgu ta’ 376 fornitur |
-| `providerModels.ts`            | Aliasijiet tal-mudelli, immappjar tal-formati                 |
+| `providerModels.ts`            | Psewdonimi tal-mudelli, immappjar tal-format                  |
 | `constants.ts`                 | Limiti ta’ żmien, limiti, kodiċijiet tal-istatus              |
 | `defaultThinkingSignature.ts`  | Firma predefinita tal-ħsieb ta’ Claude                        |
 | `modelStrip.ts` (fis-servizzi) | Tneħħija ta’ oqsma għal kull fornitur                         |
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Il-validazzjoni b’Zod waqt it-tagħbija tal-modulu tiżgura li l-konfigurazzjonijiet kollha tal-fornituri jkunu validi.
+Il-validazzjoni ta’ Zod waqt it-tagħbija tal-modulu tiżgura li l-konfigurazzjonijiet kollha tal-fornituri jkunu validi.
 
 ---
 

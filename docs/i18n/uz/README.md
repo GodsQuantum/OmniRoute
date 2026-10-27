@@ -691,7 +691,7 @@ shell tarixingizdan tashqarida saqlaydi. → [CLI integratsiyalari](docs/guides/
 
 </div>
 
-> **376 ta roʻyxatdan oʻtgan provayder** kanonik chat, media, qidiruv, mahalliy, bulut agenti va tizim toʻplamlari boʻylab mavjud boʻlib, ulardan **153 tasida `hasFree: true` aniqlash metamaʼlumotlari bor**. Chat modellari reyestri **239 ta provayder / 3 059 ta alohida provayder-model juftligi / 1 475 ta xom model ID**ni qamrab oladi; alohida bepul budjet katalogida esa **har bir model uchun 471 ta qator**, **34 ta takrorlanuvchi pul** va **52 ta takrorlanuvchi yoki kalitsiz doimiy bepul provayder** mavjud. Bular ataylab turli maxrajlar asosida hisoblangan; taʼriflar va pullar boʻyicha takrorlarni olib tashlagan hisob-kitoblar [Provayderlar maʼlumotnomasi](docs/reference/PROVIDER_REFERENCE.md) va [Bepul tariflar](docs/reference/FREE_TIERS.md) sahifalarida keltirilgan.
+> **376 ta roʻyxatdan oʻtgan provayder** kanonik chat, media, qidiruv, mahalliy, bulut agenti va tizim toʻplamlari boʻylab mavjud boʻlib, ulardan **153 tasida `hasFree: true` aniqlash metamaʼlumotlari bor**. Chat modellari reyestri **239 ta provayder / 3 059 ta alohida provayder-model juftligi / 1 475 ta xom model ID**ni qamrab oladi; alohida bepul budjet katalogida esa **har bir model uchun 484 ta qator**, **34 ta takrorlanuvchi pul** va **52 ta takrorlanuvchi yoki kalitsiz doimiy bepul provayder** mavjud. Bular ataylab turli maxrajlar asosida hisoblangan; taʼriflar va pullar boʻyicha takrorlarni olib tashlagan hisob-kitoblar [Provayderlar maʼlumotnomasi](docs/reference/PROVIDER_REFERENCE.md) va [Bepul tariflar](docs/reference/FREE_TIERS.md) sahifalarida keltirilgan.
 
 <div align="center">
 
@@ -1090,12 +1090,12 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` eng yuqori **eʼlon qilingan** barqaror SemVer versiyasiga mos keladi. U git `main` tarmogʻini kuzatmaydi. GitOps uchun `:X.Y.Z` versiyasini aniq belgilang. [Docker reliz kanallari](docs/guides/DOCKER_GUIDE.md#release-channels)ga qarang. Tasvirda **`OMNIROUTE_MEMORY_MB=1024`** qatʼiy belgilangan. Bu boshqaruv paneli va yengil chat uchun yetarli. **Kodlash agentlari** (Claude Code, Codex, Grok va boshqalardan `POST /v1/responses`) ancha katta V8 uyumini talab qiladi, aks holda bir-biriga ustma-ust tushgan ikkita uzun kontekstda, taxminan 12 GiB darajasida jarayon `FATAL ERROR` bilan yakunlanadi. Konteyner hajmini uyumdan kattaroq qilib belgilang (mahalliy buferlar V8 tashqarisida joylashadi):
+`:latest` eng yuqori **eʼlon qilingan** barqaror SemVer versiyasiga ergashadi. U git `main` tarmogʻini kuzatmaydi. GitOps uchun `:X.Y.Z` versiyasini qatʼiy belgilang. [Docker reliz kanallari](docs/guides/DOCKER_GUIDE.md#release-channels) bilan tanishing. Tasvirda **`OMNIROUTE_MEMORY_MB=1024`** qatʼiy belgilangan. Bu boshqaruv paneli va yengil chat uchun yetarli. **Dasturlash agentlari** (Claude Code, Codex, Grok va boshqalardan `POST /v1/responses`) uchun ancha katta V8 heap kerak boʻladi, aks holda bir-biriga ustma-ust tushadigan ikkita uzun kontekstda jarayon taxminan 12 GiB da `FATAL ERROR` bilan toʻxtaydi. Konteyner hajmini heap hajmidan kattaroq belgilang (mahalliy buferlar V8 dan tashqarida joylashadi):
 
-| Ish yuklamasi                            | Uyum (`-e OMNIROUTE_MEMORY_MB`) | Konteyner (`--memory`) |
+| Ish yuklamasi                            | Heap (`-e OMNIROUTE_MEMORY_MB`) | Konteyner (`--memory`) |
 | ---------------------------------------- | ------------------------------- | ---------------------- |
 | Boshqaruv paneli / yengil chat           | `1024` (tasvir standarti)       | ≥2 g                   |
-| Bitta kodlash agenti                     | `8192`                          | ≥10 g                  |
+| Bitta dasturlash agenti                  | `8192`                          | ≥10 g                  |
 | Bir vaqtdagi ikkita uzun `/v1/responses` | `10240`–`12288`                 | ≥12–16 g               |
 
 ```bash
@@ -1108,17 +1108,17 @@ Toʻliq jadval: [Docker qoʻllanmasi — bajarilish vaqtidagi RAM](docs/guides/D
 
 > **Relizoldi Docker kanali:** `diegosouzapw/omniroute:next` va
 > `diegosouzapw/omniroute:next-web` joriy standart `release/v*`
-> tarmogʻini kuzatadi. Bu oʻzgaruvchan teglar faqat hali chiqarilmagan tuzatishlarni sinash uchun moʻljallangan va
-> **ishlab chiqarish muhiti uchun qoʻllab-quvvatlanmaydi**.
-> [Docker reliz kanallari](docs/guides/DOCKER_GUIDE.md#release-channels)ga qarang.
+> tarmogʻiga ergashadi. Bu oʻzgaruvchan teglar faqat hali chiqarilmagan tuzatishlarni sinash uchun moʻljallangan va
+> **ishlab chiqarish muhiti uchun qoʻllab-quvvatlanmaydi**. Batafsil:
+> [Docker reliz kanallari](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
 Standart `bun install` va global oʻrnatish (`bun install -g omniroute`) Bun bajarilish muhitini aniqlash orqali qoʻllab-quvvatlanadi:
 
-- **Ichki `bun:sqlite`**: OmniRoute Bun muhitida ishlaganda uning ichki `bun:sqlite` drayveridan foydalanadi, Node.js muhitida esa `better-sqlite3` yoki `sql.js`ga qaytadi.
-- **Ishlab chiqishda Webpack toʻplagichini avtomatik tanlash**: Ishlab chiqish rejimi (`bun run dev`) Bunʼni avtomatik aniqlaydi va mahalliy V8 bogʻlamalaridagi nomuvofiqliklarning oldini olish uchun Turbopackʼni oʻchirib, Webpackʼdan foydalanadi. Ishlab chiqarish tuzilmalari (`bun run build`) xuddi Nodeʼdagi kabi `OMNIROUTE_USE_TURBOPACK`ga aniq amal qiladi: standart holatda Turbopack, Webpack bilan tuzish uchun `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` uni `--build-arg` sifatida taqdim etadi).
-- **Maxsus Bun Dockerfile**: Mahalliy Bun ishlab chiqarish muhitlari uchun koʻp bosqichli `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Ichki `bun:sqlite`**: OmniRoute Bun ostida ishlaganda uning ichki `bun:sqlite` drayveridan foydalanadi, Node.js da esa `better-sqlite3` yoki `sql.js` ga qaytadi.
+- **Ishlab chiqishda Webpack toʻplagichini avtomatik tanlash**: Ishlab chiqish rejimi (`bun run dev`) Bun muhitini avtomatik aniqlaydi va mahalliy V8 bogʻlanishlaridagi nomuvofiqliklarning oldini olish uchun Turbopack oʻrniga Webpack dan foydalanadi. Ishlab chiqarish tuzilmalari (`bun run build`) xuddi Node dagidek `OMNIROUTE_USE_TURBOPACK` qiymatiga toʻliq amal qiladi: standart holatda Turbopack, Webpack bilan tuzish uchun `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` uni `--build-arg` sifatida taqdim etadi).
+- **Maxsus Bun Dockerfile fayli**: Mahalliy Bun ishlab chiqarish joylashtirishlari uchun koʻp bosqichli `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Bun bilan o‘rnating va ishga tushiring
@@ -1161,18 +1161,18 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# 1. Bog‘lab ulanadigan ma’lumotlar katalogini tayyorlang
+# 1. Bog‘lab ulangan ma’lumotlar katalogini tayyorlang
 mkdir -p data
 
-# 2. Faqat Linux + mahalliy rootless Podman uchun (hech qachon masofaviy Podman Machine mijozi uchun emas):
+# 2. Faqat Linux + mahalliy rootsiz Podman uchun (hech qachon masofaviy Podman Machine mijozi uchun emas):
 podman unshare chown 1000:1000 ./data
 
-# 3. Bajarilish muhiti ko‘rsatmasini sozlang, mahalliy Compose tasvirini tuzing va ishga tushiring
+# 3. Bajarilish muhiti ko‘rsatmasini belgilang, mahalliy Compose tasvirini tuzing va ishga tushiring
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS yoki Windowsʼda Podman masofaviy Podman Machineʼdan foydalanadi: `podman unshare`ni oʻtkazib yuboring va
+macOS yoki Windows da Podman masofaviy Podman Machine dan foydalanadi: `podman unshare` bosqichini oʻtkazib yuboring va
 [topologiyaga xos maʼlumotlar katalogi boʻyicha koʻrsatmalar](contrib/podman/README.md#data-directory-permissions-by-topology)ga amal qiling.
 
 📖 [Podman qoʻllanmasi](contrib/podman/README.md) — Compose tuzilmalari, Podman Machine va
@@ -1181,20 +1181,22 @@ Linux/systemd Quadlet sozlamalari.
 **⚡ Tezroq / ixchamroq oʻrnatish (mahalliy tuzishni oʻtkazib yuborish)**
 
 Mahalliy SQLite mexanizmi (`better-sqlite3`) **ixtiyoriy** bogʻliqlikdir, shuning uchun global
-oʻrnatish hech qachon manba kodidan kompilyatsiya qilishni kutib qolmaydi: platformangiz/Nodeʼingizga mos kelsa,
-oldindan tuzilgan ikkilik fayldan foydalanadi, aks holda shaffof tarzda sof JS mexanizmiga
-(Node 22+ da `node:sqlite`, aks holda toʻplamga kiritilgan `sql.js` WASM) qaytadi — tuzish vositalari talab qilinmaydi.
+oʻrnatish hech qachon manba kodidan kompilyatsiya qilinishini kutib qolmaydi: platformangiz/Node versiyangizga mos kelsa,
+oldindan tuzilgan binar fayldan foydalanadi, aks holda shaffof tarzda sof JS mexanizmiga
+(Node 22+ da `node:sqlite`, aks holda paketga kiritilgan `sql.js` WASM) qaytadi — tuzish vositalari talab qilinmaydi.
 
-Oʻrnatishdan keyingi mahalliy tayyorlashni butunlay oʻtkazib yuborish uchun (CI, grafik interfeyssiz yoki sekin qurilmalar):
+Oʻrnatishdan keyingi **mahalliy dastlabki tayyorlash** bosqichini butunlay oʻtkazib yuborish uchun (CI, grafik interfeyssiz yoki sekin mashinalar).
+Eslatma: bu faqat mahalliy SQLite dastlabki tayyorlash bosqichini (`scripts/postinstall.mjs`) oʻtkazib yuboradi;
+binar faylni nusxalash/tiklash hook’i (`scripts/build/postinstall.mjs`) odatdagidek bajariladi:
 
 ```bash
 OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 ham uni o‘tkazib yuboradi
 ```
 
-Eng tez oʻrnatish uchun **pnpm**dan foydalaning (kontentga asoslangan ombor + qattiq havolalar — yuqoriga qarang).
-Boshqaruv panelisiz, grafik interfeyssiz bajarilish muhiti uchun Dockerʼning `base` profilidan (yuqorida) yoki
-[Termux qoʻllanmasi](docs/guides/TERMUX_GUIDE.md)dan foydalaning. CLI va veb-boshqaruv paneliga bir portdagi
-bitta jarayon xizmat koʻrsatadi, shu sababli hozircha faqat CLI uchun alohida paket mavjud emas.
+Eng tez oʻrnatish uchun **pnpm** ni afzal koʻring (kontent asosida manzillanadigan saqlash joyi + qattiq havolalar — yuqoriga qarang).
+Boshqaruv panelisiz, grafik interfeyssiz bajarilish muhiti uchun Docker `base` profilidan (yuqorida) yoki
+[Termux qoʻllanmasi](docs/guides/TERMUX_GUIDE.md)dan foydalaning. CLI va veb-boshqaruv paneliga bir xil jarayon tomonidan
+bitta port orqali xizmat koʻrsatiladi, shuning uchun hozircha faqat CLI uchun alohida paket mavjud emas.
 
 <br/>
 

@@ -691,7 +691,7 @@ na-egosi env/args kpọmkwem tupu emezuo ha, ebe `--api-key-env NAME` na-eme ka 
 
 </div>
 
-> **Ndị na-enye ọrụ 376 e debanyere aha** n'ofe nchịkọta mkparịta ụka, mgbasa ozi, ọchụchọ, mpaghara, cloud-agent na sistemụ ndị bụ isi, gụnyere **153 nwere metadata nchọpụta `hasFree: true`**. Ndebanye ụdịdị mkparịta ụka ahụ gụnyere **ndị na-enye ọrụ 239 / ụzọ njikọ provider-model 3,059 pụrụ iche / ID ụdịdị raw 1,475**; katalọgụ mmefu ego efu dị iche nwere **ahịrị kwa-ụdịdị 471**, **otu akụ na-emegharị ugboro 34** na **ndị na-enye ọrụ efu-ruo-mgbe-ebighị-ebi 52, nke na-emegharị ugboro/na-achọghị key**. E ji ụma mee ka ọnụọgụ ndị e ji agbakọ ihe ndị a dị iche; nkọwa na mgbakọ ewepụla pool ndị megharịrị dị na [Nrụtụaka Ndị Na-enye Ọrụ](docs/reference/PROVIDER_REFERENCE.md) na [Ọkwa Efughị Ego](docs/reference/FREE_TIERS.md).
+> **Ndị na-enye ọrụ 376 e debanyere aha** n'ofe nchịkọta mkparịta ụka, mgbasa ozi, ọchụchọ, mpaghara, cloud-agent na sistemụ ndị bụ isi, gụnyere **153 nwere metadata nchọpụta `hasFree: true`**. Ndebanye ụdịdị mkparịta ụka ahụ gụnyere **ndị na-enye ọrụ 239 / ụzọ njikọ provider-model 3,059 pụrụ iche / ID ụdịdị raw 1,475**; katalọgụ mmefu ego efu dị iche nwere **ahịrị kwa-ụdịdị 484**, **otu akụ na-emegharị ugboro 34** na **ndị na-enye ọrụ efu-ruo-mgbe-ebighị-ebi 52, nke na-emegharị ugboro/na-achọghị key**. E ji ụma mee ka ọnụọgụ ndị e ji agbakọ ihe ndị a dị iche; nkọwa na mgbakọ ewepụla pool ndị megharịrị dị na [Nrụtụaka Ndị Na-enye Ọrụ](docs/reference/PROVIDER_REFERENCE.md) na [Ọkwa Efughị Ego](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1078,7 +1078,7 @@ Jiri ndị a naanị maka clients na-apụghị itinye `Authorization: Bearer ..
 
 <br/>
 
-## 📦 Ụzọ nrụnye ndị ọzọ — Docker, source, pnpm, Arch
+## 📦 Ụzọ ndị ọzọ e si wụnye — Docker, source, pnpm, Arch
 
 **🐳 Docker**
 
@@ -1087,12 +1087,12 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` na-agbaso SemVer kwụsiri ike kachasị elu nke **ebipụtara**. Ọ naghị eso git `main`. Tinye `:X.Y.Z` kpọmkwem maka GitOps. Lee [Ọwa Mwepụta Docker](docs/guides/DOCKER_GUIDE.md#release-channels).Image ahụ na-etinye **`OMNIROUTE_MEMORY_MB=1024`** kpọmkwem. Nke ahụ zuru maka dashboard na mkparịta ụka dị mfe. **Ndị nnọchi anya coding** (`POST /v1/responses` sitere na Claude Code, Codex, Grok, …) chọrọ V8 heap buru ibu karịa nke ahụ, ma ọ bụghị ya process ahụ ga-eme `FATAL ERROR` mgbe ọ ruru ihe dị ka 12 GiB n'okpuru long contexts abụọ na-adakọrịta. Hazie container ka ọ karị heap ahụ (native buffers na-anọ n'èzí V8):
+`:latest` na-esochi SemVer kwụsiri ike kachasị elu nke **ebipụtara**. Ọ naghị eso git `main`. Kpọchie `:X.Y.Z` maka GitOps. Lee [Ọwa Mwepụta Docker](docs/guides/DOCKER_GUIDE.md#release-channels).Image ahụ kpọchiri **`OMNIROUTE_MEMORY_MB=1024`**. Nke ahụ zuru maka dashboard na mkparịta ụka dị mfe. **Ndị nnọchi anya ide koodu** (`POST /v1/responses` sitere na Claude Code, Codex, Grok, …) chọrọ heap V8 buru ibu karịa, ma ọ bụghị ya usoro ahụ ga-eme `FATAL ERROR` mgbe ọ ruru ihe dịka 12 GiB n'okpuru context ogologo abụọ na-agakọ ọnụ. Mee ka container buru ibu karịa heap (native buffers nọ n'èzí V8):
 
-| Ọrụ                                    | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
+| Ibu ọrụ                                | Heap (`-e OMNIROUTE_MEMORY_MB`) | Container (`--memory`) |
 | -------------------------------------- | ------------------------------- | ---------------------- |
 | Dashboard / mkparịta ụka dị mfe        | `1024` (ndabara image)          | ≥2 g                   |
-| Otu onye nnọchi anya coding            | `8192`                          | ≥10 g                  |
+| Otu onye nnọchi anya ide koodu         | `8192`                          | ≥10 g                  |
 | `/v1/responses` ogologo abụọ n'otu oge | `10240`–`12288`                 | ≥12–16 g               |
 
 ```bash
@@ -1101,24 +1101,24 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-Tebụl zuru ezu: [Nduzi Docker — RAM oge ọrụ](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+Tebụl zuru ezu: [Ntuziaka Docker — RAM oge ọrụ](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **Ọwa Docker tupu mwepụta:** `diegosouzapw/omniroute:next` na
-> `diegosouzapw/omniroute:next-web` na-agbaso branch `release/v*` nke ndabara ugbu a.
-> Ebum n'uche tags ndị a na-agbanwe agbanwe bụ naanị maka ịnwale ndozi ndị a na-ewepụtabeghị,
-> a **kwadoghịkwa ha maka production**. Lee
+> `diegosouzapw/omniroute:next-web` na-esochi alaka ndabara `release/v*`
+> dị ugbu a. Ebum n'uche tags ndị a na-agbanwe agbanwe bụ naanị maka ịnwale mmezi ndị a na-ewepụtabeghị, ha
+> **anaghị akwado maka production**. Lee
 > [Ọwa Mwepụta Docker](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-A na-akwado `bun install` nkịtị na nrụnye global (`bun install -g omniroute`) site na nchọpụta Bun runtime:
+A na-akwado `bun install` ọkọlọtọ na nrụnye global (`bun install -g omniroute`) site na nchọpụta runtime Bun:
 
-- **`bun:sqlite` e wuru n'ime ya**: OmniRoute na-eji driver `bun:sqlite` e wuru n'ime Bun mgbe ọ na-arụ ọrụ n'okpuru Bun, ma na-alaghachi na `better-sqlite3` na Node.js ma ọ bụ `sql.js`.
-- **Nhọrọ Webpack bundler akpaka na dev**: Development (`bun run dev`) na-achọpụta Bun na akpaka ma gbanyụọ Turbopack iji Webpack dochie ya ka e gbochie enweghị ndakọrịta nke native V8 bindings. Production builds (`bun run build`) na-agbaso `OMNIROUTE_USE_TURBOPACK` kpọmkwem dịka ọ dị na Node: Turbopack na ndabara, `OMNIROUTE_USE_TURBOPACK=0` iji Webpack wuo ya (`Dockerfile.bun` na-eme ka ọ dị dịka `--build-arg`).
-- **Dockerfile pụrụ iche maka Bun**: `Dockerfile.bun` nwere ọtụtụ stages maka native Bun production deployments (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **`bun:sqlite` arụnyere n'ime ya**: OmniRoute na-eji driver `bun:sqlite` arụnyere n'ime Bun mgbe ọ na-arụ ọrụ n'okpuru Bun, ma na-alaghachi na `better-sqlite3` na Node.js ma ọ bụ `sql.js`.
+- **Nhọrọ Webpack bundler akpaka na dev**: Development (`bun run dev`) na-achọpụta Bun na-akpaghị aka ma gbanyụọ Turbopack iji Webpack kama ya, iji gbochie enweghị ndakọrịta native V8 binding. Production builds (`bun run build`) na-agbaso `OMNIROUTE_USE_TURBOPACK` kpọmkwem dịka ọ dị na Node: Turbopack na ndabara, `OMNIROUTE_USE_TURBOPACK=0` iji Webpack rụọ build (`Dockerfile.bun` na-ewepụta ya dịka `--build-arg`).
+- **Dockerfile pụrụ iche maka Bun**: `Dockerfile.bun` nwere ọtụtụ ogbo maka production deployments nke Bun native (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
-# Jiri Bun wụnye ma mee ya
+# Wụnye ma jiri Bun mee ya
 bun install
 bun run dev
 ```
@@ -1153,51 +1153,53 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Nduzi Docker](docs/guides/DOCKER_GUIDE.md) — Compose profiles, Caddy HTTPS, Cloudflare tunnels.
+📖 [Ntuziaka Docker](docs/guides/DOCKER_GUIDE.md) — Profaịlụ Compose, Caddy HTTPS, tunnels Cloudflare.
 
 **🦭 Podman**
 
 ```bash
-# 1. Kwadebe data directory e ji bind mount
+# 1. Kwadebe ndekọ data a ga-eji bind mount
 mkdir -p data
 
-# 2. Naanị Linux + Podman rootless nke mpaghara (ejila remote Podman Machine client ma ọlị):
+# 2. Naanị Linux + Podman rootless dị na mpaghara (ejila client Podman Machine dị anya ma ọlị):
 podman unshare chown 1000:1000 ./data
 
-# 3. Tọọ runtime hint, wuo Compose image nke mpaghara, wee malite
+# 3. Tọọ runtime hint, rụọ image Compose mpaghara, wee malite
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-Na macOS ma ọ bụ Windows, Podman na-eji remote Podman Machine: mafere `podman unshare` ma
-soro [ntuziaka data directory dabere na topology](contrib/podman/README.md#data-directory-permissions-by-topology).
+Na macOS ma ọ bụ Windows, Podman na-eji Podman Machine dị anya: mafere `podman unshare` ma
+soro [ntuziaka ndekọ data dabere na topology](contrib/podman/README.md#data-directory-permissions-by-topology).
 
-📖 [Nduzi Podman](contrib/podman/README.md) — Compose builds, Podman Machine, na
+📖 [Ntuziaka Podman](contrib/podman/README.md) — Compose builds, Podman Machine, na
 nhazi Linux/systemd Quadlet.
 
-**⚡ Nrụnye dị ọsọ karịa / dị mfe karịa (mafere native build)**
+**⚡ Nrụnye dị ngwa / dị mfe karịa (mafere native build)**
 
 Native SQLite engine (`better-sqlite3`) bụ dependency **nhọrọ**, ya mere nrụnye global
-anaghị akwụsị mgbe a na-compile site na source: ọ na-eji prebuilt binary mgbe nke dabara na
-platform/Node gị dị, ma ọ bụghị ya, ọ na-alaghachi n'ụzọ doro anya na pure-JS engine
-(`node:sqlite` na Node 22+, ma ọ bụghị ya bundled `sql.js` WASM) — achọghị build tools.
+anaghị akwụsị mgbe a na-compile site na source: ọ na-eji binary a rụchara tupu oge eruo mgbe otu dabara na
+platform/Node gị, ma ọ bụghị ya, ọ na-alaghachi n'ụzọ doro anya na engine pure-JS
+(`node:sqlite` na Node 22+, ma ọ bụghị ya `sql.js` WASM agbakwunyere) — a chọghị build tools.
 
-Iji mafere native warm-up mgbe nrụnye gasịrị kpamkpam (CI, headless, ma ọ bụ igwe ndị na-adịghị ọsọ):
+Iji mafere **native warm-up** mgbe nrụnye gasịrị kpamkpam (CI, headless, ma ọ bụ igwe dị nwayọ).
+Rịba ama: nke a na-amafere naanị usoro native SQLite warm-up (`scripts/postinstall.mjs`);
+binary-copy/repair hook (`scripts/build/postinstall.mjs`) ka na-arụ ọrụ dịka ọ na-emebu:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 na-emekwa ka a mafere ya
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 na-amafekwa ya
 ```
 
-Maka nrụnye kachasị ọsọ, họrọ **pnpm** (content-addressed store + hard links — lee n'elu).
-Maka runtime headless na-enweghị dashboard, jiri Docker `base` profile (n'elu) ma ọ bụ
-[Nduzi Termux](docs/guides/TERMUX_GUIDE.md). Otu process ahụ na-enye CLI na web dashboard
-site n'otu port, ya mere enweghị package pụrụ iche nke bụ naanị CLI ugbu a.
+Maka nrụnye kachasị ngwa, họrọ **pnpm** (ụlọ nchekwa content-addressed + hard links — lee n'elu).
+Maka runtime headless na-enweghị dashboard, jiri profaịlụ Docker `base` (n'elu) ma ọ bụ
+[ntuziaka Termux](docs/guides/TERMUX_GUIDE.md). Otu usoro ahụ na-enye CLI na web dashboard
+n'otu port, ya mere enweghị package pụrụ iche maka naanị CLI ugbu a.
 
 <br/>
 
 <div align="center">
 
-# 🎬 OmniRoute Ka Ọ Na-arụ Ọrụ
+# 🎬 OmniRoute Ka Ọ Na-Arụ Ọrụ
 
 </div>
 

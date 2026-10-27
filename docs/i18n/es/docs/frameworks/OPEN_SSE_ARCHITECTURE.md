@@ -489,10 +489,10 @@ Esto gestiona:
 | Archivo                        | Propósito                                                   |
 | ------------------------------ | ----------------------------------------------------------- |
 | `providerRegistry.ts`          | Registro de modelos de chat del catálogo de 376 proveedores |
-| `providerModels.ts`            | Alias de modelos, asignación de formatos                    |
+| `providerModels.ts`            | Alias de modelos, mapeo de formatos                         |
 | `constants.ts`                 | Tiempos de espera, límites, códigos de estado               |
 | `defaultThinkingSignature.ts`  | Firma de razonamiento predeterminada de Claude              |
-| `modelStrip.ts` (en servicios) | Eliminación de campos por proveedor                         |
+| `modelStrip.ts` (en servicios) | Eliminación de campos específicos de cada proveedor         |
 
 ### Esquema del registro de proveedores
 
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-La validación de Zod durante la carga del módulo garantiza que todas las configuraciones de proveedores sean válidas.
+La validación con Zod durante la carga del módulo garantiza que todas las configuraciones de proveedores sean válidas.
 
 ---
 

@@ -492,7 +492,7 @@ createResponsesApiTransformStream(): TransformStream
 | `providerModels.ts`            | ମଡେଲ୍ ଉପନାମ, ଫର୍ମାଟ୍ ମ୍ୟାପିଂ                        |
 | `constants.ts`                 | ସମୟସୀମା, ସୀମା, ସ୍ଥିତି କୋଡ୍                          |
 | `defaultThinkingSignature.ts`  | ଡିଫଲ୍ଟ Claude ଚିନ୍ତନ ସ୍ୱାକ୍ଷର                       |
-| `modelStrip.ts` (ସେବାଗୁଡ଼ିକରେ) | ପ୍ରତି-ପ୍ରଦାନକାରୀ ଫିଲ୍ଡ ବାଦ ଦେବା                     |
+| `modelStrip.ts` (ସେବାଗୁଡ଼ିକରେ) | ପ୍ରତି-ପ୍ରଦାନକାରୀ ଫିଲ୍ଡ ଅପସାରଣ                       |
 
 ### ପ୍ରଦାନକାରୀ ରେଜିଷ୍ଟ୍ରି ସ୍କିମା
 

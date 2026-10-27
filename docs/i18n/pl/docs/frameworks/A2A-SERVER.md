@@ -152,27 +152,27 @@ curl -X POST http://localhost:20128/a2a \
 
 ## Dostępne umiejętności
 
-OmniRoute udostępnia 6 umiejętności A2A powiązanych w `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Każdy moduł umiejętności znajduje się w `src/lib/a2a/skills/`.
+OmniRoute udostępnia 6 umiejętności A2A połączonych w `src/lib/a2a/taskExecution.ts::A2A_SKILL_HANDLERS`. Każdy moduł umiejętności znajduje się w `src/lib/a2a/skills/`.
 
-| Umiejętność             | ID                   | Opis                                                                                                                                                                                 | Tagi                              | Przykłady                                  |
-| :---------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- | :----------------------------------------- |
-| Inteligentne trasowanie | `smart-routing`      | Kieruje prompt do optymalnego dostawcy/zestawu, korzystając z mechanizmu zestawów i systemu oceny OmniRoute                                                                          | trasowanie, dostawcy              | "Skieruj ten prompt do najlepszego modelu" |
-| Zarządzanie limitami    | `quota-management`   | Raportuje stan limitów poszczególnych dostawców i pomaga wywołującym zdecydować, kiedy ograniczyć ruch lub zmienić dostawcę                                                          | limity, dostawcy                  | "Sprawdź limit dla anthropic"              |
-| Wykrywanie dostawców    | `provider-discovery` | Wyświetla zainstalowanych dostawców wraz z możliwościami, informacjami o bezpłatnych planach i statusem OAuth                                                                        | dostawcy, wykrywanie              | "Jacy dostawcy są dostępni?"               |
-| Analiza kosztów         | `cost-analysis`      | Szacuje koszt żądania/konwersacji na podstawie katalogu i ostatniego użycia                                                                                                          | koszt, użycie                     | "Oszacuj koszt tej konwersacji"            |
-| Raport o stanie         | `health-report`      | Agreguje stan wyłącznika obwodu, okresu oczekiwania i blokady dla każdego dostawcy                                                                                                   | stan, odporność                   | "Pokaż stan wszystkich dostawców"          |
-| Lista możliwości        | `list-capabilities`  | Zwraca pełny, 45-elementowy katalog Agent Skills (23 API + 21 CLI + 1 konfiguracja) jako tabelę markdown z nieprzetworzonymi adresami URL plików SKILL.md do wstrzykiwania kontekstu | katalog, wykrywanie, umiejętności | "Wyświetl wszystkie możliwości OmniRoute"  |
+| Umiejętność             | ID                   | Opis                                                                                                                                                                                          | Tagi                              | Przykłady                                  |
+| :---------------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- | :----------------------------------------- |
+| Inteligentne trasowanie | `smart-routing`      | Kieruje prompt do optymalnego dostawcy lub kombinacji, wykorzystując mechanizm kombinacji i oceniania OmniRoute                                                                               | trasowanie, dostawcy              | „Skieruj ten prompt do najlepszego modelu” |
+| Zarządzanie limitami    | `quota-management`   | Raportuje stan limitów poszczególnych dostawców i pomaga wywołującym zdecydować, kiedy ograniczyć ruch lub zmienić dostawcę                                                                   | limity, dostawcy                  | „Sprawdź limit dla anthropic”              |
+| Wykrywanie dostawców    | `provider-discovery` | Wyświetla zainstalowanych dostawców wraz z możliwościami, oznaczeniami bezpłatnych planów i stanem OAuth                                                                                      | dostawcy, wykrywanie              | „Jacy dostawcy są dostępni?”               |
+| Analiza kosztów         | `cost-analysis`      | Szacuje koszt żądania lub konwersacji na podstawie katalogu i ostatniego użycia                                                                                                               | koszt, użycie                     | „Oszacuj koszt tej konwersacji”            |
+| Raport o stanie         | `health-report`      | Agreguje stan mechanizmu circuit breaker, okresu wyciszenia i blokady dla każdego dostawcy                                                                                                    | stan, odporność                   | „Pokaż stan wszystkich dostawców”          |
+| Lista możliwości        | `list-capabilities`  | Zwraca pełny, zawierający 45 pozycji katalog Agent Skills (23 API + 21 CLI + 1 konfiguracja) jako tabelę markdown z nieprzetworzonymi adresami URL plików SKILL.md do wstrzykiwania kontekstu | katalog, wykrywanie, umiejętności | „Wyświetl wszystkie możliwości OmniRoute”  |
 
-> Agent Card należy utrzymywać w zgodności z aktualnym katalogiem 376 dostawców; liczba dostawców oraz metadane dotyczące bezpłatnego dostępu i braku wymogu uwierzytelniania pochodzą z rejestru środowiska uruchomieniowego.
+> Agent Card powinien być zgodny z aktualnym katalogiem 376 dostawców; liczba dostawców oraz metadane dotyczące bezpłatnego dostępu i braku konieczności uwierzytelniania pochodzą z rejestru środowiska uruchomieniowego.
 
 ### Szczegóły umiejętności `list-capabilities`
 
-Umiejętność `list-capabilities` jest szczególnie przydatna dla agentów zewnętrznych, które muszą ustalić, co udostępnia OmniRoute, zanim wyślą wywołania API. Zwraca artefakt w postaci ustrukturyzowanej tabeli markdown:
+Umiejętność `list-capabilities` jest szczególnie przydatna dla zewnętrznych agentów, które przed wysłaniem wywołań API muszą ustalić, co udostępnia OmniRoute. Zwraca artefakt w postaci ustrukturyzowanej tabeli markdown:
 
 ```
-| ID | Name | Category | Area | Endpoints/Commands | Raw URL |
+| ID | Nazwa | Kategoria | Obszar | Punkty końcowe/polecenia | Nieprzetworzony adres URL |
 | --- | --- | --- | --- | --- | --- |
-| omni-auth | Auth & Sessions | api | auth | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
+| omni-auth | Uwierzytelnianie i sesje | api | uwierzytelnianie | POST /api/auth/login, ... | https://raw.githubusercontent.com/... |
 ...
 ```
 
@@ -215,21 +215,21 @@ Punkt końcowy JSON-RPC `/a2a` jest kanonicznym punktem wejścia A2A. Poniższe 
    };
    ```
 
-3. **Udostępnij na Karcie agenta:** w pliku `src/app/.well-known/agent.json/route.ts` dołącz wpis do tablicy `skills`:
+3. **Udostępnij w karcie agenta:** w pliku `src/app/.well-known/agent.json/route.ts` dodaj element do tablicy `skills`:
 
    ```json
    {
      "id": "your-skill",
      "name": "Twoja umiejętność",
-     "description": "Krótki opis skoncentrowany na przeznaczeniu",
+     "description": "Krótki opis skoncentrowany na intencji",
      "tags": ["routing", "quota"],
      "examples": ["Przykładowe wywołanie w języku naturalnym"]
    }
    ```
 
-4. **Napisz testy:** `tests/unit/a2a-<your-skill>.test.ts`. Uwzględnij poprawny przebieg i ścieżkę błędu.
+4. **Napisz testy:** `tests/unit/a2a-<your-skill>.test.ts`. Uwzględnij scenariusz poprawnego działania i scenariusz błędu.
 
-5. **Udokumentuj** nową umiejętność w tabeli `Dostępne umiejętności` w tym pliku.
+5. **Udokumentuj** nową umiejętność w tabeli `Available Skills` w tym pliku.
 
 ---
 

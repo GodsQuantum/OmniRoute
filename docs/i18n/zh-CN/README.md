@@ -691,7 +691,7 @@ omniroute configure codex          # 还支持：claude opencode qwen aider goos
 
 </div>
 
-> 在规范的聊天、媒体、搜索、本地、云代理和系统集合中，共有 **376 家已注册提供者**，其中 **153 家带有 `hasFree: true` 发现元数据**。聊天模型注册表涵盖 **239 家提供者 / 3,059 个不同的提供者-模型组合 / 1,475 个原始模型 ID**；独立的免费额度目录包含 **471 条按模型统计的记录**、**34 个周期性额度池**和 **52 家提供周期性/无密钥永久免费服务的提供者**。这些统计口径按设计有所不同；相关定义以及按额度池去重后的计算方式，请参阅[提供者参考](docs/reference/PROVIDER_REFERENCE.md)和[免费层级](docs/reference/FREE_TIERS.md)。
+> 在规范的聊天、媒体、搜索、本地、云代理和系统集合中，共有 **376 家已注册提供者**，其中 **153 家带有 `hasFree: true` 发现元数据**。聊天模型注册表涵盖 **239 家提供者 / 3,059 个不同的提供者-模型组合 / 1,475 个原始模型 ID**；独立的免费额度目录包含 **484 条按模型统计的记录**、**34 个周期性额度池**和 **52 家提供周期性/无密钥永久免费服务的提供者**。这些统计口径按设计有所不同；相关定义以及按额度池去重后的计算方式，请参阅[提供者参考](docs/reference/PROVIDER_REFERENCE.md)和[免费层级](docs/reference/FREE_TIERS.md)。
 
 <div align="center">
 
@@ -1086,13 +1086,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` 指向已**发布**的最高稳定 SemVer 版本。它不会跟踪 git `main`。如用于 GitOps，请固定为 `:X.Y.Z`。请参阅 [Docker 发布渠道](docs/guides/DOCKER_GUIDE.md#release-channels)。该镜像固定设置了 **`OMNIROUTE_MEMORY_MB=1024`**。这足以运行仪表板和进行轻量聊天。**编程智能体**（来自 Claude Code、Codex、Grok 等的 `POST /v1/responses`）需要大得多的 V8 堆，否则当两个长上下文重叠时，进程会在约 12 GiB 处发生 `FATAL ERROR`。容器大小应高于堆大小（原生缓冲区位于 V8 之外）：
+`:latest` 跟随已**发布**的最高稳定 SemVer 版本。它不会跟踪 git `main`。对于 GitOps，请固定使用 `:X.Y.Z`。请参阅 [Docker 发布渠道](docs/guides/DOCKER_GUIDE.md#release-channels)。该镜像固定设置了 **`OMNIROUTE_MEMORY_MB=1024`**。这足以运行仪表盘和轻量聊天。**编码代理**（来自 Claude Code、Codex、Grok 等的 `POST /v1/responses`）需要大得多的 V8 堆，否则在两个长上下文重叠时，进程会在约 12 GiB 处出现 `FATAL ERROR`。容器大小应高于堆大小（原生缓冲区位于 V8 之外）：
 
-| 工作负载                     | 堆（`-e OMNIROUTE_MEMORY_MB`） | 容器（`--memory`） |
-| ---------------------------- | ------------------------------ | ------------------ |
-| 仪表板／轻量聊天             | `1024`（镜像默认值）           | ≥2 g               |
-| 一个编程智能体               | `8192`                         | ≥10 g              |
-| 两个并发的长 `/v1/responses` | `10240`–`12288`                | ≥12–16 g           |
+| 工作负载                          | 堆（`-e OMNIROUTE_MEMORY_MB`） | 容器（`--memory`） |
+| --------------------------------- | ------------------------------ | ------------------ |
+| 仪表盘／轻量聊天                  | `1024`（镜像默认值）           | ≥2 g               |
+| 一个编码代理                      | `8192`                         | ≥10 g              |
+| 两个并发的长 `/v1/responses` 请求 | `10240`–`12288`                | ≥12–16 g           |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1103,7 +1103,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 完整表格：[Docker 指南 — 运行时 RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents)。
 
 > **预发布 Docker 渠道：** `diegosouzapw/omniroute:next` 和
-> `diegosouzapw/omniroute:next-web` 跟踪当前默认的 `release/v*`
+> `diegosouzapw/omniroute:next-web` 跟随当前默认的 `release/v*`
 > 分支。这些可变标签仅用于测试尚未发布的修复，
 > **不支持用于生产环境**。请参阅
 > [Docker 发布渠道](docs/guides/DOCKER_GUIDE.md#release-channels)。
@@ -1112,9 +1112,9 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 通过 Bun 运行时检测，支持标准的 `bun install` 和全局安装（`bun install -g omniroute`）：
 
-- **内置 `bun:sqlite`**：在 Bun 下运行时，OmniRoute 使用 Bun 内置的 `bun:sqlite` 驱动程序；在 Node.js 下则回退到 `better-sqlite3` 或 `sql.js`。
-- **开发环境中自动选择 Webpack 打包器**：开发模式（`bun run dev`）会自动检测 Bun，并禁用 Turbopack、改用 Webpack，以避免原生 V8 绑定不兼容。生产构建（`bun run build`）与 Node 上一样，严格遵循 `OMNIROUTE_USE_TURBOPACK`：默认使用 Turbopack；设置 `OMNIROUTE_USE_TURBOPACK=0` 时使用 Webpack 构建（`Dockerfile.bun` 将其公开为 `--build-arg`）。
-- **专用 Bun Dockerfile**：提供多阶段 `Dockerfile.bun`，用于原生 Bun 生产部署（`docker build -f Dockerfile.bun -t omniroute:bun .`）。
+- **内置 `bun:sqlite`**：在 Bun 下运行时，OmniRoute 使用 Bun 内置的 `bun:sqlite` 驱动程序；在 Node.js 上则回退到 `better-sqlite3` 或 `sql.js`。
+- **开发环境中自动选择 Webpack 打包器**：开发模式（`bun run dev`）会自动检测 Bun，并禁用 Turbopack、改用 Webpack，以防止原生 V8 绑定不兼容。生产构建（`bun run build`）与 Node 上一样，严格遵循 `OMNIROUTE_USE_TURBOPACK`：默认使用 Turbopack，设置 `OMNIROUTE_USE_TURBOPACK=0` 则使用 Webpack 构建（`Dockerfile.bun` 将其公开为 `--build-arg`）。
+- **专用 Bun Dockerfile**：用于原生 Bun 生产部署的多阶段 `Dockerfile.bun`（`docker build -f Dockerfile.bun -t omniroute:bun .`）。
 
 ```bash
 # 使用 Bun 安装并运行
@@ -1135,13 +1135,13 @@ PORT=20128 npm run dev
 pnpm add -g omniroute@latest --allow-build=better-sqlite3 --allow-build=@swc/core && omniroute
 ```
 
-**🐧 Arch Linux（AUR）**
+**🐧 Arch Linux (AUR)**
 
 ```bash
 yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 ```
 
-**🔧 Nix（Flake）**
+**🔧 Nix (Flake)**
 
 ```bash
 # 使用 Nix flakes
@@ -1160,16 +1160,16 @@ devbox run npm run dev
 # 1. 准备绑定挂载的数据目录
 mkdir -p data
 
-# 2. 仅限 Linux + 本地无根 Podman（绝不能用于远程 Podman Machine 客户端）：
+# 2. 仅适用于 Linux + 本地无根 Podman（切勿用于远程 Podman Machine 客户端）：
 podman unshare chown 1000:1000 ./data
 
-# 3. 设置运行时提示、构建本地 Compose 镜像并启动
+# 3. 设置运行时提示，构建本地 Compose 镜像并启动
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
 在 macOS 或 Windows 上，Podman 使用远程 Podman Machine：请跳过 `podman unshare`，并
-遵循[针对不同拓扑的数据目录指南](contrib/podman/README.md#data-directory-permissions-by-topology)。
+遵循[针对具体拓扑的数据目录指南](contrib/podman/README.md#data-directory-permissions-by-topology)。
 
 📖 [Podman 指南](contrib/podman/README.md) — Compose 构建、Podman Machine，以及
 Linux/systemd Quadlet 设置。
@@ -1177,26 +1177,28 @@ Linux/systemd Quadlet 设置。
 **⚡ 更快／更精简的安装方式（跳过原生构建）**
 
 原生 SQLite 引擎（`better-sqlite3`）是一个**可选**依赖项，因此全局
-安装绝不会因源码编译而受阻：当存在与你的平台／Node 匹配的预构建二进制文件时会使用它，
+安装绝不会因从源码编译而受阻：当存在与您的平台／Node 匹配的预构建二进制文件时，它会使用该文件；
 否则会透明地回退到纯 JS 引擎
-（Node 22+ 上使用 `node:sqlite`，否则使用随附的 `sql.js` WASM）—— 无需构建工具。
+（Node 22+ 上使用 `node:sqlite`，否则使用捆绑的 `sql.js` WASM）——无需构建工具。
 
-如需完全跳过安装后的原生预热（适用于 CI、无界面环境或性能较低的机器）：
+若要完全跳过安装后的**原生预热**步骤（适用于 CI、无头环境或较慢的机器），
+请使用以下方式。注意：这只会跳过原生 SQLite 预热步骤（`scripts/postinstall.mjs`）；
+二进制文件复制／修复钩子（`scripts/build/postinstall.mjs`）仍会正常运行：
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 也会跳过
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 也会跳过该步骤
 ```
 
 为获得最快的安装速度，建议使用 **pnpm**（内容寻址存储 + 硬链接——见上文）。
-若要使用不带仪表板的无界面运行时，请使用 Docker `base` 配置文件（见上文）或
-[Termux 指南](docs/guides/TERMUX_GUIDE.md)。CLI 和 Web 仪表板由同一进程在同一端口上提供服务，
+如需不含仪表盘的无头运行时，请使用 Docker `base` 配置文件（见上文）或
+[Termux 指南](docs/guides/TERMUX_GUIDE.md)。CLI 和 Web 仪表盘由同一进程通过同一端口提供，
 因此目前没有单独的纯 CLI 软件包。
 
 <br/>
 
 <div align="center">
 
-# 🎬 OmniRoute 实际演示
+# 🎬 OmniRoute 实际运行效果
 
 </div>
 

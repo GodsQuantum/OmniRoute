@@ -25,30 +25,31 @@
 
 ## 2. Kurallar
 
-1. Değişmez değerler değil, token'lar kullanın. Bilinçli olarak korunan istisnalar: her zaman koyu olan konsol terminali, `STATUS_HEX` (`src/shared/constants/statusColors.ts`) üzerinden ReactFlow SVG
-   çizgileri ve `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) ile
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`) kategorik paletleri.
+1. Sabit değerler değil, token'lar kullanın. Bilerek korunan istisnalar: her zaman koyu olan konsol terminali ve
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) aracılığıyla kullanılan ReactFlow
+   SVG çizgileri. Yönlendirme stratejisi ve sıkıştırma katmanı paletleri, `strategyColorVar` ve
+   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) aracılığıyla kitin grafik token'larını kullanır.
 2. `packages/ui-kit/src` dosyasını asla elle yamamayın: `scripts/dev/sync-ui-kit.sh <commit>` ile eşitleyin;
    pre-commit denetimi `npm run check:ui-kit-snapshot` (`.husky/pre-commit`), sabitlenmiş upstream commit'inden
    farklı olan herhangi bir baytta başarısız olur (upstream klonu,
-   `UI_KIT_CLONE` veya `_references/cheaper-inference-ui-kit` yoksa bir uyarıyla atlanır). Kitte bir şey eksikse
-   adaptörde veya ekranda geçici bir çözüm uygulayın ve upstream'den bunu eklemesini isteyin.
+   `UI_KIT_CLONE` veya `_references/cheaper-inference-ui-kit` mevcut olmadığında bir uyarıyla atlanır). Kitte bir şey
+   eksik olduğunda, adaptörde veya ekranda geçici bir çözüm uygulayın ve bunun upstream'e eklenmesini talep edin.
 3. Kit metinlerinin varsayılanları İngilizcedir (`label = "Loading"`, `loadingLabel = "Loading table"`…) — bir kit
    bileşeni metin oluşturduğunda `useTranslations(...)` üzerinden çevrilmiş dizeler geçirin.
 4. Tailwind yardımcı sınıfları, kit bileşeni sınıflarına göre önceliklidir (kit,
-   `@layer theme, base, components, utilities` tanımlar ve kuralları `components` içinde bulunur) — yardımcı sınıfları
-   kit bileşenlerini yeniden renklendirmek için değil, boşluk ve yerleşim için kullanın.
+   `@layer theme, base, components, utilities` tanımlar ve kuralları `components` içinde yer alır) — yardımcı sınıfları
+   aralık ve yerleşim için kullanın, kit bileşenlerini yeniden renklendirmek için değil.
 5. Başlıklar: sayfa ve bölüm başlıkları için `.ci-heading` (Inter, harf aralığı yok); `.ci-dashboard-display`
-   (Instrument Serif) yalnızca hata sayfasındaki durum kodu gibi büyük ve seyrek görüntülenen metinler içindir.
-6. `tests/unit/dashboard-kit-sweep.test.ts`, kit kullanımını denetler: `src/app` veya
-   `src/shared/components` altında Material ligatür span'ı bulunamaz; dashboard ağacında (`src/app/(dashboard)` ve
-   `src/shared/components`) ham `<select>`, `<textarea>` veya `<table>` ve listelenen istisnaların (`Select`
-   adaptörünün native dalı, `RequestLoggerDetail`) dışında elle oluşturulmuş `role="dialog"` bulunamaz; buradaki
-   her ham `<button>` veya `<input>`, en fazla 3 satır yukarıda sona eren ve nedenini belirten `kit-exception:`
-   içeren bir yoruma sahip olmalıdır; palet tonlarına ve `dark:` varyantlarına yalnızca testin listelediği
-   dosyalarda izin verilir.
+   (Instrument Serif) yalnızca hata sayfasındaki durum kodu gibi büyük ve seyrek görüntüleme metinleri için kullanılmalıdır.
+6. `tests/unit/dashboard-kit-sweep.test.ts`, kitin benimsenmesini denetler: `src/app` veya
+   `src/shared/components` altında Material ligatür span'i olmamalıdır; dashboard ağacında (`src/app/(dashboard)` ve
+   `src/shared/components`) ham `<select>`, `<textarea>` veya `<table>` bulunmamalı ve listelenen istisnalar (`Select`
+   adaptörünün yerel dalı, `RequestLoggerDetail`) dışında elle oluşturulmuş `role="dialog"` kullanılmamalıdır; buradaki
+   her ham `<button>` veya `<input>`, en fazla 3 satır üstünde sona eren ve gerekçeyle birlikte
+   `kit-exception:` içeren bir yoruma sahip olmalıdır; palet tonları ve `dark:` varyantları yalnızca testin listelediği
+   dosyalarda kullanılmalıdır.
 7. Bir PR'dan önce her iki temayı ve 390 px görünüm alanını doğrulayın (ekran görüntüleri);
-   `tests/e2e/a11y.spec.ts` axe çalıştırır.
+   `tests/e2e/a11y.spec.ts` axe'i çalıştırır.
 
 ## 3. Ekran ekleme
 

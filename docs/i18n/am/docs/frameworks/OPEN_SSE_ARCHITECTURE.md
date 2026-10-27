@@ -484,7 +484,7 @@ createResponsesApiTransformStream(): TransformStream
 
 ## ውቅር
 
-`open-sse/config/` የውቅር ንብርብሩን ይይዛል፦
+`open-sse/config/` የውቅር ንብርብሩን ይዟል፦
 
 | ፋይል                            | ዓላማ                                       |
 | ------------------------------ | ----------------------------------------- |
@@ -494,7 +494,7 @@ createResponsesApiTransformStream(): TransformStream
 | `defaultThinkingSignature.ts`  | ነባሪ የClaude አስተሳሰብ ፊርማ                    |
 | `modelStrip.ts` (በአገልግሎቶች ውስጥ) | ለእያንዳንዱ አቅራቢ የመስክ ማስወገድ                   |
 
-### የአቅራቢ መዝገብ መዋቅር
+### የአቅራቢ መዝገብ ንድፍ
 
 ```ts
 interface ProviderConfig {

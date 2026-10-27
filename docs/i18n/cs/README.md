@@ -699,7 +699,7 @@ uložení tajných údajů do historie shellu. → [Integrace CLI](docs/guides/C
 
 </div>
 
-> **376 registrovaných poskytovatelů** napříč kanonickými kolekcemi pro chat, média, vyhledávání, místní použití, cloudové agenty a systémy, včetně **153 poskytovatelů s metadaty pro vyhledávání `hasFree: true`**. Registr chatovacích modelů zahrnuje **239 poskytovatelů / 3 059 jedinečných dvojic poskytovatel–model / 1 475 nezpracovaných ID modelů**; samostatný katalog bezplatných limitů obsahuje **471 řádků pro jednotlivé modely**, **34 opakujících se sdílených limitů** a **52 poskytovatelů s opakovaně obnovovaným nebo bezklíčovým bezplatným přístupem bez časového omezení**. Tyto jmenovatele se záměrně liší; definice a výpočty s deduplikovanými sdílenými limity naleznete v dokumentech [Referenční příručka poskytovatelů](docs/reference/PROVIDER_REFERENCE.md) a [Bezplatné úrovně](docs/reference/FREE_TIERS.md).
+> **376 registrovaných poskytovatelů** napříč kanonickými kolekcemi pro chat, média, vyhledávání, místní použití, cloudové agenty a systémy, včetně **153 poskytovatelů s metadaty pro vyhledávání `hasFree: true`**. Registr chatovacích modelů zahrnuje **239 poskytovatelů / 3 059 jedinečných dvojic poskytovatel–model / 1 475 nezpracovaných ID modelů**; samostatný katalog bezplatných limitů obsahuje **484 řádků pro jednotlivé modely**, **34 opakujících se sdílených limitů** a **52 poskytovatelů s opakovaně obnovovaným nebo bezklíčovým bezplatným přístupem bez časového omezení**. Tyto jmenovatele se záměrně liší; definice a výpočty s deduplikovanými sdílenými limity naleznete v dokumentech [Referenční příručka poskytovatelů](docs/reference/PROVIDER_REFERENCE.md) a [Bezplatné úrovně](docs/reference/FREE_TIERS.md).
 
 <div align="center">
 
@@ -1098,13 +1098,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` odkazuje na nejvyšší **publikovanou** stabilní verzi SemVer. Nesleduje větev git `main`. Pro GitOps použijte pevnou verzi `:X.Y.Z`. Viz [Kanály vydání Dockeru](docs/guides/DOCKER_GUIDE.md#release-channels). Image nastavuje **`OMNIROUTE_MEMORY_MB=1024`**. To stačí pro ovládací panel a nenáročný chat. **Programovací agenti** (`POST /v1/responses` z Claude Code, Codex, Grok, …) potřebují mnohem větší haldu V8, jinak proces skončí s chybou `FATAL ERROR` při přibližně 12 GiB a dvou překrývajících se dlouhých kontextech. Nastavte velikost kontejneru nad velikost haldy (nativní buffery se nacházejí mimo V8):
+`:latest` odkazuje na nejvyšší **publikovanou** stabilní verzi SemVer. Nesleduje větev git `main`. Pro GitOps připněte `:X.Y.Z`. Viz [Kanály vydání Dockeru](docs/guides/DOCKER_GUIDE.md#release-channels). Image nastavuje **`OMNIROUTE_MEMORY_MB=1024`**. To stačí pro ovládací panel a nenáročný chat. **Programovací agenti** (`POST /v1/responses` z Claude Code, Codex, Grok, …) potřebují mnohem větší haldu V8, jinak proces skončí s `FATAL ERROR` při přibližně 12 GiB u dvou překrývajících se dlouhých kontextů. Nastavte velikost kontejneru nad velikost haldy (nativní buffery se nacházejí mimo V8):
 
 | Pracovní zátěž                      | Halda (`-e OMNIROUTE_MEMORY_MB`) | Kontejner (`--memory`) |
 | ----------------------------------- | -------------------------------- | ---------------------- |
 | Ovládací panel / nenáročný chat     | `1024` (výchozí hodnota image)   | ≥2 g                   |
 | Jeden programovací agent            | `8192`                           | ≥10 g                  |
-| Dvě souběžné dlouhé `/v1/responses` | `10240`–`12288`                  | ≥12–16 g               |
+| Dva souběžné dlouhé `/v1/responses` | `10240`–`12288`                  | ≥12–16 g               |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1112,7 +1112,7 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-Úplná tabulka: [Průvodce Dockerem — operační paměť za běhu](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+Kompletní tabulka: [Průvodce Dockerem — operační paměť za běhu](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **Kanál předběžných vydání Dockeru:** `diegosouzapw/omniroute:next` a
 > `diegosouzapw/omniroute:next-web` sledují aktuální výchozí větev `release/v*`.
@@ -1124,9 +1124,9 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 Standardní `bun install` a globální instalace (`bun install -g omniroute`) jsou podporovány prostřednictvím detekce běhového prostředí Bun:
 
-- **Vestavěný `bun:sqlite`**: Při spuštění pod Bun používá OmniRoute vestavěný ovladač `bun:sqlite`; v Node.js případně použije `better-sqlite3` nebo `sql.js`.
-- **Automatický výběr bundleru Webpack při vývoji**: Vývojové prostředí (`bun run dev`) automaticky detekuje Bun a zakáže Turbopack ve prospěch Webpacku, aby zabránilo nekompatibilitě s nativními vazbami V8. Produkční sestavení (`bun run build`) se řídí proměnnou `OMNIROUTE_USE_TURBOPACK` přesně stejně jako v Node: ve výchozím nastavení používá Turbopack, zatímco `OMNIROUTE_USE_TURBOPACK=0` sestaví aplikaci pomocí Webpacku (`Dockerfile.bun` tuto možnost zpřístupňuje jako `--build-arg`).
-- **Samostatný Dockerfile pro Bun**: Vícefázový `Dockerfile.bun` pro nativní produkční nasazení Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **Vestavěný `bun:sqlite`**: Při spuštění v prostředí Bun používá OmniRoute vestavěný ovladač `bun:sqlite`; v Node.js přechází na `better-sqlite3` nebo `sql.js`.
+- **Automatický výběr bundleru Webpack ve vývojovém prostředí**: Vývojový režim (`bun run dev`) automaticky rozpozná Bun a zakáže Turbopack ve prospěch Webpacku, aby zabránil nekompatibilitám nativních vazeb V8. Produkční sestavení (`bun run build`) se řídí proměnnou `OMNIROUTE_USE_TURBOPACK` přesně stejně jako v Node: ve výchozím nastavení používá Turbopack; chcete-li sestavovat pomocí Webpacku, použijte `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` ji zpřístupňuje jako `--build-arg`).
+- **Vyhrazený Dockerfile pro Bun**: Vícefázový `Dockerfile.bun` pro nativní produkční nasazení Bun (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
 # Instalace a spuštění pomocí Bun
@@ -1156,7 +1156,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Použití flakes systému Nix
+# Pomocí Nix flakes
 nix develop
 npm run dev
 
@@ -1164,7 +1164,7 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Průvodce Dockerem](docs/guides/DOCKER_GUIDE.md) — Profily Compose, HTTPS přes Caddy, tunely Cloudflare.
+📖 [Průvodce Dockerem](docs/guides/DOCKER_GUIDE.md) — profily Compose, Caddy HTTPS, tunely Cloudflare.
 
 **🦭 Podman**
 
@@ -1172,7 +1172,7 @@ devbox run npm run dev
 # 1. Připravte datový adresář připojený pomocí bind mount
 mkdir -p data
 
-# 2. Pouze pro Linux + místní rootless Podman (nikdy pro vzdáleného klienta Podman Machine):
+# 2. Pouze Linux + místní rootless Podman (nikdy vzdálený klient Podman Machine):
 podman unshare chown 1000:1000 ./data
 
 # 3. Nastavte údaj o běhovém prostředí, sestavte místní image Compose a spusťte jej
@@ -1180,26 +1180,28 @@ echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-V macOS nebo Windows používá Podman vzdálený Podman Machine: vynechte `podman unshare` a
-postupujte podle [pokynů k datovému adresáři pro konkrétní topologii](contrib/podman/README.md#data-directory-permissions-by-topology).
+V systémech macOS nebo Windows používá Podman vzdálený Podman Machine: krok `podman unshare` přeskočte a
+postupujte podle [pokynů pro datový adresář specifických pro danou topologii](contrib/podman/README.md#data-directory-permissions-by-topology).
 
-📖 [Průvodce Podmanem](contrib/podman/README.md) — Sestavení pomocí Compose, Podman Machine a
-nastavení Quadlet se systémem Linux/systemd.
+📖 [Průvodce Podmanem](contrib/podman/README.md) — sestavení Compose, Podman Machine a
+nastavení Quadlet pro Linux/systemd.
 
-**⚡ Rychlejší / úspornější instalace (bez nativního sestavení)**
+**⚡ Rychlejší / úspornější instalace (přeskočení nativního sestavení)**
 
 Nativní databázový engine SQLite (`better-sqlite3`) je **volitelná** závislost, takže globální
 instalace nikdy nečeká na kompilaci ze zdrojového kódu: použije předem sestavený binární soubor, pokud odpovídá
-vaší platformě/Node, a v opačném případě automaticky přejde na engine implementovaný čistě v JS
-(`node:sqlite` v Node 22+, jinak přibalený WASM modul `sql.js`) — bez nutnosti nástrojů pro sestavení.
+vaší platformě/verzi Node, a jinak transparentně přejde na čistě javascriptový engine
+(`node:sqlite` v Node 22+, jinak přibalený WASM modul `sql.js`) — bez nutnosti sestavovacích nástrojů.
 
-Chcete-li zcela přeskočit nativní inicializaci po instalaci (CI, bezobslužné nebo pomalé počítače):
+Chcete-li zcela přeskočit **nativní inicializaci** po instalaci (CI, bezobslužná nebo pomalá zařízení),
+použijte následující nastavení. Poznámka: přeskočí se pouze krok inicializace nativního SQLite (`scripts/postinstall.mjs`);
+hook pro kopírování/opravu binárních souborů (`scripts/build/postinstall.mjs`) se nadále spouští běžným způsobem:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 ji také přeskočí
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # Přeskočí jej také CI=1
 ```
 
-Pro nejrychlejší instalace upřednostněte **pnpm** (úložiště adresované podle obsahu + pevné odkazy — viz výše).
+Pro nejrychlejší instalaci upřednostněte **pnpm** (úložiště adresované podle obsahu + pevné odkazy — viz výše).
 Pro bezobslužné běhové prostředí bez ovládacího panelu použijte profil Dockeru `base` (výše) nebo
 [průvodce pro Termux](docs/guides/TERMUX_GUIDE.md). CLI a webový ovládací panel obsluhuje
 stejný proces na jednom portu, takže v současnosti neexistuje samostatný balíček pouze pro CLI.

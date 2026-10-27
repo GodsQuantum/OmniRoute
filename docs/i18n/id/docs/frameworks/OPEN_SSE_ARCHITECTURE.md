@@ -491,8 +491,8 @@ Ini menangani:
 | `providerRegistry.ts`         | Registri model chat untuk katalog 376 penyedia |
 | `providerModels.ts`           | Alias model, pemetaan format                   |
 | `constants.ts`                | Batas waktu, batasan, kode status              |
-| `defaultThinkingSignature.ts` | Tanda tangan thinking Claude bawaan            |
-| `modelStrip.ts` (di services) | Penghapusan bidang per penyedia                |
+| `defaultThinkingSignature.ts` | Tanda tangan pemikiran Claude default          |
+| `modelStrip.ts` (di services) | Penghapusan field per penyedia                 |
 
 ### Skema Registri Penyedia
 

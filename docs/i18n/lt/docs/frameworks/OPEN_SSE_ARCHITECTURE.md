@@ -484,15 +484,15 @@ Jis apdoroja:
 
 ## Konfigūracija
 
-`open-sse/config/` apima konfigūracijos sluoksnį:
+`open-sse/config/` yra konfigūracijos sluoksnis:
 
 | Failas                        | Paskirtis                                                  |
 | ----------------------------- | ---------------------------------------------------------- |
 | `providerRegistry.ts`         | Pokalbių modelių registras, apimantis 376 teikėjų katalogą |
 | `providerModels.ts`           | Modelių alternatyvūs pavadinimai, formatų susiejimas       |
-| `constants.ts`                | Skirtojo laiko ribos, limitai, būsenos kodai               |
+| `constants.ts`                | Skirtojo laiko reikšmės, apribojimai, būsenos kodai        |
 | `defaultThinkingSignature.ts` | Numatytasis Claude mąstymo parašas                         |
-| `modelStrip.ts` (paslaugose)  | Kiekvieno teikėjo laukų pašalinimas                        |
+| `modelStrip.ts` (paslaugose)  | Kiekvienam teikėjui skirtų laukų pašalinimas               |
 
 ### Teikėjų registro schema
 
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Zod validacija įkeliant modulį užtikrina, kad visos teikėjų konfigūracijos būtų tinkamos.
+Zod patikra įkeliant modulį užtikrina, kad visos teikėjų konfigūracijos būtų tinkamos.
 
 ---
 

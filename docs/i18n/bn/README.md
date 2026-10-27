@@ -687,11 +687,11 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
 
 <div align="center">
 
-## 🌐 376টি AI প্রদানকারী — 153টি ক্যাটালগে বিনামূল্য হিসেবে চিহ্নিত
+## 🌐 376টি AI প্রদানকারী — 153টি ক্যাটালগে বিনামূল্যের হিসেবে চিহ্নিত
 
 </div>
 
-> ক্যানোনিক্যাল চ্যাট, মিডিয়া, সার্চ, লোকাল, ক্লাউড-এজেন্ট ও সিস্টেম সংগ্রহজুড়ে **376টি নিবন্ধিত প্রদানকারী**, যার মধ্যে **153টির ডিসকভারি মেটাডেটায় `hasFree: true` রয়েছে**। চ্যাট মডেল রেজিস্ট্রিতে রয়েছে **239টি প্রদানকারী / 3,059টি স্বতন্ত্র প্রদানকারী-মডেল জোড়া / 1,475টি অপরিশোধিত মডেল ID**; পৃথক বিনামূল্যের-বাজেট ক্যাটালগে রয়েছে **প্রতি-মডেলের 471টি সারি**, **34টি পুনরাবৃত্ত পুল** এবং **52টি পুনরাবৃত্ত/কীবিহীন চিরস্থায়ী বিনামূল্যের প্রদানকারী**। নকশাগতভাবেই এগুলোর বিভাজক আলাদা; সংজ্ঞা ও পুল-ডিডুপ্লিকেট করা হিসাব [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md) এবং [বিনামূল্যের স্তরসমূহ](docs/reference/FREE_TIERS.md)-এ রয়েছে।
+> ক্যানোনিক্যাল চ্যাট, মিডিয়া, সার্চ, লোকাল, ক্লাউড-এজেন্ট এবং সিস্টেম সংগ্রহজুড়ে **376টি নিবন্ধিত প্রদানকারী**, যার মধ্যে **153টির ডিসকভারি মেটাডেটায় `hasFree: true` রয়েছে**। চ্যাট মডেল রেজিস্ট্রিতে রয়েছে **239টি প্রদানকারী / 3,059টি স্বতন্ত্র প্রদানকারী-মডেল জোড়া / 1,475টি কাঁচা মডেল ID**; পৃথক বিনামূল্যের-বাজেট ক্যাটালগে রয়েছে **প্রতি-মডেলের 484টি সারি**, **34টি পুনরাবৃত্ত পুল** এবং **52টি পুনরাবৃত্ত/কিলেস চিরকাল-বিনামূল্যের প্রদানকারী**। নকশাগতভাবেই এগুলোর হর ভিন্ন; সংজ্ঞা এবং পুল-ডিডুপ্লিকেট করা হিসাব [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md) ও [বিনামূল্যের স্তরসমূহ](docs/reference/FREE_TIERS.md)-এ রয়েছে।
 
 <div align="center">
 
@@ -724,11 +724,11 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
   </tr>
 </table>
 
-<sub>…এবং আরও 350টির বেশি — প্রতিটি আইকন ড্যাশবোর্ডের প্রদানকারী ক্যাটালগ থেকে সরাসরি রিজলভ হয়। 📖 [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md)</sub>
+<sub>…এবং আরও 350টির বেশি — প্রতিটি আইকন ড্যাশবোর্ডের প্রদানকারী ক্যাটালগ থেকে লাইভ লোড হয়। 📖 [প্রদানকারী রেফারেন্স](docs/reference/PROVIDER_REFERENCE.md)</sub>
 
 <br/>
 
-### 🆓 চিরস্থায়ী বিনামূল্যে — $0, কোনো কার্ড নয়
+### 🆓 চিরকাল বিনামূল্যে — $0, কোনো কার্ড নয়
 
 <table>
   <tr>
@@ -742,10 +742,10 @@ omniroute configure codex          # আরও আছে: claude opencode qwen a
   <tr>
     <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="42" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Qwen3-Max, Kimi-K2<br/>সীমাহীন বিনামূল্যে</sub></td>
     <td align="center" width="150"><img src="./public/providers/pollinations.svg" width="42" alt="Pollinations"/><br/><b>Pollinations</b><br/><sub>GPT, Llama, Claude<br/>কোনো কী প্রয়োজন নেই</sub></td>
-    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50+ মডেল<br/>10K নিউরন/দিন</sub></td>
-    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>~40 RPM বিনামূল্যে</sub></td>
+    <td align="center" width="150"><img src="./public/providers/cloudflare.svg" width="42" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>৫০টিরও বেশি মডেল<br/>প্রতিদিন ১০ হাজার নিউরন</sub></td>
+    <td align="center" width="150"><img src="./public/providers/nvidia.svg" width="42" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>GLM, MiniMax<br/>বিনামূল্যে ~40 RPM</sub></td>
     <td align="center" width="150"><img src="./public/providers/cerebras.svg" width="42" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>GLM 4.7, GPT-OSS<br/>এককালীন $5 ক্রেডিট; কার্ড আবশ্যক</sub></td>
-    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free মডেল<br/>+$10 → বেশি RPM</sub></td>
+    <td align="center" width="150"><img src="./public/providers/openrouter.svg" width="42" alt="OpenRouter"/><br/><b>OpenRouter</b><br/><sub>:free মডেল<br/>+$10 → আরও বেশি RPM</sub></td>
   </tr>
 </table>
 
@@ -1087,13 +1087,13 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` সর্বোচ্চ **প্রকাশিত** স্থিতিশীল SemVer অনুসরণ করে। এটি git `main` অনুসরণ করে না। GitOps-এর জন্য `:X.Y.Z` পিন করুন। [Docker রিলিজ চ্যানেল](docs/guides/DOCKER_GUIDE.md#release-channels) দেখুন। ইমেজটি **`OMNIROUTE_MEMORY_MB=1024`** পিন করে। এটি ড্যাশবোর্ড এবং হালকা চ্যাটের জন্য যথেষ্ট। **কোডিং এজেন্টগুলোর** (Claude Code, Codex, Grok, … থেকে `POST /v1/responses`) আরও বড় V8 heap প্রয়োজন, নতুবা দুটি ওভারল্যাপিং দীর্ঘ কনটেক্সটের অধীনে প্রায় 12 GiB-এ প্রসেসটি `FATAL ERROR` দেয়। কনটেইনারের আকার heap-এর চেয়ে বেশি রাখুন (নেটিভ বাফারগুলো V8-এর বাইরে থাকে):
+`:latest` সর্বোচ্চ **প্রকাশিত** স্থিতিশীল SemVer অনুসরণ করে। এটি git `main` অনুসরণ করে না। GitOps-এর জন্য `:X.Y.Z` পিন করুন। [Docker রিলিজ চ্যানেল](docs/guides/DOCKER_GUIDE.md#release-channels) দেখুন। ইমেজটিতে **`OMNIROUTE_MEMORY_MB=1024`** পিন করা আছে। ড্যাশবোর্ড এবং হালকা চ্যাটের জন্য এটি যথেষ্ট। **কোডিং এজেন্টগুলোর** (`POST /v1/responses` from Claude Code, Codex, Grok, …) অনেক বড় V8 হিপ প্রয়োজন; অন্যথায় দুটি ওভারল্যাপিং দীর্ঘ কনটেক্সটের অধীনে প্রায় 12 GiB-এ প্রসেসে `FATAL ERROR` ঘটে। কনটেইনারের আকার হিপের চেয়ে বড় রাখুন (নেটিভ বাফারগুলো V8-এর বাইরে থাকে):
 
-| কাজের ধরন                            | Heap (`-e OMNIROUTE_MEMORY_MB`) | কনটেইনার (`--memory`) |
-| ------------------------------------ | ------------------------------- | --------------------- |
-| ড্যাশবোর্ড / হালকা চ্যাট             | `1024` (ইমেজের ডিফল্ট)          | ≥2 g                  |
-| একটি কোডিং এজেন্ট                    | `8192`                          | ≥10 g                 |
-| দুটি সমসাময়িক দীর্ঘ `/v1/responses` | `10240`–`12288`                 | ≥12–16 g              |
+| ওয়ার্কলোড                           | হিপ (`-e OMNIROUTE_MEMORY_MB`) | কনটেইনার (`--memory`) |
+| ------------------------------------ | ------------------------------ | --------------------- |
+| ড্যাশবোর্ড / হালকা চ্যাট             | `1024` (ইমেজের ডিফল্ট)         | ≥2 g                  |
+| একটি কোডিং এজেন্ট                    | `8192`                         | ≥10 g                 |
+| একই সময়ে দুটি দীর্ঘ `/v1/responses` | `10240`–`12288`                | ≥12–16 g              |
 
 ```bash
 docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
@@ -1105,20 +1105,20 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
 
 > **প্রি-রিলিজ Docker চ্যানেল:** `diegosouzapw/omniroute:next` এবং
 > `diegosouzapw/omniroute:next-web` বর্তমান ডিফল্ট `release/v*`
-> ব্রাঞ্চ অনুসরণ করে। এই পরিবর্তনশীল ট্যাগগুলো কেবল অপ্রকাশিত সংশোধন পরীক্ষা করার জন্য
-> নির্ধারিত এবং **প্রোডাকশনে সমর্থিত নয়**। দেখুন
+> ব্রাঞ্চ অনুসরণ করে। এই পরিবর্তনযোগ্য ট্যাগগুলো কেবল অপ্রকাশিত সংশোধন পরীক্ষা করার জন্য
+> এবং **প্রোডাকশনে সমর্থিত নয়**। দেখুন
 > [Docker রিলিজ চ্যানেল](docs/guides/DOCKER_GUIDE.md#release-channels)।
 
 **🥟 Bun**
 
 Bun রানটাইম শনাক্তকরণের মাধ্যমে স্ট্যান্ডার্ড `bun install` এবং গ্লোবাল ইনস্টলেশন (`bun install -g omniroute`) সমর্থিত:
 
-- **অন্তর্নির্মিত `bun:sqlite`**: Bun-এর অধীনে চলার সময় OmniRoute, Bun-এর অন্তর্নির্মিত `bun:sqlite` ড্রাইভার ব্যবহার করে এবং Node.js-এ `better-sqlite3` বা `sql.js`-এ ফলব্যাক করে।
-- **ডেভেলপমেন্টে স্বয়ংক্রিয় Webpack বান্ডলার নির্বাচন**: নেটিভ V8 বাইন্ডিংয়ের অসামঞ্জস্য প্রতিরোধ করতে ডেভেলপমেন্ট (`bun run dev`) স্বয়ংক্রিয়ভাবে Bun শনাক্ত করে এবং Webpack-এর পক্ষে Turbopack নিষ্ক্রিয় করে। প্রোডাকশন বিল্ড (`bun run build`) Node-এর মতোই `OMNIROUTE_USE_TURBOPACK` হুবহু অনুসরণ করে: ডিফল্টভাবে Turbopack, আর Webpack দিয়ে বিল্ড করতে `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` এটিকে `--build-arg` হিসেবে প্রকাশ করে)।
+- **বিল্ট-ইন `bun:sqlite`**: Bun-এর অধীনে চলার সময় OmniRoute, Bun-এর বিল্ট-ইন `bun:sqlite` ড্রাইভার ব্যবহার করে এবং Node.js-এ `better-sqlite3` বা `sql.js`-এ ফলব্যাক করে।
+- **ডেভেলপমেন্টে স্বয়ংক্রিয় Webpack বান্ডলার নির্বাচন**: ডেভেলপমেন্ট (`bun run dev`) স্বয়ংক্রিয়ভাবে Bun শনাক্ত করে এবং নেটিভ V8 বাইন্ডিংয়ের অসামঞ্জস্যতা প্রতিরোধ করতে Webpack-এর পক্ষে Turbopack নিষ্ক্রিয় করে। প্রোডাকশন বিল্ডগুলো (`bun run build`) Node-এর মতোই হুবহু `OMNIROUTE_USE_TURBOPACK` অনুসরণ করে: ডিফল্টভাবে Turbopack, Webpack দিয়ে বিল্ড করতে `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` এটিকে একটি `--build-arg` হিসেবে উন্মুক্ত করে)।
 - **নিবেদিত Bun Dockerfile**: নেটিভ Bun প্রোডাকশন ডিপ্লয়মেন্টের জন্য মাল্টি-স্টেজ `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`)।
 
 ```bash
-# Bun দিয়ে ইনস্টল ও চালান
+# Bun দিয়ে ইনস্টল ও চালু করুন
 bun install
 bun run dev
 ```
@@ -1158,10 +1158,10 @@ devbox run npm run dev
 **🦭 Podman**
 
 ```bash
-# ১. bind-mounted ডেটা ডিরেক্টরি প্রস্তুত করুন
+# ১. বাইন্ড-মাউন্ট করা ডেটা ডিরেক্টরি প্রস্তুত করুন
 mkdir -p data
 
-# ২. কেবল Linux + স্থানীয় rootless Podman-এর জন্য (কখনোই কোনো রিমোট Podman Machine ক্লায়েন্টে নয়):
+# ২. শুধু Linux + স্থানীয় rootless Podman-এর জন্য (দূরবর্তী Podman Machine ক্লায়েন্টে কখনোই নয়):
 podman unshare chown 1000:1000 ./data
 
 # ৩. রানটাইম হিন্ট সেট করুন, স্থানীয় Compose ইমেজ বিল্ড করুন এবং চালু করুন
@@ -1169,29 +1169,31 @@ echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS বা Windows-এ Podman একটি রিমোট Podman Machine ব্যবহার করে: `podman unshare` এড়িয়ে যান এবং
+macOS বা Windows-এ Podman একটি দূরবর্তী Podman Machine ব্যবহার করে: `podman unshare` এড়িয়ে যান এবং
 [টপোলজি-নির্দিষ্ট ডেটা ডিরেক্টরির নির্দেশনা](contrib/podman/README.md#data-directory-permissions-by-topology) অনুসরণ করুন।
 
 📖 [Podman নির্দেশিকা](contrib/podman/README.md) — Compose বিল্ড, Podman Machine এবং
 Linux/systemd Quadlet সেটআপ।
 
-**⚡ দ্রুততর / হালকা ইনস্টলেশন (নেটিভ বিল্ড এড়িয়ে যান)**
+**⚡ আরও দ্রুত / হালকা ইনস্টলেশন (নেটিভ বিল্ড এড়িয়ে যান)**
 
-নেটিভ SQLite ইঞ্জিন (`better-sqlite3`) একটি **ঐচ্ছিক** ডিপেন্ডেন্সি, তাই কোনো গ্লোবাল
-ইনস্টলেশন কখনোই সোর্স থেকে কম্পাইল হওয়ার অপেক্ষায় আটকে থাকে না: আপনার প্ল্যাটফর্ম/Node-এর সঙ্গে মিলে গেলে এটি
-একটি প্রি-বিল্ট বাইনারি ব্যবহার করে, অন্যথায় স্বচ্ছভাবে একটি বিশুদ্ধ-JS ইঞ্জিনে ফলব্যাক করে
-(Node 22+-এ `node:sqlite`, নতুবা বান্ডেল করা `sql.js` WASM) — কোনো বিল্ড টুলের প্রয়োজন নেই।
+নেটিভ SQLite ইঞ্জিন (`better-sqlite3`) একটি **ঐচ্ছিক** ডিপেনডেন্সি, তাই কোনো গ্লোবাল
+ইনস্টলেশন সোর্স থেকে কম্পাইল করার জন্য কখনোই আটকে থাকে না: আপনার প্ল্যাটফর্ম/Node-এর সঙ্গে মিললে এটি
+একটি প্রিবিল্ট বাইনারি ব্যবহার করে, আর অন্যথায় স্বচ্ছভাবে একটি বিশুদ্ধ-JS ইঞ্জিনে ফলব্যাক করে
+(Node 22+-এ `node:sqlite`, অন্যথায় বান্ডেল করা `sql.js` WASM) — কোনো বিল্ড টুলের প্রয়োজন নেই।
 
-ইনস্টলেশনের পরের নেটিভ ওয়ার্ম-আপ সম্পূর্ণ এড়িয়ে যেতে (CI, headless বা ধীরগতির মেশিনে):
+পোস্ট-ইনস্টল **নেটিভ ওয়ার্ম-আপ** সম্পূর্ণভাবে এড়িয়ে যেতে (CI, হেডলেস বা ধীরগতির মেশিনে)।
+দ্রষ্টব্য: এটি কেবল নেটিভ SQLite ওয়ার্ম-আপ ধাপ (`scripts/postinstall.mjs`) এড়িয়ে যায়;
+বাইনারি-কপি/রিপেয়ার হুক (`scripts/build/postinstall.mjs`) স্বাভাবিকভাবেই চলতে থাকে:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1-ও এটি এড়িয়ে যায়
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 এটিও এড়িয়ে যায়
 ```
 
-দ্রুততম ইনস্টলেশনের জন্য **pnpm** বেছে নিন (কনটেন্ট-অ্যাড্রেসড স্টোর + হার্ড লিংক — উপরে দেখুন)।
-ড্যাশবোর্ডবিহীন headless রানটাইমের জন্য Docker `base` প্রোফাইল (উপরে) অথবা
-[Termux নির্দেশিকা](docs/guides/TERMUX_GUIDE.md) ব্যবহার করুন। CLI এবং ওয়েব ড্যাশবোর্ড একই প্রসেস থেকে একই
-পোর্টে পরিবেশিত হয়, তাই বর্তমানে আলাদা কোনো কেবল-CLI প্যাকেজ নেই।
+সবচেয়ে দ্রুত ইনস্টলেশনের জন্য **pnpm** বেছে নিন (কনটেন্ট-অ্যাড্রেসড স্টোর + হার্ড লিংক — উপরে দেখুন)।
+ড্যাশবোর্ডবিহীন, হেডলেস রানটাইমের জন্য Docker `base` প্রোফাইল (উপরে) অথবা
+[Termux নির্দেশিকা](docs/guides/TERMUX_GUIDE.md) ব্যবহার করুন। CLI এবং ওয়েব ড্যাশবোর্ড একই প্রসেসের মাধ্যমে
+একটি পোর্টে পরিবেশিত হয়, তাই বর্তমানে আলাদা কোনো CLI-শুধু প্যাকেজ নেই।
 
 <br/>
 

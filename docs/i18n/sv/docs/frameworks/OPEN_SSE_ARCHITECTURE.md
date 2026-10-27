@@ -486,13 +486,13 @@ Detta hanterar:
 
 `open-sse/config/` innehåller konfigurationslagret:
 
-| Fil                           | Syfte                                                          |
-| ----------------------------- | -------------------------------------------------------------- |
-| `providerRegistry.ts`         | Register över chattmodeller för katalogen med 376 leverantörer |
-| `providerModels.ts`           | Modellalias, formatmappning                                    |
-| `constants.ts`                | Tidsgränser, begränsningar, statuskoder                        |
-| `defaultThinkingSignature.ts` | Standardsignatur för Claude-resonemang                         |
-| `modelStrip.ts` (i tjänster)  | Leverantörsspecifik borttagning av fält                        |
+| Fil                           | Syfte                                                  |
+| ----------------------------- | ------------------------------------------------------ |
+| `providerRegistry.ts`         | Chattmodellregister för katalogen med 376 leverantörer |
+| `providerModels.ts`           | Modellalias och formatmappning                         |
+| `constants.ts`                | Tidsgränser, begränsningar och statuskoder             |
+| `defaultThinkingSignature.ts` | Standardsignatur för Claude-resonemang                 |
+| `modelStrip.ts` (i tjänster)  | Leverantörsspecifik borttagning av fält                |
 
 ### Schema för leverantörsregistret
 
@@ -509,7 +509,7 @@ interface ProviderConfig {
 }
 ```
 
-Zod-validering vid modulens inläsning säkerställer att alla leverantörskonfigurationer är giltiga.
+Zod-validering vid modulinläsning säkerställer att alla leverantörskonfigurationer är giltiga.
 
 ---
 

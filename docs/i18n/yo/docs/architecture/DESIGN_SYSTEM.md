@@ -79,33 +79,15 @@
   `src/app/offline/page.tsx`, `src/app/not-found.tsx` àti `src/shared/components/ErrorPageScaffold.tsx`
   — ń fi lockup náà hàn; `tests/unit/brand-pages-static.test.ts` ń dáàbò bo ó.
 
-## 2. Àwọn òfin
+## 2. Àwọn Òfin
 
-1. Àwọn token, kì í ṣe àwọn literal. Àwọn ìyàtọ̀ tí a mọ̀ọ́mọ̀ fi sílẹ̀: terminal console tó máa ń ṣókùnkùn nígbà gbogbo, àwọn stroke SVG ReactFlow
-   nípasẹ̀ `STATUS_HEX` (`src/shared/constants/statusColors.ts`), àti àwọn palẹ́ẹ̀tì ẹ̀ka-ẹ̀ka
-   `STRATEGY_COLORS` (`src/app/(dashboard)/dashboard/combos/live/nodes/StrategyNode.tsx`) àti
-   `LAYER_COLORS` (`src/app/(dashboard)/dashboard/compression/studio/nodes/EngineNode.tsx`).
-2. Má ṣe ṣàtúnṣe `packages/ui-kit/src` lọ́wọ́ láé: ṣe ìmúdójúìwọ̀n rẹ̀ pẹ̀lú `scripts/dev/sync-ui-kit.sh <commit>`; ẹnu-ọ̀nà
-   pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) yóò kùnà lórí byte èyíkéyìí tó
-   yàtọ̀ sí commit upstream tí a ti pin mọ́lẹ̀ (yóò foju kọ ọ́ pẹ̀lú ìkìlọ̀ nígbà tí clone upstream,
-   `UI_KIT_CLONE` tàbí `_references/cheaper-inference-ui-kit`, kò bá sí). Nígbà tí ohun kan kò bá sí nínú kit,
-   wá ọ̀nà àfidípò rẹ̀ nínú adapter tàbí ojú-ìwòran, kí o sì béèrè fún un lọ́dọ̀ upstream.
-3. Àwọn àìyípadà ọ̀rọ̀ kit jẹ́ Gẹ̀ẹ́sì (`label = "Loading"`, `loadingLabel = "Loading table"`…) — fi àwọn ọ̀rọ̀
-   tí a túmọ̀ láti inú `useTranslations(...)` ránṣẹ́ nígbàkúgbà tí component kit kan bá ń ṣe àfihàn ọ̀rọ̀.
-4. Àwọn utility Tailwind ló lágbára ju àwọn class component kit lọ (kit náà ṣàlàyé
-   `@layer theme, base, components, utilities`, àwọn òfin rẹ̀ sì wà nínú `components`) — lo àwọn utility fún
-   ààyè àti ìṣètò, kì í ṣe láti tún àwọn component kit ní àwọ̀.
-5. Àwọn àkọlé: `.ci-heading` (Inter, láìsí tracking) fún àwọn àkọlé ojú-ìwé àti abala; `.ci-dashboard-display`
-   (Instrument Serif) fún ọ̀rọ̀ àfihàn tó tóbi tí kò sì pọ̀ nìkan, bíi kóòdù ipò ojú-ìwé àṣìṣe.
-6. `tests/unit/dashboard-kit-sweep.test.ts` ń dáàbò bo lílo kit: kò gbọdọ̀ sí span ligature Material lábẹ́
-   `src/app` tàbí `src/shared/components`; nínú igi dashboard (`src/app/(dashboard)` àti
-   `src/shared/components`) kò gbọdọ̀ sí `<select>`, `<textarea>` tàbí `<table>` taara, bẹ́ẹ̀ ni kò gbọdọ̀ sí
-   `role="dialog"` tí a fi ọwọ́ kọ lẹ́yìn àwọn ìyàtọ̀ tí a ṣe àkójọ (ẹ̀ka native adapter `Select`,
-   `RequestLoggerDetail`); gbogbo `<button>` tàbí `<input>` taara níbẹ̀ nílò àlàyé tó ní
-   `kit-exception:` nínú (pẹ̀lú ìdí), tí yóò sì parí ní ìlà mẹ́ta tàbí kéré sí i lókè rẹ̀; àwọn hue palẹ́ẹ̀tì àti
-   àwọn variant `dark:` gbọdọ̀ wà nínú àwọn fáìlì tí test náà ṣe àkójọ nìkan.
-7. Ṣàyẹ̀wò àwọn theme méjèèjì àti viewport 390 px kí PR tó wáyé (pẹ̀lú àwọn àwòrán ojú-ìwòran);
-   `tests/e2e/a11y.spec.ts` ń ṣiṣẹ́ axe.
+1. Àwọn tọ́kìnì, kì í ṣe àwọn iye lítírà. Àwọn ìyàsọ́tọ̀ tí a mọ̀ọ́mọ̀ fi sílẹ̀ ni: console terminal tó máa ń dúdú ní gbogbo ìgbà àti àwọn ìlà SVG ReactFlow nípasẹ̀ `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Ètò routing àti àwọn palette compression-layer ń lo àwọn tọ́kìnì chart inú kit nípasẹ̀ `strategyColorVar` àti `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+2. Má ṣe ṣàtúnṣe `packages/ui-kit/src` pẹ̀lú ọwọ́ láéláé: mú un bá a mu pẹ̀lú `scripts/dev/sync-ui-kit.sh <commit>`; ẹnu-ọ̀nà pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) yóò kùnà lórí byte èyíkéyìí tó yàtọ̀ sí upstream commit tí a ti so mọ́lẹ̀ (ó máa fò ó kọjá pẹ̀lú ìkìlọ̀ nígbà tí upstream clone, `UI_KIT_CLONE` tàbí `_references/cheaper-inference-ui-kit`, kò bá sí). Nígbà tí ohun kan kò bá sí nínú kit, ṣe ọ̀nà àbáyọ ní adapter tàbí screen, kí o sì béèrè rẹ̀ lọ́wọ́ upstream.
+3. Àwọn àiyípadà àkọ́kọ́ fún ọ̀rọ̀ inú kit jẹ́ Gẹ̀ẹ́sì (`label = "Loading"`, `loadingLabel = "Loading table"`…) — fi àwọn ọ̀rọ̀ tí a túmọ̀ láti inú `useTranslations(...)` ránṣẹ́ ní gbogbo ìgbà tí component kit bá ń render ọ̀rọ̀.
+4. Àwọn utility Tailwind máa ń borí àwọn class component kit (kit náà ń kéde `@layer theme, base, components, utilities`, àwọn òfin rẹ̀ sì wà nínú `components`) — lo àwọn utility fún spacing àti layout, kì í ṣe láti tún àwọ̀ àwọn component kit ṣe.
+5. Àwọn àkọlé: `.ci-heading` (Inter, láìsí tracking) fún àwọn àkọlé ojú-ewé àti abala; `.ci-dashboard-display` (Instrument Serif) fún ọ̀rọ̀ display ńlá tí kò pọ̀ nìkan, bíi status code ojú-ewé àṣìṣe.
+6. `tests/unit/dashboard-kit-sweep.test.ts` ń ṣọ́ ìlò kit: kò gbọ́dọ̀ sí span ligature Material lábẹ́ `src/app` tàbí `src/shared/components`; nínú igi dashboard (`src/app/(dashboard)` àti `src/shared/components`), kò gbọ́dọ̀ sí `<select>`, `<textarea>` tàbí `<table>` raw, bẹ́ẹ̀ ni kò gbọ́dọ̀ sí `role="dialog"` tí a fi ọwọ́ kọ lẹ́yìn àwọn ìyàsọ́tọ̀ tí a tò sílẹ̀ (ẹ̀ka native ti adapter `Select`, `RequestLoggerDetail`); gbogbo `<button>` tàbí `<input>` raw níbẹ̀ gbọ́dọ̀ ní àlàyé tó ní `kit-exception:` (pẹ̀lú ìdí náà), tí yóò sì parí ní ìlà mẹ́ta tàbí kéré sí i lókè rẹ̀; àwọn hue palette àti àwọn variant `dark:` gbọ́dọ̀ wà nínú àwọn fáìlì tí test náà tò sílẹ̀ nìkan.
+7. Ṣàyẹ̀wò theme méjèèjì àti viewport 390 px ṣáájú PR (pẹ̀lú àwọn screenshot); `tests/e2e/a11y.spec.ts` ń ṣiṣẹ́ axe.
 
 ## 3. Ṣíṣàfikún ojú-ìwòran
 

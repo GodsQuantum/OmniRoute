@@ -24,9 +24,9 @@ Jumla ya watoa huduma: **376**. Tazama mgawanyo wa kategoria hapa chini.
 - **Wakala wa wingu** — mawakala wa usimbaji wanaofanya kazi kwa muda mrefu (Codex Cloud, Devin, Jules)
 - **Mfumo** — watoa huduma wa ndani wa OmniRoute (loopback, n.k.)
 
-Vitambulisho vya ziada: `picha`, `video`, `mkusanyaji`, `biashara`, `pachika/panga upya`, `iliyepangishwa mwenyewe`.
+Vitambulisho vya ziada: `image` (picha), `video`, `aggregator` (mkusanyaji), `enterprise` (biashara), `embed/rerank` (pachika/panga upya), `self-hosted` (iliyepangishwa mwenyewe).
 
-`Kupiga simu kwa zana` (pale inapoonyeshwa): `asili` — API halisi ya kupiga simu kwa kazi; `iliyoigwa` — safu ya `zana` imeigwa kwa haraka kupitia `webTools.ts` (vizuizi vya `<tool>{...}</tool>` vilivyochanganuliwa kwa regex); `hakuna` — `zana` kwa sasa huachwa kimya kimya. Tazama #7286.
+`Tool calling` (Kupiga simu kwa zana) (pale inapoonyeshwa): `native` (asili) — API halisi ya kupiga simu kwa kazi; `emulated` (iliyoigwa) — safu ya `tools` (zana) imeigwa kwa haraka kupitia `webTools.ts` (vizuizi vya `<tool>{...}</tool>` vilivyochanganuliwa kwa regex); `none` (hakuna) — `tools` (zana) kwa sasa huachwa kimya kimya. Tazama #7286.
 
 Tumia dashibodi kwenye `/dashboard/providers` kuwezesha, kusanidi, na kujaribu kila mtoa huduma.
 

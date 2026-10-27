@@ -691,7 +691,7 @@ omniroute configure codex          # ಇವುಗಳೂ ಸಹ: claude opencode 
 
 </div>
 
-> **ನೋಂದಾಯಿತ 376 ಪೂರೈಕೆದಾರರು** — ಪ್ರಮಾಣಿತ ಚಾಟ್, ಮಾಧ್ಯಮ, ಹುಡುಕಾಟ, ಸ್ಥಳೀಯ, ಕ್ಲೌಡ್-ಏಜೆಂಟ್ ಮತ್ತು ಸಿಸ್ಟಮ್ ಸಂಗ್ರಹಗಳಾದ್ಯಂತ; ಇವುಗಳಲ್ಲಿ **153 ಪೂರೈಕೆದಾರರು `hasFree: true` ಅನ್ವೇಷಣಾ ಮೆಟಾಡೇಟಾವನ್ನು ಹೊಂದಿದ್ದಾರೆ**. ಚಾಟ್ ಮಾದರಿ ರಿಜಿಸ್ಟ್ರಿಯು **239 ಪೂರೈಕೆದಾರರು / 3,059 ವಿಭಿನ್ನ ಪೂರೈಕೆದಾರ-ಮಾದರಿ ಜೋಡಿಗಳು / 1,475 ಮೂಲ ಮಾದರಿ IDಗಳು** ಅನ್ನು ಒಳಗೊಂಡಿದೆ; ಪ್ರತ್ಯೇಕ ಉಚಿತ-ಬಜೆಟ್ ಕ್ಯಾಟಲಾಗ್ನಲ್ಲಿ **ಪ್ರತಿ ಮಾದರಿಗೆ 471 ಸಾಲುಗಳು**, **34 ಮರುಕಳಿಸುವ ಪೂಲ್ಗಳು** ಮತ್ತು **52 ಮರುಕಳಿಸುವ/ಕೀಲಿರಹಿತ ಶಾಶ್ವತ-ಉಚಿತ ಪೂರೈಕೆದಾರರು** ಇದ್ದಾರೆ. ವಿನ್ಯಾಸದ ಪ್ರಕಾರ ಇವು ವಿಭಿನ್ನ ಛೇದಗಳಾಗಿವೆ; ವ್ಯಾಖ್ಯಾನಗಳು ಮತ್ತು ಪೂಲ್-ನಕಲುಗಳನ್ನು ತೆಗೆದುಹಾಕಿದ ಲೆಕ್ಕಾಚಾರಗಳು [ಪೂರೈಕೆದಾರರ ಉಲ್ಲೇಖ](docs/reference/PROVIDER_REFERENCE.md) ಮತ್ತು [ಉಚಿತ ಶ್ರೇಣಿಗಳು](docs/reference/FREE_TIERS.md) ನಲ್ಲಿ ಲಭ್ಯವಿವೆ.
+> **ನೋಂದಾಯಿತ 376 ಪೂರೈಕೆದಾರರು** — ಪ್ರಮಾಣಿತ ಚಾಟ್, ಮಾಧ್ಯಮ, ಹುಡುಕಾಟ, ಸ್ಥಳೀಯ, ಕ್ಲೌಡ್-ಏಜೆಂಟ್ ಮತ್ತು ಸಿಸ್ಟಮ್ ಸಂಗ್ರಹಗಳಾದ್ಯಂತ; ಇವುಗಳಲ್ಲಿ **153 ಪೂರೈಕೆದಾರರು `hasFree: true` ಅನ್ವೇಷಣಾ ಮೆಟಾಡೇಟಾವನ್ನು ಹೊಂದಿದ್ದಾರೆ**. ಚಾಟ್ ಮಾದರಿ ರಿಜಿಸ್ಟ್ರಿಯು **239 ಪೂರೈಕೆದಾರರು / 3,059 ವಿಭಿನ್ನ ಪೂರೈಕೆದಾರ-ಮಾದರಿ ಜೋಡಿಗಳು / 1,475 ಮೂಲ ಮಾದರಿ IDಗಳು** ಅನ್ನು ಒಳಗೊಂಡಿದೆ; ಪ್ರತ್ಯೇಕ ಉಚಿತ-ಬಜೆಟ್ ಕ್ಯಾಟಲಾಗ್ನಲ್ಲಿ **ಪ್ರತಿ ಮಾದರಿಗೆ 484 ಸಾಲುಗಳು**, **34 ಮರುಕಳಿಸುವ ಪೂಲ್ಗಳು** ಮತ್ತು **52 ಮರುಕಳಿಸುವ/ಕೀಲಿರಹಿತ ಶಾಶ್ವತ-ಉಚಿತ ಪೂರೈಕೆದಾರರು** ಇದ್ದಾರೆ. ವಿನ್ಯಾಸದ ಪ್ರಕಾರ ಇವು ವಿಭಿನ್ನ ಛೇದಗಳಾಗಿವೆ; ವ್ಯಾಖ್ಯಾನಗಳು ಮತ್ತು ಪೂಲ್-ನಕಲುಗಳನ್ನು ತೆಗೆದುಹಾಕಿದ ಲೆಕ್ಕಾಚಾರಗಳು [ಪೂರೈಕೆದಾರರ ಉಲ್ಲೇಖ](docs/reference/PROVIDER_REFERENCE.md) ಮತ್ತು [ಉಚಿತ ಶ್ರೇಣಿಗಳು](docs/reference/FREE_TIERS.md) ನಲ್ಲಿ ಲಭ್ಯವಿವೆ.
 
 <div align="center">
 
@@ -1078,7 +1078,7 @@ Ollama tags:      http://localhost:20128/vscode/YOUR_KEY/api/tags
 
 <br/>
 
-## 📦 ಇನ್ನಷ್ಟು ಇನ್ಸ್ಟಾಲ್ ವಿಧಾನಗಳು — Docker, ಮೂಲ ಕೋಡ್, pnpm, Arch
+## 📦 ಇನ್ನಷ್ಟು ಸ್ಥಾಪನಾ ವಿಧಾನಗಳು — Docker, ಮೂಲ ಕೋಡ್, pnpm, Arch
 
 **🐳 Docker**
 
@@ -1087,9 +1087,9 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-`:latest` ಅತ್ಯುನ್ನತ **ಪ್ರಕಟಿತ** ಸ್ಥಿರ SemVer ಅನ್ನು ಅನುಸರಿಸುತ್ತದೆ. ಇದು git `main` ಅನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುವುದಿಲ್ಲ. GitOps ಗಾಗಿ `:X.Y.Z` ಅನ್ನು ಪಿನ್ ಮಾಡಿ. [Docker ಬಿಡುಗಡೆ ಚಾನಲ್ಗಳು](docs/guides/DOCKER_GUIDE.md#release-channels) ನೋಡಿ. ಇಮೇಜ್ನಲ್ಲಿ **`OMNIROUTE_MEMORY_MB=1024`** ಅನ್ನು ಪಿನ್ ಮಾಡಲಾಗಿದೆ. ಡ್ಯಾಶ್ಬೋರ್ಡ್ ಮತ್ತು ಹಗುರವಾದ ಚಾಟ್ಗೆ ಇದು ಸಾಕಾಗುತ್ತದೆ. **ಕೋಡಿಂಗ್ ಏಜೆಂಟ್ಗಳಿಗೆ** (Claude Code, Codex, Grok, … ನಿಂದ `POST /v1/responses`) ಹೆಚ್ಚು ದೊಡ್ಡ V8 ಹೀಪ್ ಅಗತ್ಯವಿದೆ; ಇಲ್ಲದಿದ್ದರೆ, ದೀರ್ಘವಾದ ಎರಡು ಸಂದರ್ಭಗಳು ಪರಸ್ಪರ ಅತಿಕ್ರಮಿಸಿದಾಗ ಪ್ರಕ್ರಿಯೆಯು ~12 GiB ನಲ್ಲಿ `FATAL ERROR` ನೊಂದಿಗೆ ವಿಫಲಗೊಳ್ಳುತ್ತದೆ. ಹೀಪ್ಗಿಂತ ಹೆಚ್ಚಿನ ಗಾತ್ರವನ್ನು ಕಂಟೇನರ್ಗೆ ನಿಗದಿಪಡಿಸಿ (ನೇಟಿವ್ ಬಫರ್ಗಳು V8 ಹೊರಗೆ ಇರುತ್ತವೆ):
+`:latest` ಅತ್ಯುನ್ನತ **ಪ್ರಕಟಿತ** ಸ್ಥಿರ SemVer ಅನ್ನು ಅನುಸರಿಸುತ್ತದೆ. ಇದು git `main` ಅನ್ನು ಅನುಸರಿಸುವುದಿಲ್ಲ. GitOps ಗಾಗಿ `:X.Y.Z` ಅನ್ನು ನಿಗದಿಪಡಿಸಿ. [Docker ಬಿಡುಗಡೆ ಚಾನಲ್ಗಳು](docs/guides/DOCKER_GUIDE.md#release-channels) ನೋಡಿ. ಇಮೇಜ್ನಲ್ಲಿ **`OMNIROUTE_MEMORY_MB=1024`** ನಿಗದಿಪಡಿಸಲಾಗಿದೆ. ಡ್ಯಾಶ್ಬೋರ್ಡ್ ಮತ್ತು ಹಗುರವಾದ ಚಾಟ್ಗೆ ಅದು ಸಾಕಾಗುತ್ತದೆ. **ಕೋಡಿಂಗ್ ಏಜೆಂಟ್ಗಳಿಗೆ** (Claude Code, Codex, Grok, … ನಿಂದ `POST /v1/responses`) ಇನ್ನೂ ದೊಡ್ಡ V8 heap ಅಗತ್ಯವಿದೆ; ಇಲ್ಲದಿದ್ದರೆ, ಪರಸ್ಪರ ಅತಿಕ್ರಮಿಸುವ ಎರಡು ದೀರ್ಘ contextಗಳ ಅಡಿಯಲ್ಲಿ ಸುಮಾರು 12 GiB ತಲುಪಿದಾಗ ಪ್ರಕ್ರಿಯೆಯು `FATAL ERROR` ನೀಡುತ್ತದೆ. ಕಂಟೇನರ್ ಗಾತ್ರವನ್ನು heapಗಿಂತ ಹೆಚ್ಚಾಗಿ ನಿಗದಿಪಡಿಸಿ (native bufferಗಳು V8 ಹೊರಗಿರುತ್ತವೆ):
 
-| ಕಾರ್ಯಭಾರ                           | ಹೀಪ್ (`-e OMNIROUTE_MEMORY_MB`) | ಕಂಟೇನರ್ (`--memory`) |
+| ಕಾರ್ಯಭಾರ                           | Heap (`-e OMNIROUTE_MEMORY_MB`) | ಕಂಟೇನರ್ (`--memory`) |
 | ---------------------------------- | ------------------------------- | -------------------- |
 | ಡ್ಯಾಶ್ಬೋರ್ಡ್ / ಹಗುರವಾದ ಚಾಟ್        | `1024` (ಇಮೇಜ್ ಡೀಫಾಲ್ಟ್)         | ≥2 g                 |
 | ಒಂದು ಕೋಡಿಂಗ್ ಏಜೆಂಟ್                | `8192`                          | ≥10 g                |
@@ -1101,24 +1101,24 @@ docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
   -p 127.0.0.1:20128:20128 -v omniroute-data:/app/data diegosouzapw/omniroute:latest
 ```
 
-ಸಂಪೂರ್ಣ ಕೋಷ್ಟಕ: [Docker ಮಾರ್ಗದರ್ಶಿ — ರನ್ಟೈಮ್ RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
+ಪೂರ್ಣ ಕೋಷ್ಟಕ: [Docker ಮಾರ್ಗದರ್ಶಿ — runtime RAM](docs/guides/DOCKER_GUIDE.md#runtime-ram-for-coding-agents).
 
 > **ಪೂರ್ವ-ಬಿಡುಗಡೆ Docker ಚಾನಲ್:** `diegosouzapw/omniroute:next` ಮತ್ತು
 > `diegosouzapw/omniroute:next-web` ಪ್ರಸ್ತುತ ಡೀಫಾಲ್ಟ್ `release/v*`
-> ಶಾಖೆಯನ್ನು ಅನುಸರಿಸುತ್ತವೆ. ಈ ಬದಲಾಯಿಸಬಹುದಾದ ಟ್ಯಾಗ್ಗಳು ಬಿಡುಗಡೆಯಾಗದ ಪರಿಹಾರಗಳನ್ನು ಪರೀಕ್ಷಿಸಲು ಮಾತ್ರ ಉದ್ದೇಶಿಸಲ್ಪಟ್ಟಿವೆ ಮತ್ತು
-> **ಪ್ರೊಡಕ್ಷನ್ನಲ್ಲಿ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ**. ನೋಡಿ:
+> branch ಅನ್ನು ಅನುಸರಿಸುತ್ತವೆ. ಈ ಬದಲಾಯಿಸಬಹುದಾದ tagಗಳು ಬಿಡುಗಡೆಯಾಗದಿರುವ ಸರಿಪಡಿಕೆಗಳನ್ನು ಪರೀಕ್ಷಿಸಲು ಮಾತ್ರ ಉದ್ದೇಶಿತವಾಗಿವೆ ಮತ್ತು
+> **production ಬಳಕೆಗೆ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ**. ನೋಡಿ:
 > [Docker ಬಿಡುಗಡೆ ಚಾನಲ್ಗಳು](docs/guides/DOCKER_GUIDE.md#release-channels).
 
 **🥟 Bun**
 
-Bun ರನ್ಟೈಮ್ ಪತ್ತೆಹಚ್ಚುವಿಕೆಯ ಮೂಲಕ ಪ್ರಮಾಣಿತ `bun install` ಮತ್ತು ಜಾಗತಿಕ ಇನ್ಸ್ಟಾಲೇಶನ್ (`bun install -g omniroute`) ಬೆಂಬಲಿತವಾಗಿವೆ:
+Bun runtime ಪತ್ತೆಹಚ್ಚುವಿಕೆಯ ಮೂಲಕ ಪ್ರಮಾಣಿತ `bun install` ಮತ್ತು ಜಾಗತಿಕ ಸ್ಥಾಪನೆ (`bun install -g omniroute`) ಬೆಂಬಲಿತವಾಗಿವೆ:
 
-- **ಅಂತರ್ನಿರ್ಮಿತ `bun:sqlite`**: Bun ಅಡಿಯಲ್ಲಿ ರನ್ ಮಾಡುವಾಗ OmniRoute, Bun ನ ಅಂತರ್ನಿರ್ಮಿತ `bun:sqlite` ಡ್ರೈವರ್ ಅನ್ನು ಬಳಸುತ್ತದೆ; Node.js ನಲ್ಲಿ `better-sqlite3` ಅಥವಾ `sql.js` ಗೆ ಪರ್ಯಾಯವಾಗಿ ಬದಲಾಗುತ್ತದೆ.
-- **ಡೆವಲಪ್ಮೆಂಟ್ನಲ್ಲಿ ಸ್ವಯಂಚಾಲಿತ Webpack ಬಂಡ್ಲರ್ ಆಯ್ಕೆ**: ನೇಟಿವ್ V8 ಬೈಂಡಿಂಗ್ ಅಸಾಮರಸ್ಯಗಳನ್ನು ತಡೆಯಲು ಡೆವಲಪ್ಮೆಂಟ್ (`bun run dev`) ಸ್ವಯಂಚಾಲಿತವಾಗಿ Bun ಅನ್ನು ಪತ್ತೆಹಚ್ಚಿ, Webpack ಪರವಾಗಿ Turbopack ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ. ಪ್ರೊಡಕ್ಷನ್ ಬಿಲ್ಡ್ಗಳು (`bun run build`) Node ನಲ್ಲಿರುವಂತೆಯೇ `OMNIROUTE_USE_TURBOPACK` ಅನ್ನು ನಿಖರವಾಗಿ ಅನುಸರಿಸುತ್ತವೆ: ಡೀಫಾಲ್ಟ್ ಆಗಿ Turbopack, Webpack ಬಳಸಿ ಬಿಲ್ಡ್ ಮಾಡಲು `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` ಇದನ್ನು `--build-arg` ಆಗಿ ಒದಗಿಸುತ್ತದೆ).
-- **ಮೀಸಲಾದ Bun Dockerfile**: ನೇಟಿವ್ Bun ಪ್ರೊಡಕ್ಷನ್ ನಿಯೋಜನೆಗಳಿಗಾಗಿ ಬಹು-ಹಂತದ `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
+- **ಅಂತರ್ನಿರ್ಮಿತ `bun:sqlite`**: Bun ಅಡಿಯಲ್ಲಿ ಚಾಲನೆಯಲ್ಲಿರುವಾಗ OmniRoute, Bunನ ಅಂತರ್ನಿರ್ಮಿತ `bun:sqlite` driver ಅನ್ನು ಬಳಸುತ್ತದೆ ಮತ್ತು Node.js ನಲ್ಲಿ `better-sqlite3` ಅಥವಾ `sql.js` ಗೆ fallback ಆಗುತ್ತದೆ.
+- **devನಲ್ಲಿ ಸ್ವಯಂಚಾಲಿತ Webpack bundler ಆಯ್ಕೆ**: Native V8 binding ಅಸಾಮರಸ್ಯಗಳನ್ನು ತಡೆಯಲು, ಅಭಿವೃದ್ಧಿ (`bun run dev`) Bun ಅನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಪತ್ತೆಹಚ್ಚಿ Turbopack ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ Webpack ಅನ್ನು ಬಳಸುತ್ತದೆ. Production buildಗಳು (`bun run build`) Nodeನಲ್ಲಿರುವಂತೆಯೇ `OMNIROUTE_USE_TURBOPACK` ಅನ್ನು ನಿಖರವಾಗಿ ಅನುಸರಿಸುತ್ತವೆ: ಡೀಫಾಲ್ಟ್ ಆಗಿ Turbopack, Webpackನೊಂದಿಗೆ build ಮಾಡಲು `OMNIROUTE_USE_TURBOPACK=0` (`Dockerfile.bun` ಇದನ್ನು `--build-arg` ಆಗಿ ಒದಗಿಸುತ್ತದೆ).
+- **ಪ್ರತ್ಯೇಕ Bun Dockerfile**: Native Bun production deploymentಗಳಿಗಾಗಿ multi-stage `Dockerfile.bun` (`docker build -f Dockerfile.bun -t omniroute:bun .`).
 
 ```bash
-# Bun ಬಳಸಿ ಇನ್ಸ್ಟಾಲ್ ಮಾಡಿ ಮತ್ತು ರನ್ ಮಾಡಿ
+# Bunನೊಂದಿಗೆ ಸ್ಥಾಪಿಸಿ ಮತ್ತು ಚಲಾಯಿಸಿ
 bun install
 bun run dev
 ```
@@ -1145,7 +1145,7 @@ yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 **🔧 Nix (Flake)**
 
 ```bash
-# Nix flakes ಬಳಸುವುದು
+# Nix flakeಗಳನ್ನು ಬಳಸುವುದು
 nix develop
 npm run dev
 
@@ -1153,51 +1153,52 @@ npm run dev
 devbox run npm run dev
 ```
 
-📖 [Docker ಮಾರ್ಗದರ್ಶಿ](docs/guides/DOCKER_GUIDE.md) — Compose ಪ್ರೊಫೈಲ್ಗಳು, Caddy HTTPS, Cloudflare ಟನಲ್ಗಳು.
+📖 [Docker ಮಾರ್ಗದರ್ಶಿ](docs/guides/DOCKER_GUIDE.md) — Compose profileಗಳು, Caddy HTTPS, Cloudflare tunnelಗಳು.
 
 **🦭 Podman**
 
 ```bash
-# 1. ಬೈಂಡ್-ಮೌಂಟ್ ಮಾಡಿದ ಡೇಟಾ ಡೈರೆಕ್ಟರಿಯನ್ನು ಸಿದ್ಧಪಡಿಸಿ
+# 1. Bind-mount ಮಾಡಿದ data directory ಅನ್ನು ಸಿದ್ಧಪಡಿಸಿ
 mkdir -p data
 
-# 2. Linux + ಸ್ಥಳೀಯ ರೂಟ್ಲೆಸ್ Podman ನಲ್ಲಿ ಮಾತ್ರ (ರಿಮೋಟ್ Podman Machine ಕ್ಲೈಂಟ್ನಲ್ಲಿ ಎಂದಿಗೂ ಬೇಡ):
+# 2. Linux + ಸ್ಥಳೀಯ rootless Podmanಗೆ ಮಾತ್ರ (remote Podman Machine clientನಲ್ಲಿ ಎಂದಿಗೂ ಬೇಡ):
 podman unshare chown 1000:1000 ./data
 
-# 3. ರನ್ಟೈಮ್ ಸೂಚನೆಯನ್ನು ಹೊಂದಿಸಿ, ಸ್ಥಳೀಯ Compose ಇಮೇಜ್ ಅನ್ನು ಬಿಲ್ಡ್ ಮಾಡಿ ಮತ್ತು ಪ್ರಾರಂಭಿಸಿ
+# 3. Runtime hint ಅನ್ನು ಹೊಂದಿಸಿ, ಸ್ಥಳೀಯ Compose image ಅನ್ನು build ಮಾಡಿ ಮತ್ತು ಪ್ರಾರಂಭಿಸಿ
 echo "CONTAINER_HOST=podman" >> .env
 podman compose --profile base up -d --build
 ```
 
-macOS ಅಥವಾ Windows ನಲ್ಲಿ, Podman ರಿಮೋಟ್ Podman Machine ಅನ್ನು ಬಳಸುತ್ತದೆ: `podman unshare` ಅನ್ನು ಬಿಟ್ಟುಬಿಡಿ ಮತ್ತು
-[ಟೊಪಾಲಜಿ-ನಿರ್ದಿಷ್ಟ ಡೇಟಾ ಡೈರೆಕ್ಟರಿ ಮಾರ್ಗದರ್ಶನವನ್ನು](contrib/podman/README.md#data-directory-permissions-by-topology) ಅನುಸರಿಸಿ.
+macOS ಅಥವಾ Windowsನಲ್ಲಿ, Podman remote Podman Machine ಅನ್ನು ಬಳಸುತ್ತದೆ: `podman unshare` ಅನ್ನು ಬಿಟ್ಟುಬಿಡಿ ಮತ್ತು
+[topology-ನಿರ್ದಿಷ್ಟ data directory ಮಾರ್ಗದರ್ಶನ](contrib/podman/README.md#data-directory-permissions-by-topology) ಅನುಸರಿಸಿ.
 
-📖 [Podman ಮಾರ್ಗದರ್ಶಿ](contrib/podman/README.md) — Compose ಬಿಲ್ಡ್ಗಳು, Podman Machine ಮತ್ತು
+📖 [Podman ಮಾರ್ಗದರ್ಶಿ](contrib/podman/README.md) — Compose buildಗಳು, Podman Machine ಮತ್ತು
 Linux/systemd Quadlet ಸೆಟಪ್.
 
-**⚡ ವೇಗವಾದ / ಹಗುರವಾದ ಇನ್ಸ್ಟಾಲ್ (ನೇಟಿವ್ ಬಿಲ್ಡ್ ಅನ್ನು ಬಿಟ್ಟುಬಿಡಿ)**
+**⚡ ವೇಗವಾದ / ಹಗುರವಾದ ಸ್ಥಾಪನೆ (native build ಅನ್ನು ಬಿಟ್ಟುಬಿಡಿ)**
 
-ನೇಟಿವ್ SQLite ಎಂಜಿನ್ (`better-sqlite3`) ಒಂದು **ಐಚ್ಛಿಕ** ಅವಲಂಬನೆಯಾಗಿದೆ, ಆದ್ದರಿಂದ ಜಾಗತಿಕ
-ಇನ್ಸ್ಟಾಲ್ ಮೂಲ ಕೋಡ್ನಿಂದ ಕಂಪೈಲ್ ಆಗುವುದಕ್ಕಾಗಿ ಎಂದಿಗೂ ಕಾಯುವುದಿಲ್ಲ: ನಿಮ್ಮ ಪ್ಲಾಟ್ಫಾರ್ಮ್/Node ಗೆ ಹೊಂದಿಕೆಯಾಗುವಾಗ ಇದು ಪೂರ್ವನಿರ್ಮಿತ ಬೈನರಿಯನ್ನು ಬಳಸುತ್ತದೆ
-ಮತ್ತು ಇಲ್ಲದಿದ್ದರೆ ಪಾರದರ್ಶಕವಾಗಿ ಶುದ್ಧ-JS ಎಂಜಿನ್ಗೆ ಪರ್ಯಾಯವಾಗಿ ಬದಲಾಗುತ್ತದೆ
-(Node 22+ ನಲ್ಲಿ `node:sqlite`, ಇಲ್ಲದಿದ್ದರೆ ಬಂಡಲ್ ಮಾಡಲಾದ `sql.js` WASM) — ಯಾವುದೇ ಬಿಲ್ಡ್ ಪರಿಕರಗಳ ಅಗತ್ಯವಿಲ್ಲ.
+Native SQLite engine (`better-sqlite3`) ಒಂದು **ಐಚ್ಛಿಕ** dependency ಆಗಿರುವುದರಿಂದ, ಜಾಗತಿಕ
+ಸ್ಥಾಪನೆಯು ಮೂಲ ಕೋಡ್ನಿಂದ compile ಮಾಡುವುದಕ್ಕಾಗಿ ಎಂದಿಗೂ ತಡೆಹಿಡಿಯುವುದಿಲ್ಲ: ನಿಮ್ಮ platform/Nodeಗೆ ಹೊಂದಿಕೆಯಾದಾಗ ಅದು prebuilt binary ಅನ್ನು ಬಳಸುತ್ತದೆ
+ಮತ್ತು ಇಲ್ಲದಿದ್ದರೆ pure-JS engineಗೆ ಪಾರದರ್ಶಕವಾಗಿ fallback ಆಗುತ್ತದೆ
+(Node 22+ ನಲ್ಲಿ `node:sqlite`, ಇಲ್ಲದಿದ್ದರೆ bundle ಮಾಡಲಾದ `sql.js` WASM) — ಯಾವುದೇ build toolಗಳು ಅಗತ್ಯವಿಲ್ಲ.
 
-ಇನ್ಸ್ಟಾಲ್ ನಂತರದ ನೇಟಿವ್ ವಾರ್ಮ್-ಅಪ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಬಿಟ್ಟುಬಿಡಲು (CI, ಹೆಡ್ಲೆಸ್ ಅಥವಾ ನಿಧಾನ ಯಂತ್ರಗಳು):
+ಸ್ಥಾಪನೆಯ ನಂತರದ **native warm-up** ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಬಿಟ್ಟುಬಿಡಲು (CI, headless ಅಥವಾ ನಿಧಾನಗತಿಯ ಯಂತ್ರಗಳು).
+ಗಮನಿಸಿ: ಇದು native SQLite warm-up ಹಂತವನ್ನು (`scripts/postinstall.mjs`) ಮಾತ್ರ ಬಿಟ್ಟುಬಿಡುತ್ತದೆ;
+binary-copy/repair hook (`scripts/build/postinstall.mjs`) ಎಂದಿನಂತೆ ಚಾಲನೆಯಾಗುತ್ತದೆ:
 
 ```bash
-OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 ಕೂಡ ಇದನ್ನು ಬಿಟ್ಟುಬಿಡುತ್ತದೆ
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 ಸಹ ಇದನ್ನು ಬಿಟ್ಟುಬಿಡುತ್ತದೆ
 ```
 
-ಅತ್ಯಂತ ವೇಗದ ಇನ್ಸ್ಟಾಲ್ಗಳಿಗಾಗಿ **pnpm** ಗೆ ಆದ್ಯತೆ ನೀಡಿ (ವಿಷಯ-ವಿಳಾಸಿತ ಸ್ಟೋರ್ + ಹಾರ್ಡ್ ಲಿಂಕ್ಗಳು — ಮೇಲೆ ನೋಡಿ).
-ಡ್ಯಾಶ್ಬೋರ್ಡ್ ರಹಿತ, ಹೆಡ್ಲೆಸ್ ರನ್ಟೈಮ್ಗಾಗಿ Docker `base` ಪ್ರೊಫೈಲ್ (ಮೇಲೆ) ಅಥವಾ
-[Termux ಮಾರ್ಗದರ್ಶಿ](docs/guides/TERMUX_GUIDE.md) ಬಳಸಿ. CLI ಮತ್ತು ವೆಬ್ ಡ್ಯಾಶ್ಬೋರ್ಡ್ ಒಂದೇ ಪೋರ್ಟ್ನಲ್ಲಿ ಒಂದೇ
-ಪ್ರಕ್ರಿಯೆಯಿಂದ ಸರ್ವ್ ಆಗುತ್ತವೆ, ಆದ್ದರಿಂದ ಪ್ರಸ್ತುತ ಪ್ರತ್ಯೇಕ CLI-ಮಾತ್ರದ ಪ್ಯಾಕೇಜ್ ಇಲ್ಲ.
+ಅತ್ಯಂತ ವೇಗದ ಸ್ಥಾಪನೆಗಳಿಗಾಗಿ **pnpm** ಗೆ ಆದ್ಯತೆ ನೀಡಿ (content-addressed store + hard linkಗಳು — ಮೇಲೆ ನೋಡಿ).
+ಡ್ಯಾಶ್ಬೋರ್ಡ್ ರಹಿತ, headless runtimeಗಾಗಿ Docker `base` profile (ಮೇಲೆ) ಅಥವಾ
+[Termux ಮಾರ್ಗದರ್ಶಿ](docs/guides/TERMUX_GUIDE.md) ಬಳಸಿ. CLI ಮತ್ತು web dashboard ಅನ್ನು ಒಂದೇ process, ಒಂದೇ portನಲ್ಲಿ ಒದಗಿಸಲಾಗುತ್ತದೆ; ಆದ್ದರಿಂದ ಪ್ರಸ್ತುತ ಪ್ರತ್ಯೇಕ CLI-only package ಇಲ್ಲ.
 
 <br/>
 
 <div align="center">
 
-# 🎬 ಕಾರ್ಯನಿರ್ವಹಣೆಯಲ್ಲಿ OmniRoute
+# 🎬 ಕಾರ್ಯಪ್ರವೃತ್ತಿಯಲ್ಲಿ OmniRoute
 
 </div>
 

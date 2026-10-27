@@ -17,77 +17,77 @@ _Ostatnia aktualizacja: 2026-06-28_
 
 ## Podsumowanie wykonawcze
 
-OmniRoute to lokalna brama routingu AI i panel administracyjny zbudowane na Next.js.
-Udostępnia pojedynczy punkt końcowy zgodny z OpenAI (`/v1/*`) i kieruje ruch do wielu dostawców nadrzędnych, zapewniając translację, mechanizmy awaryjne, odświeżanie tokenów i śledzenie użycia.
+OmniRoute to lokalna brama routingu AI oraz panel kontrolny zbudowane w oparciu o Next.js.
+Udostępnia pojedynczy punkt końcowy zgodny z OpenAI (`/v1/*`) i kieruje ruch do wielu dostawców nadrzędnych, obsługując translację, mechanizmy awaryjne, odświeżanie tokenów oraz śledzenie użycia.
 
 Najważniejsze możliwości:
 
-- Powierzchnia API zgodna z OpenAI dla CLI/narzędzi (376 dostawców, 156 modułów wykonawczych)
-- Translacja żądań/odpowiedzi między formatami dostawców
-- Mechanizm awaryjny kombinacji modeli (sekwencja wielu modeli)
-- Ustrukturyzowane kroki kombinacji (`provider + model + connection`) z kolejnością wykonywania określaną w czasie działania przez `compositeTiers`
+- Warstwa API zgodna z OpenAI dla narzędzi CLI i innych narzędzi (376 dostawców, 156 modułów wykonawczych)
+- Translacja żądań i odpowiedzi między formatami dostawców
+- Mechanizm awaryjny dla kombinacji modeli (sekwencja wielu modeli)
+- Ustrukturyzowane kroki kombinacji (`provider + model + connection`) z ustalaniem kolejności w czasie wykonywania przez `compositeTiers`
 - Mechanizm awaryjny na poziomie konta (wiele kont na dostawcę)
-- Wstępne sprawdzanie limitów oraz uwzględniający limity wybór konta metodą P2C w głównej ścieżce czatu
-- Zarządzanie połączeniami z dostawcami przez OAuth i klucze API (27 modułów dostawców OAuth)
+- Wstępna kontrola limitów oraz uwzględniający limity wybór konta P2C w głównej ścieżce czatu
+- Zarządzanie połączeniami z dostawcami za pomocą OAuth i kluczy API (27 modułów dostawców OAuth)
 - Generowanie osadzeń przez `/v1/embeddings` (18 dostawców)
 - Generowanie obrazów przez `/v1/images/generations` (ponad 10 dostawców, ponad 20 modeli)
-- Transkrypcja audio przez `/v1/audio/transcriptions` (18 dostawców)
-- Zamiana tekstu na mowę przez `/v1/audio/speech` (24 wbudowanych dostawców)
+- Transkrypcja dźwięku przez `/v1/audio/transcriptions` (18 dostawców)
+- Synteza mowy z tekstu przez `/v1/audio/speech` (24 wbudowanych dostawców)
 - Generowanie wideo przez `/v1/videos/generations` (ComfyUI + SD WebUI)
 - Generowanie muzyki przez `/v1/music/generations` (ComfyUI)
 - Wyszukiwanie w internecie przez `/v1/search` (20 dostawców)
 - Moderacja przez `/v1/moderations`
-- Ponowne szeregowanie przez `/v1/rerank`
-- Analizowanie znaczników myślenia (`<think>...</think>`) dla modeli rozumujących
-- Sanityzacja odpowiedzi zapewniająca ścisłą zgodność z zestawem SDK OpenAI
+- Ponowne klasyfikowanie przez `/v1/rerank`
+- Parsowanie znaczników rozumowania (`<think>...</think>`) dla modeli rozumujących
+- Oczyszczanie odpowiedzi w celu zapewnienia ścisłej zgodności z zestawem SDK OpenAI
 - Normalizacja ról (developer→system, system→user) w celu zapewnienia zgodności między dostawcami
-- Konwersja ustrukturyzowanych wyników (json_schema → Gemini responseSchema)
+- Konwersja ustrukturyzowanych danych wyjściowych (json_schema → Gemini responseSchema)
 - Lokalne przechowywanie dostawców, kluczy, aliasów, kombinacji, ustawień i cenników (122 moduły bazy danych)
-- Śledzenie użycia/kosztów i rejestrowanie żądań
-- Opcjonalna synchronizacja z chmurą do synchronizacji między urządzeniami i synchronizacji stanu
-- Lista dozwolonych/zablokowanych adresów IP do kontroli dostępu do API
-- Zarządzanie budżetem myślenia (przekazywanie bez zmian/automatyczny/niestandardowy/adaptacyjny)
+- Śledzenie użycia i kosztów oraz rejestrowanie żądań
+- Opcjonalna synchronizacja w chmurze umożliwiająca synchronizację między urządzeniami i synchronizację stanu
+- Lista dozwolonych i blokowanych adresów IP do kontroli dostępu do API
+- Zarządzanie budżetem rozumowania (przekazywanie bez zmian/automatyczne/niestandardowe/adaptacyjne)
 - Globalne wstrzykiwanie promptu systemowego
-- Śledzenie sesji i tworzenie odcisków cyfrowych
-- Rozszerzone ograniczanie częstotliwości żądań dla poszczególnych kont przy użyciu profili specyficznych dla dostawcy
-- Wzorzec wyłącznika obwodu zwiększający odporność na awarie dostawców
-- Ochrona przed lawiną równoczesnych żądań z użyciem blokowania mutex
+- Śledzenie sesji i generowanie odcisków cyfrowych
+- Rozszerzone ograniczanie częstotliwości żądań dla poszczególnych kont z profilami właściwymi dla dostawców
+- Wzorzec wyłącznika automatycznego zwiększający odporność dostawców
+- Ochrona przed lawiną równoczesnych żądań z użyciem blokad mutex
 - Pamięć podręczna deduplikacji żądań oparta na sygnaturach
 - Warstwa domenowa: reguły kosztów, zasady mechanizmu awaryjnego, zasady blokowania
-- Context Relay: podsumowania przekazywania sesji zapewniające ciągłość podczas rotacji kont
-- Trwałe przechowywanie stanu domeny (pamięć podręczna SQLite z zapisem bezpośrednim dla mechanizmów awaryjnych, budżetów, blokad i wyłączników obwodu)
-- Silnik zasad do scentralizowanej oceny żądań (blokada → budżet → mechanizm awaryjny)
+- Context Relay: podsumowania przekazania sesji zapewniające ciągłość podczas rotacji kont
+- Trwałe przechowywanie stanu domeny (pamięć podręczna SQLite z bezpośrednim zapisem dla mechanizmów awaryjnych, budżetów, blokad i wyłączników automatycznych)
+- Aparat zasad do scentralizowanej oceny żądań (blokada → budżet → mechanizm awaryjny)
 - Telemetria żądań z agregacją opóźnień p50/p95/p99
 - Telemetria celów kombinacji i historyczny stan celów kombinacji za pośrednictwem `combo_execution_key` / `combo_step_id`
 - Identyfikator korelacji (X-Request-Id) do kompleksowego śledzenia
-- Rejestrowanie audytowe zgodności z możliwością wyłączenia dla poszczególnych kluczy API
-- Framework ewaluacyjny do zapewniania jakości LLM
-- Panel stanu z informacjami w czasie rzeczywistym o stanie wyłączników obwodu dostawców
+- Rejestrowanie audytów zgodności z możliwością wyłączenia dla poszczególnych kluczy API
+- Platforma ewaluacyjna do zapewniania jakości LLM
+- Panel stanu z informacjami w czasie rzeczywistym o stanie wyłączników automatycznych dostawców
 - Serwer MCP (110 narzędzi) z 3 transportami (stdio/SSE/Streamable HTTP)
 - Serwer A2A (JSON-RPC 2.0 + SSE) z umiejętnościami i cyklem życia zadań
-- System pamięci (ekstrakcja, wstrzykiwanie, pobieranie, podsumowywanie)
+- System pamięci (ekstrakcja, wstrzykiwanie, wyszukiwanie, podsumowywanie)
 - System umiejętności (rejestr, moduł wykonawczy, piaskownica, wbudowane umiejętności)
 - Serwer proxy MITM z zarządzaniem certyfikatami i obsługą DNS
 - Oprogramowanie pośredniczące chroniące przed wstrzykiwaniem promptów
 - Potok kompresji promptów z Caveman, RTK, potokami warstwowymi, kombinacjami kompresji, pakietami językowymi i analityką
 - Rejestr ACP (Agent Communication Protocol)
 - Modułowi dostawcy OAuth (22 oddzielne moduły w `src/lib/oauth/providers/`)
-- Skrypty dezinstalacji/pełnej dezinstalacji
-- Akcja naprawy środowiska OAuth
+- Skrypty odinstalowywania i pełnego odinstalowywania
+- Operacja naprawy środowiska OAuth
 - Most WebSocket dla klientów WS zgodnych z OpenAI (`/v1/ws`)
-- Zarządzanie tokenami synchronizacji (wydawanie/unieważnianie, pobieranie pakietu konfiguracji wersjonowanego za pomocą ETag)
-- GLM Thinking (`glmt`) jako wbudowany profil dostawcy pierwszej klasy
-- Hybrydowe zliczanie tokenów (wywołanie `/messages/count_tokens` po stronie dostawcy z awaryjnym szacowaniem)
+- Zarządzanie tokenami synchronizacji (wydawanie/unieważnianie, pobieranie pakietu konfiguracyjnego wersjonowanego za pomocą ETag)
+- GLM Thinking (`glmt`) jako pełnoprawne ustawienie wstępne dostawcy
+- Hybrydowe zliczanie tokenów (`/messages/count_tokens` po stronie dostawcy z awaryjnym szacowaniem)
 - Automatyczne inicjowanie aliasów modeli (ponad 30 normalizacji dialektów między serwerami proxy podczas uruchamiania)
-- Bezpieczne wychodzące żądania fetch z ochroną SSRF, blokowaniem prywatnych adresów URL i konfigurowalnymi ponowieniami
-- Ponowienia żądań czatu uwzględniające okres wyciszenia, z konfigurowalnymi ustawieniami `requestRetry` i `maxRetryIntervalSec`
-- Walidacja środowiska uruchomieniowego za pomocą Zod podczas uruchamiania
-- Audyt zgodności v2 z paginacją, zdarzeniami CRUD dostawców i rejestrowaniem walidacji zablokowanych przez SSRF
+- Bezpieczne wychodzące żądania pobierania z ochroną SSRF, blokowaniem prywatnych adresów URL i konfigurowalnym ponawianiem prób
+- Ponawianie żądań czatu z uwzględnieniem okresu odczekania oraz konfigurowalnymi `requestRetry` i `maxRetryIntervalSec`
+- Walidacja środowiska wykonawczego za pomocą Zod podczas uruchamiania
+- Audyt zgodności v2 z paginacją, zdarzeniami CRUD dostawców oraz rejestrowaniem walidacji zablokowanych przez SSRF
 
-Podstawowy model działania:
+Podstawowy model wykonawczy:
 
 - Trasy aplikacji Next.js w `src/app/api/*` implementują zarówno interfejsy API panelu, jak i interfejsy API zgodności
-- Wspólny rdzeń SSE/routingu w `src/sse/*` + `open-sse/*` obsługuje wykonywanie operacji dostawców, translację, przesyłanie strumieniowe, mechanizmy awaryjne i użycie
+- Wspólny rdzeń SSE i routingu w `src/sse/*` + `open-sse/*` obsługuje wykonywanie operacji dostawców, translację, przesyłanie strumieniowe, mechanizmy awaryjne oraz użycie
 
 ## Diagramy referencyjne
 
@@ -528,27 +528,27 @@ Pełny podręcznik ukrywania aktywności i wskazówki operacyjne znajdują się 
   - Warstwa bazy danych: `src/lib/db/readCache.ts`
   - Punkt końcowy statystyk: `GET /api/cache/stats`, panel pod adresem `/dashboard/cache`
 
-## 3) Warstwa persystencji
+## 3) Warstwa trwałości danych
 
-Główna baza stanu (SQLite):
+Główna baza danych stanu (SQLite):
 
-- Infrastruktura rdzenia: `src/lib/db/core.ts` (better-sqlite3, migracje, WAL)
-- Fasada re-eksportu: `src/lib/localDb.ts` (cienka warstwa kompatybilności dla callerów)
-- plik: `${DATA_DIR}/storage.sqlite` (lub `$XDG_CONFIG_HOME/omniroute/storage.sqlite` gdy ustawione, w przeciwnym razie `~/.omniroute/storage.sqlite`)
-- encje (tabele + przestrzenie KV): providerConnections, providerNodes, modelAliases, combos, apiKeys, settings, pricing, **customModels**, **proxyConfig**, **ipFilter**, **thinkingBudget**, **systemPrompt**
+- Podstawowa infrastruktura: `src/lib/db/core.ts` (better-sqlite3, migracje, WAL)
+- Dostęp do bazy danych: importuj bezpośrednio określone moduły `src/lib/db/*` (stary moduł zbiorczy `localDb.ts` został usunięty)
+- Plik: `${DATA_DIR}/storage.sqlite` (lub `$XDG_CONFIG_HOME/omniroute/storage.sqlite`, gdy ustawiono, w przeciwnym razie `~/.omniroute/storage.sqlite`)
+- Encje (tabele i przestrzenie nazw KV): providerConnections, providerNodes, modelAliases, combos, apiKeys, settings, pricing, **customModels**, **proxyConfig**, **ipFilter**, **thinkingBudget**, **systemPrompt**
 
-Persystencja użycia:
+Trwałość danych użycia:
 
-- fasada: `src/lib/usageDb.ts` (zdekomponowane moduły w `src/lib/usage/*`)
+- Fasada: `src/lib/usageDb.ts` (moduły składowe w `src/lib/usage/*`)
 - Tabele SQLite w `storage.sqlite`: `usage_history`, `call_logs`, `proxy_logs`
-- opcjonalne artefakty plikowe pozostają dla kompatybilności/debug (`${DATA_DIR}/log.txt`, `${DATA_DIR}/call_logs/`, `<repo>/logs/...`)
-- legacy pliki JSON są migrowane do SQLite przez migracje startowe, gdy są obecne
+- Opcjonalne artefakty plikowe są zachowywane ze względu na zgodność i debugowanie (`${DATA_DIR}/log.txt`, `${DATA_DIR}/call_logs/`, `<repo>/logs/...`)
+- Starsze pliki JSON są migrowane do SQLite przez migracje uruchamiane przy starcie, jeśli są obecne
 
-DB stanu domeny (SQLite):
+Baza danych stanu domeny (SQLite):
 
-- `src/lib/db/domainState.ts` — operacje CRUD dla stanu domeny
+- `src/lib/db/domainState.ts` — operacje CRUD na stanie domeny
 - Tabele (tworzone w `src/lib/db/core.ts`): `domain_fallback_chains`, `domain_budgets`, `domain_cost_history`, `domain_lockout_state`, `domain_circuit_breakers`
-- Wzorzec cache write-through: in-memory Maps są autorytatywne w runtime; mutacje zapisywane synchronicznie do SQLite; stan przywracany z DB przy cold start
+- Wzorzec pamięci podręcznej z jednoczesnym zapisem: mapy przechowywane w pamięci są autorytatywnym źródłem w czasie działania; zmiany są zapisywane synchronicznie w SQLite; stan jest odtwarzany z bazy danych po zimnym starcie
 
 ## 4) Uwierzytelnianie i obszary zabezpieczeń
 
@@ -853,63 +853,63 @@ flowchart LR
     Next --> SyncCloud
 ```
 
-## Mapowanie modułów (krytyczne dla decyzji)
+## Mapowanie modułów (kluczowe dla podejmowania decyzji)
 
 ### Moduły tras i API
 
-- `src/app/api/v1/*`, `src/app/api/v1beta/*`: API kompatybilności
-- `src/app/api/v1/providers/[provider]/*`: dedykowane trasy per dostawca (chat, embeddings, images)
-- `src/app/api/providers*`: CRUD dostawców, walidacja, testowanie
-- `src/app/api/provider-nodes*`: zarządzanie niestandardowymi węzłami kompatybilnymi
-- `src/app/api/provider-models`: zarządzanie modelami niestandardowymi (CRUD)
+- `src/app/api/v1/*`, `src/app/api/v1beta/*`: interfejsy API zgodności
+- `src/app/api/v1/providers/[provider]/*`: dedykowane trasy dla poszczególnych dostawców (czat, osadzania, obrazy)
+- `src/app/api/providers*`: operacje CRUD, walidacja i testowanie dostawców
+- `src/app/api/provider-nodes*`: zarządzanie niestandardowymi zgodnymi węzłami
+- `src/app/api/provider-models`: zarządzanie niestandardowymi modelami (CRUD)
 - `src/app/api/models/route.ts`: API katalogu modeli (aliasy + modele niestandardowe)
-- `src/app/api/oauth/*`: przepływy OAuth/device-code
+- `src/app/api/oauth/*`: przepływy OAuth/kodu urządzenia
 - `src/app/api/keys*`: cykl życia lokalnych kluczy API
 - `src/app/api/models/alias`: zarządzanie aliasami
-- `src/app/api/combos*`: zarządzanie combo fallback
-- `src/app/api/pricing`: nadpisania cennika do kalkulacji kosztów
-- `src/app/api/settings/proxy`: konfiguracja proxy (GET/PUT/DELETE)
-- `src/app/api/settings/proxy/test`: test łączności outbound proxy (POST)
-- `src/app/api/usage/*`: API użycia i logów
-- `src/app/api/sync/*` + `src/app/api/cloud/*`: cloud sync i pomocnicze API chmurowe
-- `src/app/api/cli-tools/*`: lokalne writers/checkers konfiguracji CLI
-- `src/app/api/settings/ip-filter`: allowlista/blocklista IP (GET/PUT)
-- `src/app/api/settings/thinking-budget`: konfiguracja budżetu tokenów thinking (GET/PUT)
-- `src/app/api/settings/system-prompt`: globalny system prompt (GET/PUT)
+- `src/app/api/combos*`: zarządzanie kombinacjami awaryjnymi
+- `src/app/api/pricing`: nadpisywanie cen na potrzeby obliczania kosztów
+- `src/app/api/settings/proxy`: konfiguracja serwera proxy (GET/PUT/DELETE)
+- `src/app/api/settings/proxy/test`: test łączności wychodzącej przez serwer proxy (POST)
+- `src/app/api/usage/*`: interfejsy API użycia i dzienników
+- `src/app/api/sync/*` + `src/app/api/cloud/*`: synchronizacja z chmurą i funkcje pomocnicze przeznaczone dla chmury
+- `src/app/api/cli-tools/*`: lokalne moduły zapisujące i sprawdzające konfigurację CLI
+- `src/app/api/settings/ip-filter`: lista dozwolonych/zablokowanych adresów IP (GET/PUT)
+- `src/app/api/settings/thinking-budget`: konfiguracja budżetu tokenów rozumowania (GET/PUT)
+- `src/app/api/settings/system-prompt`: globalny prompt systemowy (GET/PUT)
 - `src/app/api/settings/compression`: globalne ustawienia kompresji (GET/PUT)
-- `src/app/api/compression/*`: preview kompresji, metadane reguł i language packs
+- `src/app/api/compression/*`: podgląd kompresji, metadane reguł i pakiety językowe
 - `src/app/api/context/caveman/config`: alias ustawień Caveman (GET/PUT)
-- `src/app/api/context/rtk/*`: konfiguracja RTK, katalog filtrów, endpoint testowy i odzyskiwanie raw-output
-- `src/app/api/context/combos*`: CRUD compression combo i przypisania routing-combo
+- `src/app/api/context/rtk/*`: konfiguracja RTK, katalog filtrów, testowy punkt końcowy i odzyskiwanie surowych danych wyjściowych
+- `src/app/api/context/combos*`: operacje CRUD kombinacji kompresji i przypisania kombinacji routingu
 - `src/app/api/context/analytics`: alias analityki kompresji
 - `src/app/api/sessions`: lista aktywnych sesji (GET)
-- `src/app/api/rate-limits`: status rate limit per konto (GET)
-- `src/app/api/sync/tokens`: CRUD tokenów sync (GET/POST)
-- `src/app/api/sync/tokens/[id]`: get/delete tokenu sync (GET/DELETE)
-- `src/app/api/sync/bundle`: pobieranie pakietu konfiguracji (GET, wersjonowanie ETag)
-- `src/app/api/v1/ws`: handler upgrade WebSocket dla klientów WS zgodnych z OpenAI
+- `src/app/api/rate-limits`: stan limitu żądań dla poszczególnych kont (GET)
+- `src/app/api/sync/tokens`: operacje CRUD tokenów synchronizacji (GET/POST)
+- `src/app/api/sync/tokens/[id]`: pobieranie/usuwanie tokenu synchronizacji (GET/DELETE)
+- `src/app/api/sync/bundle`: pobieranie pakietu konfiguracyjnego (GET, wersjonowanie ETag)
+- `src/app/api/v1/ws`: procedura obsługi uaktualnienia WebSocket dla klientów WS zgodnych z OpenAI
 
-### Rdzeń routingu i wykonania
+### Rdzeń routingu i wykonywania
 
-- `src/sse/handlers/chat.ts`: parse żądania, obsługa combo, pętla wyboru konta
-- `open-sse/handlers/chatCore.ts`: tłumaczenie, dispatch executora, obsługa retry/refresh, setup strumienia
-- `open-sse/executors/*`: zachowanie sieciowe i formatowe specyficzne dla dostawcy
+- `src/sse/handlers/chat.ts`: parsowanie żądania, obsługa kombinacji, pętla wyboru konta
+- `open-sse/handlers/chatCore.ts`: tłumaczenie, kierowanie do wykonawcy, obsługa ponownych prób/odświeżania, konfiguracja strumienia
+- `open-sse/executors/*`: specyficzne dla dostawców zachowanie sieciowe i obsługa formatów
 
-### Rejestr tłumaczeń i konwertery formatów
+### Rejestr translacji i konwertery formatów
 
-- `open-sse/translator/index.ts`: rejestr translatora i orkiestracja
+- `open-sse/translator/index.ts`: rejestr translatorów i orkiestracja
 - Translatory żądań: `open-sse/translator/request/*` (9 modułów — `antigravity-to-openai`, `claude-to-gemini`, `claude-to-openai`, `gemini-to-openai`, `openai-responses`, `openai-to-claude`, `openai-to-cursor`, `openai-to-gemini`, `openai-to-kiro`)
-- Translatory odpowiedzi: `open-sse/translator/response/*` (8 modułów — `claude-to-openai`, `cursor-to-openai`, `gemini-to-claude`, `gemini-to-openai`, `kiro-to-openai`, `openai-responses`, `openai-to-antigravity`, `openai-to-claude`)
-- Helpery: `open-sse/translator/helpers/*` (8 modułów — `claudeHelper`, `geminiHelper`, `geminiToolsSanitizer`, `maxTokensHelper`, `openaiHelper`, `responsesApiHelper`, `schemaCoercion`, `toolCallHelper`)
+- Translatory odpowiedzi: `open-sse/translator/response/*` (11 modułów — `claude-to-openai`, `cursor-to-openai`, `gemini-to-claude`, `gemini-to-openai`, `kiro-to-openai`, `openai-responses`, `openai-to-antigravity`, `openai-to-claude`, `openai-to-gemini`, `openai-to-gemini-sse`, `responsesToolItem`)
+- Funkcje pomocnicze: `open-sse/translator/helpers/*` (12 modułów — `claudeHelper`, `geminiHelper`, `geminiToolsSanitizer`, `jsonUtil`, `markdownBoundary`, `maxTokensHelper`, `openaiHelper`, `responsesApiHelper`, `schemaCoercion`, `strictSystemHoist`, `toolCallHelper`, `toolCallShim`)
 - Stałe formatów: `open-sse/translator/formats.ts`
-- Bootstrap i rejestr: `open-sse/translator/bootstrap.ts`, `open-sse/translator/registry.ts`
-- Helpery formatu obrazów: `open-sse/translator/image/`
+- Inicjalizacja i rejestr: `open-sse/translator/bootstrap.ts`, `open-sse/translator/registry.ts`
+- Funkcje pomocnicze formatów obrazów: `open-sse/translator/image/`
 
-### Persystencja
+### Trwałość danych
 
-- `src/lib/db/*`: trwała konfiguracja/stan i persystencja domeny na SQLite
-- `src/lib/localDb.ts`: re-eksport kompatybilności dla modułów DB
-- `src/lib/usageDb.ts`: fasada historii użycia/call logs nad tabelami SQLite
+- `src/lib/db/*`: trwała konfiguracja/stan oraz utrwalanie danych domenowych w SQLite
+- `src/lib/db/*`: importuj konkretne moduły bezpośrednio — bez modułu zbiorczego (stara warstwa reeksportu `localDb.ts` została usunięta)
+- `src/lib/usageDb.ts`: fasada historii użycia/dzienników wywołań oparta na tabelach SQLite
 
 ## Pokrycie executorów dostawców (Strategy Pattern)
 
@@ -1109,11 +1109,11 @@ kompatybilności legacy. Aktualny kontrakt runtime używa:
 - migracje schematu SQLite i hooki auto-upgrade przy starcie
 - ścieżka kompatybilności migracji legacy JSON → SQLite
 
-## 6) Guard SSRF / URL outbound
+## 6) SSRF / ochrona wychodzących adresów URL
 
-- `src/shared/network/outboundUrlGuard.ts` blokuje wszystkie prywatne/loopback/link-local docelowe URL zanim dotrą do executorów dostawców
-- Trasy discovery i walidacji modeli dostawców używają `src/shared/network/safeOutboundFetch.ts`, który stosuje guard przed każdym żądaniem outbound
-- Błędy guarda pojawiają się jako `URL_GUARD_BLOCKED` z HTTP 422 i są logowane do ścieżki audytu compliance przez `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) stosuje `src/shared/network/outboundUrlGuard.ts` do żądań czatu wysyłanych za pośrednictwem `BaseExecutor.execute()`. W trybie wyłącznie publicznym (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` przy wyłączonej fladze prywatnej) blokuje hosty prywatne i zwrotne oraz zakres 169.254.0.0/16; w każdym innym trybie blokuje hosty metadanych chmurowych. Sprawdza nazwę hosta lub literał adresu IP w zapisanej postaci przed wykonaniem jakiegokolwiek zapytania DNS. Wbudowani dostawcy lokalni pomijają tę kontrolę.
+- Trasy wykrywania i walidacji modeli dostawców używają `src/shared/network/safeOutboundFetch.ts`, który stosuje ochronę przed każdym żądaniem wychodzącym
+- Błędy ochrony są zwracane jako `URL_GUARD_BLOCKED` ze statusem HTTP 503 (`getSafeOutboundFetchErrorStatus`; trasa wykrywania modeli zwraca 400), a rzeczywiste blokady SSRF podczas walidacji są rejestrowane w ścieżce audytu jako zdarzenia `provider.validation.ssrf_blocked`
 
 ## Obserwowalność i sygnały operacyjne
 
