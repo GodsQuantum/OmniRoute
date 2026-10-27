@@ -205,23 +205,31 @@ CI 的事实来源是 `.github/workflows/ci.yml`。
 
 ### 作业：`docs-sync-strict`
 
-在每个以 `main` 为目标分支的 PR 上运行。失败时阻止合并。
+对于目标分支为 `main` 或 `release/**` 的拉取请求，此作业仅对非草稿（或来自可信队列）且被归类为文档或代码变更的候选运行。它也在非 PR 的 CI 事件中运行；此工作流的 push 触发器仅覆盖 `main`，不覆盖 `release/**`。以非零退出码结束的步骤会阻断作业；仅报告的发现以及下文记载的豁免不会阻断。
 
-| 脚本                           | 验证内容                                                                                                                       | 阻断性                        |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
-| `check:docs-all`               | 元门禁，按顺序运行以下 6 个子门禁                                                                                              | 是                            |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                       | 是                            |
-| ↳ `check:docs-counts`          | 文档正文中的计数（提供者数量、迁移数量等）位于实际计数的棘轮窗口范围内                                                         | 是                            |
-| ↳ `check:env-doc-sync`         | `.env.example` 中的每个环境变量都记录在文档表格中，反之亦然                                                                    | 是                            |
-| ↳ `check:deprecated-versions`  | 文档中不存在已弃用的版本字符串                                                                                                 | 是                            |
-| ↳ `check:doc-links`            | 文档中的内部 markdown 链接可解析到真实文件（`[text]`/`(path)` 形式）                                                           | 是                            |
-| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径均存在于代码库中。通过 `--strict` 实施硬性门禁；不带此标志时为软失败。 | 是（通过 CI 中的 `--strict`） |
-| `check:cli-i18n`               | 所有 i18n 语言区域文件中都包含 CLI 命令字符串                                                                                  | 是                            |
-| `check:openapi-coverage`       | OpenAPI 规范覆盖真实路由的比例至少达到经棘轮调整的最低阈值                                                                     | 是                            |
-| `check:openapi-security-tiers` | `openapi.yaml` 中的安全层级注解与 `routeGuard.ts` 中的分类一致                                                                 | **建议性**                    |
-| `check:openapi-routes`         | `openapi.yaml` 中的每个路径都可解析到真实的 `route.ts`（防止虚构）                                                             | 是                            |
-| `check:docs-symbols`           | `docs/**/*.md` 中的每个 `/api/...` 引用都可解析到真实的 `route.ts`（防止虚构）                                                 | 是                            |
-| `i18n translation drift`       | i18n 语言区域文件中未翻译的键——仅警告                                                                                          | **建议性**                    |
+| 脚本                           | 验证内容                                                                                                                                                                                                                           | 阻断性                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `check:docs-all`               | 按顺序运行以下 7 个子门禁的元门禁                                                                                                                                                                                                  | 是                                                                      |
+| ↳ `check:docs-sync`            | 软件包、OpenAPI 和 CHANGELOG 的版本一致性，`llm.txt` 镜像的精确一致性，已翻译 CHANGELOG 的章节与大小不变量，以及不存在已被替代的重复文档                                                                                           | 是                                                                      |
+| ↳ `check:docs-frontmatter`     | 已编译的文档页面包含有效的 frontmatter 标题                                                                                                                                                                                        | 是                                                                      |
+| ↳ `check:docs-counts`          | 高置信度的计数不变量采用严格检查；启发式文件计数检查仅发出警告，除非脚本收到 `--strict` 参数（CI 元门禁不会传入该参数）                                                                                                            | 严格层级阻断；宽松层级仅供参考                                          |
+| ↳ `check:env-doc-sync`         | 应用明确的忽略项、仅文档项和仅环境项允许列表后，源代码中的环境变量读取、`.env.example` 与 `docs/reference/ENVIRONMENT.md` 保持一致                                                                                                 | 是，但已记录的允许列表例外除外                                          |
+| ↳ `check:deprecated-versions`  | 报告安全历史上下文之外可能过时的版本及过时的更新日期，忽略的文档除外                                                                                                                                                               | 当前 CI 配置中仅供参考（未传入 `--strict`）                             |
+| ↳ `check:doc-links`            | 文档中的内部 markdown 链接可解析到真实文件（`[text]`/`(path)` 形式）                                                                                                                                                               | 是                                                                      |
+| ↳ `check:fabricated-docs`      | 文档中引用的路由、环境变量、CLI 命令、钩子名称和文件路径均存在于代码库中。通过 `--strict` 实施硬性门禁；不带此标志时为软失败。                                                                                                     | 是（通过 CI 中的 `--strict`）                                           |
+| `check:cli-i18n`               | CLI 使用的 `t()` 键存在于 `en` 中；`pt-BR` 保留所有顶层章节；`zh-CN` 和 `zh-TW` 包含 `en` 的每个键                                                                                                                                 | 是                                                                      |
+| `check:openapi-coverage`       | OpenAPI 规范覆盖真实路由的比例至少达到经棘轮调整的最低阈值                                                                                                                                                                         | 是                                                                      |
+| `check:openapi-security-tiers` | 声明的 `x-loopback-only`/`x-always-protected` 注解必须得到 `routeGuard.ts` 的支持；解析器错误和正向检查不匹配会阻断。反向检查在仅限本地访问的前缀下发现缺少 `x-loopback-only` 时发出警告，且仅通过模式定义的路由不参与该反向检查。 | 解析器和正向检查阻断；反向检查仅供参考                                  |
+| `check:openapi-routes`         | 应用有理由支持的 `KNOWN_STALE_SPEC` 允许列表后，`openapi.yaml` 中的每个 `/api...` 路径都须忽略参数差异匹配到真实路由；允许列表中过时的条目也会导致失败                                                                             | 是                                                                      |
+| `check:docs-symbols`           | 非镜像的规范文档中的内部 `/api/...` URL 引用须匹配到真实路由或路由族；代理、上游、占位符及文件引用，以及有理由支持的 `KNOWN_STALE_DOC_REFS` 条目均被排除，允许列表中过时的条目会导致失败                                           | 是                                                                      |
+| `i18n translation drift`       | 核心翻译文档的源和目标哈希与 `.i18n-state.json` 一致。PR 仅会因其新引入的源漂移、目标缺失或目标哈希漂移而失败；非 PR 检查采用严格模式。PR 中继承的漂移和过时目标的源哈希仅产生警告。                                               | PR 中的新漂移及非 PR 严格检查中的漂移会阻断；继承的漂移和过时项仅供参考 |
+
+`docs/diagrams/` 下的十二个 README SVG 由 `scripts/docs/gen-readme-<name>.mjs` 生成；`npm run docs:readme-diagrams` 会重新生成全部文件。
+每个文件都有逐字节比较的单元测试（`tests/unit/docs/readme-*-svg.test.ts`，任务 `test-unit`）；当已提交的文件过时时，测试会失败。
+`check:docs-counts` 从它们的 `<text>` 节点读取规范数值，因此数字绝不会转换为轮廓路径。
+SVG 规范数值检查读取 `SVG_DIAGRAM_FILES`（`scripts/check/check-docs-counts-sync.mjs`）中列出的文件：`docs/diagrams/readme-hero.svg`, `free-tier-budget.svg`, `promise-pillars.svg`, `comparison-table.svg`, `cli-terminal.svg`, `tier-cascade.svg`, `public/images/tier-flow-dark.svg`, `tier-flow-light.svg`。
+对永久免费提供商、目录条目、周期性资源池和评分因素相关声明的检查还会读取 `promise-pillars.svg`, `free-tier-budget.svg`, `strategies-grid.svg`。
+`free-tier-budget.svg` 从当前目录加载器获取数值，因此修改 `FREE_MODEL_BUDGETS` 或提供商的显示名称后，CI 会持续失败，直到重新生成该文件。
 
 ### 作业：`i18n-ui-coverage`
 

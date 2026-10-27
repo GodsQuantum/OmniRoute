@@ -209,23 +209,31 @@ CI 的單一真實來源為 `.github/workflows/ci.yml`。
 
 ### 工作：`docs-sync-strict`
 
-在每個提交至 `main` 的 PR 上執行。失敗時阻止合併。
+對於目標為 `main` 或 `release/**` 的 pull request，此作業僅對非草稿（或位於受信任佇列中）、且被分類為文件或程式碼變更的候選版本執行。它也會在非 PR 的 CI 事件中執行；此工作流程的 push 觸發條件僅涵蓋 `main`，不涵蓋 `release/**`。步驟以非零結束碼結束時會阻擋作業；下列僅供報告的發現與已記錄的例外不會阻擋。
 
-| 指令碼                         | 驗證項目                                                                                                                            | 阻擋條件                   |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `check:docs-all`               | 依序執行下列 6 個子閘門的中繼閘門                                                                                                   | 是                         |
-| ↳ `check:docs-sync`            | CHANGELOG / OpenAPI / llm.txt 版本一致性                                                                                            | 是                         |
-| ↳ `check:docs-counts`          | 說明文字中的計數（提供者數量、遷移數量等）位於實際計數的 ratchet 範圍內                                                             | 是                         |
-| ↳ `check:env-doc-sync`         | `.env.example` 中的每個環境變數都記錄在文件表格中，反之亦然                                                                         | 是                         |
-| ↳ `check:deprecated-versions`  | 文件中沒有已棄用的版本字串                                                                                                          | 是                         |
-| ↳ `check:doc-links`            | 文件中的內部 markdown 連結會解析至實際檔案（`[text]`/`(path)` 格式）                                                                | 是                         |
-| ↳ `check:fabricated-docs`      | 文件中引用的路由、環境變數、CLI 命令、hook 名稱及檔案路徑存在於程式碼庫中。透過 `--strict` 執行硬性閘門；未使用該旗標時允許軟失敗。 | 是（CI 中透過 `--strict`） |
-| `check:cli-i18n`               | 所有 i18n 語系檔案中都包含 CLI 命令字串                                                                                             | 是                         |
-| `check:openapi-coverage`       | OpenAPI 規格至少涵蓋經 ratchet 設定的實際路由最低門檻                                                                               | 是                         |
-| `check:openapi-security-tiers` | `openapi.yaml` 中的安全層級註解與 `routeGuard.ts` 分類一致                                                                          | **建議性**                 |
-| `check:openapi-routes`         | `openapi.yaml` 中的每個路徑都會解析至實際的 `route.ts`（防止虛構）                                                                  | 是                         |
-| `check:docs-symbols`           | `docs/**/*.md` 中的每個 `/api/...` 參照都會解析至實際的 `route.ts`（防止虛構）                                                      | 是                         |
-| `i18n translation drift`       | i18n 語系檔案中未翻譯的鍵值——僅警告                                                                                                 | **建議性**                 |
+| 指令碼                         | 驗證項目                                                                                                                                                                                                                   | 阻擋條件                                                        |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `check:docs-all`               | 依序執行下列 7 個子閘門的中繼閘門                                                                                                                                                                                          | 是                                                              |
+| ↳ `check:docs-sync`            | 套件/OpenAPI/CHANGELOG 的版本一致性、`llm.txt` 的精確鏡像、已翻譯 CHANGELOG 的章節/大小不變條件，以及不存在已被取代的重複文件                                                                                              | 是                                                              |
+| ↳ `check:docs-frontmatter`     | 已編譯的文件頁面包含有效的 frontmatter 標題                                                                                                                                                                                | 是                                                              |
+| ↳ `check:docs-counts`          | 高可信度的數量不變條件採嚴格檢查；啟發式檔案數量檢查僅發出警告，除非指令碼收到 `--strict`（CI 中的中繼閘門不會傳入此旗標）                                                                                                 | 嚴格層級會阻擋；寬鬆層級僅供建議                                |
+| ↳ `check:env-doc-sync`         | 套用明確的 ignore、doc-only 與 env-only 例外清單後，原始碼中讀取的環境變數、`.env.example` 與 `docs/reference/ENVIRONMENT.md` 必須一致                                                                                     | 是，已記錄的例外清單以外均適用                                  |
+| ↳ `check:deprecated-versions`  | 排除被忽略的文件後，報告安全歷史脈絡以外可能過時的版本，以及過時的更新日期                                                                                                                                                 | 目前 CI 接線方式下僅供建議（未傳入 `--strict`）                 |
+| ↳ `check:doc-links`            | 文件中的內部 markdown 連結會解析至實際檔案（`[text]`/`(path)` 格式）                                                                                                                                                       | 是                                                              |
+| ↳ `check:fabricated-docs`      | 文件中引用的路由、環境變數、CLI 命令、hook 名稱及檔案路徑存在於程式碼庫中。透過 `--strict` 執行硬性閘門；未使用該旗標時允許軟失敗。                                                                                        | 是（CI 中透過 `--strict`）                                      |
+| `check:cli-i18n`               | CLI 使用的 `t()` 鍵必須存在於 `en`；`pt-BR` 保留每個最上層區段；`zh-CN` 和 `zh-TW` 包含 `en` 的每個鍵                                                                                                                      | 是                                                              |
+| `check:openapi-coverage`       | OpenAPI 規格至少涵蓋經 ratchet 設定的實際路由最低門檻                                                                                                                                                                      | 是                                                              |
+| `check:openapi-security-tiers` | 已宣告的 `x-loopback-only`/`x-always-protected` 註解必須有 `routeGuard.ts` 的支援；剖析器錯誤與正向檢查的不符會阻擋。對僅限本機的前綴下缺少 `x-loopback-only` 的反向檢查會發出警告，而僅由模式定義的路由不納入該反向檢查。 | 剖析器/正向檢查會阻擋；反向檢查僅供建議                         |
+| `check:openapi-routes`         | 套用有理由依據的 `KNOWN_STALE_SPEC` 例外清單後，`openapi.yaml` 中的每個 `/api...` 路徑都必須忽略參數差異而解析至真實路由；過時的例外清單項目也會使檢查失敗                                                                 | 是                                                              |
+| `check:docs-symbols`           | 非鏡像的標準文件中，內部 `/api/...` URL 參照必須解析至真實路由或路由群組；proxy/upstream/placeholder/檔案參照及有理由依據的 `KNOWN_STALE_DOC_REFS` 項目會被排除，過時的例外清單項目則使檢查失敗                            | 是                                                              |
+| `i18n translation drift`       | 核心翻譯文件的來源/目標雜湊須符合 `.i18n-state.json`。PR 僅會因新引入的來源差異、缺少目標或目標雜湊差異而失敗；非 PR 檢查採嚴格模式。PR 繼承的差異與過時目標的來源雜湊問題僅發出警告。                                     | PR 的新增差異/非 PR 的嚴格差異檢查會阻擋；繼承/過時差異僅供建議 |
+
+`docs/diagrams/` 下的十二個 README SVG 由 `scripts/docs/gen-readme-<name>.mjs` 產生；`npm run docs:readme-diagrams` 會重新產生所有檔案。
+每個檔案都有逐位元組比較的單元測試（`tests/unit/docs/readme-*-svg.test.ts`，工作 `test-unit`）；當已提交的檔案過時時，測試便會失敗。
+`check:docs-counts` 從它們的 `<text>` 節點讀取標準數值，因此數字絕不會轉換為輪廓路徑。
+SVG 標準數值檢查會讀取 `SVG_DIAGRAM_FILES`（`scripts/check/check-docs-counts-sync.mjs`）中列出的檔案：`docs/diagrams/readme-hero.svg`, `free-tier-budget.svg`, `promise-pillars.svg`, `comparison-table.svg`, `cli-terminal.svg`, `tier-cascade.svg`, `public/images/tier-flow-dark.svg`, `tier-flow-light.svg`。
+針對永久免費供應商、目錄項目、週期性資源池和評分因素相關敘述的檢查，也會讀取 `promise-pillars.svg`, `free-tier-budget.svg`, `strategies-grid.svg`。
+`free-tier-budget.svg` 從目前的目錄載入器取得數值，因此變更 `FREE_MODEL_BUDGETS` 或供應商的顯示名稱後，CI 會持續失敗，直到重新產生該檔案。
 
 ### 工作：`i18n-ui-coverage`
 
