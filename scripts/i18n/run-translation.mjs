@@ -515,15 +515,54 @@ function protectThinkCode(source, output) {
   };
 }
 
+// Leading spaces can be an indented code block, not disposable whitespace.
+const trimChunk = (text) => text.replace(/^(?:[ \t]*\r?\n)+/, "").trimEnd();
+// The reasoning patterns also consume trailing whitespace. Keep indentation
+// after their last newline so removing a block cannot turn code into a heading.
+const stripThinkBlocks = (text, pattern) =>
+  text.replace(pattern, (block) => block.match(/\n([ \t]*)$/)?.[1] ?? "");
+
 function unwrapTranslationFence(source, text) {
   const unwrapped = !/^\s*```/.test(source) && text.match(WRAPPING_FENCE);
-  return unwrapped ? unwrapped[1].trim() : text;
+  return unwrapped ? trimChunk(unwrapped[1]) : text;
+}
+
+// Compare ATX heading structure, never translated titles. A fence closes only
+// with the same delimiter character, at least its opening length, and no info
+// string; shorter or mixed fences inside an example are still code.
+function headingLevels(markdown) {
+  const levels = [];
+  let fence = null;
+  for (const line of markdown.split(/\r?\n/)) {
+    const delimiter = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    if (fence) {
+      if (
+        delimiter &&
+        delimiter[1][0] === fence[0] &&
+        delimiter[1].length >= fence.length &&
+        /^[ \t]*$/.test(delimiter[2])
+      ) {
+        fence = null;
+      }
+      continue;
+    }
+    if (delimiter && (delimiter[1][0] === "~" || !delimiter[2].includes("`"))) {
+      fence = delimiter[1];
+      continue;
+    }
+    const heading = line.match(/^ {0,3}(#{1,6})(?:[ \t]+|$)/);
+    if (heading) levels.push(heading[1].length);
+  }
+  return levels;
 }
 
 export function validateTranslatedChunk(source, output) {
-  const candidate = unwrapTranslationFence(source, output.replace(LEADING_THINK_BLOCKS, "").trim());
+  const candidate = unwrapTranslationFence(
+    source,
+    trimChunk(stripThinkBlocks(output, LEADING_THINK_BLOCKS))
+  );
   const protectedOutput = protectThinkCode(source, candidate);
-  let text = protectedOutput.text.replace(THINK_BLOCK, "").trim();
+  let text = trimChunk(stripThinkBlocks(protectedOutput.text, THINK_BLOCK));
   text = unwrapTranslationFence(source, text);
   text = protectedOutput.restore(text);
   // Recheck after stripping/unwrapping: an outer leaked block can consume a
@@ -535,6 +574,10 @@ export function validateTranslatedChunk(source, output) {
   if (fences[0] !== fences[1]) problems.push(`code fences ${fences[1]}/${fences[0]}`);
   const rows = [countLines(/^\s*\|/, source), countLines(/^\s*\|/, text)];
   if (rows[0] !== rows[1]) problems.push(`table rows ${rows[1]}/${rows[0]}`);
+  const headings = [headingLevels(source), headingLevels(text)];
+  if (headings[0].join(",") !== headings[1].join(",")) {
+    problems.push(`heading levels [${headings[1]}]/[${headings[0]}]`);
+  }
   const meta = META_PROSE.filter((re) => countMatches(re, text) > countMatches(re, source));
   if (meta.length) problems.push(`meta-prose ${meta.map((re) => re.source).join(", ")}`);
   const lost = lostInlineCode(source, text);
@@ -836,7 +879,7 @@ export function mirrorNeedsRebuild(mirrorText, sourceText) {
   return (
     looksUntranslated(body, sourceBody) ||
     checked.problems.length > 0 ||
-    checked.text !== body.trim()
+    checked.text !== trimChunk(body)
   );
 }
 
