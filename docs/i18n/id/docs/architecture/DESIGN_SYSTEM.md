@@ -82,7 +82,14 @@
 
 ## 2. Aturan
 
-1. Gunakan token, jangan nilai literal. Pengecualian yang sengaja dipertahankan: terminal konsol yang selalu gelap dan garis SVG ReactFlow melalui `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palet strategi perutean dan lapisan kompresi menggunakan token bagan dari kit melalui `strategyColorVar` dan `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Token, jangan pernah literal. Pengecualian dipertahankan dengan sengaja: terminal konsol yang
+   selalu gelap dan `STATUS_HEX` (`src/shared/constants/statusColors.ts`), cermin hex yang sudah
+   di-resolve dari palet status kit untuk pemanggil yang membutuhkan hex literal. Palet kategorikal
+   tidak lagi menjadi pengecualian: palet tersebut memakai lima token chart milik kit
+   (`--color-chart-1..5`) melalui `src/shared/utils/categoricalPalette.ts` dan, untuk strategi
+   routing, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; edge ReactFlow dan kanvas
+   orkestrasi membaca variabel `--orch-status-*` yang peka tema
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Jangan pernah menambal `packages/ui-kit/src` secara manual: sinkronkan dengan `scripts/dev/sync-ui-kit.sh <commit>`; pemeriksaan pra-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) akan gagal jika ada byte yang berbeda dari commit upstream yang disematkan (pemeriksaan dilewati dengan peringatan ketika klona upstream, `UI_KIT_CLONE` atau `_references/cheaper-inference-ui-kit`, tidak tersedia). Jika kit tidak menyediakan sesuatu, tangani kekurangannya di adaptor atau layar dan mintalah penambahannya kepada upstream.
 3. Teks bawaan kit menggunakan bahasa Inggris (`label = "Loading"`, `loadingLabel = "Loading table"`…) — teruskan string yang telah diterjemahkan dari `useTranslations(...)` setiap kali komponen kit merender teks.
 4. Utilitas Tailwind mengungguli kelas komponen kit (kit mendeklarasikan `@layer theme, base, components, utilities` dan aturannya berada di `components`) — gunakan utilitas untuk jarak dan tata letak, bukan untuk mengubah warna komponen kit.

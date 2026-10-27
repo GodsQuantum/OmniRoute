@@ -81,9 +81,13 @@
 
 ## 2. ନିୟମାବଳୀ
 
-1. ଲିଟେରାଲ୍ ନୁହେଁ, ଟୋକନ୍ ବ୍ୟବହାର କରନ୍ତୁ। ଉଦ୍ଦେଶ୍ୟମୂଳକ ଭାବେ ରଖାଯାଇଥିବା ବ୍ୟତିକ୍ରମଗୁଡ଼ିକ: ସର୍ବଦା-ଡାର୍କ କନସୋଲ୍ ଟର୍ମିନାଲ୍ ଏବଂ `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ମାଧ୍ୟମରେ ReactFlow
-   SVG ଷ୍ଟ୍ରୋକ୍। ରାଉଟିଂ ରଣନୀତି ଏବଂ କମ୍ପ୍ରେସନ୍-ଲେୟର୍ ପ୍ୟାଲେଟ୍ଗୁଡ଼ିକ `strategyColorVar` ଏବଂ
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) ମାଧ୍ୟମରେ କିଟ୍ ଚାର୍ଟ ଟୋକନ୍ଗୁଡ଼ିକ ବ୍ୟବହାର କରେ।
+1. ଟୋକନ୍, କେବେ ଲିଟେରାଲ୍ ନୁହେଁ। ଉଦ୍ଦେଶ୍ୟପୂର୍ଣ୍ଣଭାବରେ ରଖାଯାଇଥିବା ବ୍ୟତିକ୍ରମଗୁଡ଼ିକ: ସର୍ବଦା-ଡାର୍କ କନସୋଲ୍ ଟର୍ମିନାଲ୍ ଏବଂ
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), ଯାହା ଲିଟେରାଲ୍ hex ଦରକାର କରୁଥିବା କଲର୍ମାନଙ୍କ ପାଇଁ କିଟ୍ ଷ୍ଟାଟସ୍
+   ପ୍ୟାଲେଟ୍ର resolved-hex ପ୍ରତିରୂପ। ବର୍ଗୀକୃତ ପ୍ୟାଲେଟ୍ଗୁଡ଼ିକ ଆଉ ବ୍ୟତିକ୍ରମ ନୁହଁନ୍ତି:
+   ସେଗୁଡ଼ିକ `src/shared/utils/categoricalPalette.ts` ମାଧ୍ୟମରେ କିଟ୍ର ପାଞ୍ଚଟି ଚାର୍ଟ ଟୋକନ୍ (`--color-chart-1..5`) ଉପରେ
+   ଏବଂ ରାଉଟିଂ ଷ୍ଟ୍ରାଟେଜି ପାଇଁ
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` ମାଧ୍ୟମରେ ନିର୍ଭର କରନ୍ତି; ReactFlow ଏଜ୍ଗୁଡ଼ିକ ଏବଂ ଅର୍କେଷ୍ଟ୍ରେସନ୍
+   କାନଭାସ୍ ଥିମ୍-ସଚେତନ `--orch-status-*` ଭେରିଏବଲ୍ଗୁଡ଼ିକୁ ପଢ଼ନ୍ତି (`src/shared/components/flow/edgeStyles.ts`)।
 2. `packages/ui-kit/src`-କୁ କେବେ ମଧ୍ୟ ହାତରେ ପ୍ୟାଚ୍ କରନ୍ତୁ ନାହିଁ: `scripts/dev/sync-ui-kit.sh <commit>` ସହିତ ସିଙ୍କ୍ କରନ୍ତୁ; ପିନ୍ କରାଯାଇଥିବା ଅପ୍ଷ୍ଟ୍ରିମ୍ କମିଟ୍ଠାରୁ କୌଣସି ବାଇଟ୍ ଭିନ୍ନ ହେଲେ
    ପ୍ରି-କମିଟ୍ ଗେଟ୍ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ବିଫଳ ହୁଏ (ଅପ୍ଷ୍ଟ୍ରିମ୍ କ୍ଲୋନ୍,
    `UI_KIT_CLONE` କିମ୍ବା `_references/cheaper-inference-ui-kit`, ଉପସ୍ଥିତ ନଥିଲେ ଏହା ଏକ ଚେତାବନୀ ସହିତ ଯାଞ୍ଚକୁ ଏଡ଼ାଇଯାଏ)। କିଟ୍ରେ କିଛି ନଥିଲେ,

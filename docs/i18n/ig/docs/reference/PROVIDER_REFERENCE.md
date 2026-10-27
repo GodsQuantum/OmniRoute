@@ -6,7 +6,7 @@
 
 > **Emepụtara na-akpaghị aka** site na `src/shared/constants/providers.ts` — ejila aka dezie ya.
 > Mepụta ya ọzọ site na: `npm run gen:provider-reference`
-> **Oge ikpeazụ e mepụtara ya:** 2026-10-26
+> **Oge ikpeazụ e mepụtara ya:** 2026-10-27
 
 Ngụkọta ndị na-eweta ọrụ: **376**. Lee nkewa dịka otu dị n'okpuru.
 

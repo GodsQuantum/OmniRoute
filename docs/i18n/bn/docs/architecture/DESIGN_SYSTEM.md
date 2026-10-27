@@ -81,10 +81,14 @@
 
 ## 2. নিয়মাবলি
 
-1. টোকেন ব্যবহার করুন, কখনোই লিটারেল নয়। উদ্দেশ্যমূলকভাবে রাখা ব্যতিক্রম: সর্বদা-ডার্ক কনসোল টার্মিনাল এবং ReactFlow
-   SVG স্ট্রোক, `STATUS_HEX`-এর মাধ্যমে (`src/shared/constants/statusColors.ts`)। রাউটিং কৌশল এবং
-   কম্প্রেশন-লেয়ার প্যালেটগুলো `strategyColorVar` এবং
-   `categoricalSlotFor`-এর মাধ্যমে কিটের চার্ট টোকেন ব্যবহার করে (`src/shared/utils/categoricalPalette.ts`)।
+1. টোকেন, কখনোই লিটারাল নয়। ইচ্ছাকৃতভাবে রাখা ব্যতিক্রম: সর্বদা-ডার্ক কনসোল টার্মিনাল এবং
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — কিট স্ট্যাটাস প্যালেটের রিজলভড-হেক্স
+   মিরর, যেসব কলারের আক্ষরিক হেক্স দরকার তাদের জন্য। ক্যাটাগরিকাল প্যালেটগুলো আর ব্যতিক্রম নয়:
+   সেগুলো কিটের পাঁচটি চার্ট টোকেন (`--color-chart-1..5`)-এর ওপর চলে
+   `src/shared/utils/categoricalPalette.ts` এর মাধ্যমে এবং রাউটিং স্ট্র্যাটেজির ক্ষেত্রে
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` এর মাধ্যমে; ReactFlow এজ এবং
+   অর্কেস্ট্রেশন ক্যানভাস থিম-সচেতন `--orch-status-*` ভেরিয়েবলগুলো পড়ে
+   (`src/shared/components/flow/edgeStyles.ts`)।
 2. কখনোই হাতে `packages/ui-kit/src` প্যাচ করবেন না: `scripts/dev/sync-ui-kit.sh <commit>` দিয়ে সিঙ্ক করুন;
    প্রি-কমিট গেট `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) পিন করা আপস্ট্রিম কমিটের চেয়ে
    কোনো একটি বাইটও আলাদা হলে ব্যর্থ হয় (আপস্ট্রিম ক্লোন,

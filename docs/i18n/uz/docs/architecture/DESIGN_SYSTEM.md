@@ -93,9 +93,7 @@
 
 ## 2. Qoidalar
 
-1. Literallar emas, tokenlardan foydalaning. Ataylab saqlangan istisnolar: doimo qorongʻi konsol terminali va `STATUS_HEX` (`src/shared/constants/statusColors.ts`) orqali ReactFlow
-   SVG chiziqlari. Marshrutlash strategiyasi va siqish qatlami palitralari `strategyColorVar` hamda
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) orqali kit diagramma tokenlaridan foydalanadi.
+1. Tokenlar, hech qachon literallar emas. Ataylab saqlab qolingan istisnolar: har doim qorong'u bo'lgan konsol terminali va `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — literal hex kerak bo'lgan chaqiruvchilar uchun kit status palitrasining resolved-hex ko'zgudagi nusxasi. Kategorik palitralar endi istisno emas: ular kitning beshta chart tokenidan (`--color-chart-1..5`) `src/shared/utils/categoricalPalette.ts` orqali, routing strategiyalari uchun esa `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` orqali foydalanadi; ReactFlow edge'lari va orkestratsiya canvas'i mavzuga mos `--orch-status-*` o'zgaruvchilarini o'qiydi (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` fayllarini hech qachon qoʻlda oʻzgartirmang: `scripts/dev/sync-ui-kit.sh <commit>` orqali sinxronlang;
    pre-commit tekshiruvi `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mahkamlangan yuqori oqim commitidan
    biror bayt farq qilsa, muvaffaqiyatsiz tugaydi (yuqori oqim kloni,

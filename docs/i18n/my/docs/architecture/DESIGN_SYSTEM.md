@@ -80,10 +80,7 @@
 
 ## 2. စည်းမျဉ်းများ
 
-1. Literal များကို မသုံးဘဲ token များကိုသာ သုံးပါ။ ရည်ရွယ်ချက်ရှိရှိ ခြွင်းချက်ထားသောအရာများမှာ အမြဲတမ်း dark ဖြစ်သည့် console terminal နှင့်
-   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) မှတစ်ဆင့် အသုံးပြုသော ReactFlow
-   SVG stroke များဖြစ်သည်။ Routing strategy နှင့် compression-layer palette များသည် `strategyColorVar` နှင့်
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) မှတစ်ဆင့် kit chart token များကို အသုံးပြုသည်။
+1. Token များကိုသာ သုံးပါ၊ literal များ ဘယ်တော့မှ မသုံးပါနှင့်။ ရည်ရွယ်ချက်ဖြင့် ထားရှိထားသော ခြွင်းချက်များမှာ အမြဲမှောင်နေသော console terminal နှင့် `STATUS_HEX` (`src/shared/constants/statusColors.ts`) တို့ဖြစ်ပြီး၊ ၎င်းသည် literal hex လိုအပ်သော caller များအတွက် kit status palette ၏ resolved-hex mirror ဖြစ်သည်။ categorical palette များကမူ ခြွင်းချက် မဟုတ်တော့ပါ- ၎င်းတို့သည် `src/shared/utils/categoricalPalette.ts` မှတစ်ဆင့်၊ routing strategy များအတွက်မူ `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` မှတစ်ဆင့် kit ၏ chart token ငါးခု (`--color-chart-1..5`) ပေါ်တွင် အမှီပြုနေကြသည်။ ReactFlow edge များနှင့် orchestration canvas သည်မူ theme-aware `--orch-status-*` variable များကို (`src/shared/components/flow/edgeStyles.ts`) ဖတ်ရှုသည်။
 2. `packages/ui-kit/src` ကို လက်ဖြင့် မည်သည့်အခါမျှ patch မလုပ်ပါနှင့်။ `scripts/dev/sync-ui-kit.sh <commit>` ဖြင့် sync လုပ်ပါ။ pinned လုပ်ထားသော upstream commit နှင့်
    byte တစ်ခုခု ကွာခြားပါက pre-commit gate ဖြစ်သည့် `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) သည်
    fail ဖြစ်မည် (upstream clone ဖြစ်သည့်

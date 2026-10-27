@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK එන්ජින්, රෙජිස්ට්රි ගිවිසුම         |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman නීති ඇසුරුමේ JSON යෝජනා ක්රමය             |
 | `COMPRESSION_LANGUAGE_PACKS.md` | එක් එක් භාෂාවට අදාළ නීති ඇසුරුම් ලැයිස්තුව        |
-| `RTK_COMPRESSION.md`            | RTK ප්රකාශනාත්මක නළ මාර්ගය (පෙරහන් 49ක්)          |
+| `RTK_COMPRESSION.md`            | RTK ප්රකාශනාත්මක නළ මාර්ගය (පෙරහන් 56ක්)          |
 
 ### යෙදවීම
 

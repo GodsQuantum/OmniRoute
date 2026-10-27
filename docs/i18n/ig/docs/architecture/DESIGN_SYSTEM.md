@@ -81,10 +81,13 @@
 
 ## 2. Iwu
 
-1. Tokens, ọ bụghị literals. Ewezuga ndị a e debere n'ebumnuche: console terminal nke na-adị ọchịchịrị mgbe niile na ReactFlow
-   SVG strokes site na `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Atụmatụ routing na
-   palettes nke compression-layer na-eji tokens eserese nke kit site na `strategyColorVar` na
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Token, ọ bụghị literal. Ihe ndị pụrụ iche ka e debere n'echiche: console terminal nke na-adị
+   gbara ọchịchịrị mgbe niile na `STATUS_HEX` (`src/shared/constants/statusColors.ts`), enyo hex edoziziri nke
+   status palette nke kit maka ndị na-akpọ ya nke chọrọ hex literal. Categorical palettes abụghịzi
+   ihe pụrụ iche ọzọ: ha na-adabere na token chart ise nke kit (`--color-chart-1..5`) site na
+   `src/shared/utils/categoricalPalette.ts` na, maka atụmatụ routing,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow edges na canvas orchestration
+   na-agụ variables `--orch-status-*` ndị maara theme (`src/shared/components/flow/edgeStyles.ts`).
 2. Ejila aka gbanwee `packages/ui-kit/src`: jiri `scripts/dev/sync-ui-kit.sh <commit>` mekọrịta ya; ọnụ ụzọ
    pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) na-ada ma ọ bụrụ na byte ọ bụla
    dị iche na upstream commit a kpọgidere (ọ na-amafe ya ma nye ịdọ aka ná ntị mgbe upstream clone,

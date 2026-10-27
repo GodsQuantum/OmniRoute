@@ -86,10 +86,13 @@
 
 ## 2. Taisyklės
 
-1. Naudokite prieigos raktus, o ne tiesiogines reikšmes. Sąmoningai paliktos išimtys: visada tamsus konsolės terminalas ir ReactFlow
-   SVG brūkšniai per `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Maršruto parinkimo strategijos ir
-   glaudinimo sluoksnio paletės naudoja rinkinio diagramų prieigos raktus per `strategyColorVar` ir
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokenai, niekada literalai. Sąmoningai paliktos išimtys: visada tamsus konsolės terminalas ir
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) – rinkinio būsenų paletės išspręstų hex
+   reikšmių atspindys iškvietėjams, kuriems reikia tiesioginės hex reikšmės. Kategorinės paletės
+   nebėra išimtis: jos remiasi penkiais rinkinio diagramų tokenais (`--color-chart-1..5`) per
+   `src/shared/utils/categoricalPalette.ts`, o maršrutizavimo strategijoms – per
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow briaunos ir orkestravimo
+   drobė skaito temai jautrius `--orch-status-*` kintamuosius (`src/shared/components/flow/edgeStyles.ts`).
 2. Niekada nekeiskite `packages/ui-kit/src` rankiniu būdu: sinchronizuokite naudodami `scripts/dev/sync-ui-kit.sh <commit>`;
    prieš patvirtinimą vykdoma patikra `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nepavyksta, jei bent vienas baitas
    skiriasi nuo prisegto pirminio patvirtinimo (patikra praleidžiama pateikiant įspėjimą, kai nėra pirminio klono

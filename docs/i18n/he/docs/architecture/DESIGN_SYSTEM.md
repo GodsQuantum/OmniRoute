@@ -81,7 +81,13 @@
 
 ## 2. כללים
 
-1. אסימונים, לעולם לא ערכים ליטרליים. חריגים שנשמרו במכוון: מסוף הקונסולה הכהה תמיד וקווי ה-SVG של ReactFlow באמצעות `STATUS_HEX` (`src/shared/constants/statusColors.ts`). פלטות אסטרטגיית הניתוב ושכבת הדחיסה משתמשות באסימוני התרשימים של הערכה באמצעות `strategyColorVar` ו-`categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. טוקנים, לעולם לא ליטרלים. חריגים נשמרים בכוונה: טרמינל הקונסולה שהוא כהה-תמיד ו-`STATUS_HEX`
+   (`src/shared/constants/statusColors.ts`), השיקוף ב-hex המפוענח של פלטת הסטטוסים של הקיט עבור
+   קוראים שזקוקים ל-hex ליטרלי. הפלטות הקטגוריות כבר אינן חריגה: הן נשענות על חמשת טוקני הגרפים
+   של הקיט (`--color-chart-1..5`) דרך `src/shared/utils/categoricalPalette.ts` ועבור אסטרטגיות
+   ניתוב, דרך `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; הקשתות של ReactFlow וקנבס
+   התזמור קוראים את משתני `--orch-status-*` המודעים לערכת הנושא
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. לעולם אין לשנות ידנית את `packages/ui-kit/src`: יש לסנכרן באמצעות `scripts/dev/sync-ui-kit.sh <commit>`; שער ה-pre-commit‏ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) נכשל אם בית כלשהו שונה מה-commit המקובע במקור (הוא מדלג עם אזהרה כאשר עותק המקור, `UI_KIT_CLONE` או `_references/cheaper-inference-ui-kit`, אינו קיים). כאשר חסר משהו בערכה, יש לעקוף זאת במתאם או במסך ולבקש אותו מצוות המקור.
 3. ברירות המחדל לטקסט בערכה הן באנגלית (`label = "Loading"`, `loadingLabel = "Loading table"`…) — יש להעביר מחרוזות מתורגמות מ-`useTranslations(...)` בכל פעם שרכיב ערכה מציג טקסט.
 4. כלי העזר של Tailwind גוברים על מחלקות רכיבי הערכה (הערכה מצהירה על `@layer theme, base, components, utilities` והכללים שלה נמצאים ב-`components`) — יש להשתמש בכלי עזר למרווחים ולפריסה, ולא כדי לשנות את צבעי רכיבי הערכה.

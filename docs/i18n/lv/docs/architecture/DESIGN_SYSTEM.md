@@ -81,10 +81,13 @@
 
 ## 2. Noteikumi
 
-1. Izmantojiet tokenus, nevis literāļus. Apzināti saglabātie izņēmumi: vienmēr tumšais konsoles terminālis un ReactFlow
-   SVG līnijas, izmantojot `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Maršrutēšanas stratēģijas un
-   saspiešanas slāņa paletes izmanto komplekta diagrammu tokenus, lietojot `strategyColorVar` un
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeni, nekad literāļi. Izņēmumi atstāti apzināti: vienmēr tumšais konsoles terminālis un
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — kit statusa paletes atrisināto hex
+   vērtību spogulis izsaucējiem, kuriem nepieciešams literāls hex. Kategoriju paletes vairs nav
+   izņēmums: tās balstās uz kit pieciem diagrammu tokeniem (`--color-chart-1..5`) caur
+   `src/shared/utils/categoricalPalette.ts` un maršrutēšanas stratēģijām —
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow malas un orķestrācijas
+   audekls lasa no motīva atkarīgos `--orch-status-*` mainīgos (`src/shared/components/flow/edgeStyles.ts`).
 2. Nekad manuāli nemainiet `packages/ui-kit/src`: sinhronizējiet to ar `scripts/dev/sync-ui-kit.sh <commit>`;
    pirmskomita pārbaude `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) neizdodas, ja kaut viens baits
    atšķiras no fiksētā augšupstraumes komita (tā tiek izlaista ar brīdinājumu, ja augšupstraumes klons

@@ -81,7 +81,14 @@
 
 ## 2. Dokoki
 
-1. Yi amfani da tokens, ba literals ba. Keɓancewar da aka bari da gangan: terminal ɗin console mai kasancewa koyaushe cikin yanayin duhu da kuma SVG strokes na ReactFlow ta hanyar `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Dabarun routing da palettes na compression-layer suna amfani da kit chart tokens ta hanyar `strategyColorVar` da `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens kawai, ba a amfani da literals ba. An riƙe keɓancewa da gangan: tashar console da take
+   duhu a kowane lokaci da `STATUS_HEX` (`src/shared/constants/statusColors.ts`), madubin hex da aka
+   warware na palette na matsayin kit ga masu kira da ke buƙatar hex na zahiri. Palettes na rukuni
+   ba su cikin keɓancewa kuma: suna tafiya a kan tokens biyar na chart na kit (`--color-chart-1..5`)
+   ta hanyar `src/shared/utils/categoricalPalette.ts` kuma, ga dabarun routing,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; gefunan ReactFlow da canvas na
+   orchestration suna karanta masu canji `--orch-status-*` da suka fahimci jigo
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Kada a taɓa gyara `packages/ui-kit/src` da hannu: yi sync da `scripts/dev/sync-ui-kit.sh <commit>`; matakin binciken pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) yana gaza idan akwai ko byte ɗaya da ya bambanta da pinned upstream commit (yana tsallakewa tare da gargaɗi idan upstream clone,
    `UI_KIT_CLONE` ko `_references/cheaper-inference-ui-kit`, ba ya nan). Idan kit ɗin ba shi da wani abu,
    nemo hanyar kewaye da hakan a adapter ko screen sannan a nemi upstream ya samar da shi.

@@ -83,7 +83,13 @@
 
 ## 2. กฎ
 
-1. ใช้โทเค็นเสมอ ห้ามใช้ค่าลิเทอรัล ข้อยกเว้นที่ตั้งใจคงไว้: เทอร์มินัลคอนโซลที่เป็นธีมมืดเสมอ และเส้น SVG ของ ReactFlow ผ่าน `STATUS_HEX` (`src/shared/constants/statusColors.ts`) พาเลตของกลยุทธ์การกำหนดเส้นทางและเลเยอร์การบีบอัดใช้โทเค็นแผนภูมิของชุด UI ผ่าน `strategyColorVar` และ `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`)
+1. ใช้โทเคนเท่านั้น ห้ามใช้ค่าลิเทอรัล ข้อยกเว้นที่ตั้งใจเก็บไว้: เทอร์มินัลคอนโซลที่เป็นโหมดมืดเสมอ และ
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ซึ่งเป็นสำเนา hex ที่ resolve แล้วของพาเลตต์สถานะ
+   ของ kit สำหรับผู้เรียกที่จำเป็นต้องใช้ค่า hex ลิเทอรัล พาเลตต์เชิงหมวดหมู่ไม่ได้เป็นข้อยกเว้นอีกต่อไป:
+   พวกมันใช้ chart token ทั้งห้าตัวของ kit (`--color-chart-1..5`) ผ่าน
+   `src/shared/utils/categoricalPalette.ts` และสำหรับกลยุทธ์การกำหนดเส้นทาง ใช้
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; เอจของ ReactFlow และแคนวาส
+   orchestration จะอ่านตัวแปร `--orch-status-*` ที่รองรับธีม (`src/shared/components/flow/edgeStyles.ts`)
 2. ห้ามแก้ไข `packages/ui-kit/src` ด้วยตนเอง: ให้ซิงค์ด้วย `scripts/dev/sync-ui-kit.sh <commit>`; จุดตรวจสอบก่อนคอมมิต `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) จะล้มเหลวหากมีไบต์ใดแตกต่างจากคอมมิตต้นทางที่ปักหมุดไว้ (ระบบจะข้ามพร้อมคำเตือนเมื่อไม่มีโคลนต้นทาง `UI_KIT_CLONE` หรือ `_references/cheaper-inference-ui-kit`) เมื่อชุด UI ไม่มีสิ่งที่ต้องการ ให้แก้ปัญหาเฉพาะหน้าในอะแดปเตอร์หรือหน้าจอ และส่งคำขอไปยังต้นทาง
 3. ข้อความเริ่มต้นของชุด UI เป็นภาษาอังกฤษ (`label = "Loading"`, `loadingLabel = "Loading table"`…) — ให้ส่งสตริงที่แปลแล้วจาก `useTranslations(...)` ทุกครั้งที่คอมโพเนนต์ของชุด UI แสดงข้อความ
 4. ยูทิลิตี Tailwind มีลำดับความสำคัญเหนือคลาสของคอมโพเนนต์ในชุด UI (ชุด UI ประกาศ `@layer theme, base, components, utilities` และกฎของชุดอยู่ใน `components`) — ใช้ยูทิลิตีสำหรับระยะห่างและเลย์เอาต์ ไม่ใช่เพื่อเปลี่ยนสีคอมโพเนนต์ของชุด UI

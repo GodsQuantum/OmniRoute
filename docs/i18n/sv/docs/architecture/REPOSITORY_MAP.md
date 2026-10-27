@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman- och RTK-motorer, registerkontrakt  |
 | `COMPRESSION_RULES_FORMAT.md`   | JSON-schema för Caveman-regelpaket          |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventering av språkvisa regelpaket         |
-| `RTK_COMPRESSION.md`            | Deklarativ RTK-pipeline (49 filter)         |
+| `RTK_COMPRESSION.md`            | Deklarativ RTK-pipeline (56 filter)         |
 
 ### Driftsättning
 

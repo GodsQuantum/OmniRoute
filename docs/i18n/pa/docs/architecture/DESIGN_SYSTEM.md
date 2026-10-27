@@ -79,9 +79,13 @@
 
 ## 2. ਨਿਯਮ
 
-1. ਟੋਕਨ ਵਰਤੋ, ਲਿਟਰਲ ਕਦੇ ਨਹੀਂ। ਜਾਣ-ਬੁੱਝ ਕੇ ਰੱਖੇ ਅਪਵਾਦ: ਹਮੇਸ਼ਾ-ਡਾਰਕ ਕਨਸੋਲ ਟਰਮੀਨਲ ਅਤੇ `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ਰਾਹੀਂ ReactFlow
-   SVG ਸਟ੍ਰੋਕ। ਰਾਊਟਿੰਗ ਰਣਨੀਤੀ ਅਤੇ ਕੰਪ੍ਰੈਸ਼ਨ-ਲੇਅਰ ਪੈਲੇਟ `strategyColorVar` ਅਤੇ
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) ਰਾਹੀਂ ਕਿੱਟ ਚਾਰਟ ਟੋਕਨਾਂ ਦੀ ਵਰਤੋਂ ਕਰਦੇ ਹਨ।
+1. ਟੋਕਨ, ਕਦੇ ਵੀ ਲਿਟਰਲ ਨਹੀਂ। ਜਾਣਬੁੱਝ ਕੇ ਰੱਖੇ ਗਏ ਅਪਵਾਦ: ਹਮੇਸ਼ਾ-ਹਨੇਰੀ ਕੰਸੋਲ ਟਰਮੀਨਲ ਅਤੇ
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — ਕਿੱਟ ਸਟੇਟਸ ਪੈਲੇਟ ਦਾ resolved-hex ਅਕਸ,
+   ਉਹਨਾਂ ਕਾਲਰਾਂ ਲਈ ਜਿਨ੍ਹਾਂ ਨੂੰ ਲਿਟਰਲ hex ਚਾਹੀਦਾ ਹੈ। ਕੈਟੇਗੋਰੀਕਲ ਪੈਲੇਟ ਹੁਣ ਹੋਰ ਅਪਵਾਦ ਨਹੀਂ ਰਹੇ:
+   ਇਹ ਕਿੱਟ ਦੇ ਪੰਜ ਚਾਰਟ ਟੋਕਨਾਂ (`--color-chart-1..5`) ਉੱਤੇ
+   `src/shared/utils/categoricalPalette.ts` ਰਾਹੀਂ ਅਤੇ, ਰਾਊਟਿੰਗ ਰਣਨੀਤੀਆਂ ਲਈ,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` ਰਾਹੀਂ ਚੱਲਦੇ ਹਨ; ReactFlow ਐਜਾਂ ਅਤੇ
+   ਆਰਕੈਸਟ੍ਰੇਸ਼ਨ ਕੈਨਵਸ ਥੀਮ-ਜਾਣਕਾਰ `--orch-status-*` ਵੇਰੀਏਬਲਾਂ (`src/shared/components/flow/edgeStyles.ts`) ਨੂੰ ਪੜ੍ਹਦੇ ਹਨ।
 2. `packages/ui-kit/src` ਨੂੰ ਕਦੇ ਵੀ ਹੱਥੀਂ ਪੈਚ ਨਾ ਕਰੋ: `scripts/dev/sync-ui-kit.sh <commit>` ਨਾਲ ਸਿੰਕ ਕਰੋ;
    ਪ੍ਰੀ-ਕਮਿਟ ਗੇਟ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ਕਿਸੇ ਵੀ ਅਜਿਹੇ ਬਾਈਟ ਉੱਤੇ ਅਸਫਲ ਹੋ ਜਾਂਦਾ ਹੈ
    ਜੋ ਪਿੰਨ ਕੀਤੇ ਅੱਪਸਟ੍ਰੀਮ ਕਮਿਟ ਤੋਂ ਵੱਖਰਾ ਹੋਵੇ (ਅੱਪਸਟ੍ਰੀਮ ਕਲੋਨ,

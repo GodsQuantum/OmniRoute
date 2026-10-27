@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Àwọn ẹ̀rọ Caveman + RTK, àdéhùn registry |
 | `COMPRESSION_RULES_FORMAT.md`   | Schema JSON fún àkójọpọ̀ òfin Caveman    |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Àkójọ àkójọpọ̀ òfin fún èdè kọ̀ọ̀kan       |
-| `RTK_COMPRESSION.md`            | Ìṣàn iṣẹ́ ìkéde RTK (àwọn filter 49)     |
+| `RTK_COMPRESSION.md`            | Ìṣàn iṣẹ́ ìkéde RTK (àwọn filter 56)     |
 
 ### Ìmúṣiṣẹ́
 

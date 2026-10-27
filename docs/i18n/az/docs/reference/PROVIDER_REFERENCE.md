@@ -6,7 +6,7 @@
 
 > **Avtomatik yaradılıb**: `src/shared/constants/providers.ts` faylından — əl ilə redaktə etməyin.
 > Yenidən yaratmaq üçün: `npm run gen:provider-reference`
-> **Son yaradılma tarixi:** 2026-10-26
+> **Son yaradılma tarixi:** 2026-10-27
 
 Ümumi provayder sayı: **376**. Aşağıdakı kateqoriyalar üzrə bölgüyə baxın.
 

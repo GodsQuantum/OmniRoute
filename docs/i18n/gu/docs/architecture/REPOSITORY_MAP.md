@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK એન્જિન્સ, રજિસ્ટ્રી કરાર |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman રૂલ પૅક JSON સ્કીમા            |
 | `COMPRESSION_LANGUAGE_PACKS.md` | દરેક ભાષા માટેની રૂલ પૅક ઇન્વેન્ટરી    |
-| `RTK_COMPRESSION.md`            | RTK ઘોષણાત્મક પાઇપલાઇન (49 ફિલ્ટર્સ)   |
+| `RTK_COMPRESSION.md`            | RTK ઘોષણાત્મક પાઇપલાઇન (56 ફિલ્ટર્સ)   |
 
 ### ડિપ્લોયમેન્ટ
 

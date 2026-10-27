@@ -81,7 +81,14 @@
 
 ## 2. Pravila
 
-1. Žetoni, nikoli dobesedne vrednosti. Namenoma ohranjene izjeme: vedno temni konzolni terminal in poteze SVG v ReactFlow prek `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategija usmerjanja in palete kompresijske plasti uporabljajo žetone grafikona iz kompleta prek `strategyColorVar` in `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Žetoni, nikoli literali. Izjeme so namerno ohranjene: vedno temni konzolni terminal in
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), zrcalo statusne palete kompleta z
+   razrešenimi hex-vrednostmi za klicatelje, ki potrebujejo dobesedni hex. Kategorične palete niso
+   več izjema: opirajo se na pet žetonov za grafikone kompleta (`--color-chart-1..5`) prek
+   `src/shared/utils/categoricalPalette.ts` in, za usmerjevalne strategije,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; povezave ReactFlow in platno
+   orkestracije berejo spremenljivke `--orch-status-*`, ki se prilagajajo temi
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Nikoli ročno ne spreminjajte `packages/ui-kit/src`: sinhronizirajte ga z `scripts/dev/sync-ui-kit.sh <commit>`; preverjanje pred potrditvijo `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ne uspe pri nobenem bajtu, ki se razlikuje od pripete izvorne potrditve (preverjanje se preskoči z opozorilom, kadar izvorni klon, `UI_KIT_CLONE` ali `_references/cheaper-inference-ui-kit`, ni prisoten). Ko v kompletu nekaj manjka, to zaobidite v adapterju ali na zaslonu in za ustrezno funkcionalnost zaprosite skrbnike izvornega projekta.
 3. Privzeta besedila kompleta so v angleščini (`label = "Loading"`, `loadingLabel = "Loading table"` …) — kadar komponenta kompleta izrisuje besedilo, ji posredujte prevedene nize iz `useTranslations(...)`.
 4. Pripomočki Tailwind imajo prednost pred razredi komponent kompleta (komplet deklarira `@layer theme, base, components, utilities`, njegova pravila pa so v plasti `components`) — pripomočke uporabljajte za razmike in postavitev, ne za spreminjanje barv komponent kompleta.

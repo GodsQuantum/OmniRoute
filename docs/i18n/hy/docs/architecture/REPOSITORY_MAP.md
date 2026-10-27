@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK շարժիչներ, ռեեստրի պայմանագիր    |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman կանոնների փաթեթի JSON սխեմա            |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Յուրաքանչյուր լեզվի կանոնների փաթեթների ցանկ   |
-| `RTK_COMPRESSION.md`            | RTK դեկլարատիվ խողովակաշար (49 զտիչ)           |
+| `RTK_COMPRESSION.md`            | RTK դեկլարատիվ խողովակաշար (56 զտիչ)           |
 
 ### Տեղակայում
 

@@ -6,7 +6,7 @@
 
 > `src/shared/constants/providers.ts` faylidan **avtomatik yaratilgan** — qoʻlda tahrirlamang.
 > Qayta yaratish uchun: `npm run gen:provider-reference`
-> **Oxirgi marta yaratilgan:** 2026-10-26
+> **Oxirgi marta yaratilgan:** 2026-10-27
 
 Jami provayderlar: **376**. Quyidagi toifalar boʻyicha taqsimotni koʻring.
 

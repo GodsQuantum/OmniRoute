@@ -81,7 +81,14 @@
 
 ## 2. Mga Panuntunan
 
-1. Mga token, hindi mga literal. Mga sinadyang panatilihing eksepsiyon: ang palaging madilim na console terminal at mga SVG stroke ng ReactFlow sa pamamagitan ng `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Ginagamit ng routing strategy at mga palette ng compression layer ang mga chart token ng kit sa pamamagitan ng `strategyColorVar` at `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Mga token, hindi kailanman mga literal. Sadyang itinabi ang mga eksepsiyon: ang laging-madilim na
+   console terminal at ang `STATUS_HEX` (`src/shared/constants/statusColors.ts`), ang katumbas na
+   resolved-hex ng kit status palette para sa mga caller na nangangailangan ng literal na hex. Ang
+   mga categorical palette ay hindi na eksepsiyon: nakasakay ang mga ito sa limang chart token ng
+   kit (`--color-chart-1..5`) sa pamamagitan ng `src/shared/utils/categoricalPalette.ts` at, para sa
+   mga routing strategy, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; binabasa ng mga
+   ReactFlow edge at ng orchestration canvas ang mga theme-aware na variable na `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Huwag kailanman manu-manong i-patch ang `packages/ui-kit/src`: i-sync gamit ang `scripts/dev/sync-ui-kit.sh <commit>`; nabibigo ang pre-commit gate na `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sa anumang byte na naiiba sa naka-pin na upstream commit (nilalaktawan ito nang may babala kapag wala ang upstream clone na `UI_KIT_CLONE` o `_references/cheaper-inference-ui-kit`). Kapag may kulang sa kit, gumawa ng workaround sa adapter o screen at hilingin ito sa upstream.
 3. Nasa Ingles ang mga default na teksto ng kit (`label = "Loading"`, `loadingLabel = "Loading table"`…) — magpasa ng mga isinaling string mula sa `useTranslations(...)` sa tuwing nagre-render ng teksto ang isang kit component.
 4. Nanaig ang mga Tailwind utility sa mga class ng kit component (idineklara ng kit ang `@layer theme, base, components, utilities` at nasa `components` ang mga panuntunan nito) — gumamit ng mga utility para sa spacing at layout, hindi upang baguhin ang kulay ng mga kit component.

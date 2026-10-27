@@ -81,7 +81,14 @@
 
 ## 2. Rialacha
 
-1. Comharthaí, ní luachanna liteartha. Eisceachtaí a coinníodh d’aon ghnó: teirminéal an chonsóil atá dorcha i gcónaí agus stríoca SVG ReactFlow trí `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Úsáideann pailéid na straitéise ródúcháin agus na sraithe comhbhrúcháin comharthaí cairte an trealaimh trí `strategyColorVar` agus `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tocnaí, ní luachanna litriúla riamh. Eisceachtaí a coinníodh d'aon ghnó: an teirminéal consóile atá dorcha i
+   gcónaí agus `STATUS_HEX` (`src/shared/constants/statusColors.ts`), an scáthán réitithe-hex de
+   phailéad stádais an kit do ghlaoiteoirí a dteastaíonn hex litriúil uathu. Ní eisceacht iad na
+   pailéid chatagóireacha a thuilleadh: tá siad bunaithe ar chúig thocan cairte an kit
+   (`--color-chart-1..5`) trí `src/shared/utils/categoricalPalette.ts` agus, do straitéisí ródaithe,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; léann imealla ReactFlow agus canbhas an
+   eagrúcháin na hathróga `--orch-status-*` atá aireach don téama
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Ná paisteáil `packages/ui-kit/src` de láimh riamh: sioncronaigh le `scripts/dev/sync-ui-kit.sh <commit>`; teipeann ar an ngeata réamh-churtha `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) má tá aon bheart difriúil ón tiomantas réamhtheachtach pionnáilte (scipeálann sé le rabhadh nuair atá an clón réamhtheachtach, `UI_KIT_CLONE` nó `_references/cheaper-inference-ui-kit`, ar iarraidh). Nuair nach bhfuil rud éigin sa trealamh, téigh timpeall air san oiriúntóir nó sa scáileán agus iarr é ón bhfoireann réamhtheachtach.
 3. Is i mBéarla atá réamhshocruithe téacs an trealaimh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — tabhair teaghráin aistrithe ó `useTranslations(...)` gach uair a rindreálann comhpháirt trealaimh téacs.
 4. Bíonn forlámhas ag fóntais Tailwind ar aicmí comhpháirteanna an trealaimh (dearbhaíonn an trealamh `@layer theme, base, components, utilities` agus tá a rialacha in `components`) — úsáid fóntais le haghaidh spásála agus leagain amach, ní chun dath eile a chur ar chomhpháirteanna an trealaimh.

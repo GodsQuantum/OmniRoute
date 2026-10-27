@@ -6,7 +6,7 @@
 
 > **Iġġenerat awtomatikament** minn `src/shared/constants/providers.ts` — teditjahx manwalment.
 > Iġġenerah mill-ġdid bi: `npm run gen:provider-reference`
-> **Iġġenerat l-aħħar:** 2026-10-26
+> **Iġġenerat l-aħħar:** 2026-10-27
 
 Total ta’ fornituri: **376**. Ara t-tqassim skont il-kategorija hawn taħt.
 

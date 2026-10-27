@@ -82,10 +82,14 @@
 
 ## 2. Правила
 
-1. Токени, никога литерали. Умишлено запазени изключения: винаги тъмният конзолен терминал и ReactFlow
-   SVG контурите чрез `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Палитрите за стратегията за маршрутизиране и
-   слоя за компресия използват токените за диаграми на комплекта чрез `strategyColorVar` и
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Токени, никога литерали. Изключенията са запазени нарочно: винаги тъмният конзолен терминал и
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — огледалото с разрешени hex-стойности на
+   статус-палитрата на кита за потребители, които се нуждаят от литерален hex. Категорийните
+   палитри вече не са изключение: те се крепят на петте chart-токена на кита (`--color-chart-1..5`)
+   чрез `src/shared/utils/categoricalPalette.ts`, а за стратегиите за маршрутизиране — чрез
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ребрата на ReactFlow и платното за
+   оркестрация четат тематично зависимите променливи `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Никога не променяйте ръчно `packages/ui-kit/src`: синхронизирайте със `scripts/dev/sync-ui-kit.sh <commit>`; проверката
    преди commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) е неуспешна при всеки байт,
    който се различава от фиксирания upstream commit (тя се пропуска с предупреждение, когато upstream клонингът,

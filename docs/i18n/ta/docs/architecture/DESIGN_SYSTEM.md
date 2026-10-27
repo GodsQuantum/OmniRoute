@@ -75,7 +75,12 @@
 
 ## 2. விதிகள்
 
-1. நேரடி மதிப்புகள் அல்ல, டோக்கன்களைப் பயன்படுத்தவும். நோக்கத்துடன் வைக்கப்பட்டுள்ள விதிவிலக்குகள்: எப்போதும் இருண்டிருக்கும் கன்சோல் டெர்மினல் மற்றும் `STATUS_HEX` (`src/shared/constants/statusColors.ts`) வழியான ReactFlow SVG ஸ்ட்ரோக்குகள். ரூட்டிங் உத்தி மற்றும் சுருக்க அடுக்கு வண்ணத் தொகுப்புகள் `strategyColorVar` மற்றும் `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) வழியாக கிட்டின் சார்ட் டோக்கன்களைப் பயன்படுத்துகின்றன.
+1. டோக்கன்களே, ஒருபோதும் லிட்டரல்கள் அல்ல. வேண்டுமென்றே வைக்கப்பட்டுள்ள விதிவிலக்குகள்: எப்போதும்-டார்க் கன்சோல் டெர்மினல் மற்றும்
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — லிட்டரல் hex தேவைப்படும் அழைப்பாளர்களுக்கான கிட் நிலை நிறத்தட்டின்
+   resolved-hex மிரர். வகைப்பாட்டு நிறத்தட்டுகள் இனி விதிவிலக்கு அல்ல: அவை கிட்டின் ஐந்து விளக்கப்பட டோக்கன்களை (`--color-chart-1..5`)
+   அடிப்படையாகக் கொண்டு `src/shared/utils/categoricalPalette.ts` வழியாகச் செல்கின்றன; ரூட்டிங் உத்திகளுக்கு,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow விளிம்புகளும் ஆர்கெஸ்ட்ரேஷன் கேன்வாசும்
+   தீம்-உணரும் `--orch-status-*` மாறிகளைப் படிக்கின்றன (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src`-ஐ ஒருபோதும் கைமுறையாகத் திருத்த வேண்டாம்: `scripts/dev/sync-ui-kit.sh <commit>` மூலம் ஒத்திசைக்கவும்; பின் செய்யப்பட்ட upstream commit-இலிருந்து ஏதேனும் ஒரு பைட் வேறுபட்டாலும் pre-commit சரிபார்ப்பு `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) தோல்வியடையும் (upstream clone, `UI_KIT_CLONE` அல்லது `_references/cheaper-inference-ui-kit`, இல்லாதபோது எச்சரிக்கையுடன் இது தவிர்க்கப்படும்). கிட்டில் ஏதேனும் இல்லையெனில், adapter அல்லது திரையில் மாற்றுவழியைப் பயன்படுத்தி, அதை upstream-இல் கோரவும்.
 3. கிட்டின் இயல்புநிலை உரைகள் ஆங்கிலத்தில் உள்ளன (`label = "Loading"`, `loadingLabel = "Loading table"`…) — கிட்டின் component உரையை render செய்யும் போதெல்லாம் `useTranslations(...)`-இலிருந்து மொழிபெயர்க்கப்பட்ட சரங்களை வழங்கவும்.
 4. கிட்டின் component class-களை விட Tailwind utility-களே முன்னுரிமை பெறுகின்றன (கிட் `@layer theme, base, components, utilities` என அறிவிக்கிறது; அதன் விதிகள் `components`-இல் உள்ளன) — இடைவெளி மற்றும் layout-க்கு utility-களைப் பயன்படுத்தவும்; கிட்டின் component-களுக்கு மீண்டும் வண்ணமிட அவற்றைப் பயன்படுத்த வேண்டாம்.

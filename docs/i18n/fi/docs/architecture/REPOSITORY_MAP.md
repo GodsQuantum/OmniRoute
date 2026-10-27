@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman- ja RTK-moottorit sekä rekisterisopimus      |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman-sääntöpaketin JSON-skeema                    |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Kielikohtaisten sääntöpakettien luettelo             |
-| `RTK_COMPRESSION.md`            | RTK:n deklaratiivinen käsittelyputki (49 suodatinta) |
+| `RTK_COMPRESSION.md`            | RTK:n deklaratiivinen käsittelyputki (56 suodatinta) |
 
 ### Käyttöönotto
 

@@ -81,7 +81,13 @@
 
 ## 2. القواعد
 
-1. استخدم الرموز المميزة، وليس القيم الحرفية. الاستثناءات المتعمدة: طرفية وحدة التحكم الداكنة دائمًا وخطوط SVG الخاصة بـ ReactFlow عبر `STATUS_HEX` (`src/shared/constants/statusColors.ts`). تستخدم لوحات ألوان استراتيجية التوجيه وطبقة الضغط الرموز المميزة للمخططات من العُدّة عبر `strategyColorVar` و`categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. رموز (tokens) دائمًا، ولا قيم حرفية أبدًا. الاستثناءات مُبقاة عن قصد: طرفية وحدة التحكم الداكنة دائمًا و
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`)، وهي مرآة القيم hex المحسومة للوحة حالات
+   الحزمة، للمتصلين الذين يحتاجون قيمة hex حرفية. لم تعد اللوحات الفئوية استثناءً بعد الآن:
+   فهي تعتمد على رموز المخططات الخمسة في الحزمة (`--color-chart-1..5`) عبر
+   `src/shared/utils/categoricalPalette.ts`، وبالنسبة لاستراتيجيات التوجيه،
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`؛ وتقرأ حواف ReactFlow ولوحة التنسيق
+   متغيرات `--orch-status-*` الواعية بالسمة (`src/shared/components/flow/edgeStyles.ts`).
 2. لا تعدّل `packages/ui-kit/src` يدويًا مطلقًا: زامنه باستخدام `scripts/dev/sync-ui-kit.sh <commit>`؛ تفشل بوابة ما قبل الالتزام `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) عند اختلاف أي بايت عن الالتزام المثبّت في المصدر الرئيسي (وتتخطى الفحص مع تحذير عند غياب نسخة المصدر الرئيسي، `UI_KIT_CLONE` أو `_references/cheaper-inference-ui-kit`). عندما تفتقر العُدّة إلى شيء ما، تحايل على ذلك في المهايئ أو الشاشة واطلب إضافته من المصدر الرئيسي.
 3. القيم الافتراضية لنصوص العُدّة باللغة الإنجليزية (`label = "Loading"`، `loadingLabel = "Loading table"`…) — مرّر سلاسل نصية مترجمة من `useTranslations(...)` كلما عرض أحد مكوّنات العُدّة نصًا.
 4. تتغلب أدوات Tailwind على فئات مكوّنات العُدّة (تعلن العُدّة عن `@layer theme, base, components, utilities` وتوجد قواعدها ضمن `components`) — استخدم الأدوات للتباعد والتخطيط، وليس لإعادة تلوين مكوّنات العُدّة.

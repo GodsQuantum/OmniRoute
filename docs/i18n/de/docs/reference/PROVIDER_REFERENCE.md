@@ -6,7 +6,7 @@
 
 > **Automatisch generiert** aus `src/shared/constants/providers.ts` — nicht manuell bearbeiten.
 > Neu generieren mit: `npm run gen:provider-reference`
-> **Zuletzt generiert:** 2026-10-26
+> **Zuletzt generiert:** 2026-10-27
 
 Anbieter insgesamt: **376**. Siehe Aufschlüsselung nach Kategorie unten.
 

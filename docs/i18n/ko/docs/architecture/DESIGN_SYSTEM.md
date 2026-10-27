@@ -101,7 +101,13 @@
 
 ## 2. 규칙
 
-1. 리터럴이 아닌 토큰을 사용합니다. 의도적으로 유지하는 예외는 항상 다크 테마인 콘솔 터미널과 `STATUS_HEX`(`src/shared/constants/statusColors.ts`)를 통한 ReactFlow SVG 스트로크입니다. 라우팅 전략 및 압축 레이어 팔레트는 `strategyColorVar`와 `categoricalSlotFor`(`src/shared/utils/categoricalPalette.ts`)를 통해 키트의 차트 토큰을 사용합니다.
+1. 토큰만 사용하고, 리터럴은 절대 사용하지 않습니다. 의도적으로 유지하는 예외: 항상 다크인 콘솔 터미널과,
+   리터럴 hex가 필요한 호출자를 위해 키트 상태 팔레트를 resolved-hex로 미러링한
+   `STATUS_HEX`(`src/shared/constants/statusColors.ts`)입니다. 범주형 팔레트는 더 이상 예외가 아닙니다:
+   이들은 `src/shared/utils/categoricalPalette.ts`를 통해 키트의 다섯 가지 차트 토큰(`--color-chart-1..5`)을
+   사용하고, 라우팅 전략의 경우
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`를 사용합니다; ReactFlow 엣지와 오케스트레이션
+   캔버스는 테마 인식 `--orch-status-*` 변수를 읽습니다(`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src`를 직접 수정하지 마세요. `scripts/dev/sync-ui-kit.sh <commit>`으로 동기화해야 합니다. pre-commit 게이트인 `npm run check:ui-kit-snapshot`(`.husky/pre-commit`)은 고정된 업스트림 커밋과 단 하나의 바이트라도 다르면 실패합니다. 업스트림 클론인 `UI_KIT_CLONE` 또는 `_references/cheaper-inference-ui-kit`이 없으면 경고와 함께 검사를 건너뜁니다. 키트에 필요한 기능이 없으면 어댑터나 화면에서 우회하여 구현하고 업스트림에 요청하세요.
 3. 키트 텍스트의 기본값은 영어입니다(`label = "Loading"`, `loadingLabel = "Loading table"`…). 키트 컴포넌트가 텍스트를 렌더링할 때마다 `useTranslations(...)`에서 번역된 문자열을 전달하세요.
 4. Tailwind 유틸리티는 키트 컴포넌트 클래스보다 우선합니다. 키트는 `@layer theme, base, components, utilities`를 선언하고 해당 규칙은 `components`에 있기 때문입니다. 간격과 레이아웃에는 유틸리티를 사용하되, 키트 컴포넌트의 색상을 다시 지정하는 데는 사용하지 마세요.

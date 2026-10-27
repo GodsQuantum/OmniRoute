@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Silniki Caveman i RTK, kontrakt rejestru        |
 | `COMPRESSION_RULES_FORMAT.md`   | Schemat JSON pakietu reguł Caveman              |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Wykaz pakietów reguł dla poszczególnych języków |
-| `RTK_COMPRESSION.md`            | Deklaratywny potok RTK (49 filtrów)             |
+| `RTK_COMPRESSION.md`            | Deklaratywny potok RTK (56 filtrów)             |
 
 ### Wdrażanie
 

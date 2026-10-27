@@ -81,7 +81,14 @@
 
 ## 2. 規則
 
-1. 使用權杖，絕不使用常值。刻意保留的例外：永遠採用深色的主控台終端，以及透過 `STATUS_HEX`（`src/shared/constants/statusColors.ts`）設定的 ReactFlow SVG 筆畫。路由策略與壓縮層調色盤透過 `strategyColorVar` 和 `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）使用套件的圖表權杖。
+1. 一律使用 Token，絕不寫死字面值。刻意保留的例外：永遠保持深色的主控台終端機，以及
+   `STATUS_HEX`（`src/shared/constants/statusColors.ts`），它是 kit 狀態調色盤的已解析
+   hex 映射版本，供需要字面 hex 值的呼叫端使用。分類調色盤不再是例外：它們透過
+   `src/shared/utils/categoricalPalette.ts` 建立在 kit 的五個圖表 token
+   （`--color-chart-1..5`）之上，路由策略則透過
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`；ReactFlow 的邊（edge）與
+   編排畫布讀取可感知主題的 `--orch-status-*` 變數
+   （`src/shared/components/flow/edgeStyles.ts`）。
 2. 絕不可手動修改 `packages/ui-kit/src`：請使用 `scripts/dev/sync-ui-kit.sh <commit>` 同步；若有任何位元組與鎖定的上游提交不同，預先提交閘門 `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）便會失敗（若缺少上游複製版本 `UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit`，則會顯示警告並略過）。若套件缺少某項功能，請在轉接器或畫面中採取替代做法，並向上游提出需求。
 3. 套件文字的預設值為英文（`label = "Loading"`、`loadingLabel = "Loading table"`……）——只要套件元件會呈現文字，就應從 `useTranslations(...)` 傳入翻譯後的字串。
 4. Tailwind 工具類別的優先順序高於套件元件類別（套件宣告了 `@layer theme, base, components, utilities`，且其規則位於 `components`）——請使用工具類別處理間距與版面配置，不要用來重新設定套件元件的顏色。

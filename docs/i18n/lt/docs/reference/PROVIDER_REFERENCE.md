@@ -6,7 +6,7 @@
 
 > **Automatiškai sugeneruota** iš `src/shared/constants/providers.ts` — neredaguokite rankiniu būdu.
 > Sugeneruokite iš naujo naudodami: `npm run gen:provider-reference`
-> **Paskutinį kartą sugeneruota:** 2026-10-26
+> **Paskutinį kartą sugeneruota:** 2026-10-27
 
 Iš viso teikėjų: **376**. Toliau pateiktas suskirstymas pagal kategorijas.
 

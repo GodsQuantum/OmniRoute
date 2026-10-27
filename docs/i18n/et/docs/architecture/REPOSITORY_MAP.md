@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Cavemani + RTK mootorid, registri leping |
 | `COMPRESSION_RULES_FORMAT.md`   | Cavemani reeglipaketi JSON-skeem         |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Keelepõhiste reeglipakettide ülevaade    |
-| `RTK_COMPRESSION.md`            | RTK deklaratiivne konveier (49 filtrit)  |
+| `RTK_COMPRESSION.md`            | RTK deklaratiivne konveier (56 filtrit)  |
 
 ### Juurutamine
 

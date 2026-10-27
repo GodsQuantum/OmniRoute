@@ -6,7 +6,7 @@
 
 > **Automatikusan generálva** a `src/shared/constants/providers.ts` fájlból — ne szerkessze kézzel.
 > Újragenerálás: `npm run gen:provider-reference`
-> **Legutóbb generálva:** 2026-10-26
+> **Legutóbb generálva:** 2026-10-27
 
 Szolgáltatók száma összesen: **376**. Lásd alább a kategóriák szerinti bontást.
 

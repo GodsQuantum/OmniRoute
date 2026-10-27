@@ -81,7 +81,14 @@
 
 ## 2. Quy tắc
 
-1. Dùng token, không dùng giá trị literal. Các ngoại lệ được chủ ý giữ lại: terminal console luôn ở giao diện tối và các nét SVG của ReactFlow thông qua `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Bảng màu của chiến lược định tuyến và lớp nén sử dụng các token biểu đồ của kit thông qua `strategyColorVar` và `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Dùng token, tuyệt đối không dùng literal. Các ngoại lệ được giữ lại có chủ đích: terminal console
+   luôn ở chế độ tối và `STATUS_HEX` (`src/shared/constants/statusColors.ts`), bản sao hex đã được
+   resolve của bảng màu trạng thái của kit dành cho các caller cần một mã hex literal. Các bảng màu
+   phân loại (categorical) không còn là ngoại lệ nữa: chúng đi qua năm token biểu đồ của kit
+   (`--color-chart-1..5`) thông qua `src/shared/utils/categoricalPalette.ts` và, đối với các chiến
+   lược routing, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; các edge của ReactFlow
+   và canvas điều phối (orchestration) đọc các biến `--orch-status-*` nhận biết theme
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Không bao giờ sửa thủ công `packages/ui-kit/src`: hãy đồng bộ bằng `scripts/dev/sync-ui-kit.sh <commit>`; bước kiểm tra pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) sẽ thất bại nếu có bất kỳ byte nào khác với commit upstream đã ghim (bước này sẽ được bỏ qua kèm cảnh báo khi không có bản clone upstream, `UI_KIT_CLONE` hoặc `_references/cheaper-inference-ui-kit`). Khi kit thiếu nội dung nào đó, hãy xử lý tạm trong adapter hoặc màn hình và yêu cầu upstream bổ sung.
 3. Văn bản mặc định của kit là tiếng Anh (`label = "Loading"`, `loadingLabel = "Loading table"`…) — hãy truyền các chuỗi đã dịch từ `useTranslations(...)` bất cứ khi nào một thành phần kit hiển thị văn bản.
 4. Các utility của Tailwind được ưu tiên hơn các lớp thành phần của kit (kit khai báo `@layer theme, base, components, utilities` và các quy tắc của nó nằm trong `components`) — hãy dùng utility cho khoảng cách và bố cục, không dùng chúng để đổi màu các thành phần kit.

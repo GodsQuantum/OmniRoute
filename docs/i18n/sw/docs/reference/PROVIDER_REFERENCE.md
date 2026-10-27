@@ -6,7 +6,7 @@
 
 > **Imetengenezwa kiotomatiki** kutoka `src/shared/constants/providers.ts` — usihariri mwenyewe.
 > Tengeneza upya kwa: `npm run gen:provider-reference`
-> **Mara ya mwisho kutengenezwa:** 2026-10-26
+> **Mara ya mwisho kutengenezwa:** 2026-10-27
 
 Jumla ya watoa huduma: **376**. Tazama mgawanyo wa kategoria hapa chini.
 

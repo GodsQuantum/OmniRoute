@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK mehanizmi, ugovor registra |
 | `COMPRESSION_RULES_FORMAT.md`   | JSON shema Caveman paketa pravila        |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventar paketa pravila po jeziku        |
-| `RTK_COMPRESSION.md`            | RTK deklarativni tok obrade (49 filtera) |
+| `RTK_COMPRESSION.md`            | RTK deklarativni tok obrade (56 filtera) |
 
 ### Implementacija
 

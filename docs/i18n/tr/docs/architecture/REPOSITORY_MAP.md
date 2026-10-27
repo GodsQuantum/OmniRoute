@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK motorları, kayıt defteri sözleşmesi |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman kural paketi JSON şeması                  |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Dil başına kural paketi envanteri                 |
-| `RTK_COMPRESSION.md`            | RTK bildirimsel işlem hattı (49 filtre)           |
+| `RTK_COMPRESSION.md`            | RTK bildirimsel işlem hattı (56 filtre)           |
 
 ### Dağıtım
 

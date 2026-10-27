@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | محركا Caveman وRTK، وعقد السجل           |
 | `COMPRESSION_RULES_FORMAT.md`   | مخطط JSON لحزمة قواعد Caveman            |
 | `COMPRESSION_LANGUAGE_PACKS.md` | قائمة حزم القواعد الخاصة بكل لغة         |
-| `RTK_COMPRESSION.md`            | مسار RTK التعريفي (49 مرشحاً)            |
+| `RTK_COMPRESSION.md`            | مسار RTK التعريفي (56 مرشحاً)            |
 
 ### النشر
 

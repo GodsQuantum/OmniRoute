@@ -6,7 +6,7 @@
 
 > **Automatski generisano** iz `src/shared/constants/providers.ts` — nemojte ručno uređivati.
 > Ponovo generišite pomoću: `npm run gen:provider-reference`
-> **Posljednje generisanje:** 2026-10-26
+> **Posljednje generisanje:** 2026-10-27
 
 Ukupan broj pružalaca usluga: **376**. U nastavku pogledajte pregled po kategorijama.
 

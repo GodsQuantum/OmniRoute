@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | موتورهای Caveman + RTK، قرارداد رجیستری |
 | `COMPRESSION_RULES_FORMAT.md`   | شِمای JSON بستهٔ قواعد Caveman          |
 | `COMPRESSION_LANGUAGE_PACKS.md` | فهرست بستههای قواعد بهازای هر زبان      |
-| `RTK_COMPRESSION.md`            | خط لولهٔ اعلانی RTK (49 فیلتر)          |
+| `RTK_COMPRESSION.md`            | خط لولهٔ اعلانی RTK (56 فیلتر)          |
 
 ### استقرار
 

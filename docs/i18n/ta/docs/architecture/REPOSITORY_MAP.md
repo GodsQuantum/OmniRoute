@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK இயந்திரங்கள், பதிவக ஒப்பந்தம்     |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman விதித் தொகுப்பின் JSON திட்டவடிவம்      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | மொழிவாரியான விதித் தொகுப்புப் பட்டியல்          |
-| `RTK_COMPRESSION.md`            | RTK அறிவிப்புமுறைச் செயல்தொடர் (49 வடிகட்டிகள்) |
+| `RTK_COMPRESSION.md`            | RTK அறிவிப்புமுறைச் செயல்தொடர் (56 வடிகட்டிகள்) |
 
 ### வரிசைப்படுத்தல்
 

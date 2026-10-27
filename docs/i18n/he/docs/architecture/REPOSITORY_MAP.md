@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | מנועי Caveman + RTK, חוזה רישום   |
 | `COMPRESSION_RULES_FORMAT.md`   | סכמת JSON לחבילת כללים של Caveman |
 | `COMPRESSION_LANGUAGE_PACKS.md` | מצאי חבילות כללים לפי שפה         |
-| `RTK_COMPRESSION.md`            | צינור הצהרתי של RTK ‏(49 מסננים)  |
+| `RTK_COMPRESSION.md`            | צינור הצהרתי של RTK ‏(56 מסננים)  |
 
 ### פריסה
 

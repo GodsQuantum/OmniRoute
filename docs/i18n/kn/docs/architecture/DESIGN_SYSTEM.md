@@ -90,9 +90,14 @@
 
 ## 2. ನಿಯಮಗಳು
 
-1. ಟೋಕನ್ಗಳನ್ನು ಬಳಸಿ, ಲಿಟರಲ್ಗಳನ್ನು ಎಂದಿಗೂ ಬಳಸಬೇಡಿ. ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಉಳಿಸಿರುವ ಅಪವಾದಗಳು: ಯಾವಾಗಲೂ ಡಾರ್ಕ್ ಆಗಿರುವ ಕನ್ಸೋಲ್ ಟರ್ಮಿನಲ್ ಮತ್ತು `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ಮೂಲಕ ReactFlow
-   SVG ಸ್ಟ್ರೋಕ್ಗಳು. ರೂಟಿಂಗ್ ತಂತ್ರ ಮತ್ತು ಕಂಪ್ರೆಷನ್-ಲೇಯರ್ ಪ್ಯಾಲೆಟ್ಗಳು `strategyColorVar` ಮತ್ತು
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) ಮೂಲಕ ಕಿಟ್ ಚಾರ್ಟ್ ಟೋಕನ್ಗಳನ್ನು ಬಳಸುತ್ತವೆ.
+1. ಟೋಕನ್ಗಳು, ಎಂದಿಗೂ ಲಿಟರಲ್ಗಳಲ್ಲ. ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಇರಿಸಲಾದ ಅಪವಾದಗಳು: ಯಾವಾಗಲೂ-ಕತ್ತಲೆಯ ಕನ್ಸೋಲ್ ಟರ್ಮಿನಲ್ ಮತ್ತು
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — ಲಿಟರಲ್ hex ಬೇಕಾಗುವ ಕಾಲರ್ಗಳಿಗಾಗಿ ಕಿಟ್ ಸ್ಟೇಟಸ್
+   ಪ್ಯಾಲೆಟ್ನ resolved-hex ಮಿರರ್. ಕೆಟಗೊರಿಕಲ್ ಪ್ಯಾಲೆಟ್ಗಳು ಇನ್ನು ಮುಂದೆ ಅಪವಾದವಲ್ಲ:
+   ಅವು ಕಿಟ್ನ ಐದು ಚಾರ್ಟ್ ಟೋಕನ್ಗಳ (`--color-chart-1..5`) ಮೇಲೆ
+   `src/shared/utils/categoricalPalette.ts` ಮೂಲಕ ಮತ್ತು, ರೌಟಿಂಗ್ ತಂತ್ರಗಳಿಗಾಗಿ,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` ಮೂಲಕ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ; ReactFlow ಎಡ್ಜ್ಗಳು ಮತ್ತು
+   ಆರ್ಕೆಸ್ಟ್ರೇಶನ್ ಕ್ಯಾನ್ವಾಸ್ ಥೀಮ್-ಅವಗಾಹನೆಯ `--orch-status-*` ವೇರಿಯಬಲ್ಗಳನ್ನು ಓದುತ್ತವೆ
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` ಅನ್ನು ಎಂದಿಗೂ ಕೈಯಾರೆ ಪ್ಯಾಚ್ ಮಾಡಬೇಡಿ: `scripts/dev/sync-ui-kit.sh <commit>` ಮೂಲಕ ಸಿಂಕ್ ಮಾಡಿ;
    ಪಿನ್ ಮಾಡಲಾದ ಅಪ್ಸ್ಟ್ರೀಮ್ ಕಮಿಟ್ನಿಂದ ಯಾವುದೇ ಬೈಟ್ ಭಿನ್ನವಾಗಿದ್ದರೆ ಪ್ರೀ-ಕಮಿಟ್ ಗೇಟ್ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`)
    ವಿಫಲವಾಗುತ್ತದೆ (ಅಪ್ಸ್ಟ್ರೀಮ್ ಕ್ಲೋನ್, `UI_KIT_CLONE` ಅಥವಾ `_references/cheaper-inference-ui-kit`,

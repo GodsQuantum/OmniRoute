@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK dziņi, reģistra līgums              |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman kārtulu pakotnes JSON shēma               |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Katrai valodai paredzēto kārtulu pakotņu saraksts |
-| `RTK_COMPRESSION.md`            | RTK deklaratīvais konveijers (49 filtri)          |
+| `RTK_COMPRESSION.md`            | RTK deklaratīvais konveijers (56 filtri)          |
 
 ### Izvietošana
 

@@ -84,7 +84,13 @@
 
 ## 2. Правила
 
-1. Токени, а не літерали. Навмисно збережені винятки: завжди темний термінал консолі та SVG-обведення ReactFlow через `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Палітри стратегії маршрутизації та шарів стиснення використовують токени діаграм із набору через `strategyColorVar` і `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Токени, ніколи літерали. Винятки, залишені навмисно: завжди темний термінал консолі та
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — дзеркало палітри статусів кіта з
+   розв'язаними hex-значеннями для викликачів, яким потрібен буквальний hex. Категорійні палітри
+   більше не виняток: вони працюють на п'яти токенах діаграм кіта (`--color-chart-1..5`) через
+   `src/shared/utils/categoricalPalette.ts`, а для стратегій маршрутизації — через
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ребра ReactFlow і полотно оркестрації
+   читають чутливі до теми змінні `--orch-status-*` (`src/shared/components/flow/edgeStyles.ts`).
 2. Ніколи не змінюйте `packages/ui-kit/src` вручну: синхронізуйте за допомогою `scripts/dev/sync-ui-kit.sh <commit>`; перевірка перед комітом `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) завершується помилкою, якщо хоча б один байт відрізняється від зафіксованого коміту в upstream (перевірку буде пропущено з попередженням, якщо upstream-клон, `UI_KIT_CLONE` або `_references/cheaper-inference-ui-kit`, відсутній). Якщо в наборі чогось бракує, реалізуйте обхідне рішення в адаптері або на екрані та надішліть запит на додавання в upstream.
 3. Текстові значення набору за замовчуванням англійською (`label = "Loading"`, `loadingLabel = "Loading table"`…) — передавайте перекладені рядки з `useTranslations(...)` щоразу, коли компонент набору відображає текст.
 4. Утиліти Tailwind мають пріоритет над класами компонентів набору (набір оголошує `@layer theme, base, components, utilities`, а його правила містяться в `components`) — використовуйте утиліти для відступів і компонування, а не для зміни кольорів компонентів набору.

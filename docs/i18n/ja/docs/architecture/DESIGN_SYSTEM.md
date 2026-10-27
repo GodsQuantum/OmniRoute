@@ -24,9 +24,13 @@
 
 ## 2. ルール
 
-1. リテラルではなく、トークンを使用します。意図的に維持している例外は、常にダークテーマのコンソールターミナルと、`STATUS_HEX`（`src/shared/constants/statusColors.ts`）を介した ReactFlow の
-   SVG ストロークです。ルーティング戦略と圧縮レイヤーのパレットでは、`strategyColorVar` と
-   `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）を介してキットのチャートトークンを使用します。
+1. トークンのみを使用し、リテラルは禁止。意図的に残されている例外: 常にダークのコンソールターミナルと
+   `STATUS_HEX`（`src/shared/constants/statusColors.ts`。リテラルの hex を必要とする呼び出し元のための、キットのステータス
+   パレットの解決済み hex ミラー）。カテゴリカルパレットはもはや例外ではない:
+   キットの5つのチャートトークン（`--color-chart-1..5`）を
+   `src/shared/utils/categoricalPalette.ts` 経由で利用し、ルーティング戦略については
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` を利用する。ReactFlow のエッジとオーケストレーション
+   キャンバスは、テーマ対応の `--orch-status-*` 変数を読み取る（`src/shared/components/flow/edgeStyles.ts`）。
 2. `packages/ui-kit/src` を手動で修正しないでください。`scripts/dev/sync-ui-kit.sh <commit>` で同期します。
    pre-commit ゲートの `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）は、固定されたアップストリームコミットと
    1 バイトでも異なると失敗します（アップストリームのクローンである

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Μηχανές Caveman + RTK, σύμβαση μητρώου           |
 | `COMPRESSION_RULES_FORMAT.md`   | Σχήμα JSON πακέτου κανόνων Caveman               |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Κατάλογος πακέτων κανόνων ανά γλώσσα             |
-| `RTK_COMPRESSION.md`            | Δηλωτική διοχέτευση RTK (49 φίλτρα)              |
+| `RTK_COMPRESSION.md`            | Δηλωτική διοχέτευση RTK (56 φίλτρα)              |
 
 ### Ανάπτυξη
 

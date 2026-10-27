@@ -86,7 +86,13 @@
 
 ## 2. قوانین
 
-1. از توکنها استفاده کنید، نه مقادیر صریح. استثناهایی که عمداً حفظ شدهاند: ترمینال کنسولِ همیشهتیره و خطوط SVG مربوط به ReactFlow از طریق `STATUS_HEX` (`src/shared/constants/statusColors.ts`). راهبرد مسیریابی و پالتهای لایه فشردهسازی از طریق `strategyColorVar` و `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) از توکنهای نمودار کیت استفاده میکنند.
+1. توکنها، هرگز لیترال نه. استثناهایی که عمداً نگه داشته شدهاند: ترمینال کنسولِ همیشهتیره و
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`)، که بازتاب hex نهاییِ پالت وضعیت کیت
+   برای فراخوانندگانی است که به یک hex لیترال نیاز دارند. پالتهای مقولهای دیگر استثنا نیستند:
+   آنها از طریق `src/shared/utils/categoricalPalette.ts` و، برای راهبردهای مسیریابی،
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` روی پنج توکن نمودار کیت
+   (`--color-chart-1..5`) سوار میشوند؛ یالهای ReactFlow و بوم ارکستراسیون، متغیرهای آگاه از تم
+   `--orch-status-*` را میخوانند (`src/shared/components/flow/edgeStyles.ts`).
 2. هرگز `packages/ui-kit/src` را بهصورت دستی وصله نکنید: آن را با `scripts/dev/sync-ui-kit.sh <commit>` همگامسازی کنید؛ گیت پیش از کامیتِ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) در صورت وجود هر بایتی که با کامیت بالادستی پینشده متفاوت باشد، شکست میخورد (اگر کلون بالادستی، یعنی `UI_KIT_CLONE` یا `_references/cheaper-inference-ui-kit`، وجود نداشته باشد، با یک هشدار از بررسی صرفنظر میکند). وقتی چیزی در کیت وجود ندارد، در آداپتور یا صفحه راهحلی جایگزین پیاده کنید و آن را از تیم بالادستی درخواست کنید.
 3. مقادیر پیشفرض متن کیت انگلیسی هستند (`label = "Loading"`، `loadingLabel = "Loading table"`…) — هر زمان که یک کامپوننت کیت متنی را رندر میکند، رشتههای ترجمهشده را از `useTranslations(...)` به آن ارسال کنید.
 4. ابزارهای Tailwind بر کلاسهای کامپوننت کیت اولویت دارند (کیت `@layer theme, base, components, utilities` را تعریف میکند و قواعد آن در `components` قرار دارند) — از ابزارها برای فاصلهگذاری و چیدمان استفاده کنید، نه برای تغییر دوباره رنگ کامپوننتهای کیت.

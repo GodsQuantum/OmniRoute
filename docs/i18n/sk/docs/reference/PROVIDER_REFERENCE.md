@@ -6,7 +6,7 @@
 
 > **Automaticky generované** zo súboru `src/shared/constants/providers.ts` — neupravujte ručne.
 > Znova vygenerujte pomocou: `npm run gen:provider-reference`
-> **Naposledy vygenerované:** 2026-10-26
+> **Naposledy vygenerované:** 2026-10-27
 
 Celkový počet poskytovateľov: **376**. Pozrite si rozdelenie podľa kategórií nižšie.
 

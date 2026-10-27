@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Motores Caveman + RTK, contrato del registro                  |
 | `COMPRESSION_RULES_FORMAT.md`   | Esquema JSON del paquete de reglas de Caveman                 |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventario de paquetes de reglas por idioma                   |
-| `RTK_COMPRESSION.md`            | Pipeline declarativo de RTK (49 filtros)                      |
+| `RTK_COMPRESSION.md`            | Pipeline declarativo de RTK (56 filtros)                      |
 
 ### Despliegue
 

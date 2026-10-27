@@ -25,10 +25,14 @@
 
 ## 2. Kurallar
 
-1. Sabit değerler değil, token'lar kullanın. Bilerek korunan istisnalar: her zaman koyu olan konsol terminali ve
-   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) aracılığıyla kullanılan ReactFlow
-   SVG çizgileri. Yönlendirme stratejisi ve sıkıştırma katmanı paletleri, `strategyColorVar` ve
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) aracılığıyla kitin grafik token'larını kullanır.
+1. Token'lar kullanın, asla sabit değerler (literal) değil. Bilerek tutulan istisnalar: her zaman
+   koyu olan konsol terminali ve `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — sabit bir
+   hex değerine ihtiyaç duyan çağıranlar için kit durum paletinin çözümlenmiş hex yansısı.
+   Kategorik paletler artık istisna değil: `src/shared/utils/categoricalPalette.ts` üzerinden ve
+   yönlendirme stratejileri için `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`
+   üzerinden kit'in beş grafik token'ına (`--color-chart-1..5`) dayanıyor; ReactFlow kenarları ve
+   orkestrasyon tuvali, temaya duyarlı `--orch-status-*` değişkenlerini okuyor
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` dosyasını asla elle yamamayın: `scripts/dev/sync-ui-kit.sh <commit>` ile eşitleyin;
    pre-commit denetimi `npm run check:ui-kit-snapshot` (`.husky/pre-commit`), sabitlenmiş upstream commit'inden
    farklı olan herhangi bir baytta başarısız olur (upstream klonu,

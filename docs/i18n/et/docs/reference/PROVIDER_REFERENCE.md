@@ -6,7 +6,7 @@
 
 > **Automaatselt genereeritud** failist `src/shared/constants/providers.ts` — ärge muutke käsitsi.
 > Taasgenereerimiseks: `npm run gen:provider-reference`
-> **Viimati genereeritud:** 2026-10-26
+> **Viimati genereeritud:** 2026-10-27
 
 Pakkujaid kokku: **376**. Kategooriate jaotust vaadake allpool.
 

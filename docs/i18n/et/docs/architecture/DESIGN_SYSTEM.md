@@ -81,10 +81,14 @@
 
 ## 2. Reeglid
 
-1. Tokenid, mitte kunagi literaalid. Taotluslikult säilitatud erandid: alati tume konsooliterminal ja ReactFlow
-   SVG-jooned `STATUS_HEX` kaudu (`src/shared/constants/statusColors.ts`). Marsruutimisstrateegia ja
-   tihenduskihi paletid kasutavad komplekti diagrammitokeneid funktsioonide `strategyColorVar` ja
-   `categoricalSlotFor` kaudu (`src/shared/utils/categoricalPalette.ts`).
+1. Tokenid, mitte kunagi literaalid. Teadlikult jäetud erandid: alati tume konsooliterminal ja
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), kiti olekupaleti heksiks lahendatud peegel
+   kutsujatele, kes vajavad literaalset heksväärtust. Kategooriapaletid ei ole enam erand: need
+   tuginevad kiti viiele diagrammitokenile (`--color-chart-1..5`) läbi
+   `src/shared/utils/categoricalPalette.ts` ja suunamisstrateegiate puhul läbi
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow servad ja
+   orkestreerimislõuend loevad teematundlikke `--orch-status-*` muutujaid
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Ärge muutke `packages/ui-kit/src` kunagi käsitsi: sünkroonige käsuga `scripts/dev/sync-ui-kit.sh <commit>`;
    commit'i-eelne kontroll `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) nurjub iga baidi puhul,
    mis erineb fikseeritud ülesvoolu commit'ist (kontroll jäetakse hoiatusega vahele, kui ülesvoolu kloon

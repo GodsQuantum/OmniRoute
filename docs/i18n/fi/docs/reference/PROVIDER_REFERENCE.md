@@ -6,7 +6,7 @@
 
 > **Automaattisesti luotu** tiedostosta `src/shared/constants/providers.ts` — älä muokkaa käsin.
 > Luo uudelleen komennolla: `npm run gen:provider-reference`
-> **Luotu viimeksi:** 2026-10-26
+> **Luotu viimeksi:** 2026-10-27
 
 Palveluntarjoajia yhteensä: **376**. Katso alla oleva luokkakohtainen erittely.
 

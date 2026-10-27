@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | ម៉ាស៊ីន Caveman + RTK និងកិច្ចសន្យា registry |
 | `COMPRESSION_RULES_FORMAT.md`   | JSON schema របស់កញ្ចប់ច្បាប់ Caveman         |
 | `COMPRESSION_LANGUAGE_PACKS.md` | សារពើភ័ណ្ឌកញ្ចប់ច្បាប់តាមភាសា                |
-| `RTK_COMPRESSION.md`            | ខ្សែដំណើរការបែបប្រកាសរបស់ RTK (តម្រង 49)     |
+| `RTK_COMPRESSION.md`            | ខ្សែដំណើរការបែបប្រកាសរបស់ RTK (តម្រង 56)     |
 
 ### ការដាក់ឱ្យដំណើរការ
 

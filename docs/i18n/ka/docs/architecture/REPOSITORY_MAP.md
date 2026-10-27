@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK ძრავები, რეესტრის კონტრაქტი       |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman-ის წესების პაკეტის JSON სქემა           |
 | `COMPRESSION_LANGUAGE_PACKS.md` | თითოეული ენის წესების პაკეტების ინვენტარი       |
-| `RTK_COMPRESSION.md`            | RTK-ის დეკლარაციული მილსადენი (49 ფილტრი)       |
+| `RTK_COMPRESSION.md`            | RTK-ის დეკლარაციული მილსადენი (56 ფილტრი)       |
 
 ### განთავსება
 

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK ሞተሮች፣ የመዝገብ ውል      |
 | `COMPRESSION_RULES_FORMAT.md`   | የCaveman ደንብ ጥቅል JSON መርሃግብር      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | የእያንዳንዱ ቋንቋ ደንብ ጥቅል ዝርዝር          |
-| `RTK_COMPRESSION.md`            | RTK ገላጭ የሂደት መስመር (49 ማጣሪያዎች)     |
+| `RTK_COMPRESSION.md`            | RTK ገላጭ የሂደት መስመር (56 ማጣሪያዎች)     |
 
 ### ማሰማራት
 

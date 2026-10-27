@@ -6,7 +6,7 @@
 
 > **Uathghinte** ó `src/shared/constants/providers.ts` — ná cuir in eagar de láimh.
 > Athghin le: `npm run gen:provider-reference`
-> **Gineadh go deireanach:** 2026-10-26
+> **Gineadh go deireanach:** 2026-10-27
 
 Líon iomlán soláthraithe: **376**. Féach an miondealú de réir catagóire thíos.
 

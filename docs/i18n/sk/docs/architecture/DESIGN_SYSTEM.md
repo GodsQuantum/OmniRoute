@@ -86,7 +86,13 @@
 
 ## 2. Pravidlá
 
-1. Tokeny, nikdy nie literály. Zámerne zachované výnimky: vždy tmavý konzolový terminál a ťahy SVG v ReactFlow prostredníctvom `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palety stratégie smerovania a kompresnej vrstvy používajú tokeny grafov zo sady prostredníctvom `strategyColorVar` a `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeny, nikdy literály. Výnimky ponechané zámerne: vždy tmavý konzolový terminál a
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), zrkadlo stavovej palety kitu vo
+   vyhodnotených hex hodnotách pre volajúcich, ktorí potrebujú hex literál. Kategorické palety už
+   nie sú výnimkou: sú postavené na piatich grafových tokenoch kitu (`--color-chart-1..5`) cez
+   `src/shared/utils/categoricalPalette.ts` a, v prípade stratégií smerovania,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; hrany ReactFlow a orchestračné
+   plátno čítajú premenné `--orch-status-*` citlivé na tému (`src/shared/components/flow/edgeStyles.ts`).
 2. Nikdy ručne neupravujte `packages/ui-kit/src`: synchronizujte pomocou `scripts/dev/sync-ui-kit.sh <commit>`; kontrola pred commitom `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) zlyhá pri každom bajte, ktorý sa líši od pripnutého upstream commitu (ak upstream klon, `UI_KIT_CLONE` alebo `_references/cheaper-inference-ui-kit`, chýba, kontrola sa preskočí s upozornením). Ak v sade niečo chýba, obíďte to v adaptéri alebo na obrazovke a požiadajte upstream o doplnenie.
 3. Predvolené texty sady sú v angličtine (`label = "Loading"`, `loadingLabel = "Loading table"`…) — vždy, keď komponent sady vykresľuje text, odovzdajte preložené reťazce z `useTranslations(...)`.
 4. Utility Tailwind majú prednosť pred triedami komponentov sady (sada deklaruje

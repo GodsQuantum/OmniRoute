@@ -90,9 +90,7 @@
 
 ## 2. నియమాలు
 
-1. లిటరల్స్ కాదు, టోకెన్లను ఉపయోగించండి. ఉద్దేశపూర్వకంగా ఉంచిన మినహాయింపులు: ఎల్లప్పుడూ డార్క్గా ఉండే కన్సోల్ టెర్మినల్ మరియు `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ద్వారా ReactFlow
-   SVG స్ట్రోక్స్. రౌటింగ్ వ్యూహం మరియు కంప్రెషన్-లేయర్ పాలెట్లు `strategyColorVar` మరియు
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) ద్వారా కిట్ చార్ట్ టోకెన్లను ఉపయోగిస్తాయి.
+1. టోకెన్లు, ఎప్పుడూ లిటరల్లు కాదు. ఉద్దేశపూర్వకంగా ఉంచిన మినహాయింపులు: ఎల్లప్పుడూ డార్క్గా ఉండే కన్సోల్ టెర్మినల్ మరియు `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — ఇది లిటరల్ హెక్స్ అవసరమైన కాలర్ల కోసం కిట్ స్టేటస్ పాలెట్ యొక్క రిజాల్వ్ చేసిన హెక్స్ మిర్రర్. కేటగొరికల్ పాలెట్లు ఇకపై మినహాయింపు కావు: అవి `src/shared/utils/categoricalPalette.ts` ద్వారా మరియు రూటింగ్ స్ట్రటజీల కోసం `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` ద్వారా కిట్ యొక్క ఐదు చార్ట్ టోకెన్ల (`--color-chart-1..5`) మీద నడుస్తాయి; ReactFlow ఎడ్జ్లు మరియు ఆర్కెస్ట్రేషన్ కాన్వాస్ థీమ్-అవేర్ `--orch-status-*` వేరియబుల్లను చదువుతాయి (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src`ను ఎప్పుడూ మాన్యువల్గా ప్యాచ్ చేయవద్దు: `scripts/dev/sync-ui-kit.sh <commit>`తో సింక్ చేయండి; పిన్ చేసిన అప్స్ట్రీమ్ కమిట్కు ఏ ఒక్క బైట్ భిన్నంగా ఉన్నా
    ప్రీ-కమిట్ గేట్ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) విఫలమవుతుంది (అప్స్ట్రీమ్ క్లోన్,
    `UI_KIT_CLONE` లేదా `_references/cheaper-inference-ui-kit`, లేకపోతే హెచ్చరికతో దాటవేస్తుంది). కిట్లో ఏదైనా లేకపోతే,

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK ଇଞ୍ଜିନ୍, ରେଜିଷ୍ଟ୍ରି ଚୁକ୍ତି   |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman ରୁଲ୍ ପ୍ୟାକ୍ JSON ସ୍କିମା            |
 | `COMPRESSION_LANGUAGE_PACKS.md` | ପ୍ରତି-ଭାଷା ରୁଲ୍ ପ୍ୟାକ୍ ଇନ୍ଭେଣ୍ଟୋରି         |
-| `RTK_COMPRESSION.md`            | RTK ଘୋଷଣାତ୍ମକ ପାଇପ୍ଲାଇନ୍ (49ଟି ଫିଲ୍ଟର୍)    |
+| `RTK_COMPRESSION.md`            | RTK ଘୋଷଣାତ୍ମକ ପାଇପ୍ଲାଇନ୍ (56ଟି ଫିଲ୍ଟର୍)    |
 
 ### ଡିପ୍ଲୟମେଣ୍ଟ୍
 

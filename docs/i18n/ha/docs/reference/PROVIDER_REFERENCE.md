@@ -6,7 +6,7 @@
 
 > **An samar da shi ta atomatik** daga `src/shared/constants/providers.ts` — kada a gyara da hannu.
 > Sake samar da shi da: `npm run gen:provider-reference`
-> **Lokacin samarwa na ƙarshe:** 2026-10-26
+> **Lokacin samarwa na ƙarshe:** 2026-10-27
 
 Jimillar masu samarwa: **376**. Duba rarrabuwar rukuni a ƙasa.
 

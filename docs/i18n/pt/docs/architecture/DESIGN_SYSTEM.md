@@ -86,7 +86,14 @@
 
 ## 2. Regras
 
-1. Tokens, nunca literais. Exceções mantidas intencionalmente: o terminal da consola sempre escuro e os traços SVG do ReactFlow através de `STATUS_HEX` (`src/shared/constants/statusColors.ts`). As paletas da estratégia de encaminhamento e da camada de compressão utilizam os tokens de gráficos do kit através de `strategyColorVar` e `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, nunca literais. Exceções mantidas propositadamente: o terminal de consola sempre escuro e
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), o espelho em hex resolvido da paleta de
+   estados do kit para quem chamar e precisar de um hex literal. As paletas categóricas deixaram de
+   ser exceção: assentam nos cinco tokens de gráficos do kit (`--color-chart-1..5`) através de
+   `src/shared/utils/categoricalPalette.ts` e, para estratégias de routing,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; as arestas do ReactFlow e o canvas de
+   orquestração leem as variáveis `--orch-status-*` sensíveis ao tema
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Nunca altere `packages/ui-kit/src` manualmente: sincronize com `scripts/dev/sync-ui-kit.sh <commit>`; a verificação de pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) falha se qualquer byte for diferente do commit upstream fixado (é ignorada com um aviso quando o clone upstream, `UI_KIT_CLONE` ou `_references/cheaper-inference-ui-kit`, não está presente). Quando faltar algo no kit, contorne a situação no adaptador ou no ecrã e solicite a respetiva implementação upstream.
 3. Os textos predefinidos do kit estão em inglês (`label = "Loading"`, `loadingLabel = "Loading table"`…) — passe strings traduzidas a partir de `useTranslations(...)` sempre que um componente do kit renderizar texto.
 4. Os utilitários do Tailwind têm precedência sobre as classes dos componentes do kit (o kit declara `@layer theme, base, components, utilities` e as respetivas regras encontram-se em `components`) — utilize utilitários para espaçamento e disposição, não para alterar as cores dos componentes do kit.

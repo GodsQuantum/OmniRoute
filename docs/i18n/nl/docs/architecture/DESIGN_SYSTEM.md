@@ -81,10 +81,14 @@
 
 ## 2. Regels
 
-1. Tokens, nooit letterlijke waarden. Bewust behouden uitzonderingen: de altijd donkere consoleterminal en ReactFlow
-   SVG-lijnen via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). De routeringsstrategie en
-   paletten van de compressielaag gebruiken de grafiektokens van de kit via `strategyColorVar` en
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, nooit literals. Uitzonderingen bewust behouden: de altijd-donkere consoleterminal en
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), de opgeloste-hex-mirror van het
+   statuspalet van de kit voor aanroepers die een letterlijke hexwaarde nodig hebben. De
+   categorische paletten vormen geen uitzondering meer: ze liften mee op de vijf grafiektokens van
+   de kit (`--color-chart-1..5`) via `src/shared/utils/categoricalPalette.ts` en, voor
+   routingstrategieën, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow-edges
+   en het orkestratiecanvas lezen de thema-afhankelijke `--orch-status-*`-variabelen
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Pas `packages/ui-kit/src` nooit handmatig aan: synchroniseer met `scripts/dev/sync-ui-kit.sh <commit>`; de
    pre-commitcontrole `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mislukt bij elke byte die
    afwijkt van de vastgezette upstream-commit (de controle wordt met een waarschuwing overgeslagen wanneer de upstream-kloon,

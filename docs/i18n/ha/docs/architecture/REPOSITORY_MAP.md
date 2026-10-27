@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Injinan Caveman + RTK, yarjejeniyar registry        |
 | `COMPRESSION_RULES_FORMAT.md`   | JSON schema na kunshin ƙa'idojin Caveman            |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Jerin kunshin ƙa'idoji na kowane harshe             |
-| `RTK_COMPRESSION.md`            | Bututun RTK na bayani (filters 49)                  |
+| `RTK_COMPRESSION.md`            | Bututun RTK na bayani (filters 56)                  |
 
 ### Turawa zuwa aiki
 

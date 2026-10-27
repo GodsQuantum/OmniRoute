@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Injin Caveman + RTK, nkwekọrịta registry |
 | `COMPRESSION_RULES_FORMAT.md`   | Schema JSON nke ngwugwu iwu Caveman      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Ndepụta ngwugwu iwu maka asụsụ ọ bụla    |
-| `RTK_COMPRESSION.md`            | Pipeline nkwupụta RTK (filters 49)       |
+| `RTK_COMPRESSION.md`            | Pipeline nkwupụta RTK (filters 56)       |
 
 ### Mbunye
 

@@ -64,10 +64,13 @@
 
 ## 2. नियम
 
-1. लिटरल्स नव्हे, टोकन्स वापरा. हेतुपुरस्सर ठेवलेले अपवाद: नेहमी गडद असलेले कन्सोल टर्मिनल आणि `STATUS_HEX` (`src/shared/constants/statusColors.ts`) द्वारे ReactFlow
-   SVG स्ट्रोक्स. रूटिंग धोरण आणि
-   कॉम्प्रेशन-लेयर पॅलेट्स `strategyColorVar` आणि
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) द्वारे किट चार्ट टोकन्स वापरतात.
+1. टोकन, कधीही लिटरल नाही. जाणीवपूर्वक ठेवलेले अपवाद: नेहमी गडद असलेले कन्सोल टर्मिनल आणि
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — लिटरल हेक्स हवा असलेल्या कॉलरसाठी किट स्टेटस
+   पॅलेटचे रिझॉल्व्ह-हेक्स मिरर. कॅटेगोरिकल पॅलेट्स आता अपवाद राहिलेल्या नाहीत:
+   त्या किटच्या पाच चार्ट टोकनवर (`--color-chart-1..5`) `src/shared/utils/categoricalPalette.ts`
+   मार्फत आणि रूटिंग स्ट्रॅटेजीसाठी
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` मार्फत चालतात; ReactFlow एजेस आणि ऑर्केस्ट्रेशन
+   कॅनव्हास थीम-जागरूक `--orch-status-*` व्हेरिएबल्स वाचतात (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` मध्ये कधीही हाताने बदल करू नका: `scripts/dev/sync-ui-kit.sh <commit>` वापरून सिंक करा; प्री-कमिट गेट `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) पिन केलेल्या अपस्ट्रीम कमिटपेक्षा कोणताही बाइट
    वेगळा असल्यास अयशस्वी होते (अपस्ट्रीम क्लोन,
    `UI_KIT_CLONE` किंवा `_references/cheaper-inference-ui-kit`, उपलब्ध नसल्यास ते इशाऱ्यासह वगळले जाते). किटमध्ये एखादी गोष्ट नसल्यास,

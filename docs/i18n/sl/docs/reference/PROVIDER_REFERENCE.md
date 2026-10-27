@@ -6,7 +6,7 @@
 
 > **Samodejno ustvarjeno** iz `src/shared/constants/providers.ts` — ne urejajte ročno.
 > Znova ustvarite z: `npm run gen:provider-reference`
-> **Nazadnje ustvarjeno:** 2026-10-26
+> **Nazadnje ustvarjeno:** 2026-10-27
 
 Skupno število ponudnikov: **376**. Spodaj si oglejte razčlenitev po kategorijah.
 

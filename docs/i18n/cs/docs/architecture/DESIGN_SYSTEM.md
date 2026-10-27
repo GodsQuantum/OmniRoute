@@ -82,7 +82,13 @@
 
 ## 2. Pravidla
 
-1. Tokeny, nikdy ne literály. Záměrně zachované výjimky: vždy tmavý terminál konzole a tahy SVG v ReactFlow přes `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palety strategie směrování a kompresní vrstvy používají tokeny grafů z kitu prostřednictvím `strategyColorVar` a `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeny, nikdy literály. Výjimky ponechané záměrně: vždy tmavý konzolový terminál a
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), zrcadlo stavové palety kitu ve formě
+   vyhodnocených hex hodnot pro volající, kteří potřebují hex literál. Kategoriální palety již
+   nejsou výjimkou: vycházejí z pěti tokenů grafů kitu (`--color-chart-1..5`) prostřednictvím
+   `src/shared/utils/categoricalPalette.ts` a, pro směrovací strategie,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; hrany ReactFlow a orchestrační
+   plátno čtou proměnné `--orch-status-*` závislé na motivu (`src/shared/components/flow/edgeStyles.ts`).
 2. Nikdy ručně neupravujte `packages/ui-kit/src`: synchronizujte pomocí `scripts/dev/sync-ui-kit.sh <commit>`; kontrola před commitem `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) selže při jakémkoli bajtu, který se liší od připnutého upstream commitu (pokud upstream klon, `UI_KIT_CLONE` nebo `_references/cheaper-inference-ui-kit`, chybí, kontrola se přeskočí s varováním). Pokud v kitu něco chybí, vyřešte to v adaptéru nebo na obrazovce a požádejte upstream o doplnění.
 3. Výchozí texty kitu jsou v angličtině (`label = "Loading"`, `loadingLabel = "Loading table"`…) — kdykoli komponenta kitu vykresluje text, předejte jí přeložené řetězce z `useTranslations(...)`.
 4. Utility Tailwindu mají přednost před třídami komponent kitu (kit deklaruje `@layer theme, base, components, utilities` a jeho pravidla jsou ve vrstvě `components`) — utility používejte pro rozestupy a rozvržení, nikoli k přebarvování komponent kitu.

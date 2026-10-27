@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK انجنز، رجسٹری معاہدہ |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman رول پیک کی JSON اسکیما     |
 | `COMPRESSION_LANGUAGE_PACKS.md` | ہر زبان کے لیے رول پیک کی فہرست    |
-| `RTK_COMPRESSION.md`            | RTK اعلانیہ پائپ لائن (49 فلٹرز)   |
+| `RTK_COMPRESSION.md`            | RTK اعلانیہ پائپ لائن (56 فلٹرز)   |
 
 ### تعیناتی
 

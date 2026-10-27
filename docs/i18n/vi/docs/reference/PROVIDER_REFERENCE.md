@@ -6,7 +6,7 @@
 
 > **Được tạo tự động** từ `src/shared/constants/providers.ts` — không chỉnh sửa thủ công.
 > Tạo lại bằng: `npm run gen:provider-reference`
-> **Lần tạo gần nhất:** 2026-10-26
+> **Lần tạo gần nhất:** 2026-10-27
 
 Tổng số nhà cung cấp: **376**. Xem phân loại theo danh mục bên dưới.
 

@@ -81,7 +81,14 @@
 
 ## 2. Κανόνες
 
-1. Tokens, ποτέ κυριολεκτικές τιμές. Εξαιρέσεις που διατηρούνται σκόπιμα: το τερματικό κονσόλας που είναι πάντα σε σκοτεινό θέμα και οι γραμμές SVG του ReactFlow μέσω του `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Η στρατηγική δρομολόγησης και οι παλέτες επιπέδων συμπίεσης χρησιμοποιούν τα tokens γραφημάτων του kit μέσω των `strategyColorVar` και `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, ποτέ literals. Εξαιρέσεις που τηρούνται σκόπιμα: το πάντα σκοτεινό τερματικό της κονσόλας και
+   το `STATUS_HEX` (`src/shared/constants/statusColors.ts`), ο καθρέφτης resolved-hex της παλέτας κατάστασης
+   του kit για καλούντες που χρειάζονται ένα literal hex. Οι κατηγορικές παλέτες δεν αποτελούν πλέον εξαίρεση:
+   βασίζονται στα πέντε chart tokens του kit (`--color-chart-1..5`) μέσω του
+   `src/shared/utils/categoricalPalette.ts` και, για τις στρατηγικές δρομολόγησης,
+   του `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`· τα edges του ReactFlow και ο καμβάς
+   ενορχήστρωσης διαβάζουν τις theme-aware μεταβλητές `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Μην τροποποιείτε ποτέ το `packages/ui-kit/src` χειροκίνητα: συγχρονίστε το με `scripts/dev/sync-ui-kit.sh <commit>`· ο έλεγχος pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) αποτυγχάνει αν οποιοδήποτε byte διαφέρει από το καρφιτσωμένο upstream commit (παραλείπεται με προειδοποίηση όταν απουσιάζει ο upstream κλώνος, το `UI_KIT_CLONE` ή το `_references/cheaper-inference-ui-kit`). Όταν κάτι λείπει από το kit, εφαρμόστε μια παράκαμψη στον adapter ή στην οθόνη και ζητήστε το από το upstream.
 3. Οι προεπιλεγμένες τιμές κειμένου του kit είναι στα Αγγλικά (`label = "Loading"`, `loadingLabel = "Loading table"`…) — περάστε μεταφρασμένες συμβολοσειρές από το `useTranslations(...)` κάθε φορά που ένα component του kit αποδίδει κείμενο.
 4. Τα utilities του Tailwind υπερισχύουν των κλάσεων των components του kit (το kit δηλώνει `@layer theme, base, components, utilities` και οι κανόνες του βρίσκονται στο `components`) — χρησιμοποιήστε utilities για τα διάκενα και τη διάταξη, όχι για να αλλάξετε τα χρώματα των components του kit.

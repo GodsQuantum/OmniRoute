@@ -6,7 +6,7 @@
 
 > **Autogenererad** från `src/shared/constants/providers.ts` — redigera inte manuellt.
 > Generera om med: `npm run gen:provider-reference`
-> **Senast genererad:** 2026-10-26
+> **Senast genererad:** 2026-10-27
 
 Totalt antal leverantörer: **376**. Se kategorifördelningen nedan.
 

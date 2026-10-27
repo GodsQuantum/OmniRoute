@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK mexanizmlari, reyestr shartnomasi         |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman qoidalar paketi uchun JSON sxemasi              |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Har bir til uchun qoidalar paketlari roʻyxati           |
-| `RTK_COMPRESSION.md`            | RTK deklarativ konveyeri (49 ta filtr)                  |
+| `RTK_COMPRESSION.md`            | RTK deklarativ konveyeri (56 ta filtr)                  |
 
 ### Joylashtirish
 

@@ -88,10 +88,13 @@
 
 ## 2. Կանոններ
 
-1. Թոքեններ, ոչ երբեք լիտերալներ։ Դիտմամբ պահպանված բացառություններն են՝ միշտ մուգ կոնսոլային տերմինալը և ReactFlow-ի
-   SVG եզրագծերը՝ `STATUS_HEX`-ի միջոցով (`src/shared/constants/statusColors.ts`)։ Ուղղորդման ռազմավարության և
-   սեղմման շերտերի գունապնակներն օգտագործում են փաթեթի գծապատկերային թոքենները՝ `strategyColorVar`-ի և
-   `categoricalSlotFor`-ի միջոցով (`src/shared/utils/categoricalPalette.ts`)։
+1. Տոկեններ, երբեք՝ լիտերալներ։ Բացառությունները պահված են դիտավորյալ՝ միշտ մուգ կոնսոլային տերմինալը և
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — kit-ի կարգավիճակային պալետրի լուծված hex արտացոլումը
+   այն կանչողների համար, որոնց լիտերալ hex է պետք։ Կատեգորիկ պալետրները այլևս բացառություն չեն՝
+   դրանք հիմնվում են kit-ի հինգ գծապատկերային տոկենների (`--color-chart-1..5`) վրա
+   `src/shared/utils/categoricalPalette.ts`-ի միջոցով, իսկ երթուղավորման ռազմավարությունների համար՝
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`-ի միջոցով; ReactFlow-ի կողերն ու օրկեստրման
+   կտավը կարդում են թեմա-զգայուն `--orch-status-*` փոփոխականները (`src/shared/components/flow/edgeStyles.ts`)։
 2. Երբեք ձեռքով մի փոփոխեք `packages/ui-kit/src`-ը․ համաժամեցրեք `scripts/dev/sync-ui-kit.sh <commit>`-ով։
    Նախնական commit-ի ստուգումը՝ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`), ձախողվում է, եթե որևէ բայթ
    տարբերվում է ամրագրված upstream commit-ից (այն զգուշացմամբ բաց է թողնում ստուգումը, երբ upstream clone-ը՝

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman ir RTK varikliai, registro kontraktas |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman taisyklių paketo JSON schema          |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Kiekvienos kalbos taisyklių paketų sąrašas    |
-| `RTK_COMPRESSION.md`            | RTK deklaratyvusis konvejeris (49 filtrai)    |
+| `RTK_COMPRESSION.md`            | RTK deklaratyvusis konvejeris (56 filtrai)    |
 
 ### Diegimas
 

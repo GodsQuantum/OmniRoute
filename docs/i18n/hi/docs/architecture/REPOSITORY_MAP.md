@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK इंजन, रजिस्ट्री अनुबंध |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman नियम पैक JSON स्कीमा         |
 | `COMPRESSION_LANGUAGE_PACKS.md` | प्रति-भाषा नियम पैक सूची             |
-| `RTK_COMPRESSION.md`            | RTK घोषणात्मक पाइपलाइन (49 फ़िल्टर)  |
+| `RTK_COMPRESSION.md`            | RTK घोषणात्मक पाइपलाइन (56 फ़िल्टर)  |
 
 ### परिनियोजन
 

@@ -81,10 +81,14 @@
 
 ## 2. Regeln
 
-1. Tokens, niemals Literale. Bewusst beibehaltene Ausnahmen: das stets dunkle Konsolenterminal und ReactFlow-
-   SVG-Konturen über `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Die Paletten für Routingstrategien und
-   Komprimierungsebenen verwenden die Diagramm-Tokens des Kits über `strategyColorVar` und
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, niemals Literale. Bewusst beibehaltene Ausnahmen: das immer dunkle Konsolen-Terminal und
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), der aufgelöste Hex-Spiegel der
+   Kit-Statuspalette für Aufrufer, die einen literalen Hex-Wert benötigen. Die kategorialen Paletten
+   sind keine Ausnahme mehr: Sie basieren auf den fünf Chart-Tokens des Kits (`--color-chart-1..5`)
+   über `src/shared/utils/categoricalPalette.ts` und, für Routing-Strategien, über
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow-Kanten und die
+   Orchestrierungs-Canvas lesen die theme-sensitiven `--orch-status-*`-Variablen
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` niemals manuell ändern: Synchronisierung mit `scripts/dev/sync-ui-kit.sh <commit>`; die
    Pre-Commit-Prüfung `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) schlägt bei jedem Byte fehl, das
    vom angehefteten Upstream-Commit abweicht (sie wird mit einer Warnung übersprungen, wenn der Upstream-Klon,

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK എൻജിനുകൾ, രജിസ്ട്രി കോൺട്രാക്ട്  |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman റൂൾ പാക്ക് JSON സ്കീമ                  |
 | `COMPRESSION_LANGUAGE_PACKS.md` | ഓരോ ഭാഷയ്ക്കുമുള്ള റൂൾ പാക്ക് ഇൻവെന്ററി        |
-| `RTK_COMPRESSION.md`            | RTK ഡിക്ലറേറ്റീവ് പൈപ്പ്ലൈൻ (49 ഫിൽട്ടറുകൾ)    |
+| `RTK_COMPRESSION.md`            | RTK ഡിക്ലറേറ്റീവ് പൈപ്പ്ലൈൻ (56 ഫിൽട്ടറുകൾ)    |
 
 ### വിന്യാസം
 

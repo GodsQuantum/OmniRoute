@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Enginy Caveman + RTK, kontrakt registru        |
 | `COMPRESSION_RULES_FORMAT.md`   | Schéma JSON balíčku pravidel Caveman           |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Přehled balíčků pravidel pro jednotlivé jazyky |
-| `RTK_COMPRESSION.md`            | Deklarativní pipeline RTK (49 filtrů)          |
+| `RTK_COMPRESSION.md`            | Deklarativní pipeline RTK (56 filtrů)          |
 
 ### Nasazení
 

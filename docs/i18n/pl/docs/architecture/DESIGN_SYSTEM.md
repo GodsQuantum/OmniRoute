@@ -81,7 +81,14 @@
 
 ## 2. Zasady
 
-1. Tokeny, nigdy literały. Celowo zachowane wyjątki: zawsze ciemny terminal konsoli oraz obrysy SVG ReactFlow za pośrednictwem `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategia routingu i palety warstwy kompresji używają tokenów wykresów zestawu za pośrednictwem `strategyColorVar` i `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeny, nigdy literały. Wyjątki zachowane celowo: zawsze ciemny terminal konsoli oraz
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) — lustro palety statusów kitu w postaci
+   rozwiązanych wartości hex, dla wywołań, które potrzebują dosłownej wartości hex. Palety
+   kategorialne nie są już wyjątkiem: opierają się na pięciu tokenach wykresów kitu
+   (`--color-chart-1..5`) poprzez `src/shared/utils/categoricalPalette.ts`, a dla strategii routingu —
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; krawędzie ReactFlow i kanwa
+   orkiestracji odczytują reagujące na motyw zmienne `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Nigdy nie modyfikuj ręcznie `packages/ui-kit/src`: synchronizuj za pomocą `scripts/dev/sync-ui-kit.sh <commit>`; kontrola pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) kończy się niepowodzeniem w przypadku każdego bajtu różniącego się od przypiętego commitu upstream (jest pomijana z ostrzeżeniem, gdy brakuje klonu upstream, `UI_KIT_CLONE` lub `_references/cheaper-inference-ui-kit`). Gdy w zestawie czegoś brakuje, zastosuj obejście w adapterze lub na ekranie i poproś upstream o dodanie tej funkcji.
 3. Domyślne teksty zestawu są po angielsku (`label = "Loading"`, `loadingLabel = "Loading table"`…) — przekazuj przetłumaczone ciągi z `useTranslations(...)` za każdym razem, gdy komponent zestawu renderuje tekst.
 4. Narzędzia Tailwind mają pierwszeństwo przed klasami komponentów zestawu (zestaw deklaruje `@layer theme, base, components, utilities`, a jego reguły znajdują się w `components`) — używaj narzędzi do odstępów i układu, a nie do zmiany kolorów komponentów zestawu.

@@ -81,9 +81,13 @@
 
 ## 2. නීති
 
-1. ලිටරල් නොව, ටෝකන භාවිත කරන්න. අරමුණින්ම තබා ඇති ව්යතිරේක: සැමවිටම අඳුරු console terminal එක සහ `STATUS_HEX` (`src/shared/constants/statusColors.ts`) හරහා ReactFlow
-   SVG strokes. Routing strategy සහ compression-layer palettes, `strategyColorVar` සහ
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) හරහා kit chart tokens භාවිත කරයි.
+1. ටෝකන, කිසිවිටෙක literal නොවේ. හිතාමතා තබා ඇති ව්යතිරේක: සැමවිටම අඳුරු කොන්සෝල ටර්මිනලය සහ
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), literal hex එකක් අවශ්ය අමතන්නන් සඳහා kit තත්ත්ව
+   පැලට් එකේ resolved-hex කැඩපත. කාණ්ඩීය පැලට් තවදුරටත් ව්යතිරේකයක් නොවේ: ඒවා
+   `src/shared/utils/categoricalPalette.ts` හරහා සහ, routing උපාය මාර්ග සඳහා,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` හරහා kit එකේ chart ටෝකන පහ
+   (`--color-chart-1..5`) මත රඳා පවතී; ReactFlow දාර සහ orchestration කැන්වස් එක theme-හැඟීම් සහිත
+   `--orch-status-*` විචල්යයන් කියවයි (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` කිසිවිටෙක අතින් patch නොකරන්න: `scripts/dev/sync-ui-kit.sh <commit>` මඟින් sync කරන්න; pinned upstream commit එකෙන් වෙනස් වන ඕනෑම byte එකක් සඳහා
    pre-commit gate වන `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) අසමත් වේ (upstream clone එක,
    `UI_KIT_CLONE` හෝ `_references/cheaper-inference-ui-kit`, නොමැති විට එය අනතුරු ඇඟවීමක් සමඟ skip වේ). Kit එකේ යමක් නොමැති විට,

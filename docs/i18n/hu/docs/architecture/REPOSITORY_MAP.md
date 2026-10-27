@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK motorok, regisztrációs szerződés  |
 | `COMPRESSION_RULES_FORMAT.md`   | A Caveman szabálycsomag JSON-sémája             |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Nyelvenkénti szabálycsomag-leltár               |
-| `RTK_COMPRESSION.md`            | RTK deklaratív feldolgozási folyamat (49 szűrő) |
+| `RTK_COMPRESSION.md`            | RTK deklaratív feldolgozási folyamat (56 szűrő) |
 
 ### Üzembe helyezés
 

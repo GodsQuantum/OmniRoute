@@ -81,10 +81,14 @@
 
 ## 2. Säännöt
 
-1. Käytä tokeneita, älä koskaan literaaleja. Tarkoituksella säilytetyt poikkeukset: aina tumma konsolipääte ja ReactFlow'n
-   SVG-viivat `STATUS_HEX`-vakion kautta (`src/shared/constants/statusColors.ts`). Reititysstrategian ja
-   pakkauskerrosten paletit käyttävät kitin kaaviotokeneita `strategyColorVar`- ja
-   `categoricalSlotFor`-funktioiden kautta (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeneja, ei koskaan literaaleja. Tarkoituksella jätetyt poikkeukset: aina tumma konsoliterminaali ja
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), kitin statuspaletin ratkaistu heksapeili
+   kutsujille, jotka tarvitsevat literaalin heksa-arvon. Kategoriset paletit eivät ole enää poikkeus:
+   ne tukeutuvat kitin viiteen kaaviotokeniin (`--color-chart-1..5`) tiedoston
+   `src/shared/utils/categoricalPalette.ts` kautta ja reititysstrategioiden osalta tiedoston
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` kautta; ReactFlow-reunat ja
+   orkestrointikanvas lukevat teematietoiset `--orch-status-*`-muuttujat
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Älä koskaan muokkaa `packages/ui-kit/src`-hakemistoa käsin: synkronoi se komennolla `scripts/dev/sync-ui-kit.sh <commit>`;
    commitointia edeltävä tarkistus `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) epäonnistuu, jos yksikin tavu
    poikkeaa kiinnitetystä upstream-commitista (tarkistus ohitetaan varoituksella, jos upstream-klooni

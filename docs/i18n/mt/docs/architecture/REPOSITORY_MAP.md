@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Magni Caveman + RTK, kuntratt tar-reġistru                       |
 | `COMPRESSION_RULES_FORMAT.md`   | Skema JSON tal-pakkett ta’ regoli Caveman                        |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventarju tal-pakketti ta’ regoli għal kull lingwa              |
-| `RTK_COMPRESSION.md`            | Pipeline dikjarattiv RTK (49 filtru)                             |
+| `RTK_COMPRESSION.md`            | Pipeline dikjarattiv RTK (56 filtru)                             |
 
 ### Skjerament
 

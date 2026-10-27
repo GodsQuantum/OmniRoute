@@ -81,10 +81,7 @@
 
 ## 2. ደንቦች
 
-1. Tokens ይጠቀሙ፣ literals ፈጽሞ አይጠቀሙ። ሆን ተብለው የተቀመጡ ልዩ ሁኔታዎች፦ ሁልጊዜ ጨለማ የሆነው console terminal እና ReactFlow
-   SVG strokes በ`STATUS_HEX` (`src/shared/constants/statusColors.ts`) በኩል። የRouting strategy እና
-   የcompression-layer palettes የkit chart tokensን በ`strategyColorVar` እና
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) በኩል ይጠቀማሉ።
+1. ቶክኖች፣ ፈጽሞ literals አይደሉም። በዓላማ የተቀሩ ልዩ ሁኔታዎች፦ ሁልጊዜ ጨለማ የሆነው ኮንሶል ተርሚናል እና `STATUS_HEX` (`src/shared/constants/statusColors.ts`)፣ ይህም ቀጥተኛ hex ለሚያስፈልጋቸው ጠሪዎች የኪቱ የሁኔታ ፓሌት የተፈታ-hex አንፀባራቂ ነው። የምድብ ፓሌቶች ከእንግዲህ ልዩ ሁኔታ አይደሉም፦ በ `src/shared/utils/categoricalPalette.ts` በኩል በኪቱ አምስት የቻርት ቶክኖች (`--color-chart-1..5`) ላይ ይመሠርታሉ፣ እና ለራውቲንግ ስትራቴጂዎች ደግሞ በ `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` በኩል፤ የReactFlow ጠርዞች እና የኦርኬስትሬሽን ካንቫስ ገጽታን የሚገነዘቡትን `--orch-status-*` ተለዋዋጮች ያነባሉ (`src/shared/components/flow/edgeStyles.ts`)።
 2. `packages/ui-kit/src`ን በእጅ ፈጽሞ አያስተካክሉ፦ በ`scripts/dev/sync-ui-kit.sh <commit>` ያመሳስሉት፤
    የpre-commit መቆጣጠሪያው `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ከተወሰነው upstream commit
    በአንድ byte እንኳ ልዩነት ሲኖር አይሳካም (upstream clone፣

@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Enjin Caveman + RTK, kontrak daftar                   |
 | `COMPRESSION_RULES_FORMAT.md`   | Skema JSON pek peraturan Caveman                      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventori pek peraturan bagi setiap bahasa            |
-| `RTK_COMPRESSION.md`            | Saluran deklaratif RTK (49 penapis)                   |
+| `RTK_COMPRESSION.md`            | Saluran deklaratif RTK (56 penapis)                   |
 
 ### Penggunaan
 

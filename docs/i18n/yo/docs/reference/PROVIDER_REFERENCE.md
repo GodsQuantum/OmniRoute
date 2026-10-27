@@ -6,7 +6,7 @@
 
 > **Ti a ṣẹda láìfọwọ́yí** láti inú `src/shared/constants/providers.ts` — má ṣe ṣàtúnṣe rẹ̀ pẹ̀lú ọwọ́.
 > Ṣẹ̀dá rẹ̀ padà pẹ̀lú: `npm run gen:provider-reference`
-> **Ìgbà tí a ṣẹ̀ṣẹ̀ dá a:** 2026-10-26
+> **Ìgbà tí a ṣẹ̀ṣẹ̀ dá a:** 2026-10-27
 
 Àpapọ̀ àwọn olupèsè: **376**. Wo ìpín sí ẹ̀ka ní ìsàlẹ̀.
 

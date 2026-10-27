@@ -81,10 +81,14 @@
 
 ## 2. Regler
 
-1. Tokens, aldri literaler. Bevisste unntak: den alltid mørke konsollterminalen og ReactFlow-
-   SVG-streker via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Palettene for rutingstrategi og
-   komprimeringslag bruker diagramtokenene fra kitet gjennom `strategyColorVar` og
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, aldri literaler. Unntak som er beholdt med vilje: den alltid mørke konsollterminalen og
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), som speiler kitens statuspalett som
+   oppløste hex-verdier for kallere som trenger en konkret hex. De kategoriske palettene er ikke
+   lenger noe unntak: de bygger på kitens fem diagramtokens (`--color-chart-1..5`) gjennom
+   `src/shared/utils/categoricalPalette.ts` og, for rutingsstrategier,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow-kanter og
+   orkestreringslerretet leser de tematilpassede `--orch-status-*`-variablene
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Endre aldri `packages/ui-kit/src` manuelt: synkroniser med `scripts/dev/sync-ui-kit.sh <commit>`; pre-commit-
    kontrollen `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) mislykkes hvis én eneste byte
    avviker fra den festede oppstrøms-commiten (den hopper over med en advarsel når oppstrømsklonen,

@@ -81,9 +81,13 @@
 
 ## 2. नियमहरू
 
-1. टोकनहरू प्रयोग गर्नुहोस्, लिटरलहरू कहिल्यै नगर्नुहोस्। जानाजानी राखिएका अपवादहरू: सधैँ-गाढा कन्सोल टर्मिनल र `STATUS_HEX` (`src/shared/constants/statusColors.ts`) मार्फत ReactFlow का
-   SVG स्ट्रोकहरू। राउटिङ रणनीति र कम्प्रेसन-लेयर प्यालेटहरूले `strategyColorVar` र
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) मार्फत किटका चार्ट टोकनहरू प्रयोग गर्छन्।
+1. टोकनहरू, कहिल्यै लिटरलहरू होइन। जानबूझेर राखिएका अपवादहरू: सधैं-गाढा कन्सोल टर्मिनल र
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), जुन लिटरल हेक्स चाहिने कलरहरूका लागि किट
+   स्टेटस प्यालेटको रिजल्भ-हेक्स मिरर हो। कोटिगत प्यालेटहरू अब अपवाद रहेनन्: ती किटका पाँच चार्ट
+   टोकनहरू (`--color-chart-1..5`) मा `src/shared/utils/categoricalPalette.ts` मार्फत र, राउटिङ
+   रणनीतिहरूका लागि, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` मार्फत चल्छन्;
+   ReactFlow एजहरू र अर्केस्ट्रेसन क्यानभासले थिम-सचेत `--orch-status-*` भेरिएबलहरू पढ्छन्
+   (`src/shared/components/flow/edgeStyles.ts`)।
 2. `packages/ui-kit/src` लाई कहिल्यै हातैले प्याच नगर्नुहोस्: `scripts/dev/sync-ui-kit.sh <commit>` मार्फत सिङ्क गर्नुहोस्;
    प्रि-कमिट गेट `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) पिन गरिएको अपस्ट्रिम कमिटभन्दा
    कुनै पनि बाइट फरक भएमा असफल हुन्छ (अपस्ट्रिम क्लोन,

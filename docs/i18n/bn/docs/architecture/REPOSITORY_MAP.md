@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Caveman + RTK ইঞ্জিন, রেজিস্ট্রি কন্ট্রাক্ট |
 | `COMPRESSION_RULES_FORMAT.md`   | Caveman রুল প্যাকের JSON স্কিমা             |
 | `COMPRESSION_LANGUAGE_PACKS.md` | ভাষাভিত্তিক রুল প্যাকের তালিকা              |
-| `RTK_COMPRESSION.md`            | RTK ডিক্লারেটিভ পাইপলাইন (49টি ফিল্টার)     |
+| `RTK_COMPRESSION.md`            | RTK ডিক্লারেটিভ পাইপলাইন (56টি ফিল্টার)     |
 
 ### ডিপ্লয়মেন্ট
 

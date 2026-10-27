@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Injini za Caveman + RTK, mkataba wa sajili        |
 | `COMPRESSION_RULES_FORMAT.md`   | Schema ya JSON ya kifurushi cha kanuni za Caveman |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Orodha ya vifurushi vya kanuni kwa kila lugha     |
-| `RTK_COMPRESSION.md`            | Msururu tangazaji wa RTK (vichujio 49)            |
+| `RTK_COMPRESSION.md`            | Msururu tangazaji wa RTK (vichujio 56)            |
 
 ### Upelekaji
 

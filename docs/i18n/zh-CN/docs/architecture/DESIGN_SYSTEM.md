@@ -80,7 +80,13 @@
 
 ## 2. 规则
 
-1. 使用令牌，绝不使用字面值。有意保留的例外：始终为深色的控制台终端，以及通过 `STATUS_HEX`（`src/shared/constants/statusColors.ts`）设置的 ReactFlow SVG 描边。路由策略和压缩层调色板通过 `strategyColorVar` 和 `categoricalSlotFor`（`src/shared/utils/categoricalPalette.ts`）使用工具包的图表令牌。
+1. 使用令牌（token），绝不使用字面量。有意保留的例外：始终为深色主题的控制台终端，以及
+   `STATUS_HEX`（`src/shared/constants/statusColors.ts`）——它是 kit 状态色板的解析后 hex
+   镜像，供确实需要字面量 hex 值的调用方使用。分类色板已不再是例外：它们通过
+   `src/shared/utils/categoricalPalette.ts` 依托 kit 的五个图表令牌（`--color-chart-1..5`），
+   对于路由策略则通过
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`；ReactFlow 边和编排画布读取主题感知的
+   `--orch-status-*` 变量（`src/shared/components/flow/edgeStyles.ts`）。
 2. 切勿手动修改 `packages/ui-kit/src`：使用 `scripts/dev/sync-ui-kit.sh <commit>` 进行同步；预提交检查 `npm run check:ui-kit-snapshot`（`.husky/pre-commit`）会在任何字节与锁定的上游提交不一致时失败（当上游克隆、`UI_KIT_CLONE` 或 `_references/cheaper-inference-ui-kit` 不存在时，它会发出警告并跳过）。如果工具包缺少某项功能，请在适配器或页面中采用变通方案，并向上游提出需求。
 3. 工具包的文本默认值为英文（`label = "Loading"`、`loadingLabel = "Loading table"`……）——每当工具包组件渲染文本时，都要传入来自 `useTranslations(...)` 的翻译字符串。
 4. Tailwind 工具类的优先级高于工具包组件类（工具包声明了 `@layer theme, base, components, utilities`，其规则位于 `components` 中）——使用工具类控制间距和布局，不要用它们重新着色工具包组件。

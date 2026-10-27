@@ -81,10 +81,12 @@
 
 ## 2. ច្បាប់
 
-1. ប្រើ token ជានិច្ច មិនប្រើ literal ទេ។ ករណីលើកលែងដែលរក្សាទុកដោយចេតនា៖ console terminal ដែលងងឹតជានិច្ច និង stroke របស់ ReactFlow
-   SVG តាមរយៈ `STATUS_HEX` (`src/shared/constants/statusColors.ts`)។ យុទ្ធសាស្ត្រ routing និង
-   palette របស់ compression layer ប្រើ chart token របស់ kit តាមរយៈ `strategyColorVar` និង
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`)។
+1. ប្រើ tokens ជានិច្ច កុំប្រើ literals។ ករណីលើកលែងដែលរក្សាទុកដោយចេតនា៖ console terminal ដែលងងឹតជានិច្ច និង
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`) ដែលជាកញ្ចក់ resolved-hex នៃ palette ស្ថានភាពរបស់ kit សម្រាប់ caller ដែលត្រូវការ hex literal។ Palette ប្រភេទ (categorical palettes) លែងជាករណីលើកលែងទៀតហើយ៖
+   ពួកវាផ្អែកលើ chart tokens ទាំងប្រាំរបស់ kit (`--color-chart-1..5`) តាមរយៈ
+   `src/shared/utils/categoricalPalette.ts` ហើយសម្រាប់ routing strategies គឺ
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow edges និង orchestration
+   canvas អានអថេរ `--orch-status-*` ដែលអាចប្តូរតាម theme បាន (`src/shared/components/flow/edgeStyles.ts`)។
 2. កុំកែ `packages/ui-kit/src` ដោយដៃ៖ ធ្វើសមកាលកម្មជាមួយ `scripts/dev/sync-ui-kit.sh <commit>`; ច្រកត្រួតពិនិត្យ
    មុន commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) នឹងបរាជ័យ ប្រសិនបើមាន byte ណាមួយ
    ខុសពី upstream commit ដែលបាន pin (វារំលងដោយមានការព្រមាន នៅពេលគ្មាន upstream clone,

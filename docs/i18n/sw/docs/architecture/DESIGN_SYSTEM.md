@@ -81,7 +81,13 @@
 
 ## 2. Kanuni
 
-1. Tumia tokeni, kamwe si thamani halisi. Vighairi vilivyowekwa kimakusudi: terminali ya dashibodi ambayo daima ni nyeusi na mistari ya SVG ya ReactFlow kupitia `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Mkakati wa uelekezaji na paleti za safu ya ukandamizaji hutumia tokeni za chati za kit kupitia `strategyColorVar` na `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeni, kamwe si thamani halisi. Mambo ya kipekee yamehifadhiwa kimakusudi: terminali ya konsole
+   inayodumu kuwa giza kila wakati na `STATUS_HEX` (`src/shared/constants/statusColors.ts`), kioo cha
+   hex iliyotatuliwa cha paleti ya hali ya kit kwa wanaohitaji hex halisi. Paleti za kategoria si za
+   kipekee tena: zinatembea juu ya tokeni tano za chati za kit (`--color-chart-1..5`) kupitia
+   `src/shared/utils/categoricalPalette.ts` na, kwa mikakati ya uelekezaji,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; kingo za ReactFlow na kanvasi ya uratibu
+   husoma vigezo `--orch-status-*` vinavyotambua mandhari (`src/shared/components/flow/edgeStyles.ts`).
 2. Kamwe usibadilishe `packages/ui-kit/src` mwenyewe: sawazisha kwa kutumia `scripts/dev/sync-ui-kit.sh <commit>`; kizuizi cha kabla ya commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) hushindwa ikiwa baiti yoyote inatofautiana na commit ya upstream iliyobandikwa (hurukwa kwa onyo wakati kloni ya upstream, `UI_KIT_CLONE` au `_references/cheaper-inference-ui-kit`, haipo). Wakati kit haina kitu fulani, tumia suluhisho mbadala kwenye adapta au skrini na ukiombe kutoka upstream.
 3. Chaguomsingi za maandishi ya kit ni Kiingereza (`label = "Loading"`, `loadingLabel = "Loading table"`…) — pitisha mifuatano iliyotafsiriwa kutoka `useTranslations(...)` kila wakati kijenzi cha kit kinapoonyesha maandishi.
 4. Huduma za Tailwind zina kipaumbele dhidi ya class za vijenzi vya kit (kit hutangaza `@layer theme, base, components, utilities` na kanuni zake ziko kwenye `components`) — tumia huduma kwa nafasi na mpangilio, si kubadilisha rangi za vijenzi vya kit.

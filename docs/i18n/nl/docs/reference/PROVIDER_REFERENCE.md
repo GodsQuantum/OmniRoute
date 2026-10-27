@@ -6,7 +6,7 @@
 
 > **Automatisch gegenereerd** vanuit `src/shared/constants/providers.ts` — niet handmatig bewerken.
 > Opnieuw genereren met: `npm run gen:provider-reference`
-> **Laatst gegenereerd:** 2026-10-26
+> **Laatst gegenereerd:** 2026-10-27
 
 Totaal aantal providers: **376**. Zie hieronder de uitsplitsing per categorie.
 

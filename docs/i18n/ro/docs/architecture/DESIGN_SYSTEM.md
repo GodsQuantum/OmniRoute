@@ -81,10 +81,13 @@
 
 ## 2. Reguli
 
-1. Tokenuri, niciodată valori literale. Excepții păstrate intenționat: terminalul consolei, întotdeauna întunecat, și contururile SVG ReactFlow
-   prin `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategia de rutare și paletele stratului
-   de compresie folosesc tokenurile pentru grafice ale kitului prin `strategyColorVar` și
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokenuri, niciodată valori literale. Excepțiile păstrate intenționat: terminalul de consolă mereu întunecat și
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), oglinda în hex rezolvată a paletei de statusuri din kit
+   pentru apelanții care au nevoie de un hex literal. Paletele categorice nu mai sunt o excepție: ele se bazează pe
+   cele cinci tokenuri de grafice ale kitului (`--color-chart-1..5`) prin
+   `src/shared/utils/categoricalPalette.ts` și, pentru strategiile de rutare,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; muchiile ReactFlow și canvasul de orchestrare citesc
+   variabilele sensibile la temă `--orch-status-*` (`src/shared/components/flow/edgeStyles.ts`).
 2. Nu modificați niciodată manual `packages/ui-kit/src`: sincronizați cu `scripts/dev/sync-ui-kit.sh <commit>`; verificarea
    pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) eșuează pentru orice octet care
    diferă de commitul upstream fixat (este omisă cu un avertisment atunci când clona upstream,

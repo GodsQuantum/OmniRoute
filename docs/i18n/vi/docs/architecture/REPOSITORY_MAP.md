@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Công cụ Caveman + RTK, hợp đồng registry |
 | `COMPRESSION_RULES_FORMAT.md`   | Lược đồ JSON cho gói quy tắc Caveman     |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Danh mục gói quy tắc theo từng ngôn ngữ  |
-| `RTK_COMPRESSION.md`            | Quy trình khai báo RTK (49 bộ lọc)       |
+| `RTK_COMPRESSION.md`            | Quy trình khai báo RTK (56 bộ lọc)       |
 
 ### Triển khai
 

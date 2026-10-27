@@ -86,7 +86,14 @@
 
 ## 2. Regoli
 
-1. Tokens, qatt valuri letterali. Eċċezzjonijiet miżmuma apposta: it-terminal tal-console dejjem skur u l-linji SVG ta’ ReactFlow permezz ta’ `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Il-paletti tal-istrateġija tar-routing u tas-saff tal-kompressjoni jużaw it-tokens taċ-ċarts tal-kit permezz ta’ `strategyColorVar` u `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, qatt literals. Eċċezzjonijiet miżmuma apposta: it-terminal tal-console li huwa dejjem skur u
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), ir-rifless resolved-hex tal-paletta tal-istatus
+   tal-kit għall-callers li jeħtieġu hex letterali. Il-paletti kategorici m'għadhomx eċċezzjoni:
+   jimxu fuq il-ħames chart tokens tal-kit (`--color-chart-1..5`) permezz ta'
+   `src/shared/utils/categoricalPalette.ts` u, għall-istrateġiji tar-routing,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; il-edges ta' ReactFlow u l-canvas
+   tal-orchestration jaqraw il-varjabbli li jimxu mat-tema `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Qatt timmodifika `packages/ui-kit/src` manwalment: issinkronizza ma’ `scripts/dev/sync-ui-kit.sh <commit>`; il-kontroll ta’ qabel il-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ifalli għal kwalunkwe byte li jkun differenti mill-commit upstream iffissat (jinqabeż bi twissija meta l-klonu upstream, `UI_KIT_CLONE` jew `_references/cheaper-inference-ui-kit`, ikun nieqes). Meta l-kit ma jkollux xi ħaġa, sib soluzzjoni alternattiva fl-adapter jew fl-iskrin u itlobha upstream.
 3. Il-valuri predefiniti tat-test tal-kit huma bl-Ingliż (`label = "Loading"`, `loadingLabel = "Loading table"`…) — għaddi strings tradotti minn `useTranslations(...)` kull meta komponent tal-kit jirrendi test.
 4. L-utilitajiet ta’ Tailwind jieħdu preċedenza fuq il-klassijiet tal-komponenti tal-kit (il-kit jiddikjara `@layer theme, base, components, utilities` u r-regoli tiegħu jinsabu f’`components`) — uża utilitajiet għall-ispazjar u t-tqassim, mhux biex tibdel il-kulur tal-komponenti tal-kit.

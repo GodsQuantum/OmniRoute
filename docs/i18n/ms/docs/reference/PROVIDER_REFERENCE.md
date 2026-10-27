@@ -6,7 +6,7 @@
 
 > **Dijana secara automatik** daripada `src/shared/constants/providers.ts` — jangan edit secara manual.
 > Jana semula dengan: `npm run gen:provider-reference`
-> **Kali terakhir dijana:** 2026-10-26
+> **Kali terakhir dijana:** 2026-10-27
 
 Jumlah penyedia: **376**. Lihat pecahan kategori di bawah.
 

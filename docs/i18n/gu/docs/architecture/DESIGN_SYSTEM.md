@@ -24,9 +24,13 @@
 
 ## 2. નિયમો
 
-1. ટોકન્સ, લિટરલ્સ ક્યારેય નહીં. હેતુપૂર્વક રાખેલા અપવાદો: હંમેશાં-ડાર્ક કન્સોલ ટર્મિનલ અને `STATUS_HEX` (`src/shared/constants/statusColors.ts`) મારફતે ReactFlow
-   SVG સ્ટ્રોક્સ. રાઉટિંગ વ્યૂહરચના અને કમ્પ્રેશન-લેયર પેલેટ્સ `strategyColorVar` અને
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) મારફતે કિટ ચાર્ટ ટોકન્સનો ઉપયોગ કરે છે.
+1. ટોકન્સ, ક્યારેય લિટરલ્સ નહીં. જાણીજોઈને રાખવામાં આવેલા અપવાદો: હંમેશાં ડાર્ક રહેતું કન્સોલ ટર્મિનલ અને
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), કિટ સ્ટેટસ પેલેટનું રિઝોલ્વ થયેલ hex પ્રતિબિંબ,
+   જે એવા કૉલર્સ માટે છે જેમને લિટરલ hex જોઈએ છે. કેટેગોરિકલ પેલેટ્સ હવે અપવાદ રહી નથી:
+   તેઓ `src/shared/utils/categoricalPalette.ts` દ્વારા કિટના પાંચ ચાર્ટ ટોકન્સ
+   (`--color-chart-1..5`) પર આધારિત છે અને, રૂટિંગ સ્ટ્રેટેજીઝ માટે,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow એજીસ અને ઓર્કેસ્ટ્રેશન
+   કેનવસ થીમ-અવેર `--orch-status-*` વેરિએબલ્સ વાંચે છે (`src/shared/components/flow/edgeStyles.ts`).
 2. `packages/ui-kit/src` ને ક્યારેય હાથથી પૅચ ન કરો: `scripts/dev/sync-ui-kit.sh <commit>` વડે સિંક કરો; કોઈપણ બાઇટ
    પિન કરેલા અપસ્ટ્રીમ કમિટથી અલગ હોય તો પ્રી-કમિટ ગેટ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`)
    નિષ્ફળ જાય છે (અપસ્ટ્રીમ ક્લોન, `UI_KIT_CLONE` અથવા `_references/cheaper-inference-ui-kit`, હાજર ન હોય ત્યારે

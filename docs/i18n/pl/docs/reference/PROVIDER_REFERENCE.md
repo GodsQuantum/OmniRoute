@@ -6,7 +6,7 @@
 
 > **Wygenerowano automatycznie** z `src/shared/constants/providers.ts` — nie edytuj ręcznie.
 > Wygeneruj ponownie za pomocą: `npm run gen:provider-reference`
-> **Ostatnio wygenerowano:** 2026-10-26
+> **Ostatnio wygenerowano:** 2026-10-27
 
 Łączna liczba dostawców: **376**. Poniżej znajduje się podział według kategorii.
 

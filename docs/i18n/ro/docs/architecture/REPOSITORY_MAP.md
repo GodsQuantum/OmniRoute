@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Motoarele Caveman + RTK, contractul registrului                 |
 | `COMPRESSION_RULES_FORMAT.md`   | Schema JSON a pachetului de reguli Caveman                      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Inventarul pachetelor de reguli pentru fiecare limbă            |
-| `RTK_COMPRESSION.md`            | Flux declarativ RTK (49 de filtre)                              |
+| `RTK_COMPRESSION.md`            | Flux declarativ RTK (56 de filtre)                              |
 
 ### Implementare
 

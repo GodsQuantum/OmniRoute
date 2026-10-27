@@ -78,10 +78,13 @@
 
 ## 2. قواعد
 
-1. ٹوکنز، کبھی بھی لٹریلز نہیں۔ دانستہ رکھی گئی مستثنیات: ہمیشہ تاریک رہنے والا کنسول ٹرمینل اور ReactFlow
-   کے SVG اسٹروکس بذریعہ `STATUS_HEX` (`src/shared/constants/statusColors.ts`)۔ روٹنگ کی حکمتِ عملی اور
-   کمپریشن لیئر کی پیلیٹس، `strategyColorVar` اور
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`) کے ذریعے کِٹ کے چارٹ ٹوکنز استعمال کرتی ہیں۔
+1. ٹوکنز، کبھی لٹلرل ویلیوز نہیں۔ استثنا جان بوجھ کر رکھے گئے ہیں: ہمیشہ ڈارک رہنے والا کنسول ٹرمینل اور
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`)، جو کٹ اسٹیٹس پیلٹ کا resolved-hex عکس ہے ان
+   کالرز کے لیے جنہیں لٹلرل hex درکار ہو۔ کیٹیگوریکل پیلٹس اب کوئی استثنا نہیں رہتیں: یہ کٹ کے پانچ چارٹ
+   ٹوکنز (`--color-chart-1..5`) پر چلتی ہیں، `src/shared/utils/categoricalPalette.ts` کے ذریعے اور،
+   روٹنگ اسٹریٹیجیز کے لیے، `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` کے ذریعے؛
+   ReactFlow ایجز اور آرکسٹریشن کینوس تھیم-آگاہ `--orch-status-*` ویری ایبلز سے پڑھتے ہیں
+   (`src/shared/components/flow/edgeStyles.ts`)۔
 2. `packages/ui-kit/src` کو کبھی بھی دستی طور پر پیچ نہ کریں: `scripts/dev/sync-ui-kit.sh <commit>` کے ذریعے ہم آہنگ کریں؛
    پری کمیٹ گیٹ `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) کسی بھی ایسے بائٹ پر ناکام ہو جاتا ہے
    جو پن کیے گئے اپ اسٹریم کمیٹ سے مختلف ہو (جب اپ اسٹریم کلون،

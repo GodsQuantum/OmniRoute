@@ -6,7 +6,7 @@
 
 > **Awtomatikong nabuo** mula sa `src/shared/constants/providers.ts` — huwag manu-manong i-edit.
 > Muling buuin gamit ang: `npm run gen:provider-reference`
-> **Huling nabuo:** 2026-10-26
+> **Huling nabuo:** 2026-10-27
 
 Kabuuang bilang ng mga provider: **376**. Tingnan ang pagkakahati ayon sa kategorya sa ibaba.
 

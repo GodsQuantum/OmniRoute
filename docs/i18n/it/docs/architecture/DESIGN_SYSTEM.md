@@ -81,7 +81,14 @@
 
 ## 2. Regole
 
-1. Token, mai valori letterali. Eccezioni mantenute intenzionalmente: il terminale della console sempre scuro e i tratti SVG di ReactFlow tramite `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Le palette della strategia di routing e del livello di compressione usano i token dei grafici del kit tramite `strategyColorVar` e `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Token, mai valori letterali. Eccezioni mantenute intenzionalmente: il terminale della console
+   sempre scuro e `STATUS_HEX` (`src/shared/constants/statusColors.ts`), lo specchio in hex risolto
+   della palette di stato del kit per i chiamanti che necessitano di un hex letterale. Le palette
+   categoriali non sono più un'eccezione: poggiano sui cinque token chart del kit
+   (`--color-chart-1..5`) tramite `src/shared/utils/categoricalPalette.ts` e, per le strategie di
+   routing, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; gli archi di ReactFlow e il
+   canvas di orchestrazione leggono le variabili sensibili al tema `--orch-status-*`
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Non modificare mai manualmente `packages/ui-kit/src`: sincronizzalo con `scripts/dev/sync-ui-kit.sh <commit>`; il controllo pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) fallisce se anche un solo byte differisce dal commit upstream fissato (viene ignorato con un avviso quando il clone upstream, `UI_KIT_CLONE` o `_references/cheaper-inference-ui-kit`, è assente). Quando manca qualcosa nel kit, aggira il problema nell'adapter o nella schermata e richiedilo upstream.
 3. I testi predefiniti del kit sono in inglese (`label = "Loading"`, `loadingLabel = "Loading table"`…) — passa stringhe tradotte da `useTranslations(...)` ogni volta che un componente del kit visualizza del testo.
 4. Le utility Tailwind hanno la precedenza sulle classi dei componenti del kit (il kit dichiara `@layer theme, base, components, utilities` e le sue regole si trovano in `components`) — usa le utility per spaziatura e layout, non per ricolorare i componenti del kit.

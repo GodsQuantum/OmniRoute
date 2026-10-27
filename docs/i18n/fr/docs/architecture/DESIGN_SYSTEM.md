@@ -81,7 +81,14 @@
 
 ## 2. Règles
 
-1. Des tokens, jamais de valeurs littérales. Exceptions conservées volontairement : le terminal de console toujours sombre et les traits SVG de ReactFlow via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Les palettes de stratégie de routage et de couche de compression utilisent les tokens de graphiques du kit via `strategyColorVar` et `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Des tokens, jamais de littéraux. Exceptions conservées volontairement : le terminal de console
+   toujours sombre et `STATUS_HEX` (`src/shared/constants/statusColors.ts`), le miroir en hexadécimal
+   résolu de la palette de statuts du kit pour les appelants qui ont besoin d'un hex littéral. Les
+   palettes catégorielles ne font plus exception : elles s'appuient sur les cinq tokens de graphique
+   du kit (`--color-chart-1..5`) via `src/shared/utils/categoricalPalette.ts` et, pour les stratégies
+   de routage, `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` ; les arêtes ReactFlow et le
+   canevas d'orchestration lisent les variables `--orch-status-*` sensibles au thème
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Ne modifiez jamais `packages/ui-kit/src` manuellement : synchronisez-le avec `scripts/dev/sync-ui-kit.sh <commit>` ; le contrôle de pré-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) échoue dès qu'un octet diffère du commit amont épinglé (il est ignoré avec un avertissement lorsque le clone amont, `UI_KIT_CLONE` ou `_references/cheaper-inference-ui-kit`, est absent). Lorsqu'un élément manque dans le kit, contournez le problème dans l'adaptateur ou l'écran et demandez son ajout en amont.
 3. Les textes par défaut du kit sont en anglais (`label = "Loading"`, `loadingLabel = "Loading table"`…) — transmettez des chaînes traduites depuis `useTranslations(...)` chaque fois qu'un composant du kit affiche du texte.
 4. Les utilitaires Tailwind prévalent sur les classes des composants du kit (le kit déclare `@layer theme, base, components, utilities` et ses règles se trouvent dans `components`) — utilisez les utilitaires pour l'espacement et la mise en page, et non pour modifier les couleurs des composants du kit.

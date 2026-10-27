@@ -81,7 +81,13 @@
 
 ## 2. Peraturan
 
-1. Token, bukan nilai literal. Pengecualian yang dikekalkan dengan sengaja: terminal konsol yang sentiasa gelap dan goresan SVG ReactFlow melalui `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategi penghalaan dan palet lapisan pemampatan menggunakan token carta kit melalui `strategyColorVar` dan `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Token, bukan literal. Pengecualian dikekalkan dengan sengaja: terminal konsol yang sentiasa
+   gelap dan `STATUS_HEX` (`src/shared/constants/statusColors.ts`), cermin hex terselesai bagi
+   palet status kit untuk pemanggil yang memerlukan hex literal. Palet kategori tidak lagi menjadi
+   pengecualian: ia bergantung pada lima token carta kit (`--color-chart-1..5`) melalui
+   `src/shared/utils/categoricalPalette.ts` dan, untuk strategi penghalaan,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; tepi ReactFlow dan kanvas orkestrasi
+   membaca pembolehubah `--orch-status-*` yang peka tema (`src/shared/components/flow/edgeStyles.ts`).
 2. Jangan sesekali tampal `packages/ui-kit/src` secara manual: segerakkan dengan `scripts/dev/sync-ui-kit.sh <commit>`; get pra-komit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) akan gagal jika terdapat sebarang bait yang berbeza daripada komit huluan yang telah ditetapkan (ia dilangkau dengan amaran apabila klon huluan, `UI_KIT_CLONE` atau `_references/cheaper-inference-ui-kit`, tiada). Apabila kit tidak menyediakan sesuatu, gunakan penyelesaian alternatif dalam penyesuai atau skrin dan minta penambahbaikan tersebut daripada pihak huluan.
 3. Teks lalai kit adalah dalam bahasa Inggeris (`label = "Loading"`, `loadingLabel = "Loading table"`…) — berikan rentetan terjemahan daripada `useTranslations(...)` apabila komponen kit memaparkan teks.
 4. Utiliti Tailwind mengatasi kelas komponen kit (kit mengisytiharkan `@layer theme, base, components, utilities` dan peraturannya terletak dalam `components`) — gunakan utiliti untuk jarak dan reka letak, bukan untuk mewarnakan semula komponen kit.

@@ -84,7 +84,13 @@
 
 ## 2. Regras
 
-1. Tokens, nunca literais. Exceções mantidas propositalmente: o terminal do console sempre escuro e os traços SVG do ReactFlow via `STATUS_HEX` (`src/shared/constants/statusColors.ts`). As paletas da estratégia de roteamento e da camada de compressão usam os tokens de gráfico do kit por meio de `strategyColorVar` e `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokens, nunca literais. Exceções mantidas intencionalmente: o terminal de console sempre escuro e
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), o espelho em hex resolvido da paleta de status
+   do kit para chamadores que precisam de um hex literal. As paletas categóricas não são mais exceção:
+   elas usam os cinco tokens de gráfico do kit (`--color-chart-1..5`) por meio de
+   `src/shared/utils/categoricalPalette.ts` e, para estratégias de roteamento,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; as arestas do ReactFlow e o canvas de orquestração
+   leem as variáveis `--orch-status-*` sensíveis ao tema (`src/shared/components/flow/edgeStyles.ts`).
 2. Nunca altere `packages/ui-kit/src` manualmente: sincronize com `scripts/dev/sync-ui-kit.sh <commit>`; a verificação de pre-commit `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) falha se qualquer byte diferir do commit upstream fixado (ela é ignorada com um aviso quando o clone upstream, `UI_KIT_CLONE` ou `_references/cheaper-inference-ui-kit`, está ausente). Quando faltar algo no kit, contorne a limitação no adaptador ou na tela e solicite a implementação ao upstream.
 3. Os textos padrão do kit estão em inglês (`label = "Loading"`, `loadingLabel = "Loading table"`…) — passe strings traduzidas de `useTranslations(...)` sempre que um componente do kit renderizar texto.
 4. Os utilitários do Tailwind prevalecem sobre as classes dos componentes do kit (o kit declara `@layer theme, base, components, utilities` e suas regras ficam em `components`) — use utilitários para espaçamento e layout, não para alterar as cores dos componentes do kit.

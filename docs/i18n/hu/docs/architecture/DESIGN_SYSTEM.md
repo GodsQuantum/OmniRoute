@@ -90,10 +90,15 @@
 
 ## 2. Szabályok
 
-1. Tokeneket használj, soha ne literálokat. Szándékosan megtartott kivételek: a mindig sötét konzolterminál és a ReactFlow
-   SVG-körvonalai a `STATUS_HEX` használatával (`src/shared/constants/statusColors.ts`). Az útválasztási stratégia és
-   a tömörítési réteg palettái a készlet diagramtokenjeit használják a `strategyColorVar` és a
-   `categoricalSlotFor` segítségével (`src/shared/utils/categoricalPalette.ts`).
+1. Tokenek, soha literális értékek. A kivételek szándékosan maradtak meg: a mindig sötét
+   konzolterminál és a `STATUS_HEX` (`src/shared/constants/statusColors.ts`), a kit
+   státuszpalettájának feloldott hexadecimális tükörképe azoknak a hívóknak, amelyeknek literális
+   hex értékre van szükségük. A kategorikus paletták már nem kivételek: a kit öt
+   diagramtokenjére (`--color-chart-1..5`) támaszkodnak a
+   `src/shared/utils/categoricalPalette.ts` segítségével, útválasztási stratégiák esetén pedig a
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts` segítségével; a ReactFlow élek és az
+   orkesztrációs vászon a témaérzékeny `--orch-status-*` változókat olvassák
+   (`src/shared/components/flow/edgeStyles.ts`).
 2. Soha ne módosítsd kézzel a `packages/ui-kit/src` tartalmát: szinkronizáld a `scripts/dev/sync-ui-kit.sh <commit>` használatával; a
    commit előtti ellenőrzés, az `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) minden olyan bájteltérésnél
    hibát jelez, amely eltér a rögzített upstream committól (figyelmeztetéssel kihagyja az ellenőrzést, ha az upstream klón,

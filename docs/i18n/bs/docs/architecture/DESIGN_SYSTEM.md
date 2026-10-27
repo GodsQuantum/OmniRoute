@@ -86,10 +86,13 @@
 
 ## 2. Pravila
 
-1. Tokeni, nikada literalne vrijednosti. Namjerno zadržani izuzeci: konzolni terminal koji je uvijek taman i ReactFlow
-   SVG potezi putem `STATUS_HEX` (`src/shared/constants/statusColors.ts`). Strategija usmjeravanja i
-   palete sloja kompresije koriste tokene grafikona iz kita putem `strategyColorVar` i
-   `categoricalSlotFor` (`src/shared/utils/categoricalPalette.ts`).
+1. Tokeni, nikad literali. Iznimke zadržane namjerno: konzolni terminal koji je uvijek taman i
+   `STATUS_HEX` (`src/shared/constants/statusColors.ts`), zrcalo statusne palete kita s razriješenim
+   hex vrijednostima za pozivatelje kojima treba literalni hex. Kategorijske palete više nisu
+   iznimka: one se oslanjaju na pet chart tokena kita (`--color-chart-1..5`) kroz
+   `src/shared/utils/categoricalPalette.ts` i, za strategije rutiranja,
+   `src/app/(dashboard)/dashboard/combos/strategyPalette.ts`; ReactFlow bridovi i orkestracijsko
+   platno čitaju varijable `--orch-status-*` svjesne teme (`src/shared/components/flow/edgeStyles.ts`).
 2. Nikada ručno ne mijenjajte `packages/ui-kit/src`: sinhronizujte pomoću `scripts/dev/sync-ui-kit.sh <commit>`; provjera
    prije commita `npm run check:ui-kit-snapshot` (`.husky/pre-commit`) ne uspijeva za bilo koji bajt koji
    se razlikuje od prikvačenog upstream commita (preskače se uz upozorenje kada upstream klon,

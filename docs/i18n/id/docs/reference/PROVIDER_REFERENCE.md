@@ -6,7 +6,7 @@
 
 > **Dibuat secara otomatis** dari `src/shared/constants/providers.ts` — jangan diedit secara manual.
 > Buat ulang dengan: `npm run gen:provider-reference`
-> **Terakhir dibuat:** 2026-10-26
+> **Terakhir dibuat:** 2026-10-27
 
 Total penyedia: **376**. Lihat perincian kategori di bawah ini.
 

@@ -6,7 +6,7 @@
 
 > **自動產生**自 `src/shared/constants/providers.ts` — 請勿手動編輯。
 > 使用以下指令重新產生：`npm run gen:provider-reference`
-> **最後產生日期：** 2026-10-26
+> **最後產生日期：** 2026-10-27
 
 提供者總數：**376**。請參閱下方的類別細目。
 

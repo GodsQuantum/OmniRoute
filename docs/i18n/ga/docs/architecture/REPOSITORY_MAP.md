@@ -443,7 +443,7 @@ open-sse/
 | `COMPRESSION_ENGINES.md`        | Innill Caveman + RTK, conradh clárlainne        |
 | `COMPRESSION_RULES_FORMAT.md`   | Scéimre JSON do phacáiste rialacha Caveman      |
 | `COMPRESSION_LANGUAGE_PACKS.md` | Fardal pacáistí rialacha de réir teanga         |
-| `RTK_COMPRESSION.md`            | Píblíne dhearbhaitheach RTK (49 scagaire)       |
+| `RTK_COMPRESSION.md`            | Píblíne dhearbhaitheach RTK (56 scagaire)       |
 
 ### Imscaradh
 

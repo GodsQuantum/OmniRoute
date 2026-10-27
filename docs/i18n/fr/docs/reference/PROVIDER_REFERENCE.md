@@ -6,7 +6,7 @@
 
 > **Généré automatiquement** à partir de `src/shared/constants/providers.ts` — ne pas modifier manuellement.
 > Régénérer avec : `npm run gen:provider-reference`
-> **Dernière génération :** 2026-10-26
+> **Dernière génération :** 2026-10-27
 
 Nombre total de fournisseurs : **376**. Consultez la répartition par catégorie ci-dessous.
 
