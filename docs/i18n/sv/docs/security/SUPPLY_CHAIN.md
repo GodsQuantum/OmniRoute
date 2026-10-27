@@ -25,29 +25,32 @@ utan att blockera; _CRITICAL-grindsteget_ (`severity: CRITICAL`, `ignore-unfixed
 `exit-code: 1`) underkänner releasen vid en CRITICAL CVE **där en fix finns tillgänglig**. `ignore-unfixed`
 förhindrar att releasen blockeras för en basavbildnings-CVE utan uppströmsfix.
 
-## ⚠️ CVE-avvikelse (blockerande osv-/Trivy-grindar)
+## ⚠️ CVE-variation (blockerar osv-/Trivy-kontroller)
 
-osv och Trivy jämför beroenden mot CVE-databaser som **kontinuerligt växer**. En PR
-som **inte berör några beroenden** kan plötsligt bli röd eftersom en ny CVE har
-offentliggjorts i ett befintligt beroende (osv: uppmätt `vulnCount` > baslinje; Trivy: en ny
-åtgärdningsbar CRITICAL i avbildningen). **Detta är FÖRVÄNTAT operationellt beteende för en blockerande
-CVE-grind, inte en produktregression.**
+osv och Trivy jämför beroenden mot CVE-databaser som **växer kontinuerligt**. En PR
+som **inte ändrar några beroenden** kan plötsligt bli röd eftersom en ny CVE har
+offentliggjorts i ett befintligt beroende (osv: uppmätt `vulnCount` > baslinjen; Trivy: en ny
+åtgärdbar CRITICAL i avbildningen). **Detta är FÖRVÄNTAT operativt beteende för en blockerande
+CVE-kontroll, inte en produktregression.**
 
 När osv eller Trivy blir röda på grund av en nyligen offentliggjord CVE är åtgärden:
 
-1. **Uppdatera det berörda beroendet** (föredras) – uppgradera till den fixade versionen via `package.json`
-   `overrides` (transitiva beroenden) eller bygg om avbildningen på en fixad bas.
-2. **Om det inte finns någon uppströmsfix:**
+1. **Uppgradera det berörda beroendet** (föredras) — uppgradera till den korrigerade versionen via `package.json`
+   `overrides` (transitiva beroenden) eller bygg om avbildningen med en korrigerad basavbildning.
+2. **Om det inte finns någon korrigering uppströms:**
    - **osv:** uppdatera baslinjen för `metrics.vulnCount` i `config/quality/quality-baseline.json`
-     (`npm run quality:ratchet -- --update` täcker inte dedikerade grindar – redigera värdet
-     manuellt, `direction:down`) med en motivering + spårningsärende.
-   - **Trivy:** lägg till en post i `.trivyignore` (CVE-ID per rad) med en
-     motiveringskommentar + spårningsärende. `ignore-unfixed: true` täcker redan CVE:er utan
-     patchar automatiskt.
+     (`npm run quality:ratchet -- --update` omfattar inte dedikerade kontroller — redigera värdet
+     manuellt, `direction:down`) med en motiverande kommentar + ett spårningsärende.
+   - **Trivy:** lägg till en post i `.trivyignore` (CVE-ID per rad) med en motiverande
+     kommentar + ett spårningsärende. `ignore-unfixed: true` omfattar redan automatiskt CVE:er utan
+     korrigeringar.
 
-Båda grindarna **Hoppar graciöst över** (avslutar med 0) när verktyget saknas eller mätningen
-misslyckas (osv-scanner finns inte i PATH, osv.dev/nätverket är o nåbart, ogiltig JSON) – ett
-**mätningsfel** blockerar aldrig, endast en **uppmätt** regression blockerar.
+Obligatoriska OSV-körningar (`check:vuln-ratchet -- --ratchet`) misslyckas på ett säkert sätt med
+`INCOMPLETE` och avslutningskod 2 när skannern, rapporten eller baslinjen inte kan valideras.
+En uppmätt regression ger avslutningskod 1. En rådgivande körning kan fortfarande rapportera `SKIP` med
+avslutningskod 0, vilket inte fastställer att beroendena klarade skanningen. Det blockerande
+Trivy-steget kräver också en lyckad mätning: otillgängliga verktyg, misslyckade jobb
+och saknade belägg för avbildningen kan inte intyga att en avbildning är ren.
 
 ## Risk med utfasat beroende
 

@@ -27,27 +27,31 @@ bez blokowania; krok _bramki CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: t
 
 ## ⚠️ Zmienność CVE (blokowanie bramek osv/Trivy)
 
-osv i Trivy porównują zależności z bazami danych CVE, które **stale rosną**. PR,
-który **nie dotyka żadnych zależności**, może nagle zmienić kolor na czerwony, ponieważ
-ujawniono nowe CVE w istniejącej zależności (osv: zmierzona `vulnCount` > bazowa; Trivy: nowe
-możliwe do naprawienia CRITICAL w obrazie). **Jest to OCZEKIWANE zachowanie operacyjne
-blokującej bramki CVE, a nie regresja produktu.**
+osv i Trivy porównują zależności z bazami danych CVE, które **stale się rozrastają**. PR,
+który **nie zmienia żadnych zależności**, może nagle zacząć kończyć się niepowodzeniem, ponieważ
+ujawniono nową lukę CVE w istniejącej zależności (osv: zmierzona wartość `vulnCount` > wartość
+bazowa; Trivy: nowa możliwa do naprawienia luka CRITICAL w obrazie). **Jest to OCZEKIWANE zachowanie
+operacyjne blokującej bramki CVE, a nie regresja produktu.**
 
-Gdy osv lub Trivy zmienią kolor na czerwony z powodu nowo ujawnionego CVE, rozwiązaniem jest:
+Gdy osv lub Trivy zgłasza błąd z powodu nowo ujawnionej luki CVE, należy:
 
-1. **Zaktualizuj dotkniętą zależność** (preferowane) — zaktualizuj do poprawionej wersji za pomocą
-   `overrides` w `package.json` (zależności przechodnie) lub przebuduj obraz na poprawionej bazie.
-2. **Jeśli nie ma poprawki upstream:**
-   - **osv:** ponownie ustal linię bazową `metrics.vulnCount` w `config/quality/quality-baseline.json`
-     (`npm run quality:ratchet -- --update` nie obejmuje dedykowanych bramek — edytuj wartość ręcznie,
-     `direction:down`) z notatką uzasadniającą + problemem do śledzenia.
-   - **Trivy:** dodaj wpis do `.trivyignore` (CVE-ID na linię) z komentarzem uzasadniającym
-     - problemem do śledzenia. `ignore-unfixed: true` już automatycznie obejmuje CVE bez
-       poprawek.
+1. **Zaktualizować dotkniętą zależność** (preferowane) — przejść na poprawioną wersję za pomocą
+   `overrides` w `package.json` (zależności przechodnie) lub ponownie zbudować obraz na poprawionej
+   wersji obrazu bazowego.
+2. **Jeśli poprawka nie jest dostępna w projekcie źródłowym:**
+   - **osv:** ponownie ustawić wartość bazową `metrics.vulnCount` w `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` nie obejmuje dedykowanych bramek — edytować wartość
+     ręcznie, `direction:down`), dodając uzasadnienie i zgłoszenie śledzące.
+   - **Trivy:** dodać wpis do `.trivyignore` (jeden identyfikator CVE w każdym wierszu) wraz z komentarzem
+     zawierającym uzasadnienie i zgłoszeniem śledzącym. `ignore-unfixed: true` już automatycznie
+     uwzględnia luki CVE bez dostępnych poprawek.
 
-Obie bramki **grzecznie POMIJAJĄ** (exit 0), gdy narzędzie jest nieobecne lub pomiar
-się nie powiedzie (osv-scanner nie w PATH, osv.dev/sieć nieosiągalna, nieprawidłowy JSON) —
-niepowodzenie **pomiaru** nigdy nie blokuje, tylko **zmierzona** regresja blokuje.
+Wymagane wykonania OSV (`check:vuln-ratchet -- --ratchet`) kończą się bezpiecznym niepowodzeniem ze
+statusem `INCOMPLETE` i kodem wyjścia 2, gdy nie można zweryfikować skanera, raportu lub wartości bazowej.
+Zmierzona regresja powoduje zakończenie z kodem 1. Wykonanie doradcze może nadal zgłosić `SKIP`
+z kodem wyjścia 0, co nie potwierdza, że zależności pomyślnie przeszły skanowanie. Blokujący
+krok Trivy również wymaga pomyślnego wykonania pomiaru: niedostępne narzędzia, nieudane zadania
+i brak dowodów dotyczących obrazu nie pozwalają poświadczyć, że obraz jest wolny od luk.
 
 ## Ryzyko związane z wycofaną zależnością
 

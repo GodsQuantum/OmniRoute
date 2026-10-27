@@ -24,29 +24,18 @@ _KRİTİK geçit_ adımı (`severity: CRITICAL`, `ignore-unfixed: true`,
 `exit-code: 1`), **düzeltmesi mevcut olan** KRİTİK bir CVE'de yayını başarısız kılar. `ignore-unfixed`
 yukarı akış yaması olmayan bir temel imaj CVE'si için yayının engellenmesini önler.
 
-## ⚠️ CVE Varyansı (osv/Trivy geçitlerini engelleme)
+## ⚠️ CVE Değişkenliği (osv/Trivy kapılarını engeller)
 
-osv ve Trivy, bağımlılıkları **sürekli büyüyen** CVE veritabanlarına karşı karşılaştırır.
-**Hiçbir bağımlılığa dokunmayan** bir PR, mevcut bir bağımlılıkta yeni bir CVE
-açıklandığı için aniden kırmızıya dönebilir (osv: ölçülen `vulnCount` > temel çizgi; Trivy:
-imajda yeni düzeltilebilir bir KRİTİK). **Bu, engelleme yapan bir CVE geçidinin BEKLENEN
-operasyonel davranışıdır, bir ürün gerilemesi değildir.**
+osv ve Trivy, bağımlılıkları **sürekli büyüyen** CVE veritabanlarıyla karşılaştırır. **Hiçbir bağımlılığa dokunmayan** bir PR, mevcut bir bağımlılıkta yeni bir CVE açıklandığı için aniden başarısız olabilir (osv: ölçülen `vulnCount` > temel değer; Trivy: imajda düzeltilebilir yeni bir CRITICAL). **Bu, ürün regresyonu değil, engelleyici bir CVE kapısının BEKLENEN operasyonel davranışıdır.**
 
-Yeni açıklanan bir CVE nedeniyle osv veya Trivy kırmızıya döndüğünde, çözüm şudur:
+osv veya Trivy yeni açıklanan bir CVE nedeniyle başarısız olduğunda çözüm şudur:
 
-1. **Etkilenen bağımlılığı yükseltin** (tercih edilen) — `package.json`
-   `overrides` (geçişli bağımlılıklar) aracılığıyla yamalı sürüme yükseltin veya yamalı bir temel üzerinde imajı yeniden oluşturun.
+1. **Etkilenen bağımlılığın sürümünü yükseltin** (tercih edilen) — `package.json` içindeki `overrides` aracılığıyla yamalı sürüme yükseltin (geçişli bağımlılıklar için) veya imajı yamalı bir temel üzerinde yeniden oluşturun.
 2. **Yukarı akışta bir düzeltme yoksa:**
-   - **osv:** `config/quality/quality-baseline.json` içindeki `metrics.vulnCount` değerini yeniden temel alın
-     (`npm run quality:ratchet -- --update` özel geçitleri kapsamaz — değeri elle düzenleyin,
-     `direction:down`) bir gerekçe notu + takip sorunu ile.
-   - **Trivy:** `.trivyignore` dosyasına (her satırda CVE-ID) bir gerekçe
-     yorum + takip sorunu ile bir giriş ekleyin. `ignore-unfixed: true` zaten
-     yaması olmayan CVE'leri otomatik olarak kapsar.
+   - **osv:** `config/quality/quality-baseline.json` içindeki `metrics.vulnCount` için yeniden temel değer belirleyin (`npm run quality:ratchet -- --update`, özel kapıları kapsamaz — değeri gerekçe notu ve takip sorunuyla birlikte elle düzenleyin, `direction:down`).
+   - **Trivy:** `.trivyignore` dosyasına gerekçe yorumu ve takip sorunuyla birlikte bir kayıt ekleyin (satır başına CVE kimliği). `ignore-unfixed: true`, yaması olmayan CVE'leri zaten otomatik olarak kapsar.
 
-Her iki geçit de araç yoksa veya ölçüm başarısız olursa (osv-scanner PATH'de yok,
-osv.dev/ağ erişilemez, geçersiz JSON) **zarifçe ATLAR** (çıkış 0) — bir
-**ölçüm** hatası asla engellemez, yalnızca **ölçülen** bir gerileme engeller.
+Zorunlu OSV yürütmeleri (`check:vuln-ratchet -- --ratchet`), tarayıcı, rapor veya temel değer doğrulanamadığında güvenli biçimde başarısız olur; `INCOMPLETE` ile çıkış kodu 2 döndürür. Ölçülen bir regresyon, çıkış kodu 1 döndürür. Tavsiye niteliğindeki yürütme yine de `SKIP` bildirip çıkış kodu 0 döndürebilir; bu, bağımlılıkların taramayı geçtiğini kanıtlamaz. Engelleyici Trivy adımı da başarılı bir ölçüm gerektirir: kullanılamayan araçlar, başarısız işler ve eksik imaj kanıtları, bir imajın temiz olduğunu doğrulayamaz.
 
 ## Kullanımdan kaldırılan bağımlılık riski
 

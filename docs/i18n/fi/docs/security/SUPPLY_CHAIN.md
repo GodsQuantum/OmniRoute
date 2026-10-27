@@ -18,18 +18,32 @@ OmniRoute julkaisee npm- ja Docker-artefakteja. Nämä portit tarjoavat alkuper�
 
 Kuvan CVE-kiristys käyttää **kahta vaihetta** tiedostossa `docker-publish.yml`: SARIF-vaihe (`HIGH,CRITICAL`, `exit-code: 0`) pitää HIGH+CRITICAL-löydökset näkyvissä Turvallisuus-välilehdellä estämättä julkaisua; _CRITICAL-portin_ vaihe (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) epäonnistuttaa julkaisun, jos kriittinen CVE **korjauksella on saatavilla**. `ignore-unfixed` estää julkaisun estämisen peruskuvan CVE:n vuoksi, jos ylävirran korjausta ei ole.
 
-## ⚠️ CVE-vaihtelu (osv/Trivy-porttien estäminen)
+## ⚠️ CVE-vaihtelu (estävät osv-/Trivy-portit)
 
-osv ja Trivy vertaavat riippuvuuksia CVE-tietokantoihin, jotka **kasvavat jatkuvasti**. Pull request, joka **ei kosketa riippuvuuksia**, voi yhtäkkiä muuttua punaiseksi, koska uusi CVE paljastui olemassa olevassa riippuvuudessa (osv: mitattu `vulnCount` > perustaso; Trivy: uusi korjattavissa oleva CRITICAL kuvassa). **Tämä on ESTÄVÄN CVE-portin ODOTETTUA toiminnallista käyttäytymistä, ei tuotteen regressio.**
+osv ja Trivy vertaavat riippuvuuksia CVE-tietokantoihin, jotka **kasvavat jatkuvasti**. PR,
+joka **ei muuta riippuvuuksia**, voi muuttua yhtäkkiä punaiseksi, koska olemassa olevasta
+riippuvuudesta on julkaistu uusi CVE (osv: mitattu `vulnCount` > perustaso; Trivy: uusi
+korjattavissa oleva CRITICAL-kuvan haavoittuvuus). **Tämä on estävän CVE-portin ODOTETTUA
+toiminnallista käyttäytymistä, ei tuotteen regressio.**
 
-Kun osv tai Trivy muuttuvat punaisiksi äskettäin paljastuneen CVE:n vuoksi, korjauskeinot ovat:
+Kun osv tai Trivy muuttuu punaiseksi uuden CVE-julkistuksen vuoksi, korjaustapa on:
 
-1.  **Päivitä vaikutuksen alainen riippuvuus** (ensisijainen) — päivitä korjattuun versioon `package.json`-tiedoston `overrides`-kohdan kautta (transitiiviset riippuvuudet) tai rakenna kuva uudelleen korjatun perustan päälle.
-2.  **Jos ylävirran korjausta ei ole:**
-    - **osv:** aseta `metrics.vulnCount`-arvo uudelleen perustasolle tiedostossa `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` ei kata omia portteja – muokkaa arvoa käsin, `direction:down`) perusteluineen ja seurantatehtävineen.
-    - **Trivy:** lisää merkintä tiedostoon `.trivyignore` (CVE-ID per rivi) perusteluineen ja seurantatehtävineen. `ignore-unfixed: true` kattaa jo automaattisesti CVE:t ilman korjauksia.
+1. **Päivitä kyseinen riippuvuus** (ensisijainen vaihtoehto) — päivitä korjattuun versioon `package.json`-tiedoston
+   `overrides`-määrityksen avulla (transitiiviset riippuvuudet) tai rakenna kuva uudelleen korjatun pohjakuvan päälle.
+2. **Jos upstream-korjausta ei ole:**
+   - **osv:** määritä `metrics.vulnCount`-perustaso uudelleen tiedostossa `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` ei kata erillisiä portteja — muokkaa arvoa
+     käsin, `direction:down`) ja lisää perusteluhuomautus sekä seurantaongelma.
+   - **Trivy:** lisää merkintä tiedostoon `.trivyignore` (yksi CVE-ID riviä kohden) sekä perustelukommentti
+     ja seurantaongelma. `ignore-unfixed: true` kattaa jo automaattisesti CVE:t, joihin
+     ei ole korjauksia.
 
-Molemmat portit **ohittavat siististi** (exit 0), jos työkalu puuttuu tai mittaus epäonnistuu (osv-scanner ei ole PATHissa, osv.dev/verkko tavoittamaton, virheellinen JSON) — **mittauksen** epäonnistuminen ei koskaan estä, vain **mitattu** regressio estää.
+Pakolliset OSV-suoritukset (`check:vuln-ratchet -- --ratchet`) epäonnistuvat suljetusti tilalla
+`INCOMPLETE` ja palautuskoodilla 2, jos tarkistinta, raporttia tai perustasoa ei voida validoida.
+Mitattu regressio palauttaa koodin 1. Neuvoa-antava suoritus voi silti ilmoittaa tilan `SKIP`
+ja palautuskoodin 0, mikä ei osoita, että riippuvuudet läpäisivät tarkistuksen. Estävä
+Trivy-vaihe edellyttää myös onnistunutta mittausta: työkalujen puuttuminen, epäonnistuneet työt
+ja puuttuva näyttö kuvasta eivät voi vahvistaa kuvaa puhtaaksi.
 
 ## Poistetun riippuvuuden riski
 

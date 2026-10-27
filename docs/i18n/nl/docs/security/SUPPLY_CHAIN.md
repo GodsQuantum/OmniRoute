@@ -18,18 +18,32 @@ OmniRoute publiceert npm + Docker-artefacten. Deze poorten bieden herkomst, inve
 
 De CVE-ratchet voor afbeeldingen gebruikt **twee stappen** in `docker-publish.yml`: de SARIF-stap (`HIGH,CRITICAL`, `exit-code: 0`) houdt HIGH+CRITICAL zichtbaar in het Beveiligingstabblad zonder te blokkeren; de _CRITICAL-poort_ stap (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) laat de release mislukken bij een CRITICAL CVE **met een beschikbare oplossing**. `ignore-unfixed` voorkomt het blokkeren van de release voor een basis-image CVE zonder een upstream-patch.
 
-## ⚠️ CVE-variantie (blokkerende osv/Trivy-poorten)
+## ⚠️ CVE-variatie (blokkeert osv/Trivy-gates)
 
-osv en Trivy vergelijken afhankelijkheden met CVE-databases die **continu groeien**. Een PR die **geen afhankelijkheden aanraakt**, kan plotseling rood worden omdat een nieuwe CVE werd onthuld in een bestaande afhankelijkheid (osv: gemeten `vulnCount` > baseline; Trivy: een nieuwe oplosbare CRITICAL in de image). **Dit is VERWACHT operationeel gedrag van een blokkerende CVE-poort, geen productregressie.**
+osv en Trivy vergelijken afhankelijkheden met CVE-databases die **continu blijven groeien**. Een PR
+waarin **geen afhankelijkheden worden gewijzigd**, kan plotseling rood worden omdat een nieuwe CVE is
+bekendgemaakt in een bestaande afhankelijkheid (osv: gemeten `vulnCount` > baseline; Trivy: een nieuwe
+herstelbare CRITICAL in de image). **Dit is VERWACHT operationeel gedrag van een blokkerende
+CVE-gate, geen productregressie.**
 
-Wanneer osv of Trivy rood worden door een nieuw onthulde CVE, is de oplossing:
+Wanneer osv of Trivy rood wordt vanwege een nieuw bekendgemaakte CVE, is de oplossing:
 
-1.  **Werk de getroffen afhankelijkheid bij** (voorkeur) — upgrade naar de gepatchte versie via `package.json` `overrides` (transitieme afhankelijkheden) of herbouw de image op een gepatchte basis.
-2.  **Als er geen upstream-oplossing is:**
-    - **osv:** her-baseline `metrics.vulnCount` in `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` dekt geen dedicated poorten — bewerk de waarde handmatig, `direction:down`) met een rechtvaardigingsnotitie + tracking-issue.
-    - **Trivy:** voeg een vermelding toe in `.trivyignore` (CVE-ID per regel) met een rechtvaardigingscommentaar + tracking-issue. `ignore-unfixed: true` dekt CVE's zonder patches al automatisch.
+1. **Werk de getroffen afhankelijkheid bij** (voorkeur) — upgrade naar de gepatchte versie via `package.json`
+   `overrides` (transitieve afhankelijkheden) of bouw de image opnieuw op basis van een gepatchte basisimage.
+2. **Als er geen upstream-fix beschikbaar is:**
+   - **osv:** stel de baseline voor `metrics.vulnCount` opnieuw in `config/quality/quality-baseline.json` vast
+     (`npm run quality:ratchet -- --update` dekt afzonderlijke gates niet — bewerk de waarde
+     handmatig, `direction:down`) met een onderbouwing en een tracking-issue.
+   - **Trivy:** voeg een vermelding toe aan `.trivyignore` (één CVE-ID per regel) met een onderbouwende
+     opmerking en een tracking-issue. `ignore-unfixed: true` dekt CVE's zonder
+     patches al automatisch af.
 
-Beide poorten **slaan netjes over** (exit 0) wanneer de tool afwezig is of de meting mislukt (osv-scanner niet in PATH, osv.dev/netwerk onbereikbaar, ongeldige JSON) — een **meetfout** blokkeert nooit, alleen een **gemeten** regressie blokkeert.
+Verplichte OSV-uitvoeringen (`check:vuln-ratchet -- --ratchet`) sluiten bij fouten en mislukken met
+`INCOMPLETE` en exitcode 2 wanneer de scanner, het rapport of de baseline niet kan worden gevalideerd.
+Een gemeten regressie resulteert in exitcode 1. Een adviserende uitvoering kan nog steeds `SKIP` rapporteren met
+exitcode 0, maar dat toont niet aan dat de afhankelijkheden de scan hebben doorstaan. De blokkerende
+Trivy-stap vereist eveneens een geslaagde meting: niet-beschikbare tools, mislukte jobs
+en ontbrekend bewijs voor de image kunnen niet certificeren dat een image schoon is.
 
 ## Risico van uitgefaseerde afhankelijkheid
 

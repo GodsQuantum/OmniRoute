@@ -18,18 +18,32 @@ OmniRoute objavljuje npm + Docker artefakte. Ove kapije pružaju provenijenciju,
 
 Podešavanje CVE-a slike koristi **dva koraka** u `docker-publish.yml`: SARIF korak (`HIGH,CRITICAL`, `exit-code: 0`) održava HIGH+CRITICAL vidljivim u kartici Sigurnost bez blokiranja; korak _CRITICAL kapije_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) ne uspijeva izdavanje zbog KRITIČNOG CVE-a **sa dostupnom popravkom**. `ignore-unfixed` sprečava blokiranje izdavanja za CVE osnovne slike bez uzvodne zakrpe.
 
-## ⚠️ Varijacija CVE-a (blokirajuće osv/Trivy kapije)
+## ⚠️ Varijabilnost CVE-ova (blokirajuće osv/Trivy provjere)
 
-osv i Trivy upoređuju zavisnosti sa CVE bazama podataka koje **kontinuirano rastu**. PR koji **ne dodiruje nijednu zavisnost** može iznenada postati crven jer je novi CVE otkriven u postojećoj zavisnosti (osv: izmjereni `vulnCount` > osnovna linija; Trivy: novi popravljivi KRITIČNI u slici). **Ovo je OČEKIVANO operativno ponašanje blokirajuće CVE kapije, a ne regresija proizvoda.**
+osv i Trivy upoređuju zavisnosti s CVE bazama podataka koje **kontinuirano rastu**. PR
+koji **ne mijenja nijednu zavisnost** može iznenada postati crven jer je novi CVE
+objavljen za postojeću zavisnost (osv: izmjereni `vulnCount` > početna vrijednost; Trivy: novi
+popravljivi CRITICAL u slici). **Ovo je OČEKIVANO operativno ponašanje blokirajuće
+CVE provjere, a ne regresija proizvoda.**
 
 Kada osv ili Trivy postanu crveni zbog novootkrivenog CVE-a, rješenje je:
 
-1.  **Ažurirajte pogođenu zavisnost** (preferirano) — nadogradite na zakrpljenu verziju putem `package.json` `overrides` (tranzitivne zavisnosti) ili ponovo izgradite sliku na zakrpljenoj osnovi.
-2.  **Ako nema uzvodne popravke:**
-    - **osv:** ponovo postavite osnovnu liniju `metrics.vulnCount` u `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` ne pokriva namjenske kapije — ručno uredite vrijednost, `direction:down`) uz napomenu o opravdanju + problem za praćenje.
-    - **Trivy:** dodajte unos u `.trivyignore` (CVE-ID po liniji) sa komentarom o opravdanju + problemom za praćenje. `ignore-unfixed: true` već automatski pokriva CVE-ove bez zakrpa.
+1. **Ažurirajte pogođenu zavisnost** (preporučeno) — nadogradite je na ispravljenu verziju putem
+   `overrides` u `package.json` (tranzitivne zavisnosti) ili ponovo izgradite sliku koristeći ispravljenu osnovu.
+2. **Ako ne postoji ispravka iz izvornog projekta:**
+   - **osv:** ponovo postavite početnu vrijednost za `metrics.vulnCount` u `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` ne obuhvata namjenske provjere — ručno uredite vrijednost,
+     `direction:down`) uz bilješku s obrazloženjem + problem za praćenje.
+   - **Trivy:** dodajte unos u `.trivyignore` (CVE-ID po redu) uz komentar
+     s obrazloženjem + problem za praćenje. `ignore-unfixed: true` već automatski obuhvata CVE-ove bez
+     zakrpa.
 
-Obje kapije **graciozno PRESKAČU** (izlaz 0) kada alat nedostaje ili mjerenje ne uspije (osv-scanner nije u PATH-u, osv.dev/network nedostupan, nevažeći JSON) — neuspjeh **mjerenja** nikada ne blokira, samo **izmjerena** regresija blokira.
+Obavezna OSV izvršavanja (`check:vuln-ratchet -- --ratchet`) završavaju neuspješno
+s `INCOMPLETE` i izlaznim kodom 2 kada nije moguće potvrditi valjanost skenera, izvještaja ili početne vrijednosti.
+Izmjerena regresija vraća izlazni kod 1. Savjetodavno izvršavanje i dalje može prijaviti `SKIP` s
+izlaznim kodom 0, što ne potvrđuje da su zavisnosti prošle skeniranje. Blokirajući
+Trivy korak također zahtijeva uspješno mjerenje: nedostupni alati, neuspjeli poslovi
+i nedostajući dokazi o slici ne mogu potvrditi da je slika čista.
 
 ## Rizik od povučene zavisnosti
 

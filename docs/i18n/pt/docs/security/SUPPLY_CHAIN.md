@@ -18,18 +18,32 @@ OmniRoute publica artefatos npm + Docker. Estas portas fornecem proveniência, i
 
 O controlo de CVE da imagem utiliza **dois passos** em `docker-publish.yml`: o passo SARIF (`HIGH,CRITICAL`, `exit-code: 0`) mantém HIGH+CRITICAL visíveis no separador Segurança sem bloquear; o passo _porta CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) falha o lançamento numa CVE CRITICAL **com uma correção disponível**. `ignore-unfixed` impede o bloqueio do lançamento para uma CVE de imagem base sem um patch upstream.
 
-## ⚠️ Variação de CVE (portas osv/Trivy bloqueantes)
+## ⚠️ Variação de CVE (bloqueia os controlos do osv/Trivy)
 
-osv e Trivy comparam dependências com bases de dados de CVE que **crescem continuamente**. Uma PR que **não toca em dependências** pode de repente ficar vermelha porque uma nova CVE foi divulgada numa dependência existente (osv: `vulnCount` medido > linha de base; Trivy: uma nova CRITICAL corrigível na imagem). **Este é o comportamento operacional ESPERADO de uma porta CVE bloqueante, não uma regressão do produto.**
+O osv e o Trivy comparam as dependências com bases de dados de CVE que **crescem continuamente**. Um PR
+que **não altera quaisquer dependências** pode subitamente ficar vermelho porque uma nova CVE foi
+divulgada numa dependência existente (osv: `vulnCount` medido > referência; Trivy: uma nova
+vulnerabilidade CRITICAL corrigível na imagem). **Este é o comportamento operacional ESPERADO de um
+controlo de CVE bloqueante, não uma regressão do produto.**
 
-Quando osv ou Trivy ficam vermelhos devido a uma CVE recém-divulgada, a solução é:
+Quando o osv ou o Trivy ficam vermelhos devido a uma CVE recentemente divulgada, a solução é:
 
-1.  **Atualizar a dependência afetada** (preferencial) — atualizar para a versão corrigida via `overrides` de `package.json` (dependências transitivas) ou reconstruir a imagem numa base corrigida.
-2.  **Se não houver correção upstream:**
-    - **osv:** redefinir a linha de base de `metrics.vulnCount` em `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` não cobre portas dedicadas — edite o valor manualmente, `direction:down`) com uma nota de justificação + problema de acompanhamento.
-    - **Trivy:** adicionar uma entrada em `.trivyignore` (CVE-ID por linha) com um comentário de justificação + problema de acompanhamento. `ignore-unfixed: true` já cobre automaticamente CVEs sem patches.
+1. **Atualizar a dependência afetada** (preferencial) — atualizar para a versão corrigida através de `package.json`
+   `overrides` (dependências transitivas) ou reconstruir a imagem com uma base corrigida.
+2. **Se não existir uma correção a montante:**
+   - **osv:** redefinir a referência de `metrics.vulnCount` em `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` não abrange controlos dedicados — editar o valor
+     manualmente, `direction:down`) com uma nota de justificação + problema de acompanhamento.
+   - **Trivy:** adicionar uma entrada em `.trivyignore` (um ID de CVE por linha) com um comentário
+     de justificação + problema de acompanhamento. `ignore-unfixed: true` já abrange automaticamente
+     as CVE sem correções.
 
-Ambas as portas **IGNORAM graciosamente** (saída 0) quando a ferramenta está ausente ou a medição falha (osv-scanner não está no PATH, osv.dev/network inacessível, JSON inválido) — uma falha de **medição** nunca bloqueia, apenas uma regressão **medida** bloqueia.
+As execuções obrigatórias do OSV (`check:vuln-ratchet -- --ratchet`) falham de forma fechada com
+`INCOMPLETE` e código de saída 2 quando não é possível validar o analisador, o relatório ou a referência.
+Uma regressão medida resulta no código de saída 1. Uma execução informativa pode ainda comunicar `SKIP` com
+código de saída 0, o que não comprova que as dependências passaram na análise. O passo bloqueante do
+Trivy também exige uma medição bem-sucedida: ferramentas indisponíveis, tarefas falhadas
+e a ausência de provas relativas à imagem não permitem certificar uma imagem como limpa.
 
 ## Risco de dependência descontinuada
 

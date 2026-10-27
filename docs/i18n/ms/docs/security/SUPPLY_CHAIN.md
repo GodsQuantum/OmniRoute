@@ -25,29 +25,32 @@ tanpa menghalang; langkah _gerbang CRITICAL_ (`severity: CRITICAL`, `ignore-unfi
 `exit-code: 1`) menggagalkan keluaran apabila terdapat CVE CRITICAL **dengan pembaikan yang tersedia**. `ignore-unfixed`
 mengelakkan keluaran daripada dihalang kerana CVE imej asas yang tiada tampalan huluan.
 
-## ⚠️ Varians CVE (gerbang osv/Trivy yang menghalang)
+## ⚠️ Varians CVE (menyekat get osv/Trivy)
 
-osv dan Trivy membandingkan kebergantungan dengan pangkalan data CVE yang **terus berkembang**. PR
-yang **tidak mengubah sebarang kebergantungan** boleh tiba-tiba menjadi merah kerana CVE baharu
-telah didedahkan dalam kebergantungan sedia ada (osv: `vulnCount` yang diukur > garis dasar; Trivy: CRITICAL baharu
-yang boleh dibaiki dalam imej). **Ini ialah tingkah laku operasi YANG DIJANGKA bagi gerbang
-CVE yang menghalang, bukannya regresi produk.**
+osv dan Trivy membandingkan kebergantungan dengan pangkalan data CVE yang **berkembang secara berterusan**. Sesuatu PR
+yang **tidak mengubah sebarang kebergantungan** boleh tiba-tiba menjadi merah kerana CVE baharu telah
+didedahkan dalam kebergantungan sedia ada (osv: `vulnCount` yang diukur > garis dasar; Trivy: CRITICAL
+baharu yang boleh dibaiki dalam imej). **Ini ialah tingkah laku operasi yang DIJANGKA bagi get
+CVE yang menyekat, bukan regresi produk.**
 
 Apabila osv atau Trivy menjadi merah disebabkan CVE yang baru didedahkan, penyelesaiannya ialah:
 
 1. **Naik taraf kebergantungan yang terjejas** (diutamakan) — naik taraf kepada versi yang telah ditampal melalui `package.json`
-   `overrides` (kebergantungan transitif) atau bina semula imej menggunakan imej asas yang telah ditampal.
+   `overrides` (kebergantungan transitif) atau bina semula imej berasaskan imej asas yang telah ditampal.
 2. **Jika tiada pembaikan huluan:**
    - **osv:** tetapkan semula garis dasar `metrics.vulnCount` dalam `config/quality/quality-baseline.json`
-     (`npm run quality:ratchet -- --update` tidak merangkumi gerbang khusus — edit nilainya secara
-     manual, `direction:down`) berserta nota justifikasi + isu penjejakan.
-   - **Trivy:** tambahkan entri dalam `.trivyignore` (satu CVE-ID setiap baris) berserta komen
+     (`npm run quality:ratchet -- --update` tidak merangkumi get khusus — edit nilai tersebut secara
+     manual, `direction:down`) dengan nota justifikasi + isu penjejakan.
+   - **Trivy:** tambahkan entri dalam `.trivyignore` (CVE-ID setiap baris) dengan komen
      justifikasi + isu penjejakan. `ignore-unfixed: true` sudah merangkumi CVE tanpa
      tampalan secara automatik.
 
-Kedua-dua gerbang **MELANGKAU dengan lancar** (keluar 0) apabila alat tiada atau pengukuran
-gagal (osv-scanner tiada dalam PATH, osv.dev/rangkaian tidak dapat dicapai, JSON tidak sah) — kegagalan
-**pengukuran** tidak pernah menghalang; hanya regresi yang **diukur** akan menghalang.
+Pelaksanaan OSV yang diwajibkan (`check:vuln-ratchet -- --ratchet`) akan gagal secara tertutup dengan
+`INCOMPLETE` dan kod keluar 2 apabila pengimbas, laporan atau garis dasar tidak dapat disahkan.
+Regresi yang diukur menghasilkan kod keluar 1. Pelaksanaan berbentuk nasihat masih boleh melaporkan `SKIP` dengan
+kod keluar 0, yang tidak membuktikan bahawa kebergantungan telah lulus imbasan. Langkah
+Trivy yang menyekat juga memerlukan pengukuran yang berjaya: alat yang tidak tersedia, tugas yang gagal
+dan bukti imej yang tiada tidak boleh memperakui imej sebagai bersih.
 
 ## Risiko kebergantungan yang ditamatkan
 

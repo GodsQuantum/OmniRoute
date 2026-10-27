@@ -25,29 +25,32 @@ ba tare da toshewa ba; matakin _CRITICAL gate_ (`severity: CRITICAL`, `ignore-un
 `exit-code: 1`) yana kasa sakin akan CRITICAL CVE **tare da gyara da ake samu**. `ignore-unfixed`
 yana hana toshe sakin don CVE na asali ba tare da facin sama ba.
 
-## ⚠️ Bambancin CVE (toshewar ƙofofin osv/Trivy)
+## ⚠️ Bambancin CVE (ƙofofin osv/Trivy masu toshewa)
 
-osv da Trivy suna kwatanta deps da bayanan CVE waɗanda **ke ci gaba da girma**. PR
-wanda **bai taɓa dogaro ba** na iya zama ja ba zato ba tsammani saboda an bayyana sabon CVE
-a cikin dep da ke akwai (osv: an auna `vulnCount` > tushe; Trivy: sabon
-CRITICAL mai gyarawa a cikin hoton). **Wannan shine halin aiki da ake tsammani na toshewar
-ƙofar CVE, ba koma baya na samfur ba.**
+osv da Trivy suna kwatanta dependencies da ma'ajin bayanan CVE waɗanda suke **ci gaba da ƙaruwa**. Wani PR
+wanda **bai taɓa kowace dependency ba** zai iya sauyawa zuwa ja ba zato ba tsammani saboda an
+bayyana sabon CVE a cikin dependency da ake da ita (osv: `vulnCount` da aka auna > baseline; Trivy: sabon
+CRITICAL mai gyaruwa a cikin image). **Wannan halayyar aiki ce da AKE SA RAN TA daga
+ƙofar CVE mai toshewa, ba koma-bayan samfur ba.**
 
-Lokacin da osv ko Trivy suka zama ja saboda sabon CVE da aka bayyana, maganin shine:
+Lokacin da osv ko Trivy suka koma ja saboda sabon CVE da aka bayyana, mafita ita ce:
 
-1. **Haɓaka dep da abin ya shafa** (an fi so) — haɓaka zuwa sigar da aka gyara ta hanyar `package.json`
-   `overrides` (transitive deps) ko sake gina hoton akan tushe da aka gyara.
-2. **Idan babu gyara na sama:**
-   - **osv:** sake daidaita `metrics.vulnCount` a cikin `config/quality/quality-baseline.json`
-     (`npm run quality:ratchet -- --update` baya rufe ƙofofin da aka keɓe — gyara darajar da
-     hannu, `direction:down`) tare da bayanin hujja + batun bin diddigi.
-   - **Trivy:** ƙara shigarwa a cikin `.trivyignore` (CVE-ID a kowane layi) tare da bayanin
-     hujja + batun bin diddigi. `ignore-unfixed: true` ya riga ya rufe CVEs ba tare da
-     facin kai tsaye ba.
+1. **Ɗaga sigar dependency da abin ya shafa** (an fi so) — haɓaka zuwa sigar da aka gyara ta hanyar `package.json`
+   `overrides` (dependencies na kaikaice) ko sake gina image ɗin bisa patched base.
+2. **Idan babu gyara daga upstream:**
+   - **osv:** sake saita baseline na `metrics.vulnCount` a cikin `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` ba ya rufe keɓaɓɓun ƙofofi — gyara ƙimar da
+     hannu, `direction:down`) tare da bayanin dalili + tracking issue.
+   - **Trivy:** ƙara entry a cikin `.trivyignore` (CVE-ID ɗaya a kowane layi) tare da comment na
+     dalili + tracking issue. `ignore-unfixed: true` tuni yana rufe CVEs marasa
+     patches kai tsaye.
 
-Duk ƙofofin **suna tsallakewa da kyau** (fita 0) lokacin da kayan aikin ba su nan ko kuma ma'aunin
-ya gaza (osv-scanner ba a cikin PATH, osv.dev/network ba za a iya isa ba, JSON mara inganci) —
-gazawar **ma'auni** ba ta taɓa toshewa ba, kawai koma baya **da aka auna** ke toshewa.
+Aiwatarwar OSV da ake buƙata (`check:vuln-ratchet -- --ratchet`) tana gazawa a rufe tare da
+`INCOMPLETE` da exit 2 lokacin da ba za a iya tabbatar da ingancin scanner, report ko baseline ba.
+Koma-bayan da aka auna yana bayar da exit 1. Aiwatarwar shawara har yanzu tana iya bayar da rahoton `SKIP` tare da
+exit 0, wanda ba ya tabbatar da cewa dependencies sun wuce scan ɗin. Matakin Trivy
+mai toshewa kuma yana buƙatar auna sakamako cikin nasara: tools da ba su samuwa, jobs da suka gaza
+da rashin shaidar image ba za su iya tabbatar da cewa image ɗin ba shi da matsala ba.
 
 ## Haɗarin dogaron da aka daina amfani da shi
 

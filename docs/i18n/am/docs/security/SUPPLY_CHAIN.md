@@ -18,18 +18,24 @@ OmniRoute npm + Docker artifacts ያትማል። እነዚህ መግቢያዎች
 
 የምስሉ CVE ratchet በ`docker-publish.yml` ውስጥ **ሁለት ደረጃዎችን** ይጠቀማል፦ የSARIF ደረጃ (`HIGH,CRITICAL`, `exit-code: 0`) HIGH+CRITICALን በደህንነት ትር (Security tab) ውስጥ ሳያግድ እንዲታይ ያደርጋል፤ የ_CRITICAL gate_ ደረጃ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) **መፍትሄ ያለው** CRITICAL CVE ሲገኝ መልቀቂያውን ያቋርጣል። `ignore-unfixed` ከላይኛው ምንጭ (upstream) ጥገና የሌለውን የመሠረት ምስል (base-image) CVE መልቀቂያውን እንዳያግድ ይከላከላል።
 
-## ⚠️ የCVE ልዩነት (osv/Trivy መግቢያዎችን ማገድ)
+## ⚠️ የCVE ልዩነት (የማገጃ osv/Trivy ጌቶች)
 
-osv እና Trivy ጥገኞችን (deps) **በቀጣይነት ከሚያድጉ** የCVE ዳታቤዞች ጋር ያነጻጽራሉ። **ምንም ጥገኞችን የማይነካ** PR በአንድ ነባር ጥገኛ ውስጥ አዲስ CVE በመገለጡ ምክንያት በድንገት ቀይ ሊሆን ይችላል (osv: የተለካው `vulnCount` > መሰረታዊ መስመር (baseline)፤ Trivy: በምስሉ ውስጥ አዲስ ሊስተካከል የሚችል CRITICAL)። **ይህ የማገጃ CVE መግቢያ የሚጠበቅ የአሠራር ባህሪ እንጂ የምርት መበላሸት (regression) አይደለም።**
+osv እና Trivy ጥገኞችን **ያለማቋረጥ እያደጉ ካሉ** የCVE የውሂብ ጎታዎች ጋር ያነጻጽራሉ። **ምንም ጥገኞችን የማይነካ** PR፣ በነባር ጥገኛ ውስጥ አዲስ CVE ይፋ ስለተደረገ ብቻ በድንገት ቀይ ሊሆን ይችላል (osv፦ የተለካው `vulnCount` > መነሻ መለኪያ፤ Trivy፦ በምስሉ ውስጥ አዲስ ሊስተካከል የሚችል CRITICAL)። **ይህ የሚጠበቅ የማገጃ CVE ጌት የአሠራር ባህሪ እንጂ የምርት ዳግም-ማሽቆልቆል አይደለም።**
 
-osv ወይም Trivy በአዲስ በተገለጸ CVE ምክንያት ቀይ ሲሆኑ፣ መፍትሄው የሚከተለው ነው፦
+አዲስ ይፋ በተደረገ CVE ምክንያት osv ወይም Trivy ቀይ ሲሆኑ፣ መፍትሔው፦
 
-1.  **የተጎዳውን ጥገኛ ያሳድጉ** (የተመረጠ) — በ`package.json` `overrides` (transitive deps) በኩል ወደተስተካከለው ስሪት ያሻሽሉ ወይም ምስሉን በተስተካከለ መሠረት ላይ እንደገና ይገንቡ።
-2.  **ከላይኛው ምንጭ (upstream) ጥገና ከሌለ፦**
-    - **osv:** በ`config/quality/quality-baseline.json` ውስጥ `metrics.vulnCount`ን እንደገና መሰረታዊ መስመር ያድርጉ (`npm run quality:ratchet -- --update` የተወሰኑ መግቢያዎችን አይሸፍንም — እሴቱን በእጅ ያርትዑ፣ `direction:down`) ከማረጋገጫ ማስታወሻ + መከታተያ ጉዳይ ጋር።
-    - **Trivy:** በ`.trivyignore` ውስጥ (በእያንዳንዱ መስመር CVE-ID) ከማረጋገጫ አስተያየት + መከታተያ ጉዳይ ጋር ግቤት ያክሉ። `ignore-unfixed: true` ጥገና የሌላቸውን CVEs በራስ-ሰር ይሸፍናል።
+1. **የተጎዳውን ጥገኛ ስሪት ከፍ ያድርጉ** (ተመራጭ) — በ`package.json`
+   `overrides` (ተዘዋዋሪ ጥገኞች) በኩል ወደ ታረመው ስሪት ያሻሽሉ ወይም ምስሉን በታረመ መሠረታዊ ምስል ላይ እንደገና ይገንቡ።
+2. **የላይኛው ምንጭ ማስተካከያ ከሌለ፦**
+   - **osv:** በ`config/quality/quality-baseline.json` ውስጥ ያለውን `metrics.vulnCount` እንደገና መነሻ መለኪያ ያድርጉ
+     (`npm run quality:ratchet -- --update` ለብቻቸው የተዘጋጁ ጌቶችን አይሸፍንም — እሴቱን በእጅ ያርትዑ፣ `direction:down`) ከምክንያት ማስታወሻ + የክትትል ጉዳይ ጋር።
+   - **Trivy:** ከምክንያት አስተያየት + የክትትል ጉዳይ ጋር በ`.trivyignore` ውስጥ ግቤት ያክሉ (በእያንዳንዱ መስመር CVE-ID)። `ignore-unfixed: true` አስቀድሞ ማስተካከያ የሌላቸውን CVEዎች በራስ-ሰር ይሸፍናል።
 
-ሁለቱም መግቢያዎች መሳሪያው በማይኖርበት ጊዜ ወይም መለኪያው ሲከሽፍ (osv-scanner በPATH ውስጥ ከሌለ፣ osv.dev/network ሊደረስበት የማይችል ከሆነ፣ ልክ ያልሆነ JSON) **በጥሩ ሁኔታ ይዘላሉ** (exit 0) — የ**መለኪያ** ውድቀት በጭራሽ አያግድም፣ የ**ተለካ** መበላሸት (regression) ብቻ ነው የሚያግደው።
+አስፈላጊ የOSV አፈጻጸሞች (`check:vuln-ratchet -- --ratchet`) ስካነሩ፣ ሪፖርቱ ወይም መነሻ መለኪያው ሊረጋገጥ በማይችልበት ጊዜ በ
+`INCOMPLETE` እና የመውጫ ኮድ 2 የተዘጋ ሁኔታ ይከሽፋሉ።
+የተለካ ዳግም-ማሽቆልቆል በኮድ 1 ይወጣል። የምክር አፈጻጸም አሁንም `SKIP`ን ከመውጫ ኮድ 0 ጋር ሪፖርት ሊያደርግ ይችላል፤ ይህም ጥገኞቹ ስካኑን እንዳለፉ አያረጋግጥም። የማገጃው
+Trivy ደረጃም የተሳካ ልኬትን ይፈልጋል፦ የማይገኙ መሣሪያዎች፣ ያልተሳኩ ሥራዎች
+እና የጎደለ የምስል ማስረጃ አንድ ምስል ንጹሕ መሆኑን ማረጋገጥ አይችሉም።
 
 ## ከአገልግሎት የወጣ ጥገኛ አካል ስጋት
 

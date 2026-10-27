@@ -18,18 +18,32 @@ OmniRoute huchapisha bidhaa za npm + Docker. Milango hii hutoa uthibitisho wa as
 
 Marekebisho ya CVE ya picha hutumia **hatua mbili** katika `docker-publish.yml`: hatua ya SARIF (`HIGH,CRITICAL`, `exit-code: 0`) huweka HIGH+CRITICAL ionekane kwenye kichupo cha Usalama bila kuzuia; hatua ya _lango la CRITICAL_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) hushindwa kutoa toleo kutokana na CVE ya CRITICAL **yenye suluhisho linalopatikana**. `ignore-unfixed` huzuia kuzuia toleo kwa CVE ya picha ya msingi isiyo na kiraka kutoka kwa chanzo kikuu.
 
-## ⚠️ Tofauti ya CVE (ikizuia milango ya osv/Trivy)
+## ⚠️ Tofauti za CVE (zinazuia vizuizi vya osv/Trivy)
 
-osv na Trivy hulinganisha vitegemezi dhidi ya hifadhidata za CVE ambazo **zinaendelea kukua**. PR ambayo **haigusi vitegemezi vyovyote** inaweza ghafla kugeuka nyekundu kwa sababu CVE mpya ilifichuliwa katika tegemezi lililopo (osv: `vulnCount` iliyopimwa > msingi; Trivy: CRITICAL mpya inayoweza kurekebishwa kwenye picha). **Huu ni tabia INAYOTARAJIWA ya uendeshaji wa lango la CVE linalozuia, si udhaifu wa bidhaa.**
+osv na Trivy hulinganisha vitegemezi na hifadhidata za CVE ambazo **hukua kila mara**. PR
+ambayo **haibadilishi vitegemezi vyovyote** inaweza ghafla kuonyesha hali nyekundu kwa sababu CVE mpya
+imefichuliwa katika kitegemezi kilichopo (osv: `vulnCount` iliyopimwa > kiwango cha msingi; Trivy: CVE mpya
+ya kiwango cha CRITICAL inayoweza kurekebishwa kwenye taswira). **Hii ni tabia ya kiutendaji INAYOTARAJIWA ya
+kizuizi cha CVE kinachozuia, wala si hitilafu mpya ya bidhaa.**
 
-Wakati osv au Trivy zinageuka nyekundu kutokana na CVE mpya iliyofichuliwa, suluhisho ni:
+osv au Trivy zinapoonyesha hali nyekundu kwa sababu ya CVE iliyofichuliwa hivi karibuni, suluhisho ni:
 
-1.  **Pandisha tegemezi lililoathirika** (inayopendelewa) — sasisha hadi toleo lililorekebishwa kupitia `package.json` `overrides` (vitegemezi vya mpito) au jenga upya picha kwenye msingi uliorekebishwa.
-2.  **Ikiwa hakuna suluhisho kutoka kwa chanzo kikuu:**
-    - **osv:** weka upya msingi wa `metrics.vulnCount` katika `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` haijumuishi milango maalum — hariri thamani kwa mkono, `direction:down`) na noti ya uhalali + suala la kufuatilia.
-    - **Trivy:** ongeza kiingilio katika `.trivyignore` (CVE-ID kwa kila mstari) na maoni ya uhalali + suala la kufuatilia. `ignore-unfixed: true` tayari inashughulikia CVEs zisizo na viraka kiotomatiki.
+1. **Sasisha kitegemezi kilichoathiriwa** (inapendekezwa) — pandisha hadi toleo lenye kiraka kupitia `package.json`
+   `overrides` (vitegemezi visivyo vya moja kwa moja) au jenga upya taswira ukitumia msingi wenye kiraka.
+2. **Ikiwa hakuna suluhisho kutoka kwa chanzo cha kitegemezi:**
+   - **osv:** weka upya kiwango cha msingi cha `metrics.vulnCount` katika `config/quality/quality-baseline.json`
+     (`npm run quality:ratchet -- --update` haishughulikii vizuizi maalumu — hariri thamani
+     mwenyewe, `direction:down`) pamoja na maelezo ya kuhalalisha + suala la ufuatiliaji.
+   - **Trivy:** ongeza ingizo katika `.trivyignore` (CVE-ID moja kwa kila mstari) pamoja na maoni
+     ya kuhalalisha + suala la ufuatiliaji. `ignore-unfixed: true` tayari hushughulikia kiotomatiki CVE zisizo na
+     viraka.
 
-Milango yote miwili **huruka kwa upole** (exit 0) wakati zana haipo au kipimo kinashindwa (osv-scanner haipo kwenye PATH, osv.dev/network haipatikani, JSON batili) — kushindwa kwa **kipimo** hakuzuii kamwe, ni udhaifu **uliopimwa** tu ndio unaozuia.
+Utekelezaji unaohitajika wa OSV (`check:vuln-ratchet -- --ratchet`) hushindwa kwa hali iliyofungwa kwa
+`INCOMPLETE` na msimbo wa kutoka 2 wakati kichanganuzi, ripoti au kiwango cha msingi hakiwezi kuthibitishwa.
+Kuzorota kulikopimwa hutoka kwa msimbo 1. Utekelezaji wa ushauri bado unaweza kuripoti `SKIP` kwa
+msimbo wa kutoka 0, jambo ambalo halithibitishi kuwa vitegemezi vilifaulu uchanganuzi. Hatua inayozuia ya
+Trivy pia inahitaji kipimo kilichofaulu: zana zisizopatikana, kazi zilizoshindwa
+na ushahidi unaokosekana wa taswira haviwezi kuthibitisha kuwa taswira haina udhaifu.
 
 ## Hatari ya utegemezi uliostaafishwa
 

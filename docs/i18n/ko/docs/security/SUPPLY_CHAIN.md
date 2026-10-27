@@ -18,18 +18,18 @@ OmniRoute는 npm + Docker 아티팩트를 게시합니다. 이러한 게이트�
 
 이미지 CVE 래칫은 `docker-publish.yml`에서 **두 단계**를 사용합니다. SARIF 단계(`HIGH,CRITICAL`, `exit-code: 0`)는 HIGH+CRITICAL을 차단 없이 보안 탭에 표시합니다. _CRITICAL 게이트_ 단계(`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`)는 **수정 가능한** CRITICAL CVE에 대해 릴리스를 실패시킵니다. `ignore-unfixed`는 업스트림 패치가 없는 기본 이미지 CVE로 인해 릴리스가 차단되는 것을 방지합니다.
 
-## ⚠️ CVE 변동성 (osv/Trivy 게이트 차단)
+## ⚠️ CVE 변동성(차단형 osv/Trivy 게이트)
 
-osv와 Trivy는 **지속적으로 증가하는** CVE 데이터베이스와 종속성을 비교합니다. **어떤 종속성도 건드리지 않은** PR이 기존 종속성에서 새로운 CVE가 공개되어 갑자기 빨간색으로 변할 수 있습니다 (osv: 측정된 `vulnCount` > 기준선; Trivy: 이미지에 새로운 수정 가능한 CRITICAL). **이는 차단 CVE 게이트의 예상되는 운영 동작이며, 제품 회귀가 아닙니다.**
+osv와 Trivy는 **지속적으로 증가하는** CVE 데이터베이스를 기준으로 의존성을 비교합니다. **의존성을 전혀 변경하지 않은** PR도 기존 의존성에서 새로운 CVE가 공개되면 갑자기 실패 상태가 될 수 있습니다(osv: 측정된 `vulnCount` > 기준선, Trivy: 이미지에서 수정 가능한 새로운 CRITICAL 발견). **이는 차단형 CVE 게이트에서 예상되는 운영 동작이며, 제품 회귀가 아닙니다.**
 
-새로 공개된 CVE로 인해 osv 또는 Trivy가 빨간색으로 변할 경우, 해결책은 다음과 같습니다.
+새로 공개된 CVE로 인해 osv 또는 Trivy가 실패하면 다음과 같이 조치합니다.
 
-1.  **영향받는 종속성 업데이트** (권장) — `package.json` `overrides` (전이 종속성)를 통해 패치된 버전으로 업그레이드하거나, 패치된 기반으로 이미지를 재구축합니다.
-2.  **업스트림 수정 사항이 없는 경우:**
-    - **osv:** `config/quality/quality-baseline.json`에서 `metrics.vulnCount`를 재기준선화합니다 (`npm run quality:ratchet -- --update`는 전용 게이트를 다루지 않으므로, 값을 수동으로 편집하고 `direction:down`으로 설정) (정당화 메모 + 추적 이슈 포함).
-    - **Trivy:** `.trivyignore`에 항목을 추가합니다 (줄당 CVE-ID) (정당화 주석 + 추적 이슈 포함). `ignore-unfixed: true`는 패치 없는 CVE를 자동으로 처리합니다.
+1. **영향받는 의존성 버전 상향**(권장) — `package.json`의 `overrides`(전이 의존성)를 통해 패치된 버전으로 업그레이드하거나, 패치된 베이스를 사용해 이미지를 다시 빌드합니다.
+2. **업스트림 수정 사항이 없는 경우:**
+   - **osv:** 정당한 사유를 설명하는 메모와 추적 이슈를 추가하고 `config/quality/quality-baseline.json`의 `metrics.vulnCount` 기준선을 다시 설정합니다(`npm run quality:ratchet -- --update`는 전용 게이트를 처리하지 않으므로 `direction:down`으로 값을 직접 편집).
+   - **Trivy:** 정당한 사유를 설명하는 주석과 추적 이슈를 포함하여 `.trivyignore`에 항목을 추가합니다(줄마다 CVE-ID 하나). `ignore-unfixed: true`는 패치가 없는 CVE를 이미 자동으로 처리합니다.
 
-두 게이트 모두 도구가 없거나 측정에 실패할 경우 (PATH에 osv-scanner 없음, osv.dev/네트워크 연결 불가, 유효하지 않은 JSON) **정상적으로 건너뜠니다** (exit 0). — **측정** 실패는 절대 차단하지 않으며, **측정된** 회귀만 차단합니다.
+필수 OSV 실행(`check:vuln-ratchet -- --ratchet`)에서는 스캐너, 보고서 또는 기준선을 검증할 수 없는 경우 `INCOMPLETE`와 종료 코드 2로 폐쇄형 실패가 발생합니다. 측정된 회귀의 종료 코드는 1입니다. 권고 실행은 여전히 종료 코드 0과 함께 `SKIP`을 보고할 수 있지만, 이는 의존성이 스캔을 통과했음을 입증하지 않습니다. 차단형 Trivy 단계에서도 성공적인 측정이 필요합니다. 사용할 수 없는 도구, 실패한 작업, 이미지 증거 누락으로는 이미지가 안전하다고 인증할 수 없습니다.
 
 ## 폐기된 종속성 위험
 

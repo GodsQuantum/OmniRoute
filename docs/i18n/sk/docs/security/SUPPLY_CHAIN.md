@@ -18,18 +18,35 @@ OmniRoute publikuje npm + Docker artefakty. Tieto brány poskytujú provenienciu
 
 CVE ratchet pre obrazy používa **dva kroky** v `docker-publish.yml`: krok SARIF (`HIGH,CRITICAL`, `exit-code: 0`) udržiava HIGH+CRITICAL viditeľné na karte Bezpečnosť bez blokovania; krok _CRITICAL gate_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) zlyhá vydanie pri CRITICAL CVE **s dostupnou opravou**. `ignore-unfixed` zabraňuje blokovaniu vydania pre CVE základného obrazu bez upstreamovej opravy.
 
-## ⚠️ Variabilita CVE (blokujúce brány osv/Trivy)
+## ⚠️ Variabilita CVE (blokovanie kontrol osv/Trivy)
 
-osv a Trivy porovnávajú závislosti s databázami CVE, ktoré **nepretržite rastú**. PR, ktorý **nemodifikuje žiadne závislosti**, môže zrazu zčervenať, pretože bolo odhalené nové CVE v existujúcej závislosti (osv: namerané `vulnCount` > základná hodnota; Trivy: nové opraviteľné CRITICAL v obraze). **Toto je OČAKÁVANÉ prevádzkové správanie blokujúcej CVE brány, nie regresia produktu.**
+osv a Trivy porovnávajú závislosti s databázami CVE, ktoré **neustále rastú**. PR,
+ktorý **nemení žiadne závislosti**, môže náhle zlyhať, pretože bola zverejnená nová
+CVE v existujúcej závislosti (osv: nameraná hodnota `vulnCount` > východisková hodnota;
+Trivy: nová opraviteľná zraniteľnosť úrovne CRITICAL v obraze). **Ide o OČAKÁVANÉ
+prevádzkové správanie blokujúcej kontroly CVE, nie o regresiu produktu.**
 
-Keď osv alebo Trivy zčervenajú kvôli novo odhalenému CVE, riešenie je:
+Keď osv alebo Trivy zlyhá v dôsledku novo zverejnenej CVE, riešením je:
 
-1.  **Aktualizovať ovplyvnenú závislosť** (preferované) — aktualizovať na opravenú verziu prostredníctvom `package.json` `overrides` (tranzitívne závislosti) alebo prebudovať obraz na opravenom základe.
-2.  **Ak neexistuje upstreamová oprava:**
-    - **osv:** znovu nastaviť základnú hodnotu `metrics.vulnCount` v `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` nepokrýva vyhradené brány — upravte hodnotu ručne, `direction:down`) s odôvodnením + sledovacím problémom.
-    - **Trivy:** pridať záznam do `.trivyignore` (CVE-ID na riadok) s odôvodňujúcim komentárom + sledovacím problémom. `ignore-unfixed: true` už automaticky pokrýva CVE bez opráv.
+1. **Aktualizovať dotknutú závislosť** (preferované) — prejsť na opravenú verziu
+   prostredníctvom `package.json` a `overrides` (tranzitívne závislosti) alebo znova
+   zostaviť obraz na opravenom základnom obraze.
+2. **Ak upstream neposkytuje opravu:**
+   - **osv:** znova nastaviť východiskovú hodnotu `metrics.vulnCount` v
+     `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update`
+     nepokrýva samostatné kontroly — upravte hodnotu ručne, `direction:down`) a pridať
+     poznámku s odôvodnením + sledovací problém.
+   - **Trivy:** pridať záznam do `.trivyignore` (jedno CVE-ID na riadok) s komentárom
+     obsahujúcim odôvodnenie + sledovací problém. `ignore-unfixed: true` už automaticky
+     pokrýva CVE bez dostupných opráv.
 
-Obe brány **elegantne PRESKOČIA** (exit 0), ak nástroj chýba alebo meranie zlyhá (osv-scanner nie je v PATH, osv.dev/sieť nedostupná, neplatný JSON) — zlyhanie **merania** nikdy neblokuje, blokuje iba **nameraná** regresia.
+Povinné spustenia OSV (`check:vuln-ratchet -- --ratchet`) zlyhajú bezpečným spôsobom
+so stavom `INCOMPLETE` a návratovým kódom 2, keď nie je možné overiť skener, správu
+alebo východiskovú hodnotu. Nameraná regresia skončí s návratovým kódom 1. Informatívne
+spustenie môže naďalej hlásiť `SKIP` s návratovým kódom 0, čo nepotvrdzuje, že závislosti
+úspešne prešli kontrolou. Blokujúci krok Trivy tiež vyžaduje úspešné meranie: nedostupné
+nástroje, neúspešné úlohy a chýbajúce dôkazy o obraze nemôžu potvrdiť, že obraz
+neobsahuje zraniteľnosti.
 
 ## Riziko vyradenej závislosti
 

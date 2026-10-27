@@ -18,18 +18,31 @@ OmniRoute 發布 npm + Docker 構件。這些關卡提供溯源、庫存（SBOM�
 
 映像檔 CVE 棘輪式調整在 `docker-publish.yml` 中使用**兩個步驟**：SARIF 步驟（`HIGH,CRITICAL`，`exit-code: 0`）讓高風險和嚴重風險在安全性分頁中可見，但不阻擋發布；而 _嚴重關卡_ 步驟（`severity: CRITICAL`，`ignore-unfixed: true`，`exit-code: 1`）會在存在**可用修復程式**的嚴重 CVE 時使發布失敗。`ignore-unfixed` 可防止因基礎映像檔 CVE 缺乏上游修補程式而阻擋發布。
 
-## ⚠️ CVE 變異（阻擋 osv/Trivy 關卡）
+## ⚠️ CVE 差異（阻擋 osv/Trivy 閘門）
 
-osv 和 Trivy 會將依賴項與**持續增長**的 CVE 資料庫進行比較。一個**未觸及任何依賴項**的 PR 可能會突然變紅，因為現有依賴項中披露了新的 CVE（osv：測量的 `vulnCount` > 基準線；Trivy：映像檔中出現新的可修復嚴重問題）。**這是阻擋性 CVE 關卡的預期操作行為，而非產品退化。**
+osv 和 Trivy 會將相依套件與**持續增加**的 CVE 資料庫進行比對。即使 PR
+**完全未變更相依套件**，也可能因現有相依套件新揭露了 CVE 而突然變成紅燈（osv：測得的 `vulnCount` > 基準值；Trivy：映像中出現新的
+可修復 CRITICAL 弱點）。**這是阻擋式 CVE 閘門的預期操作行為，
+並非產品退化。**
 
-當 osv 或 Trivy 因新披露的 CVE 而變紅時，解決方案是：
+當 osv 或 Trivy 因新揭露的 CVE 而變成紅燈時，處理方式如下：
 
-1.  **提升受影響的依賴項**（首選）— 透過 `package.json` 的 `overrides`（傳遞性依賴項）升級到已修補版本，或在已修補的基礎上重建映像檔。
-2.  **如果沒有上游修復：**
-    - **osv：** 在 `config/quality/quality-baseline.json` 中重新設定 `metrics.vulnCount` 的基準線（`npm run quality:ratchet -- --update` 不涵蓋專用關卡 — 手動編輯數值，`direction:down`），並附上理由說明和追蹤問題。
-    - **Trivy：** 在 `.trivyignore` 中新增一個條目（每行一個 CVE-ID），並附上理由註釋和追蹤問題。`ignore-unfixed: true` 已自動涵蓋沒有修補程式的 CVE。
+1. **升級受影響的相依套件**（建議）— 透過 `package.json`
+   `overrides`（間接相依套件）升級至已修補版本，或使用已修補的基礎映像重新建置映像。
+2. **若上游尚無修正：**
+   - **osv：** 重新設定 `config/quality/quality-baseline.json` 中的 `metrics.vulnCount` 基準值
+     （`npm run quality:ratchet -- --update` 不涵蓋專用閘門——請手動編輯該值，
+     `direction:down`），並附上理由說明與追蹤議題。
+   - **Trivy：** 在 `.trivyignore` 中新增一筆項目（每行一個 CVE-ID），並附上理由
+     註解與追蹤議題。`ignore-unfixed: true` 已會自動涵蓋沒有
+     修補程式的 CVE。
 
-當工具不存在或測量失敗時（例如 osv-scanner 不在 PATH 中、osv.dev/網路無法連線、JSON 無效），這兩個關卡都會**優雅地跳過**（exit 0）— **測量**失敗絕不會阻擋，只有**測量到的**退化才會阻擋。
+必要的 OSV 執行（`check:vuln-ratchet -- --ratchet`）會在
+掃描器、報告或基準值無法驗證時採取失敗關閉策略，回報
+`INCOMPLETE` 並以狀態碼 2 結束。測得退化時則以狀態碼 1 結束。諮詢性執行仍可能回報 `SKIP` 並
+以狀態碼 0 結束，但這不代表相依套件已通過掃描。阻擋式
+Trivy 步驟同樣要求成功完成測量：工具無法使用、工作失敗
+以及缺少映像證據，都無法證明映像未含弱點。
 
 ## 已淘汰的相依性風險
 

@@ -18,18 +18,18 @@ OmniRoute npm + Docker artefaktlarını dərc edir. Bu qapılar mənşə, invent
 
 Şəkil CVE ratçeti `docker-publish.yml` faylında **iki addımdan** istifadə edir: SARIF addımı (`HIGH,CRITICAL`, `exit-code: 0`) HIGH+CRITICAL səviyyələrini Təhlükəsizlik tabında bloklamadan görünən saxlayır; _KRİTİK qapı_ addımı (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) **mövcud düzəlişi olan** KRİTİK CVE-də buraxılışı uğursuz edir. `ignore-unfixed` yuxarı axın yaması olmayan əsas şəkil CVE-si üçün buraxılışın bloklanmasının qarşısını alır.
 
-## ⚠️ CVE Fərqliliyi (osv/Trivy qapılarını bloklayır)
+## ⚠️ CVE dəyişkənliyi (bloklayıcı osv/Trivy keçidləri)
 
-osv və Trivy asılılıqları **davamlı olaraq böyüyən** CVE verilənlər bazaları ilə müqayisə edir. **Heç bir asılılığa toxunmayan** bir PR, mövcud bir asılılıqda yeni bir CVE aşkar edildiyi üçün qəfildən qırmızıya çevrilə bilər (osv: ölçülmüş `vulnCount` > baza; Trivy: şəkildə yeni düzəldilə bilən KRİTİK). **Bu, bloklayıcı CVE qapısının GÖZLƏNİLƏN əməliyyat davranışıdır, məhsul reqressiyası deyil.**
+osv və Trivy asılılıqları **davamlı olaraq genişlənən** CVE verilənlər bazaları ilə müqayisə edir. **Heç bir asılılığa toxunmayan** PR mövcud asılılıqda yeni CVE açıqlandığı üçün qəfildən uğursuz ola bilər (osv: ölçülən `vulnCount` > ilkin göstərici; Trivy: obrazda aradan qaldırıla bilən yeni CRITICAL boşluq). **Bu, məhsul reqressiyası deyil, bloklayıcı CVE keçidinin GÖZLƏNİLƏN əməliyyat davranışıdır.**
 
-osv və ya Trivy yeni aşkar edilmiş CVE səbəbindən qırmızıya çevrildikdə, çarəsi budur:
+Yeni açıqlanmış CVE səbəbindən osv və ya Trivy uğursuz olduqda həll yolu belədir:
 
-1.  **Təsirlənmiş asılılığı yeniləyin** (üstünlük verilən) — `package.json` `overrides` (tranzitiv asılılıqlar) vasitəsilə yamalanmış versiyaya yüksəldin və ya yamalanmış baza üzərində şəkli yenidən qurun.
-2.  **Əgər yuxarı axın düzəlişi yoxdursa:**
-    - **osv:** `metrics.vulnCount` göstəricisini `config/quality/quality-baseline.json` faylında yenidən baza səviyyəsinə gətirin (`npm run quality:ratchet -- --update` xüsusi qapıları əhatə etmir — dəyəri əl ilə dəyişdirin, `direction:down`) əsaslandırma qeydi + izləmə problemi ilə.
-    - **Trivy:** `.trivyignore` faylına (hər sətirdə CVE-ID) əsaslandırma şərhi + izləmə problemi ilə bir giriş əlavə edin. `ignore-unfixed: true` artıq yaması olmayan CVE-ləri avtomatik olaraq əhatə edir.
+1. **Təsirə məruz qalan asılılığın versiyasını artırın** (üstünlük verilən variant) — `package.json` faylındakı `overrides` vasitəsilə düzəliş edilmiş versiyaya yüksəldin (tranzitiv asılılıqlar üçün) və ya obrazı düzəliş edilmiş baza əsasında yenidən yaradın.
+2. **Əgər yuxarı axında düzəliş yoxdursa:**
+   - **osv:** `config/quality/quality-baseline.json` faylındakı `metrics.vulnCount` üçün ilkin göstəricini yenidən təyin edin (`npm run quality:ratchet -- --update` xüsusi keçidləri əhatə etmir — əsaslandırma qeydi və izləmə məsələsi əlavə edərək dəyəri əl ilə redaktə edin, `direction:down`).
+   - **Trivy:** `.trivyignore` faylına əsaslandırma şərhi və izləmə məsələsi ilə birlikdə qeyd əlavə edin (hər sətirdə bir CVE-ID). `ignore-unfixed: true` artıq yamağı olmayan CVE-ləri avtomatik olaraq əhatə edir.
 
-Hər iki qapı, alət olmadıqda və ya ölçmə uğursuz olduqda (osv-scanner PATH-da yoxdur, osv.dev/şəbəkə əlçatmazdır, etibarsız JSON) **zərif şəkildə ÖTÜRÜLÜR** (exit 0) — **ölçmə** uğursuzluğu heç vaxt bloklamır, yalnız **ölçülmüş** reqressiya bloklayır.
+Tələb olunan OSV icraları (`check:vuln-ratchet -- --ratchet`) skaner, hesabat və ya ilkin göstərici doğrulana bilmədikdə `INCOMPLETE` statusu və 2 çıxış kodu ilə qapalı şəkildə uğursuz olur. Ölçülmüş reqressiya 1 çıxış kodu ilə nəticələnir. Məsləhət xarakterli icra yenə də 0 çıxış kodu ilə `SKIP` bildirə bilər, lakin bu, asılılıqların skandan uğurla keçdiyini təsdiqləmir. Bloklayıcı Trivy addımı da uğurlu ölçmə tələb edir: əlçatan olmayan alətlər, uğursuz tapşırıqlar və çatışmayan obraz sübutları obrazın təmiz olduğunu təsdiqləyə bilməz.
 
 ## İstifadədən çıxarılmış asılılıq riski
 

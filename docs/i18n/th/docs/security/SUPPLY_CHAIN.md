@@ -18,18 +18,18 @@ OmniRoute เผยแพร่ npm + Docker artifacts เกตเหล่า�
 
 การปรับระดับ CVE ของอิมเมจใช้ **สองขั้นตอน** ใน `docker-publish.yml`: ขั้นตอน SARIF (`HIGH,CRITICAL`, `exit-code: 0`) จะทำให้ HIGH+CRITICAL แสดงในแท็บ Security โดยไม่บล็อก; ขั้นตอน _CRITICAL gate_ (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) จะทำให้การเผยแพร่ล้มเหลวเมื่อพบ CRITICAL CVE **ที่มีการแก้ไขพร้อมใช้งาน** `ignore-unfixed` ช่วยป้องกันการบล็อกการเผยแพร่สำหรับ base-image CVE ที่ไม่มีแพตช์จากต้นน้ำ
 
-## ⚠️ ความผันผวนของ CVE (การบล็อกเกต osv/Trivy)
+## ⚠️ ความแปรผันของ CVE (ขัดขวางเกต osv/Trivy)
 
-osv และ Trivy เปรียบเทียบ deps กับฐานข้อมูล CVE ที่**เติบโตอย่างต่อเนื่อง** PR ที่**ไม่ได้แก้ไข dependencies ใดๆ** อาจเปลี่ยนเป็นสีแดงกะทันหันได้ เนื่องจากมีการเปิดเผย CVE ใหม่ใน dep ที่มีอยู่ (osv: `vulnCount` ที่วัดได้ > baseline; Trivy: CRITICAL ที่แก้ไขได้ใหม่ในอิมเมจ) **นี่คือพฤติกรรมการทำงานที่คาดหวังของเกต CVE ที่บล็อก ไม่ใช่ข้อบกพร่องของผลิตภัณฑ์**
+osv และ Trivy เปรียบเทียบ dependencies กับฐานข้อมูล CVE ที่ **เพิ่มขึ้นอย่างต่อเนื่อง** PR ที่ **ไม่ได้แก้ไข dependencies ใดๆ** อาจเปลี่ยนเป็นสถานะล้มเหลวได้ทันที เนื่องจากมีการเปิดเผย CVE ใหม่ใน dependency ที่มีอยู่ (osv: ค่า `vulnCount` ที่วัดได้ > baseline; Trivy: พบช่องโหว่ระดับ CRITICAL ใหม่ที่แก้ไขได้ใน image) **นี่คือพฤติกรรมการทำงานที่คาดไว้ของเกต CVE แบบขัดขวาง ไม่ใช่ regression ของผลิตภัณฑ์**
 
-เมื่อ osv หรือ Trivy แสดงสถานะสีแดงเนื่องจาก CVE ที่เพิ่งถูกเปิดเผย วิธีแก้ไขคือ:
+เมื่อ osv หรือ Trivy ล้มเหลวเนื่องจาก CVE ที่เพิ่งเปิดเผยใหม่ วิธีแก้ไขคือ:
 
-1.  **อัปเดต dep ที่ได้รับผลกระทบ** (แนะนำ) — อัปเกรดเป็นเวอร์ชันที่ได้รับการแก้ไขผ่าน `package.json` `overrides` (สำหรับ transitive deps) หรือสร้างอิมเมจใหม่บน base ที่ได้รับการแก้ไข
-2.  **หากไม่มีการแก้ไขจากต้นน้ำ:**
-    - **osv:** ปรับ baseline ของ `metrics.vulnCount` ใหม่ใน `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` ไม่ครอบคลุมเกตเฉพาะ — ให้แก้ไขค่าด้วยตนเอง, `direction:down`) พร้อมบันทึกเหตุผล + tracking issue
-    - **Trivy:** เพิ่มรายการใน `.trivyignore` (CVE-ID ต่อบรรทัด) พร้อมคอมเมนต์เหตุผล + tracking issue `ignore-unfixed: true` ครอบคลุม CVE ที่ไม่มีแพตช์โดยอัตโนมัติอยู่แล้ว
+1. **อัปเดต affected dependency** (แนะนำ) — อัปเกรดเป็นเวอร์ชันที่แพตช์แล้วผ่าน `package.json` `overrides` (สำหรับ transitive dependencies) หรือสร้าง image ใหม่บน base ที่แพตช์แล้ว
+2. **หากยังไม่มีการแก้ไขจาก upstream:**
+   - **osv:** กำหนด baseline ใหม่สำหรับ `metrics.vulnCount` ใน `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` ไม่ครอบคลุม dedicated gates — แก้ไขค่าด้วยตนเอง โดยใช้ `direction:down`) พร้อมหมายเหตุอธิบายเหตุผล + tracking issue
+   - **Trivy:** เพิ่มรายการใน `.trivyignore` (หนึ่ง CVE-ID ต่อบรรทัด) พร้อม comment อธิบายเหตุผล + tracking issue โดย `ignore-unfixed: true` ครอบคลุม CVE ที่ยังไม่มีแพตช์โดยอัตโนมัติอยู่แล้ว
 
-เกตทั้งสองจะ**ข้ามอย่างนุ่มนวล** (exit 0) เมื่อไม่มีเครื่องมือหรือการวัดล้มเหลว (เช่น osv-scanner ไม่อยู่ใน PATH, osv.dev/network เข้าถึงไม่ได้, JSON ไม่ถูกต้อง) — ความล้มเหลวในการ**วัด**จะไม่บล็อก แต่การถดถอยที่**วัดได้**เท่านั้นที่จะบล็อก
+การเรียกใช้ OSV ที่จำเป็น (`check:vuln-ratchet -- --ratchet`) จะล้มเหลวแบบปิดด้วย `INCOMPLETE` และ exit 2 เมื่อไม่สามารถตรวจสอบความถูกต้องของ scanner, report หรือ baseline ได้ ส่วน regression ที่วัดได้จะ exit 1 การเรียกใช้ในโหมด advisory ยังคงสามารถรายงาน `SKIP` พร้อม exit 0 ได้ ซึ่งไม่ได้ยืนยันว่า dependencies ผ่านการสแกน ขั้นตอน Trivy แบบขัดขวางยังกำหนดให้การวัดผลต้องสำเร็จด้วย: tools ที่ไม่พร้อมใช้งาน, jobs ที่ล้มเหลว และการไม่มีหลักฐานของ image ไม่สามารถรับรองได้ว่า image ปราศจากช่องโหว่
 
 ## ความเสี่ยงจากการพึ่งพาที่เลิกใช้งานแล้ว
 

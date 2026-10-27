@@ -18,18 +18,32 @@ OmniRoute avaldab npm + Docker artefakte. Need väravad pakuvad päritolu, varud
 
 Kujutise CVE kohandamine kasutab `docker-publish.yml` failis **kahte sammu**: SARIF-samm (`HIGH,CRITICAL`, `exit-code: 0`) hoiab HIGH+CRITICAL nähtavana turvalisuse vahekaardil blokeerimata; _KRIITILISE värava_ samm (`severity: CRITICAL`, `ignore-unfixed: true`, `exit-code: 1`) nurjab väljalaske KRIITILISE CVE korral, **millele on parandus saadaval**. `ignore-unfixed` takistab väljalaske blokeerimist baaskujutise CVE tõttu, millel puudub ülesvoolu parandus.
 
-## ⚠️ CVE varieeruvus (blokeerivad osv/Trivy väravad)
+## ⚠️ CVE varieeruvus (blokeerivad osv/Trivy kontrollid)
 
-osv ja Trivy võrdlevad sõltuvusi CVE andmebaasidega, mis **pidevalt kasvavad**. PR, mis **ei puuduta ühtegi sõltuvust**, võib ootamatult punaseks minna, sest olemasolevas sõltuvuses avastati uus CVE (osv: mõõdetud `vulnCount` > baasjoon; Trivy: uus parandatav KRIITILINE kujutises). **See on blokeeriva CVE värava OODATUD operatiivne käitumine, mitte toote regressioon.**
+osv ja Trivy võrdlevad sõltuvusi CVE-andmebaasidega, mis **kasvavad pidevalt**. PR,
+mis **ei muuda ühtegi sõltuvust**, võib äkitselt punaseks muutuda, sest olemasolevas
+sõltuvuses avalikustati uus CVE (osv: mõõdetud `vulnCount` > lähtetase; Trivy: tõmmises
+on uus parandatav CRITICAL). **See on blokeeriva CVE-kontrolli OODATUD töökäitumine,
+mitte toote regressioon.**
 
-Kui osv või Trivy lähevad äsja avaldatud CVE tõttu punaseks, on lahendus:
+Kui osv või Trivy muutub äsja avalikustatud CVE tõttu punaseks, tuleb teha järgmist:
 
-1.  **Uuenda mõjutatud sõltuvust** (eelistatud) — uuenda parandatud versioonile `package.json` `overrides` kaudu (transitiivsed sõltuvused) või ehita kujutis uuesti parandatud baasil.
-2.  **Kui ülesvoolu parandust pole:**
-    - **osv:** määra `metrics.vulnCount` uuesti baasjooneks failis `config/quality/quality-baseline.json` (`npm run quality:ratchet -- --update` ei hõlma spetsiaalseid väravaid — muuda väärtust käsitsi, `direction:down`) koos põhjenduse märkuse + jälgimisprobleemiga.
-    - **Trivy:** lisa kirje faili `.trivyignore` (CVE-ID rea kohta) koos põhjenduse kommentaari + jälgimisprobleemiga. `ignore-unfixed: true` katab juba automaatselt CVE-d ilma parandusteta.
+1. **Uuenda mõjutatud sõltuvust** (eelistatud) — võta parandatud versioon kasutusele faili `package.json`
+   jaotise `overrides` kaudu (transitiivsed sõltuvused) või loo tõmmis uuesti parandatud baastõmmise põhjal.
+2. **Kui ülesvoolus pole parandust:**
+   - **osv:** määra failis `config/quality/quality-baseline.json` väärtusele `metrics.vulnCount` uus lähtetase
+     (`npm run quality:ratchet -- --update` ei hõlma eraldiseisvaid kontrolle — muuda väärtust
+     käsitsi, `direction:down`) ning lisa põhjendus ja jälgimisülesanne.
+   - **Trivy:** lisa faili `.trivyignore` kirje (üks CVE-ID rea kohta) koos põhjendava
+     kommentaari ja jälgimisülesandega. `ignore-unfixed: true` hõlmab juba automaatselt
+     parandusteta CVE-sid.
 
-Mõlemad väravad **jätavad sujuvalt vahele** (exit 0), kui tööriist puudub või mõõtmine ebaõnnestub (osv-scanner pole PATH-is, osv.dev/võrk kättesaamatu, vigane JSON) — **mõõtmise** ebaõnnestumine ei blokeeri kunagi, ainult **mõõdetud** regressioon blokeerib.
+Nõutavad OSV käivitused (`check:vuln-ratchet -- --ratchet`) nurjuvad turvaliselt
+olekuga `INCOMPLETE` ja väljumiskoodiga 2, kui skannerit, aruannet või lähtetaset ei saa valideerida.
+Mõõdetud regressiooni korral on väljumiskood 1. Nõuandev käivitus võib endiselt teatada olekust `SKIP`
+ja lõppeda väljumiskoodiga 0, kuid see ei kinnita, et sõltuvused läbisid skannimise. Blokeeriv
+Trivy etapp nõuab samuti edukat mõõtmist: kättesaamatud tööriistad, nurjunud tööd
+ja puuduvad tõmmise tõendid ei võimalda tõendada, et tõmmis on puhas.
 
 ## Eemaldatud sõltuvuse risk
 

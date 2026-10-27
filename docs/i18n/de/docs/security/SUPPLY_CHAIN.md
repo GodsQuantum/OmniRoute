@@ -23,28 +23,32 @@ ohne zu blockieren; der _CRITICAL Gate_-Schritt (`severity: CRITICAL`, `ignore-u
 `exit-code: 1`) lässt das Release bei einem CRITICAL CVE **mit verfügbarem Fix** fehlschlagen. `ignore-unfixed`
 verhindert das Blockieren des Releases für einen Basis-Image-CVE ohne Upstream-Patch.
 
-## ⚠️ CVE-Varianz (blockierende osv/Trivy Gates)
+## ⚠️ CVE-Abweichungen (blockierende osv-/Trivy-Prüfungen)
 
-osv und Trivy vergleichen Abhängigkeiten mit CVE-Datenbanken, die **kontinuierlich wachsen**. Ein PR,
-der **keine Abhängigkeiten berührt**, kann plötzlich rot werden, weil eine neue CVE
-in einer bestehenden Abhängigkeit offengelegt wurde (osv: gemessener `vulnCount` > Baseline; Trivy: ein neuer
-behebbarer CRITICAL im Image). **Dies ist ERWARTETES Betriebsverhalten eines blockierenden
-CVE-Gates, keine Produktregression.**
+osv und Trivy gleichen Abhängigkeiten mit CVE-Datenbanken ab, die **kontinuierlich wachsen**. Ein PR,
+der **keine Abhängigkeiten ändert**, kann plötzlich fehlschlagen, weil eine neue CVE
+für eine bestehende Abhängigkeit veröffentlicht wurde (osv: gemessener `vulnCount` > Baseline; Trivy: eine neue
+behebbare CRITICAL-Schwachstelle im Image). **Dies ist das ERWARTETE Betriebsverhalten einer blockierenden
+CVE-Prüfung und keine Produktregression.**
 
-Wenn osv oder Trivy aufgrund einer neu offengelegten CVE rot werden, ist die Abhilfe:
+Wenn osv oder Trivy aufgrund einer neu veröffentlichten CVE fehlschlagen, ist wie folgt vorzugehen:
 
-1.  **Betroffene Abhängigkeit aktualisieren** (bevorzugt) — Upgrade auf die gepatchte Version über `package.json`
-    `overrides` (transitive Abhängigkeiten) oder Neuerstellung des Images auf einer gepatchten Basis.
-2.  **Wenn kein Upstream-Fix verfügbar ist:**
-    - **osv:** Re-Baseline von `metrics.vulnCount` in `config/quality/quality-baseline.json`
-      (`npm run quality:ratchet -- --update` deckt dedizierte Gates nicht ab — Wert manuell bearbeiten,
-      `direction:down`) mit einer Begründung + Tracking-Issue.
-    - **Trivy:** Eintrag in `.trivyignore` hinzufügen (CVE-ID pro Zeile) mit einem Begründungskommentar
-      - Tracking-Issue. `ignore-unfixed: true` deckt CVEs ohne Patches bereits automatisch ab.
+1. **Betroffene Abhängigkeit aktualisieren** (bevorzugt) — Upgrade auf die gepatchte Version über
+   `overrides` in `package.json` (transitive Abhängigkeiten) oder Neuerstellung des Images auf einer gepatchten Basis.
+2. **Wenn es keinen Upstream-Fix gibt:**
+   - **osv:** `metrics.vulnCount` in `config/quality/quality-baseline.json` neu als Baseline festlegen
+     (`npm run quality:ratchet -- --update` deckt dedizierte Prüfungen nicht ab — den Wert
+     manuell mit `direction:down` bearbeiten), einschließlich Begründung und Tracking-Issue.
+   - **Trivy:** Einen Eintrag in `.trivyignore` hinzufügen (eine CVE-ID pro Zeile), einschließlich eines
+     Begründungskommentars und eines Tracking-Issues. `ignore-unfixed: true` deckt CVEs ohne
+     Patches bereits automatisch ab.
 
-Beide Gates **überspringen elegant** (exit 0), wenn das Tool fehlt oder die Messung
-fehlschlägt (osv-scanner nicht im PATH, osv.dev/Netzwerk unerreichbar, ungültiges JSON) — ein
-**Messfehler** blockiert nie, nur eine **gemessene** Regression blockiert.
+Erforderliche OSV-Ausführungen (`check:vuln-ratchet -- --ratchet`) schlagen nach dem Fail-Closed-Prinzip mit
+`INCOMPLETE` und Exit-Code 2 fehl, wenn Scanner, Bericht oder Baseline nicht validiert werden können.
+Eine gemessene Regression führt zu Exit-Code 1. Eine beratende Ausführung kann weiterhin `SKIP` mit
+Exit-Code 0 melden; dies weist jedoch nicht nach, dass die Abhängigkeiten den Scan bestanden haben. Auch der blockierende
+Trivy-Schritt erfordert eine erfolgreiche Messung: Nicht verfügbare Tools, fehlgeschlagene Jobs
+und fehlende Image-Nachweise können nicht bestätigen, dass ein Image frei von Schwachstellen ist.
 
 ## Risiko durch eingestellte Abhängigkeit
 
