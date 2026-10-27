@@ -1,10 +1,18 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SCRIPT = fileURLToPath(new URL("../../scripts/i18n/audit-all.py", import.meta.url));
 const REL = "docs/architecture/QUALITY_GATES.md";
@@ -59,6 +67,102 @@ test("reports the duplicated body H1 from the Bosnian quality-gates mirror", (t)
 
 test("accepts translated headings after the generated title and navigation", (t) => {
   assert.deepEqual(audit(t, SOURCE, PREFIX + TRANSLATED_BODY).findings, []);
+});
+
+for (const [name, source, mirror] of [
+  [
+    "a standalone translated title",
+    "# Contributor Covenant Code of Conduct\n\n## Our Pledge\n\nA welcoming community.",
+    "# Contributor Covenant Code of Conduct\n\n## Nasze zobowiązanie\n\nPrzyjazna społeczność.",
+  ],
+  [
+    "standalone frontmatter and a translated title",
+    SOURCE,
+    "---\ntitle: Referenca\n---\n\n# Referenca za Quality Gates\n\n" + TRANSLATED_BODY,
+  ],
+  [
+    "a standalone title with leading blank lines and indented code",
+    "\n\n# Example\n\n    # Code comment\n\n## Setup",
+    "\n\n# Primjer\n\n    ### Komentar\n\n## Postavljanje",
+  ],
+  [
+    "standalone CRLF frontmatter and title",
+    SOURCE.replaceAll("\n", "\r\n"),
+    ("---\ntitle: Referenca\n---\n\n# Referenca\n\n" + TRANSLATED_BODY).replaceAll("\n", "\r\n"),
+  ],
+]) {
+  test(`accepts ${name} without a generated mirror prefix`, (t) => {
+    assert.deepEqual(audit(t, source, mirror).findings, []);
+  });
+}
+
+test("does not remove an added standalone H1 when the source has no initial title", (t) => {
+  const source = "---\ntitle: Metadata only\n---\n\nIntroduction.\n\n## Setup";
+  const mirror = "---\ntitle: Samo metapodaci\n---\n\n# Dodani naslov\n\nUvod.\n\n## Postavljanje";
+  assert.deepEqual(audit(t, source, mirror).findings, [[REL, "bs", "headings [1, 2]/[2]"]]);
+});
+
+test("retains a legitimate standalone body H1 after an introduction", (t) => {
+  const source = "Introduction.\n\n# Body heading\n\n## Setup";
+  const mirror = "Uvod.\n\n# Naslov tijela\n\n## Postavljanje";
+  assert.deepEqual(audit(t, source, mirror).findings, []);
+  assert.deepEqual(audit(t, source, mirror.replace("# Naslov tijela", "Naslov tijela")).findings, [
+    [REL, "bs", "headings [2]/[1, 2]"],
+  ]);
+});
+
+test("does not normalize leaked frontmatter and a duplicate title inside a generated body", (t) => {
+  const leakedBody = "---\ntitle: Referenca\n---\n\n# Referenca\n\n" + TRANSLATED_BODY;
+  assert.deepEqual(audit(t, SOURCE, PREFIX + leakedBody).findings, [
+    [REL, "bs", "headings [1, 2]/[2]"],
+  ]);
+});
+
+test("removes only the standalone title and still reports a second H1", (t) => {
+  const mirror = "# Referenca\n\n# Dodani naslov\n\n" + TRANSLATED_BODY;
+  assert.deepEqual(audit(t, SOURCE, mirror).findings, [[REL, "bs", "headings [1, 2]/[2]"]]);
+});
+
+test("agrees with the official extractors for generated and standalone document bodies", async (t) => {
+  const dir = mkdtempSync(path.join(os.tmpdir(), "omniroute-i18n-extractors-"));
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  // Import the actual module in a fixture checkout with no .env or backend configuration.
+  // Only its local source dependencies are copied; no installation or translation runs.
+  const moduleDir = path.join(dir, "scripts/i18n");
+  for (const rel of [
+    "run-translation.mjs",
+    "glossary-normalize.mjs",
+    "lib/language-bar.mjs",
+    "lib/translate-backend.mjs",
+    "lib/translation-state.mjs",
+    "lib/numeric-section-delta.mjs",
+  ]) {
+    const target = path.join(moduleDir, rel);
+    mkdirSync(path.dirname(target), { recursive: true });
+    copyFileSync(path.join(path.dirname(SCRIPT), rel), target);
+  }
+  assert.equal(existsSync(path.join(dir, ".env")), false);
+  t.mock.method(globalThis, "fetch", () => {
+    throw new Error("The extractor compatibility test must not call a backend");
+  });
+  const { extractMirrorBody, stripTopHeading, validateTranslatedChunk } = await import(
+    pathToFileURL(path.join(moduleDir, "run-translation.mjs")).href
+  );
+  for (const [mirror, extract] of [
+    [PREFIX + TRANSLATED_BODY, extractMirrorBody],
+    [PREFIX + "# Dodatni naslov\n\n" + TRANSLATED_BODY, extractMirrorBody],
+    ["# Referenca\n\n" + TRANSLATED_BODY, stripTopHeading],
+    ["---\ntitle: Referenca\n---\n\n# Referenca\n\n" + TRANSLATED_BODY, stripTopHeading],
+  ]) {
+    const expected = validateTranslatedChunk(
+      stripTopHeading(SOURCE),
+      extract(mirror)
+    ).problems.some((problem) => problem.startsWith("heading levels"));
+    const actual = audit(t, SOURCE, mirror).findings.some((finding) =>
+      finding[2].includes("headings")
+    );
+    assert.equal(actual, expected);
+  }
 });
 
 test("the canonical CLI defaults to the audited checkout's artifact directory", (t) => {
