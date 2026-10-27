@@ -4,7 +4,7 @@
 
 ---
 
-# AGENTS.md
+@AGENTS.md
 
 **Sva pravila projekta nalaze se u [`AGENTS.md`](AGENTS.md)** — jedini izvor istine za svakog AI
 asistenta (arhitektura, konvencije, testiranje, kvalitativni uvjeti, git tijek rada, 23 Tvrda pravila,
