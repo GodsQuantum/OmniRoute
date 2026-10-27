@@ -1038,7 +1038,9 @@ async function decodeAdmittedBody(
   const encoding = normalizeContentEncoding(request.headers.get("content-encoding"));
   if (!encoding) return { body };
   const decoded = await decodeRequestBodyBytes(body, encoding, hardMaxBytes);
-  if (decoded.ok) return { body: decoded.body };
+  // `=== true` (not a truthiness test): the repo compiles without strictNullChecks, where
+  // only an equality check narrows the boolean discriminant to the failure branch below.
+  if (decoded.ok === true) return { body: decoded.body };
   return {
     response:
       decoded.reason === "too_large"
