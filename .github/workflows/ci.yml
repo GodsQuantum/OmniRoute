@@ -1196,9 +1196,16 @@ jobs:
         # Merging 8 shards of raw v8 coverage is memory-heavy. `--merge-async`
         # keeps the V8 coverage merge incremental instead of loading every raw
         # JSON blob into one in-memory merge, which avoids Node heap OOMs.
+        # lcov only outside pull_request (2026-10-26): its sole consumer on a PR was the
+        # informational Codecov upload below (SonarQube is off: vars.SONARQUBE_ENABLED is
+        # unset), and the PR gate only needs the json/text summaries. The step took ~21 min
+        # on a measured PR against the org's 20-job hosted cap.
         env:
           NODE_OPTIONS: --max-old-space-size=8192
+          EVENT_NAME: ${{ github.event_name }}
         run: |
+          LCOV_REPORTER=()
+          if [ "$EVENT_NAME" != "pull_request" ]; then LCOV_REPORTER=(--reporter=lcov); fi
           mkdir -p coverage
           first_coverage_file=""
           if [ -d coverage-shards ]; then
@@ -1221,7 +1228,7 @@ jobs:
             --merge-async \
             --reporter=text-summary \
             --reporter=json-summary \
-            --reporter=lcov \
+            "${LCOV_REPORTER[@]}" \
             --exclude=tests/** \
             --exclude=**/*.test.* \
             --check-coverage \
@@ -1249,7 +1256,9 @@ jobs:
       # reporter above also fixes coverage/lcov.info being silently absent
       # (if-no-files-found: warn) — Sonar consumes the same file.
       - name: Upload coverage to Codecov (informational)
-        if: always()
+        # Push/merge-queue only: on a PR it cost ~5 min of the job for an informational
+        # patch-coverage note, and the PR no longer writes lcov.info (see the merge step).
+        if: ${{ always() && github.event_name != 'pull_request' }}
         # Informational means informational: its own ceiling and continue-on-error, so a
         # stalled upload can neither eat the job's budget nor turn a green job cancelled.
         timeout-minutes: 5
