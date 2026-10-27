@@ -189,6 +189,55 @@ test("mirrorNeedsRebuild: a real translation is left alone", () => {
   assert.equal(mirrorNeedsRebuild(mirror, SRC), false);
 });
 
+test("mirrorNeedsRebuild: an extra body H1 is stale even when the mirror is translated", () => {
+  const source = "# Quality Gates Reference\n\n## Inventory\n\nQuality checks are required.";
+  const prefix = "# Referenca (Bosanski)\n\n🌐 Languages\n\n---\n\n";
+  const body = "## Inventar\n\nProvjere kvaliteta su obavezne.";
+  assert.equal(mirrorNeedsRebuild(prefix + body, source), false);
+  assert.equal(
+    mirrorNeedsRebuild(prefix + "# Referenca za Quality Gates\n\n" + body, source),
+    true
+  );
+});
+
+test("mirrorNeedsRebuild: initial indented code is preserved as translated code", () => {
+  const source = "# Example\n\n    # Example comment\n    npm ci";
+  const mirror = "# Exemplo\n\n🌐 Languages\n\n---\n\n    ### Comentário traduzido\n    npm ci";
+  assert.equal(mirrorNeedsRebuild(mirror, source), false);
+});
+
+test("section reuse retranslates heading drift despite matching source hashes", () => {
+  const sections = ["Introduction.", "## Settings\n\n### Limits\n\nSet the limits."];
+  const prefix = "Introdução.";
+  const complete = "## Configurações\n\n### Limites\n\nConfigure os limites.";
+  for (const broken of [
+    "# Título extra\n\n" + complete,
+    complete.replace("### Limites", "Limites"),
+    complete.replace("### Limites", "#### Limites"),
+  ]) {
+    const plan = planSectionReuse({
+      previousHashes: sectionHashes(sections),
+      sections,
+      mirrorSections: [prefix, broken],
+    });
+    assert.deepEqual(plan.translate, [1]);
+    assert.deepEqual([...plan.reuse.entries()], [[0, prefix]]);
+  }
+  const valid = planSectionReuse({
+    previousHashes: sectionHashes(sections),
+    sections,
+    mirrorSections: [prefix, complete],
+  });
+  assert.deepEqual(valid.translate, []);
+  assert.deepEqual(
+    [...valid.reuse.entries()],
+    [
+      [0, prefix],
+      [1, complete],
+    ]
+  );
+});
+
 test("mergeStateUpdates keeps other runners' entries and applies this run's records", () => {
   const fresh = {
     sources: {
