@@ -129,9 +129,20 @@ async function findCompetingOpenPullRequest(ctx) {
     if (!Array.isArray(openPrs)) {
       throw new Error("checking open PRs returned an invalid response");
     }
+    const hasAmbiguousMetadata = openPrs.some(
+      (candidate) =>
+        !Number.isSafeInteger(candidate?.number) ||
+        candidate?.state !== "open" ||
+        typeof candidate?.head?.ref !== "string" ||
+        candidate.head.ref.length === 0 ||
+        typeof candidate?.head?.repo?.full_name !== "string" ||
+        candidate.head.repo.full_name.length === 0
+    );
+    if (hasAmbiguousMetadata) {
+      throw new Error("checking open PRs returned ambiguous PR metadata; preserving all runs");
+    }
     const competing = openPrs.find(
       (candidate) =>
-        candidate?.number !== ctx.prNumber &&
         candidate?.state === "open" &&
         candidate?.head?.ref === ctx.headRef &&
         candidate?.head?.repo?.full_name === ctx.headRepo
@@ -177,7 +188,11 @@ async function listWorkflowRuns(ctx) {
 async function readRun(ctx, runId) {
   const res = await gh(`/repos/${ctx.repo}/actions/runs/${runId}`, ctx);
   if (!res.ok) throw new Error(`run ${runId} readback failed with HTTP ${res.status}`);
-  return responseJson(res, `run ${runId} readback`);
+  const run = await responseJson(res, `run ${runId} readback`);
+  if (run?.id !== runId) {
+    throw new Error(`run ${runId} readback returned mismatched id ${String(run?.id)}`);
+  }
+  return run;
 }
 
 function isTerminal(run) {
@@ -256,40 +271,37 @@ async function confirmRunOwnership(ctx, run, selectorContext) {
 }
 
 async function forceCancelRun(ctx, originalRun, current, selectorContext, pollIntervalMs) {
+  const runId = originalRun.id;
   if (!(await confirmClosedPullRequest(ctx))) {
-    throw new Error(
-      `PR #${ctx.prNumber} reopened before force-cancel; preserving run ${current.id}`
-    );
+    throw new Error(`PR #${ctx.prNumber} reopened before force-cancel; preserving run ${runId}`);
   }
   await confirmRunOwnership(ctx, current, {
     ...selectorContext,
     allowUnlinkedFallback: selectorContext.allowUnlinkedFallback && isUnlinkedRun(originalRun),
   });
 
-  const force = await gh(`/repos/${ctx.repo}/actions/runs/${current.id}/force-cancel`, {
+  const force = await gh(`/repos/${ctx.repo}/actions/runs/${runId}/force-cancel`, {
     ...ctx,
     method: "POST",
   });
   if (force.status === 409) {
-    const raced = await readRun(ctx, current.id);
+    const raced = await readRun(ctx, runId);
     if (!isTerminal(raced)) {
-      throw new Error(
-        `run ${current.id} force-cancel returned HTTP 409 and remains ${raced?.status}`
-      );
+      throw new Error(`run ${runId} force-cancel returned HTTP 409 and remains ${raced?.status}`);
     }
     logTerminal(raced);
     return raced;
   }
   if (force.status !== 202) {
-    throw new Error(`run ${current.id} force-cancel request failed with HTTP ${force.status}`);
+    throw new Error(`run ${runId} force-cancel request failed with HTTP ${force.status}`);
   }
   console.log(
-    `accepted force-cancel request for ${current.id} ${current.name ?? originalRun.name} ${current.status}`
+    `accepted force-cancel request for ${runId} ${current.name ?? originalRun.name} ${current.status}`
   );
-  const terminal = await waitForTerminal(ctx, current.id, ctx.deadlineAt, pollIntervalMs);
+  const terminal = await waitForTerminal(ctx, runId, ctx.deadlineAt, pollIntervalMs);
   if (!isTerminal(terminal)) {
     throw new Error(
-      `run ${current.id} remains ${terminal?.status ?? "unknown"} after force-cancel was accepted`
+      `run ${runId} remains ${terminal?.status ?? "unknown"} after force-cancel was accepted`
     );
   }
   logTerminal(terminal);
