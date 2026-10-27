@@ -268,21 +268,21 @@ Domene upravljanja:
 - Paket konfiguracije: `src/app/api/sync/bundle` (GET, ETag-verzionirani snapshot postavki/pružatelja usluga/kombinacija/ključeva)
 - WebSocket: `src/app/api/v1/ws/route.ts` — Upgrade handler za OpenAI-kompatibilne WS klijente
 
-## 2) SSE + jezgra prevođenja
+## 2) SSE + jezgra za prevođenje
 
 Glavni moduli toka:
 
 - Ulazna točka: `src/sse/handlers/chat.ts`
-- Temeljna orkestracija: `open-sse/handlers/chatCore.ts`
-- Adapteri za izvršavanje pružatelja usluga: `open-sse/executors/*`
-- Otkrivanje formata/konfiguracija pružatelja usluga: `open-sse/services/provider.ts`
-- Raščlanjivanje/razrješavanje modela: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- Logika prijelaza na pričuvni račun: `open-sse/services/accountFallback.ts`
-- Registar prevođenja: `open-sse/translator/index.ts`
-- Transformacije toka: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- Izdvajanje/normalizacija podataka o upotrebi: `open-sse/utils/usageTracking.ts`
-- Parser oznake za razmišljanje: `open-sse/utils/thinkTagParser.ts`
-- Rukovatelj ugrađivanjima: `open-sse/handlers/embeddings.ts`
+- Osnovna orkestracija: `open-sse/handlers/chatCore.ts`
+- Adapteri za izvršavanje pružatelja: `open-sse/executors/*`
+- Detekcija formata/konfiguracija pružatelja: `open-sse/services/provider.ts`
+- Parsiranje/razrješavanje modela: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Logika pričuvnog (fallback) računa: `open-sse/services/accountFallback.ts`
+- Registar za prevođenje: `open-sse/translator/index.ts`
+- Transformacije streamova: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
+- Ekstrakcija/normalizacija potrošnje: `open-sse/utils/usageTracking.ts`
+- Parser think oznaka: `open-sse/utils/thinkTagParser.ts`
+- Rukovatelj ugrađivanjima (embeddings): `open-sse/handlers/embeddings.ts`
 - Registar pružatelja ugrađivanja: `open-sse/config/embeddingRegistry.ts`
 - Rukovatelj generiranjem slika: `open-sse/handlers/imageGeneration.ts`
 - Registar pružatelja slika: `open-sse/config/imageRegistry.ts`
@@ -293,47 +293,47 @@ Usluge (poslovna logika):
 
 - Odabir/bodovanje računa: `open-sse/services/accountSelector.ts`
 - Upravljanje životnim ciklusom konteksta: `open-sse/services/contextManager.ts`
-- Provedba IP filtra: `open-sse/services/ipFilter.ts`
-- Praćenje sesije: `open-sse/services/sessionManager.ts`
+- Primjena IP filtra: `open-sse/services/ipFilter.ts`
+- Praćenje sesija: `open-sse/services/sessionManager.ts`
 - Deduplikacija zahtjeva: `open-sse/services/signatureCache.ts`
-- Umetanje sistemskog upita: `open-sse/services/systemPrompt.ts`
-- Upravljanje proračunom za razmišljanje: `open-sse/services/thinkingBudget.ts`
-- Usmjeravanje modela sa zamjenskim znakovima: `open-sse/services/wildcardRouter.ts`
+- Ubacivanje sistemskog prompta: `open-sse/services/systemPrompt.ts`
+- Upravljanje proračunom razmišljanja: `open-sse/services/thinkingBudget.ts`
+- Usmjeravanje modela s džokerima: `open-sse/services/wildcardRouter.ts`
 - Upravljanje ograničenjem brzine: `open-sse/services/rateLimitManager.ts`
-- Prekidač strujnog kruga: `src/shared/utils/circuitBreaker.ts`
-- Predaja konteksta: `open-sse/services/contextHandoff.ts` — generiranje i umetanje sažetka predaje za strategiju prosljeđivanja konteksta
-- Kompresija: `open-sse/services/compression/*` — proaktivna kompresija prije prevođenja za pružatelja usluga;
-  uključuje pravila Caveman, filtre RTK, složene cjevovode, kombinacije kompresije, statistiku i provjeru valjanosti
-- Dohvatitelj kvote za Codex: `open-sse/services/codexQuotaFetcher.ts` — dohvaća kvotu za Codex radi odluka o predaji pri prosljeđivanju konteksta
-- Ponovni pokušaji koji uzimaju u obzir razdoblje hlađenja: `src/sse/services/cooldownAwareRetry.ts` — ponovni pokušaji po modelu nakon razdoblja hlađenja, s podesivim vrijednostima `requestRetry` / `maxRetryIntervalSec`
-- Sigurno izlazno dohvaćanje: `src/shared/network/safeOutboundFetch.ts` — zaštićeno dohvaćanje pružatelja usluga/modela sa zaštitom od SSRF-a, blokiranjem privatnih URL-ova, ponovnim pokušajima i vremenskim ograničenjem
-- Zaštita izlaznih URL-ova: `src/shared/network/outboundUrlGuard.ts` — provjere glavnog računala u URL-ovima pružatelja usluga; `src/shared/network/outboundUrlGuardPolicy.ts` odabire način rada iz `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` i njihovih preklopnika na nadzornoj ploči (pogledajte `docs/reference/ENVIRONMENT.md`)
-- Zadane vrijednosti zahtjeva prema pružatelju usluga: `open-sse/services/providerRequestDefaults.ts` — zadane vrijednosti `maxTokens`, `temperature`, `thinkingBudgetTokens` na razini pružatelja usluga
-- Konstante pružatelja GLM-a: `open-sse/config/glmProvider.ts` — zajednički GLM modeli, URL-ovi kvota te vremensko ograničenje/zadane vrijednosti za GLMT
-- Nadređena usluga Antigravity: `open-sse/config/antigravityUpstream.ts` — osnovni URL i konstante putanje za otkrivanje
-- Konstante klijenta Codex: `open-sse/config/codexClient.ts` — verzionirane vrijednosti korisničkog agenta i verzije klijenta
-- Početni skup pseudonima modela: `src/lib/modelAliasSeed.ts` — pri pokretanju postavlja više od 30 pseudonima dijalekata između proxy poslužitelja
+- Prekidač kruga (circuit breaker): `src/shared/utils/circuitBreaker.ts`
+- Predaja konteksta: `open-sse/services/contextHandoff.ts` — generiranje i ubacivanje sažetka predaje za strategiju context-relay
+- Kompresija: `open-sse/services/compression/*` — proaktivna kompresija prije prevođenja za pružatelja;
+  uključuje Caveman pravila, RTK filtre, složene (stacked) pipelineove, kombinacije kompresije, statistiku i validaciju
+- Dohvaćanje Codex kvote: `open-sse/services/codexQuotaFetcher.ts` — dohvaća Codex kvotu za odluke o predaji u okviru context-relay strategije
+- Ponovni pokušaji svjesni cooldowna: `src/sse/services/cooldownAwareRetry.ts` — ponovni pokušaji s cooldownom po modelu s konfigurabilnim `requestRetry` / `maxRetryIntervalSec`
+- Sigurno odlazno dohvaćanje: `src/shared/network/safeOutboundFetch.ts` — zaštićeno dohvaćanje pružatelja/modela sa SSRF zaštitom, blokiranjem privatnih URL-ova, ponovnim pokušajima i vremenskim ograničenjem
+- Zaštita odlaznih URL-ova: `src/shared/network/outboundUrlGuard.ts` — provjere hostova na URL-ovima pružatelja; `src/shared/network/outboundUrlGuardPolicy.ts` bira način rada na temelju `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` i njihovih preklopki na nadzornoj ploči (vidi `docs/reference/ENVIRONMENT.md`)
+- Zadane vrijednosti zahtjeva pružatelja: `open-sse/services/providerRequestDefaults.ts` — zadane vrijednosti `maxTokens`, `temperature`, `thinkingBudgetTokens` na razini pružatelja
+- Konstante GLM pružatelja: `open-sse/config/glmProvider.ts` — dijeljeni GLM modeli, URL-ovi kvota, GLMT timeout/zadane vrijednosti
+- Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — konstante osnovnog URL-a i putanje otkrivanja
+- Konstante Codex klijenta: `open-sse/config/codexClient.ts` — verzionirane vrijednosti user-agenta i verzije klijenta
+- Početno punjenje pseudonima modela: `src/lib/modelAliasSeed.ts` — pri pokretanju puni 30+ pseudonima dijalekata za više proxyja
 
 Moduli domenskog sloja:
 
 - Pravila troškova/proračuni: `src/domain/costRules.ts`
-- Pravila prijelaza na pričuvnu opciju: `src/domain/fallbackPolicy.ts`
-- Razrješivač kombinacija: `src/domain/comboResolver.ts`
-- Pravila zaključavanja: `src/domain/lockoutPolicy.ts`
-- Mehanizam pravila: `src/domain/policyEngine.ts` — centralizirana procjena zaključavanje → proračun → pričuvna opcija
+- Politika pričuvnih opcija (fallback): `src/domain/fallbackPolicy.ts`
+- Rezervirani ugovor za razrješavanje kombinacija: `src/domain/comboResolver.ts`; aktivno usmjeravanje koristi `open-sse/services/combo.ts`
+- Politika blokade: `src/domain/lockoutPolicy.ts`
+- Rezervirani ugovor za procjenu politika: `src/domain/policyEngine.ts`; putanja zahtjeva provodi politiku API ključa kroz `src/shared/utils/apiKeyPolicy.ts` i autorizaciju razriješenog cilja kroz `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Katalog kodova pogrešaka: `src/shared/constants/errorCodes.ts`
 - ID zahtjeva: `src/shared/utils/requestId.ts`
 - Vremensko ograničenje dohvaćanja: `src/shared/utils/fetchTimeout.ts`
 - Telemetrija zahtjeva: `src/shared/utils/requestTelemetry.ts`
 - Usklađenost/revizija: `src/lib/compliance/index.ts`
-- Pokretač evaluacija: `src/lib/evals/evalRunner.ts`
-- Trajno spremanje stanja domene: `src/lib/db/domainState.ts` — SQLite CRUD operacije za lance pričuvnih opcija, proračune, povijest troškova, stanje zaključavanja i prekidače strujnog kruga
+- Izvršitelj evaluacija: `src/lib/evals/evalRunner.ts`
+- Trajnost domenskog stanja: `src/lib/db/domainState.ts` — SQLite CRUD za lance pričuvnih opcija, proračune, povijest troškova, stanje blokade i prekidače
 
-Moduli OAuth pružatelja usluga (27 zasebnih datoteka u `src/lib/oauth/providers/`):
+Moduli OAuth pružatelja (27 pojedinačnih datoteka u `src/lib/oauth/providers/`):
 
 - Indeks registra: `src/lib/oauth/providers/index.ts`
-- Pojedinačni pružatelji usluga: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Zajedničke pomoćne funkcije: `codebuddyDeviceAuth.ts` (tijek autentifikacije uređaja za CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
+- Pojedinačni pružatelji: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
+- Dijeljeni pomoćnici: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl tijek uređaja), `museCodeDeviceResponse.ts`
 - Tanki omotač: `src/lib/oauth/providers.ts` — ponovno izvozi iz pojedinačnih modula
 
 ## 5) Ugrađene usluge (v3.8.4)
@@ -361,171 +361,178 @@ Detaljnije: `docs/frameworks/EMBEDDED-SERVICES.md`
 
 ## Glavni podsustavi (v3.8.0)
 
-### A. Mehanizam Auto Combo
+### A. Auto Combo Engine
 
-Auto Combo dinamički ocjenjuje i odabire ciljeve usmjeravanja u trenutku zahtjeva, umjesto
+Auto Combo dinamički boduje i odabire ciljeve usmjeravanja u trenutku zahtjeva, umjesto
 da se oslanja na statičku definiciju kombinacije. Pokreće obitelj prefiksa modela `auto/*`.
 
-- Ulazna točka mehanizma: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- Ulaz mehanizma: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Razrješivač: `src/domain/comboResolver.ts` (automatsko otkrivanje prefiksa `auto/`)
+- Ulaz aktivne kombinacije: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), koju poziva `src/sse/handlers/chat.ts`
 - Nadzorna ploča: `/dashboard/auto-combo`
 - Telemetrija: SQLite tablica `auto_combo_decisions`
 
 Ključne mogućnosti:
 
-- **20 strategija usmjeravanja** (prioritetno, ponderirano, prvo popunjavanje, kružno,
-  P2C, nasumično, najmanje korišteno, troškovno optimizirano, uzimajući u obzir poništavanje,
-  prozor poništavanja, raspoloživi kapacitet, ponderirano kvotom, strogo nasumično, **auto**,
-  lkgp, kontekstno optimizirano, predmemorijski optimizirano, prosljeđivanje konteksta, **fusion**,
-  cjevovod) —
-  auto je glavni dodatak u v3.8.0; `fusion` (slanje upita panelu + sinteza procjenitelja,
-  `open-sse/services/fusion.ts`) nov je u v3.8.36.
-- **Ocjenjivanje prema 16 čimbenika**: kvota, stanje, inverzni trošak, inverzna latencija,
-  prikladnost za zadatak i još deset čimbenika. Mjerodavna tablica čimbenika i njihovih zadanih
-  težina nalazi se u dokumentu
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — njezino ponovno navođenje ovdje
-  stvorilo bi još jedno mjesto na kojem može zastarjeti.
-- **Virtualna tvornica** materijalizira kratkotrajne kombinacije kada ne postoji odgovarajuća
-  imenovana kombinacija, odabirući kandidate iz aktivnih veza s pružateljima koje su u ispravnom stanju.
-- **Automatski prefiksi**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — svaki je podržan prilagođenim profilom težina.
+- **20 strategija usmjeravanja** (priority, weighted, fill-first, round-robin, P2C, random,
+  least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
+  strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
+  pipeline) —
+  auto je glavna novost u v3.8.0; `fusion` (razgrananje na panel + sinteza ocjenjivača,
+  `open-sse/services/fusion.ts`) novo je u v3.8.36.
+- **Bodovanje s 16 faktora**: kvota, zdravlje, inverzni trošak, inverzna latencija,
+  prikladnost zadatku i još deset drugih. Kanonska tablica faktora i njihovih zadanih
+  težina nalazi se u
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — njezino ponovno navođenje
+  ovdje stvorilo bi drugo mjesto na kojem može zastarjeti.
+- **Virtualna tvornica** stvara prolazne kombinacije kada ne postoji odgovarajuća
+  imenovana kombinacija, a kandidate preuzima iz zdravih aktivnih veza s pružateljima usluga.
+- **Auto prefiksi**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — svaki podržan podešenim profilom težina.
 - **6 paketa načina rada**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` i `chaos-mode` — unaprijed zadane konfiguracije težina koje se mogu
-  pozvati s nadzorne ploče. (Ne treba ih miješati s prethodno navedenim prefiksima `auto/*`,
-  koji su varijante primjenjivane u trenutku zahtjeva.)
+  `reliability-first` i `chaos-mode` — unaprijed definirane konfiguracije težina koje se
+  mogu pozivati s nadzorne ploče. (Ne treba ih brkati s gornjim prefiksima `auto/*`,
+  koji su varijante u trenutku zahtjeva.)
 
-Potpune pojedinosti o algoritmu (formule čimbenika, prilagodba težina) potražite u
+Za potpune algoritamske detalje (formule faktora, podešavanje težina) pogledajte
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. Agenti u oblaku
+### B. Cloud Agents
 
-Agenti u oblaku objedinjuju platforme trećih strana za agente za kodiranje smještene u
-oblaku (Codex Cloud, Devin, Jules) iza jedinstvenog životnog ciklusa zadatka podržanog
-bazom podataka. Sve krajnje točke za stvaranje i pregled zadataka zahtijevaju
-upravljačku autentifikaciju.
+Cloud Agents objedinjuje hostirane platforme kodnih agenata trećih strana (Codex Cloud,
+Devin, Jules) iza ujednačenog životnog ciklusa zadataka podržanog bazom podataka. Sve
+krajnje točke za stvaranje/pregled zadataka zahtijevaju autentikaciju za upravljanje.
 
 - Korijen modula: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts` te poddirektoriji pojedinačnih agenata unutar `agents/`)
-- Implementacije pojedinačnih agenata: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Javne krajnje točke: `/api/v1/agents/tasks/*` (popis/stvaranje/dohvaćanje/otkazivanje)
-- Upravljačke krajnje točke: `/api/cloud/*` (dodjela resursa, status, skupna obrada)
+  `types.ts`, `db.ts`, uz poddirektorije po agentu pod `agents/`)
+- Implementacije po agentu: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Javne krajnje točke: `/api/v1/agents/tasks/*` (popis/stvaranje/dohvat/otkazivanje)
+- Krajnje točke za upravljanje: `/api/cloud/*` (dodjela resursa, status, skupne operacije)
 - Nadzorna ploča: `/dashboard/cloud-agents`
 - Pohrana: tablica `cloud_agent_tasks`
 
-Pojedinosti o dodjeli resursa i protokolu OAuth za pojedine agente potražite u
+Za dodjelu resursa po agentu i specifičnosti OAuth-a pogledajte
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. Zaštitne mjere
+### C. Guardrails
 
-Modul zaštitnih mjera sloj je posredničkog softvera s mogućnošću ponovnog učitavanja
-bez prekida rada, koji provjerava zahtjeve i odgovore radi otkrivanja osobnih podataka,
-ubrizgavanja upita i nesigurnog vizualnog sadržaja. Kršenja odmah prekidaju zahtjev
-HTTP statusom **503** uz strukturirani kôd pogreške, čime se pozivateljima u nastavku
-omogućuje ponovni pokušaj ili grananje.
+Modul guardrails je posrednički sloj (middleware) s mogućnošću vrućeg ponovnog
+učitavanja koji pregledava zahtjeve i odgovore na osobne podatke (PII), ubrizgavanje
+upita (prompt injection) i nesiguran vizualni sadržaj. Kršenja prekidaju zahtjev s HTTP
+**503** uz strukturirani kôd pogreške, omogućujući pozivateljima niže u lancu da ponove
+pokušaj ili se grane.
 
 - Korijen modula: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Ponovno učitavanje bez prekida rada: registar prati promjene konfiguracije i iznova
-  izgrađuje lanac na mjestu
-- Točke povezivanja: ulaz rukovatelja razgovorom, rukovatelj generiranjem slika,
-  pročišćivač odgovora
-- HTTP ugovor: kršenja se prikazuju kao `503` s `error.code = "GUARDRAIL_VIOLATION"`
+- Vruće ponovno učitavanje: registar nadzire promjene konfiguracije i obnavlja lanac na mjestu
+- Točke povezivanja: ulaz u rukovatelja chata, rukovatelj generiranja slika, modul za pročišćavanje odgovora
+- HTTP ugovor: kršenja se iskazuju kao `503` s `error.code = "GUARDRAIL_VIOLATION"`
 
-Informacije o izradi skupova pravila i prilagodbi pragova potražite u
+Za izradu skupova pravila i podešavanje pragova pogledajte
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Domenski sloj
+### D. Sloj domene
 
-Imenski prostor `src/domain/` centralizira odluke o pravilima kako rukovatelji rutama
-ne bi morali sami sastavljati logiku zaključavanja, proračuna i zamjenskih opcija.
+Prostor imena `src/domain/` sadrži domenske servise i rezervirane ugovore evaluacije.
+Nije jedna obavezna ulazna točka pravila za svaki zahtjev.
 
-- Mehanizam pravila: `src/domain/policyEngine.ts` — jedinstvena ulazna točka za
-  procjenu prije izvršavanja (redoslijed: zaključavanje → proračun → zamjenska opcija)
+Aktivna putanja chata poziva `enforceApiKeyPolicy()` iz
+`src/shared/utils/apiKeyPolicy.ts`; autorizacija razriješenih modela i članova
+kombinacije implementirana je u `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ulazna
+točka samostalnog hostiranja u `src/app/api/v1/chat/completions/route.ts` također
+provodi pravilo API ključa prije proslijeđivanja. Razrješavanje kombinacije odvija se
+kroz `open-sse/services/combo.ts`.
+
+`src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` i `src/lib/container.ts`
+ostaju testirani ugovori, a ne ožičenje te putanje zahtjeva. Spremnik registrira
+mehanizam pravila, ali pregledana produkcijska putanja zahtjeva ne razrješava ga. Sama
+izmjena tih ugovora ne mijenja aktivna pravila chata niti usmjeravanje kombinacija;
+njihovo povezivanje ili uklanjanje zahtijeva zasebnu odluku o dizajnu.
+
+- Rezervirani mehanizam pravila: `src/domain/policyEngine.ts` — evaluacija blokade → proračuna → pričuve
 - Pravila troškova: `src/domain/costRules.ts`
-- Pravila zamjenskih opcija: `src/domain/fallbackPolicy.ts`
-- Pravila zaključavanja: `src/domain/lockoutPolicy.ts`
-- Usmjeravanje na temelju oznaka: `src/domain/tagRouter.ts`
-- Razrješivač kombinacija: `src/domain/comboResolver.ts` — razrješava nazive kombinacija,
-  prefikse auto/\* i ciljeve modela sa zamjenskim znakovima u konkretne planove izvršavanja
-- Povezivač pravila veza/modela: `src/domain/connectionModelRules.ts`
+- Pravila pričuve: `src/domain/fallbackPolicy.ts`
+- Pravila blokade: `src/domain/lockoutPolicy.ts`
+- Usmjeravanje temeljeno na oznakama: `src/domain/tagRouter.ts`
+- Rezervirani razrješavač kombinacija: `src/domain/comboResolver.ts` — samostalni ugovor odabira; aktivno usmjeravanje kombinacija implementirano je u `open-sse/services/combo.ts`
+- Spajač pravila veza i modela: `src/domain/connectionModelRules.ts`
 - Snimke dostupnosti modela: `src/domain/modelAvailability.ts`
-- Praćenje isteka pružatelja: `src/domain/providerExpiration.ts`
+- Praćenje isteka pružatelja usluga: `src/domain/providerExpiration.ts`
 - Predmemorija kvota: `src/domain/quotaCache.ts`
 - Stanje degradacije: `src/domain/degradation.ts`
 - Revizija konfiguracije: `src/domain/configAudit.ts`
-- Sastavljač metapodataka odgovora OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Podsustav procjene: `src/domain/assessment/` — zadaci periodične procjene
+- Graditelj metapodataka odgovora OmniRoute-a: `src/domain/omnirouteResponseMeta.ts`
+- Podsustav procjene: `src/domain/assessment/` — periodični zadaci evaluacije
 
-### E. Autorizacijski cjevovod
+### E. Cjevovod autorizacije
 
-Autorizacijski cjevovod klasificira svaki dolazni zahtjev i prije otpreme primjenjuje
-odgovarajući lanac pravila.
+Cjevovod autorizacije klasificira svaki dolazni zahtjev i primjenjuje odgovarajući
+lanac pravila prije proslijeđivanja.
 
-- Ulazna točka cjevovoda: `src/server/authz/pipeline.ts`
+- Ulazna točka pipelinea: `src/server/authz/pipeline.ts`
 - Klasifikator zahtjeva: `src/server/authz/classify.ts` — razlikuje javne
   kompatibilne rute od upravljačkih ruta
 - Popis javnih ruta: `src/shared/constants/publicApiRoutes.ts`
-- Pravila: `src/server/authz/policies/` — predikati koji se mogu kombinirati
-  (`requireApiKey`, `requireManagement`, `requireFreshAuth` itd.)
-- Pomoćni alati za zaglavlja: `src/server/authz/headers.ts`
-- Pomoćni alat za provjeru: `src/server/authz/assertAuth.ts`
+- Pravila: `src/server/authz/policies/` — komponibilni predikati
+  (`requireApiKey`, `requireManagement`, `requireFreshAuth`, itd.)
+- Alati za zaglavlja: `src/server/authz/headers.ts`
+- Pomoćna funkcija za provjeru: `src/server/authz/assertAuth.ts`
 - Kontekst zahtjeva: `src/server/authz/context.ts`
 
-Javne i upravljačke rute strogo su razgraničene: API-ji agenata/vremena čekanja i
-izmjene pružatelja zahtijevaju upravljačku autentifikaciju (HTTP 401 ako nedostaje).
+Javne i upravljačke rute čine strogu granicu: API-ji za agente/cooldown i
+mutacije pružatelja zahtijevaju upravljačku autentikaciju (HTTP 401 ako nedostaje).
 
-Potpuna pravila klasifikacije ruta potražite u
+Za potpuna pravila klasifikacije ruta pogledajte
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
 ### F. FSM tijeka rada i usmjerivač svjestan zadataka
 
-Usmjerivač vođen konačnim automatom, smješten iznad odabira kombinacije, usmjerava
-promet na temelju otkrivene faze tijeka rada (planiranje, izvršavanje,
-pregled) i afiniteta pozadinskih zadataka.
+Usmjerivač vođen konačnim automatom, slojevito postavljen iznad odabira kombinacija, za usmjeravanje
+prometa na temelju otkrivene faze tijeka rada (planiranje, izvođenje,
+pregled) i afiniteta prema pozadinskim zadacima.
 
 - FSM tijeka rada: `open-sse/services/workflowFSM.ts`
 - Usmjerivač svjestan zadataka: `open-sse/services/taskAwareRouter.ts`
 - Detektor pozadinskih zadataka: `open-sse/services/backgroundTaskDetector.ts`
 - Klasifikator namjere: `open-sse/services/intentClassifier.ts`
 
-Prijelazi FSM-a koriste se pri bodovanju značajke Auto Combo, dajući prednost jeftinijim modelima
-za pozadinske/automatizirane zadatke, a snažnijim modelima za interaktivne
+Prijelazi FSM-a ugrađuju se u bodovanje Auto Comba, favorizirajući jeftinije modele
+za pozadinske/automatizacijske zadatke i jače modele za interaktivne
 korake planiranja/pregleda.
 
-### G. Otpornost specifična za pružatelja usluge
+### G. Otpornost specifična za pružatelje
 
-Nekoliko pružatelja isporučuje namjenske module za otpornost i prikrivanje koji se nadovezuju na
-globalne slojeve prekidača strujnog kruga / razdoblja hlađenja veze / blokiranja modela:
+Nekoliko pružatelja isporučuje namjenske module otpornosti i prikrivanja koji se nadovezuju na
+globalne slojeve circuit breakera / cooldowna veze / blokade modela:
 
-- Antigravity mehanizam za 429: `open-sse/services/antigravity429Engine.ts` (rotira
-  identitet, uklanja zaglavlja odgovora, upravlja praćenjem kredita/verzije putem
+- Antigravity 429 motor: `open-sse/services/antigravity429Engine.ts` (rotira
+  identitet, čisti zaglavlja odgovora, upravlja praćenjem kredita/verzija putem
   `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
   `antigravityIdentity.ts`, `antigravityVersion.ts`)
-- ModelScope pravila kvote: `open-sse/services/modelscopePolicy.ts`
+- Pravilo kvote ModelScope: `open-sse/services/modelscopePolicy.ts`
 - Claude Code CCH (rukovanje kanalom kompatibilnosti): `open-sse/services/claudeCodeCCH.ts`,
-  uz `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+  plus `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Oblikovanje otiska Claude Codea: `open-sse/services/claudeCodeFingerprint.ts`
-- Prikrivanje Claude Codea: `open-sse/services/claudeCodeObfuscation.ts`
+- Oblikovanje otiska Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- Obfuskacija Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Za cjelovit priručnik o prikrivanju i operativne smjernice pogledajte
-`docs/security/STEALTH_GUIDE.md` (git; ne kompilira se u `/docs`).
+Za potpuni priručnik prikrivanja i operativne upute pogledajte
+`docs/security/STEALTH_GUIDE.md` (git; nije kompilirano u `/docs`).
 
-### H. Web-dojavnici, predmemorija zaključivanja, predmemorija čitanja
+### H. Webhookovi, predmemorija zaključivanja, predmemorija čitanja
 
-- **Web-dojavnici** — odlazno slanje događaja pružatelja/računa/zadatka.
+- **Webhookovi** — odlazno slanje događaja pružatelja/računa/zadataka.
   - Dispečer: `src/lib/webhookDispatcher.ts`
   - Pohrana: SQLite tablica `webhooks` (putem `src/lib/db/webhooks.ts`)
   - Nadzorna ploča: `/dashboard/webhooks` (pretplate, tajne, povijest ponovnih pokušaja)
   - Za taksonomiju događaja i semantiku ponovnih pokušaja pogledajte [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Predmemorija zaključivanja** — blokovi zaključivanja koji se mogu ponovno reproducirati za pružatelje koji emitiraju
-  tokene razmišljanja (Claude, GLMT itd.) kako bi uzastopni koraci mogli preskočiti ponovno razmišljanje.
+- **Predmemorija zaključivanja** — ponovljivi blokovi zaključivanja za pružatelje koji emitiraju
+  tokene razmišljanja (Claude, GLMT itd.), kako bi uzastopni koraci mogli preskočiti ponovno razmišljanje.
   - Sloj baze podataka: `src/lib/db/reasoningCache.ts`
   - Sloj usluge: `open-sse/services/reasoningCache.ts`
-  - Za semantiku ponovne reprodukcije pogledajte [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Predmemorija čitanja** — kratkotrajna predmemorija odgovora indeksirana prema potpisu koja se koristi za
-  objedinjavanje identičnih ponovnih pokušaja neispravnih nadređenih SDK-ova.
+  - Za semantiku reprodukcije pogledajte [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Predmemorija čitanja** — kratkotrajna predmemorija odgovora ključirana potpisom, koristi se
+  za spajanje identičnih ponovnih pokušaja iz neispravnih uzvodnih SDK-ova.
   - Sloj baze podataka: `src/lib/db/readCache.ts`
   - Krajnja točka statistike: `GET /api/cache/stats`, nadzorna ploča na `/dashboard/cache`
 

@@ -266,73 +266,73 @@ Hallinta-alueet:
 - Määrityspaketti: `src/app/api/sync/bundle` (GET, ETag-versioitu tilannevedos asetuksista, palveluntarjoajista, yhdistelmistä ja avaimista)
 - WebSocket: `src/app/api/v1/ws/route.ts` — Upgrade-käsittelijä OpenAI-yhteensopiville WS-asiakkaille
 
-## 2) SSE + käännösydin
+## 2) SSE + käännösydein (Translation Core)
 
-Pääprosessin moduulit:
+Päävirtauksen moduulit:
 
 - Aloituspiste: `src/sse/handlers/chat.ts`
-- Ydinkoordinointi: `open-sse/handlers/chatCore.ts`
+- Ydinorkestrointi: `open-sse/handlers/chatCore.ts`
 - Palveluntarjoajien suoritusadapterit: `open-sse/executors/*`
-- Muodon tunnistus / palveluntarjoajan määritys: `open-sse/services/provider.ts`
-- Mallin jäsennys / ratkaisu: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- Tilin varajärjestelylogiikka: `open-sse/services/accountFallback.ts`
+- Muodon tunnistus / palveluntarjoajan konfiguraatio: `open-sse/services/provider.ts`
+- Mallin jäsennys/ratkaisu: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Tilin varatoimintalogiikka: `open-sse/services/accountFallback.ts`
 - Käännösrekisteri: `open-sse/translator/index.ts`
 - Virtamuunnokset: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- Käyttötietojen poiminta / normalisointi: `open-sse/utils/usageTracking.ts`
-- Think-tunnisteen jäsennin: `open-sse/utils/thinkTagParser.ts`
+- Käytön poiminta/normalisointi: `open-sse/utils/usageTracking.ts`
+- Think-tagin jäsentäjä: `open-sse/utils/thinkTagParser.ts`
 - Upotusten käsittelijä: `open-sse/handlers/embeddings.ts`
 - Upotuspalveluntarjoajien rekisteri: `open-sse/config/embeddingRegistry.ts`
-- Kuvien luonnin käsittelijä: `open-sse/handlers/imageGeneration.ts`
+- Kuvageneroinnin käsittelijä: `open-sse/handlers/imageGeneration.ts`
 - Kuvapalveluntarjoajien rekisteri: `open-sse/config/imageRegistry.ts`
-- Vastauksen puhdistus: `open-sse/handlers/responseSanitizer.ts`
+- Vastausten siistiminen: `open-sse/handlers/responseSanitizer.ts`
 - Roolien normalisointi: `open-sse/services/roleNormalizer.ts`
 
 Palvelut (liiketoimintalogiikka):
 
-- Tilin valinta / pisteytys: `open-sse/services/accountSelector.ts`
+- Tilin valinta/pisteytys: `open-sse/services/accountSelector.ts`
 - Kontekstin elinkaaren hallinta: `open-sse/services/contextManager.ts`
-- IP-suodatuksen valvonta: `open-sse/services/ipFilter.ts`
-- Istuntojen seuranta: `open-sse/services/sessionManager.ts`
-- Pyyntöjen kaksoiskappaleiden poisto: `open-sse/services/signatureCache.ts`
-- Järjestelmäkehotteen lisäys: `open-sse/services/systemPrompt.ts`
-- Ajattelubudjetin hallinta: `open-sse/services/thinkingBudget.ts`
-- Jokerimallien reititys: `open-sse/services/wildcardRouter.ts`
-- Nopeusrajoitusten hallinta: `open-sse/services/rateLimitManager.ts`
-- Katkaisija: `src/shared/utils/circuitBreaker.ts`
-- Kontekstin siirto: `open-sse/services/contextHandoff.ts` — siirtoyhteenvetojen luonti ja lisäys kontekstinvälitysstrategiaa varten
-- Pakkaus: `open-sse/services/compression/*` — ennakoiva pakkaus ennen palveluntarjoajamuunnosta;
-  sisältää Caveman-säännöt, RTK-suodattimet, pinotut käsittelyketjut, pakkausyhdistelmät, tilastot ja validoinnin
-- Codex-kiintiön noutaja: `open-sse/services/codexQuotaFetcher.ts` — noutaa Codex-kiintiön kontekstinvälityksen siirtopäätöksiä varten
-- Jäähdytysajan huomioiva uudelleenyritys: `src/sse/services/cooldownAwareRetry.ts` — mallikohtaiset jäähdytysajan jälkeiset uudelleenyritykset määritettävillä `requestRetry`- / `maxRetryIntervalSec`-asetuksilla
-- Turvallinen lähtevä nouto: `src/shared/network/safeOutboundFetch.ts` — suojattu palveluntarjoajan/mallin nouto, joka sisältää SSRF-suojauksen, yksityisten URL-osoitteiden eston, uudelleenyrityksen ja aikakatkaisun
-- Lähtevien URL-osoitteiden suojaus: `src/shared/network/outboundUrlGuard.ts` — palveluntarjoajien URL-osoitteiden isäntätarkistukset; `src/shared/network/outboundUrlGuardPolicy.ts` valitsee tilan muuttujista `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ja niiden hallintapaneelivalinnoista (katso `docs/reference/ENVIRONMENT.md`)
-- Palveluntarjoajapyyntöjen oletusarvot: `open-sse/services/providerRequestDefaults.ts` — palveluntarjoajakohtaiset `maxTokens`-, `temperature`- ja `thinkingBudgetTokens`-oletusarvot
-- GLM-palveluntarjoajan vakiot: `open-sse/config/glmProvider.ts` — jaetut GLM-mallit, kiintiöiden URL-osoitteet sekä GLMT:n aikakatkaisu ja oletusarvot
-- Antigravity-vastapalvelu: `open-sse/config/antigravityUpstream.ts` — perus-URL:n ja etsintäpolun vakiot
-- Codex-asiakasohjelman vakiot: `open-sse/config/codexClient.ts` — versioidut user-agent- ja asiakasohjelmaversioarvot
-- Mallialiasten alkutiedot: `src/lib/modelAliasSeed.ts` — alustaa käynnistyksen yhteydessä yli 30 välityspalvelindialektien välistä aliasta
+- IP-suodattimen valvonta: `open-sse/services/ipFilter.ts`
+- Istunnon seuranta: `open-sse/services/sessionManager.ts`
+- Pyyntöjen deduplikointi: `open-sse/services/signatureCache.ts`
+- Järjestelmäkehoteen injektointi: `open-sse/services/systemPrompt.ts`
+- Thinking-budjetin hallinta: `open-sse/services/thinkingBudget.ts`
+- Yleismerkkimallien reititys: `open-sse/services/wildcardRouter.ts`
+- Käyttörajoitusten hallinta: `open-sse/services/rateLimitManager.ts`
+- Katkaisija (circuit breaker): `src/shared/utils/circuitBreaker.ts`
+- Kontekstin luovutus: `open-sse/services/contextHandoff.ts` — luovutusyhteenvedon generointi ja injektointi context-relay-strategiaa varten
+- Pakkaus: `open-sse/services/compression/*` — ennakoiva pakkaus ennen palveluntarjoajakäännöstä;
+  sisältää Caveman-säännöt, RTK-suodattimet, pinotut putket, pakkausyhdistelmät, tilastot ja validoinnin
+- Codex-kiintiön haku: `open-sse/services/codexQuotaFetcher.ts` — hakee Codex-kiintiön context-relay-luovutuspäätöksiä varten
+- Jäähdytysajan huomioiva uudelleenyritys: `src/sse/services/cooldownAwareRetry.ts` — mallikohtaiset jäähdytysuudelleenyritykset konfiguroitavilla `requestRetry` / `maxRetryIntervalSec` -asetuksilla
+- Turvallinen lähtevä haku: `src/shared/network/safeOutboundFetch.ts` — suojattu palveluntarjoaja-/mallihaku SSRF-suojalla, yksityisten URL-osoitteiden estolla, uudelleenyrityksellä ja aikakatkaisulla
+- Lähtevien URL-osoitteiden vartija: `src/shared/network/outboundUrlGuard.ts` — isäntätarkistukset palveluntarjoajien URL-osoitteille; `src/shared/network/outboundUrlGuardPolicy.ts` valitsee tilan muuttujista `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ja niiden hallintapaneelin kytkimistä (katso `docs/reference/ENVIRONMENT.md`)
+- Palveluntarjoajan pyyntöoletukset: `open-sse/services/providerRequestDefaults.ts` — palveluntarjoajatason `maxTokens`-, `temperature`- ja `thinkingBudgetTokens`-oletukset
+- GLM-palveluntarjoajan vakiot: `open-sse/config/glmProvider.ts` — yhteiset GLM-mallit, kiintiö-URL-osoitteet, GLMT:n aikakatkaisu/oletukset
+- Antigravity-upstream: `open-sse/config/antigravityUpstream.ts` — perus-URL ja löytöpolkuvakiot
+- Codex-asiakkaan vakiot: `open-sse/config/codexClient.ts` — versioidut user-agent- ja client-version-arvot
+- Mallialusten alustus: `src/lib/modelAliasSeed.ts` — alustaa käynnistyksessä yli 30 ristiproxy-dialektialusta
 
-Toimialokerroksen moduulit:
+Toimialuekerroksen moduulit:
 
-- Kustannussäännöt / budjetit: `src/domain/costRules.ts`
-- Varajärjestelykäytäntö: `src/domain/fallbackPolicy.ts`
-- Yhdistelmän ratkaisija: `src/domain/comboResolver.ts`
+- Kustannussäännöt/budjetit: `src/domain/costRules.ts`
+- Varatoimintakäytäntö: `src/domain/fallbackPolicy.ts`
+- Varattu combo-ratkaisusopimus: `src/domain/comboResolver.ts`; reaaliaikainen reititys käyttää moduulia `open-sse/services/combo.ts`
 - Lukituskäytäntö: `src/domain/lockoutPolicy.ts`
-- Käytäntömoottori: `src/domain/policyEngine.ts` — keskitetty lukituksen → budjetin → varajärjestelyn arviointi
-- Virhekoodiluettelo: `src/shared/constants/errorCodes.ts`
-- Pyynnön tunniste: `src/shared/utils/requestId.ts`
-- Noudon aikakatkaisu: `src/shared/utils/fetchTimeout.ts`
+- Varattu käytäntöarviointisopimus: `src/domain/policyEngine.ts`; pyyntöpolku valvoo API-avainkäytäntöä moduulilla `src/shared/utils/apiKeyPolicy.ts` ja ratkaistun kohteen valtuutusta moduulilla `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Virhekoodien luettelo: `src/shared/constants/errorCodes.ts`
+- Pyyntö-ID: `src/shared/utils/requestId.ts`
+- Haun aikakatkaisu: `src/shared/utils/fetchTimeout.ts`
 - Pyyntötelemetria: `src/shared/utils/requestTelemetry.ts`
-- Vaatimustenmukaisuus / auditointi: `src/lib/compliance/index.ts`
-- Arviointien suorittaja: `src/lib/evals/evalRunner.ts`
-- Toimialan tilan pysyväistallennus: `src/lib/db/domainState.ts` — SQLite CRUD varajärjestelyketjuille, budjeteille, kustannushistorialle, lukitustilalle ja katkaisijoille
+- Vaatimustenmukaisuus/auditointi: `src/lib/compliance/index.ts`
+- Eval-ajuri: `src/lib/evals/evalRunner.ts`
+- Toimialueen tilan pysyväistallennus: `src/lib/db/domainState.ts` — SQLite CRUD varatoimintoketjuille, budjeteille, kustannushistorialle, lukitustilalle ja katkaisijoille
 
-OAuth-palveluntarjoajamoduulit (27 erillistä tiedostoa hakemistossa `src/lib/oauth/providers/`):
+OAuth-palveluntarjoajamoduulit (27 yksittäistä tiedostoa hakemistossa `src/lib/oauth/providers/`):
 
-- Rekisterin hakemistotiedosto: `src/lib/oauth/providers/index.ts`
+- Rekisterin indeksi: `src/lib/oauth/providers/index.ts`
 - Yksittäiset palveluntarjoajat: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Jaetut apumoduulit: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl -laiteprosessi), `museCodeDeviceResponse.ts`
-- Ohut kääremoduuli: `src/lib/oauth/providers.ts` — vie uudelleen yksittäisistä moduuleista
+- Jaetut apurit: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl -laitevirta), `museCodeDeviceResponse.ts`
+- Ohut wrapperi: `src/lib/oauth/providers.ts` — uudelleenvie yksittäisistä moduuleista
 
 ## 5) Upotetut palvelut (v3.8.4)
 
@@ -357,169 +357,187 @@ Arkkitehtuurikerrokset:
 
 Syvällisempi kuvaus: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-## Tärkeimmät alijärjestelmät (v3.8.0)
+## Keskeiset alijärjestelmät (v3.8.0)
 
 ### A. Auto Combo -moottori
 
-Auto Combo pisteyttää ja valitsee reitityskohteet dynaamisesti pyynnön käsittelyn aikana
-staattiseen yhdistelmämäärittelyyn tukeutumisen sijaan. Se toimii `auto/*`-mallietuliiteperheen perustana.
+Auto Combo pisteyttää ja valitsee reitityskohteet dynaamisesti pyyntöhetkellä sen
+sijaan, että se nojaisi staattiseen combo-määritelmään. Se toimii `auto/*`-mallietuliiteperheen moottorina.
 
 - Moottorin aloituspiste: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Ratkaisija: `src/domain/comboResolver.ts` (`auto/`-etuliitteen automaattinen tunnistus)
+- Tuotannon combo-aloituspiste: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), jota kutsuu `src/sse/handlers/chat.ts`
 - Hallintapaneeli: `/dashboard/auto-combo`
-- Telemetria: SQLite-taulu `auto_combo_decisions`
+- Telemetria: `auto_combo_decisions`-SQLite-taulu
 
 Keskeiset ominaisuudet:
 
-- **20 reititysstrategiaa** (prioriteetti, painotettu, täytä ensin, vuorottelu, P2C, satunnainen,
-  vähiten käytetty, kustannusoptimoitu, nollauksen huomioiva, nollausikkuna, liikkumavara, kiintiöpainotettu,
-  tiukasti satunnainen, **auto**, lkgp, kontekstioptimoitu, välimuistioptimoitu, kontekstin välitys, **fusion**,
-  liukuhihna) —
-  auto on v3.8.0:n merkittävin lisäys; `fusion` (paneelin rinnakkaishajautus + arvioijan koostaminen,
+- **20 reititysstrategiaa** (priority, weighted, fill-first, round-robin, P2C, random,
+  least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
+  strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
+  pipeline) —
+  auto on version v3.8.0 näkyvin uutuus; `fusion` (paneelin haarautus + tuomarin synteesi,
   `open-sse/services/fusion.ts`) on uusi versiossa v3.8.36.
-- **16 tekijän pisteytys**: kiintiö, kunto, käänteinen kustannus, käänteinen viive, tehtävään soveltuvuus ja
-  kymmenen muuta. Tekijöiden ja niiden oletuspainojen ensisijainen taulukko sijaitsee tiedostossa
+- **16 tekijän pisteytys**: kiintiö, kunto, käänteinen kustannus, käänteinen viive,
+  tehtäväsoveltuvuus ja kymmenen muuta. Tekijöiden ja niiden oletuspainojen kanoninen
+  taulukko sijaitsee dokumentissa
   [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — sen toistaminen tässä
-  loisi sille toisen paikan, jossa se voisi vanhentua.
-- **Virtuaalitehdas** toteuttaa tilapäisiä yhdistelmiä, kun vastaavaa nimettyä yhdistelmää
-  ei ole, ja hakee ehdokkaat kunnossa olevista aktiivisista palveluntarjoajayhteyksistä.
-- **Automaattiset etuliitteet**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — jokaisen taustalla on hienosäädetty painoprofiili.
+  antaisi sille toisen paikan vanhentua.
+- **Virtuaalitehdas** luo tilapäisiä comboja, kun vastaavaa nimettyä combo ei ole
+  olemassa, ja hakee ehdokkaat terveistä aktiivisista palveluntarjoajayhteyksistä.
+- **Auto-etuliitteet**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — jokaisen taustalla on viritetty painoprofiili.
 - **6 tilapakettia**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` ja `chaos-mode` — hallintapaneelista käytettävissä olevia
-  painomääritysten esiasetuksia. (Näitä ei pidä sekoittaa yllä oleviin `auto/*`-etuliitteisiin,
-  jotka ovat pyyntökohtaisia muunnelmia.)
+  `reliability-first` ja `chaos-mode` — esiasetettuja painokokoonpanoja, joita voi
+  kutsua hallintapaneelista. (Ei sekoitettavaksi yllä oleviin `auto/*`-etuliitteisiin,
+  jotka ovat pyyntöaikaisia muunnelmia.)
 
-Täydelliset algoritmiset tiedot (tekijöiden kaavat, painojen hienosäätö) ovat tiedostossa
-[`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
+Täydet algoritmien yksityiskohdat (tekijäkaavat, painojen viritys) on kuvattu
+dokumentissa [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. Pilviagentit
+### B. Cloud Agents
 
-Pilviagentit käärivät kolmansien osapuolten isännöidyt koodiagenttialustat (Codex Cloud, Devin,
-Jules) yhtenäisen, tietokantapohjaisen tehtävän elinkaaren taakse. Kaikki tehtävien luonti- ja tarkastuspäätepisteet
-edellyttävät hallinnan todennusta.
+Cloud Agents käärii kolmansien osapuolten isännöimät koodiagenttialustat (Codex Cloud,
+Devin, Jules) yhtenäisen tietokantapohjaisen tehtäväelinkaaren taakse. Kaikki
+tehtävien luonti- ja tarkastelupäätepisteet vaativat hallintatodennuksen.
 
-- Moduulin juurihakemisto: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts` sekä agenttikohtaiset alihakemistot hakemistossa `agents/`)
+- Moduulin juuri: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
+  `types.ts`, `db.ts`, sekä agenttikohtaiset alihakemistot hakemiston `agents/` alla)
 - Agenttikohtaiset toteutukset: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Julkiset päätepisteet: `/api/v1/agents/tasks/*` (luettelointi/luonti/haku/peruutus)
-- Hallintapäätepisteet: `/api/cloud/*` (käyttöönotto, tila, eräkäsittely)
+- Julkiset päätepisteet: `/api/v1/agents/tasks/*` (listaus/luonti/haku/peruutus)
+- Hallintapäätepisteet: `/api/cloud/*` (provisiointi, tila, eräajo)
 - Hallintapaneeli: `/dashboard/cloud-agents`
-- Tallennus: taulu `cloud_agent_tasks`
+- Tallennustila: `cloud_agent_tasks`-taulu
 
-Agenttikohtaiset käyttöönotto- ja OAuth-tiedot ovat tiedostossa
+Agenttikohtaiset provisioinnin ja OAuthin yksityiskohdat on kuvattu dokumentissa
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. Suojaukset
+### C. Guardrails
 
-Suojausmoduuli on ajonaikaisesti uudelleenladattava väliohjelmistokerros, joka tarkastaa pyynnöt
-ja vastaukset henkilötietojen, kehotteiden injektoinnin ja turvattoman kuvasisällön varalta. Rikkomukset
-keskeyttävät pyynnön HTTP-tilakoodilla **503** sekä rakenteisella virhekoodilla, jolloin
-alavirran kutsujat voivat yrittää uudelleen tai haarautua.
+Guardrails-moduuli on ajonaikaisesti uudelleenladattava väliohjelmistokerros, joka
+tarkastaa pyynnöt ja vastaukset henkilötietojen (PII), kehoteinjektion ja haitallisen
+visionsisällön varalta. Rikkomukset katkaisevat pyynnön välittömästi HTTP **503**
+-tilakoodilla ja jäsennellyllä virhekoodilla, jolloin alavirran kutsujat voivat
+yrittää uudelleen tai haarautua.
 
-- Moduulin juurihakemisto: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
+- Moduulin juuri: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Ajonaikainen uudelleenlataus: rekisteri tarkkailee määritysmuutoksia ja muodostaa ketjun uudelleen paikallaan
-- Kytkentäpisteet: keskustelukäsittelijän aloituspiste, kuvanluontikäsittelijä, vastauksen puhdistin
-- HTTP-sopimus: rikkomukset näkyvät tilakoodina `503` ja arvona `error.code = "GUARDRAIL_VIOLATION"`
+- Ajonaikainen uudelleenlataus: rekisteri tarkkailee konfiguraatiomuutoksia ja
+  rakentaa ketjun uudelleen paikallaan
+- Kytkentäkohdat: chat-käsittelijän sisääntulo, kuvanluontikäsittelijä, vastausten puhdistin
+- HTTP-sopimus: rikkomukset näkyvät muodossa `503` ja `error.code = "GUARDRAIL_VIOLATION"`
 
-Sääntöjoukkojen laatimista ja kynnysarvojen hienosäätöä käsitellään tiedostossa
+Sääntöjoukkojen laatiminen ja kynnysarvojen viritys on kuvattu dokumentissa
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Toimialuekerros
+### D. Domain-kerros
 
-Nimiavaruus `src/domain/` keskittää käytäntöpäätökset, jotta reittikäsittelijöiden ei
-tarvitse koostaa lukitus-, budjetti- ja varamenettelylogiikkaa itse.
+`src/domain/`-nimiavaruus sisältää domain-palveluja ja varattuja arviointisopimuksia.
+Se ei ole yhtenäinen pakollinen käytäntöjen aloituspiste jokaiselle pyynnölle.
 
-- Käytäntömoottori: `src/domain/policyEngine.ts` — yksi aloituspiste
-  suoritusta edeltävälle arvioinnille (lukitus → budjetti → varamenettelyn järjestys)
+Tuotannon chat-polku kutsuu funktiota `enforceApiKeyPolicy()` tiedostosta
+`src/shared/utils/apiKeyPolicy.ts`; ratkaistujen mallien ja combo-jäsenten valtuutus
+on toteutettu tiedostossa `src/sse/handlers/chat/resolvedModelPolicy.ts`. Myös itse
+isännöidyn asennuksen päätepiste `src/app/api/v1/chat/completions/route.ts` valvoo
+API-avainkäytäntöä ennen edelleenlähetystä. Combo-ratkaisu kulkee tiedoston
+`open-sse/services/combo.ts` kautta.
+
+`src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` ja `src/lib/container.ts`
+ovat edelleen testattuja sopimuksia, eivät kyseisen pyyntöpolun kytkentöjä. Säiliö
+rekisteröi käytäntömoottorin, mutta tarkasteltu tuotannon pyyntöpolku ei ratkaise
+sitä. Pelkkä näiden sopimusten muuttaminen ei muuta tuotannon chat-käytäntöä tai
+combo-reititystä; niiden kytkeminen tai poistaminen vaatii erillisen
+suunnittelupäätöksen.
+
+- Varattu käytäntömoottori: `src/domain/policyEngine.ts` — lukitus → budjetti → varatoiminnon arviointi
 - Kustannussäännöt: `src/domain/costRules.ts`
-- Varamenettelykäytäntö: `src/domain/fallbackPolicy.ts`
+- Varatoimintokäytäntö: `src/domain/fallbackPolicy.ts`
 - Lukituskäytäntö: `src/domain/lockoutPolicy.ts`
 - Tunnistepohjainen reititys: `src/domain/tagRouter.ts`
-- Yhdistelmäratkaisija: `src/domain/comboResolver.ts` — ratkaisee yhdistelmien nimet, auto/\*
-  -etuliitteet ja jokerimerkkejä sisältävät mallikohteet konkreettisiksi suoritussuunnitelmiksi
-- Yhteys- ja mallisääntöjen yhdistäjä: `src/domain/connectionModelRules.ts`
-- Mallien saatavuustilannevedokset: `src/domain/modelAvailability.ts`
-- Palveluntarjoajan vanhenemisen seuranta: `src/domain/providerExpiration.ts`
+- Varattu combo-ratkaisija: `src/domain/comboResolver.ts` — itsenäinen valintasopimus; tuotannon combo-reititys on toteutettu tiedostossa `open-sse/services/combo.ts`
+- Yhteys-/mallisääntöjen yhdistäjä: `src/domain/connectionModelRules.ts`
+- Mallien saatavuuden tilannevedokset: `src/domain/modelAvailability.ts`
+- Palveluntarjoajien vanhenemisseuranta: `src/domain/providerExpiration.ts`
 - Kiintiövälimuisti: `src/domain/quotaCache.ts`
-- Heikentymistila: `src/domain/degradation.ts`
-- Määritysten auditointi: `src/domain/configAudit.ts`
+- Heikkenemistila: `src/domain/degradation.ts`
+- Konfiguraation auditointi: `src/domain/configAudit.ts`
 - OmniRoute-vastauksen metatietojen muodostin: `src/domain/omnirouteResponseMeta.ts`
-- Arviointialijärjestelmä: `src/domain/assessment/` — säännölliset arviointityöt
+- Arviointialijärjestelmä: `src/domain/assessment/` — määräajoin suoritettavat arviointityöt
 
 ### E. Valtuutusputki
 
-Valtuutusputki luokittelee jokaisen saapuvan pyynnön ja soveltaa
-asianmukaista käytäntöketjua ennen välitystä.
+Valtuutusputki luokittelee jokaisen saapuvan pyynnön ja soveltaa asianmukaista
+käytäntöketjua ennen edelleenlähetystä.
 
-- Putken aloituspiste: `src/server/authz/pipeline.ts`
+- Pipeline-tulokohta: `src/server/authz/pipeline.ts`
 - Pyyntöluokittelija: `src/server/authz/classify.ts` — erottaa julkiset
   yhteensopivuusreitit hallintareiteistä
 - Julkisten reittien luettelo: `src/shared/constants/publicApiRoutes.ts`
 - Käytännöt: `src/server/authz/policies/` — yhdisteltävät predikaatit
   (`requireApiKey`, `requireManagement`, `requireFreshAuth` jne.)
 - Otsakeapuohjelmat: `src/server/authz/headers.ts`
-- Varmistusapuohjelma: `src/server/authz/assertAuth.ts`
+- Varmistusapuri: `src/server/authz/assertAuth.ts`
 - Pyyntökonteksti: `src/server/authz/context.ts`
 
-Julkisten ja hallintareittien välinen raja on ehdoton: agentti- ja jäähdytysrajapinnat sekä
-palveluntarjoajien muutokset edellyttävät hallinnan todennusta (HTTP 401, jos se puuttuu).
+Julkiset reitit ja hallintareitit muodostavat ehdottoman rajan: agent/cooldown-rajapinnat
+ja tarjoajamuutokset vaativat hallintatodennuksen (HTTP 401, jos se puuttuu).
 
-Täydelliset reittien luokittelusäännöt ovat tiedostossa
+Katso täydet reittien luokittelusäännöt ohjeesta
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. Työnkulun FSM ja tehtävät huomioiva reititin
+### F. Työnkulun FSM ja tehtävähuomioiva reititin
 
-Äärelliseen tilakoneeseen perustuva, yhdistelmävalinnan yläpuolelle kerrostettu reititin,
-joka ohjaa liikennettä tunnistetun työnkulun vaiheen (suunnittelu, suoritus,
-tarkastus) ja taustatehtäviin kohdistuvan affiniteetin perusteella.
+Äärellisen tilakoneen (FSM) ohjaama reititin, joka on kerrostettu
+yhdistelmävalinnan päälle ohjaamaan liikennettä havaitun työnkuluvaiheen
+(suunnittelu, toteutus, tarkistus) ja taustatehtäväaffiniteetin perusteella.
 
 - Työnkulun FSM: `open-sse/services/workflowFSM.ts`
-- Tehtävät huomioiva reititin: `open-sse/services/taskAwareRouter.ts`
+- Tehtävähuomioiva reititin: `open-sse/services/taskAwareRouter.ts`
 - Taustatehtävien tunnistin: `open-sse/services/backgroundTaskDetector.ts`
-- Aikomusluokittelija: `open-sse/services/intentClassifier.ts`
+- Tarkoitusluokittelija: `open-sse/services/intentClassifier.ts`
 
-FSM:n tilasiirtymät vaikuttavat Auto Combon pisteytykseen suosimalla edullisempia malleja
-tausta- ja automaatiotehtävissä sekä tehokkaampia malleja vuorovaikutteisissa
-suunnittelu- ja tarkistuskierroksissa.
+FSM:n tilasiirtymät ohjaavat Auto Combon pisteytystä painottaen halvempia
+malleja tausta- ja automaatiotehtävissä sekä vahvempia malleja
+vuorovaikutteisilla suunnittelu- ja tarkistusvuoroilla.
 
-### G. Palveluntarjoajakohtainen häiriönsietokyky
+### G. Tarjoajakohtainen vikasietoisuus
 
-Useilla palveluntarjoajilla on erillisiä häiriönsieto- ja häivytysmoduuleja, jotka hyödyntävät
-yleisiä katkaisija-, yhteyden jäähdytys- ja mallien estokerroksia:
+Useat tarjoajat toimittavat mukanaan omia vikasieto- ja stealth-moduuleja,
+jotka hyödyntävät globaaleja virrankatkaisu-, yhteysjäähdytys- ja
+mallilukituskerroksia:
 
-- Antigravityn 429-moottori: `open-sse/services/antigravity429Engine.ts` (kierrättää
-  identiteettiä, puhdistaa vastausotsakkeet sekä hallinnoi krediittien ja versioiden seurantaa moduulien
-  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts` avulla)
-- ModelScopen kiintiökäytäntö: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (yhteensopivuuskanavan kättely): `open-sse/services/claudeCodeCCH.ts`,
+- Antigravity 429 -moottori: `open-sse/services/antigravity429Engine.ts` (kierrättää
+  identiteettiä, puhdistaa vastausotsakkeita sekä ohjaa krediitti- ja
+  versioseurantaa tiedostojen `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
+  `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts` avulla)
+- ModelScope-kiintiökäytäntö: `open-sse/services/modelscopePolicy.ts`
+- Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
   sekä `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Claude Coden sormenjäljen muotoilu: `open-sse/services/claudeCodeFingerprint.ts`
-- Claude Coden obfuskointi: `open-sse/services/claudeCodeObfuscation.ts`
+- Claude Code -sormenjäljen muotoilu: `open-sse/services/claudeCodeFingerprint.ts`
+- Claude Code -obfuskointi: `open-sse/services/claudeCodeObfuscation.ts`
 
-Täydellinen häivytysohjeisto ja operatiiviset ohjeet ovat tiedostossa
-`docs/security/STEALTH_GUIDE.md` (gitissä; ei käännetä `/docs`-hakemistoon).
+Katso täydet stealth-käytännöt ja operatiivinen ohjeistus tiedostosta
+`docs/security/STEALTH_GUIDE.md` (git; ei käännetty osaksi `/docs`-kansiota).
 
-### H. Webhookit, päättelyvälimuisti ja lukuvälimuisti
+### H. Webhookit, päättelyvälimuisti, lukuvälimuisti
 
-- **Webhookit** — lähtevä välitys palveluntarjoaja-, tili- ja tehtävätapahtumille.
-  - Välittäjä: `src/lib/webhookDispatcher.ts`
-  - Tallennus: SQLiten `webhooks`-taulu (`src/lib/db/webhooks.ts`-moduulin kautta)
+- **Webhookit** — lähtevä tapahtumavälitys tarjoaja-, tili- ja tehtävätapahtumille.
+  - Lähettäjä: `src/lib/webhookDispatcher.ts`
+  - Tallennus: `webhooks`-SQLite-taulu (tiedoston `src/lib/db/webhooks.ts` kautta)
   - Hallintapaneeli: `/dashboard/webhooks` (tilaukset, salaisuudet, uudelleenyrityshistoria)
-  - Tapahtumien luokittelu ja uudelleenyritysten semantiikka on kuvattu dokumentissa [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Päättelyvälimuisti** — uudelleentoistettavat päättelylohkot ajattelutunnisteita
-  tuottaville palveluntarjoajille (Claude, GLMT jne.), jotta peräkkäisillä kierroksilla voidaan välttää päättelyn toistaminen.
+  - Tapahtumien luokittelu ja uudelleenyrityssemantiikka on kuvattu kohdassa [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Päättelyvälimuisti** — uudelleentoistettavat päättelylohkot tarjoajille, jotka
+  tuottavat ajattelutokeneita (Claude, GLMT jne.), jotta peräkkäiset vuorot voivat
+  ohittaa uudelleenpäättelyn.
   - Tietokantakerros: `src/lib/db/reasoningCache.ts`
   - Palvelukerros: `open-sse/services/reasoningCache.ts`
-  - Uudelleentoiston semantiikka on kuvattu dokumentissa [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Lukuvälimuisti** — lyhytkestoinen, allekirjoituksen mukaan avainnettu vastausvälimuisti, jota käytetään
-  viallisten ylätason SDK:iden identtisten uudelleenyritysten yhdistämiseen.
+  - Uudelleentoiston semantiikka on kuvattu kohdassa [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Lukuvälimuisti** — lyhytikäinen vastausvälimuisti, joka avainnetaan
+  allekirjoituksen perusteella ja jota käytetään yhdistämään identtiset
+  uudelleenyritykset, joita vialliset ylävirran SDK:t aiheuttavat.
   - Tietokantakerros: `src/lib/db/readCache.ts`
-  - Tilastopäätepiste: `GET /api/cache/stats`, hallintapaneeli osoitteessa `/dashboard/cache`
+  - Tilastopääte: `GET /api/cache/stats`, hallintapaneeli osoitteessa `/dashboard/cache`
 
 ## 3) Persistenssikerros
 

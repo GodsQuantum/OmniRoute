@@ -272,16 +272,16 @@ flowchart LR
 
 - نقطة الدخول: `src/sse/handlers/chat.ts`
 - التنسيق الأساسي: `open-sse/handlers/chatCore.ts`
-- محوّلات تنفيذ المزوّدين: `open-sse/executors/*`
-- اكتشاف التنسيق/إعداد المزوّد: `open-sse/services/provider.ts`
-- تحليل/حلّ النموذج: `src/sse/services/model.ts`، `open-sse/services/model.ts`
-- منطق الرجوع إلى حساب بديل: `open-sse/services/accountFallback.ts`
+- محوّلات تنفيذ المزوّد: `open-sse/executors/*`
+- كشف التنسيق/إعداد المزوّد: `open-sse/services/provider.ts`
+- تحليل النموذج/حلّه: `src/sse/services/model.ts`، `open-sse/services/model.ts`
+- منطق التراجع بين الحسابات: `open-sse/services/accountFallback.ts`
 - سجلّ الترجمة: `open-sse/translator/index.ts`
-- تحويلات التدفق: `open-sse/utils/stream.ts`، `open-sse/utils/streamHandler.ts`
-- استخراج/تطبيع الاستخدام: `open-sse/utils/usageTracking.ts`
-- محلّل وسم التفكير: `open-sse/utils/thinkTagParser.ts`
-- معالج التضمين: `open-sse/handlers/embeddings.ts`
-- سجلّ مزوّدي التضمين: `open-sse/config/embeddingRegistry.ts`
+- تحويلات البث: `open-sse/utils/stream.ts`، `open-sse/utils/streamHandler.ts`
+- استخراج الاستخدام وتطبيعه: `open-sse/utils/usageTracking.ts`
+- محلّل وسوم think: `open-sse/utils/thinkTagParser.ts`
+- معالج التضمينات: `open-sse/handlers/embeddings.ts`
+- سجلّ مزوّدي التضمينات: `open-sse/config/embeddingRegistry.ts`
 - معالج توليد الصور: `open-sse/handlers/imageGeneration.ts`
 - سجلّ مزوّدي الصور: `open-sse/config/imageRegistry.ts`
 - تنقية الاستجابة: `open-sse/handlers/responseSanitizer.ts`
@@ -291,48 +291,48 @@ flowchart LR
 
 - اختيار الحساب/تقييمه: `open-sse/services/accountSelector.ts`
 - إدارة دورة حياة السياق: `open-sse/services/contextManager.ts`
-- فرض تصفية عناوين IP: `open-sse/services/ipFilter.ts`
+- فرض مرشّح IP: `open-sse/services/ipFilter.ts`
 - تتبّع الجلسات: `open-sse/services/sessionManager.ts`
 - إزالة تكرار الطلبات: `open-sse/services/signatureCache.ts`
 - حقن موجّه النظام: `open-sse/services/systemPrompt.ts`
 - إدارة ميزانية التفكير: `open-sse/services/thinkingBudget.ts`
-- توجيه النماذج باستخدام أحرف البدل: `open-sse/services/wildcardRouter.ts`
-- إدارة حدود المعدّل: `open-sse/services/rateLimitManager.ts`
+- توجيه النماذج ذات الأحرف البدل: `open-sse/services/wildcardRouter.ts`
+- إدارة حدود المعدل: `open-sse/services/rateLimitManager.ts`
 - قاطع الدائرة: `src/shared/utils/circuitBreaker.ts`
-- تسليم السياق: `open-sse/services/contextHandoff.ts` — توليد ملخّص التسليم وحقنه لاستراتيجية ترحيل السياق
-- الضغط: `open-sse/services/compression/*` — ضغط استباقي قبل الترجمة إلى صيغة المزوّد؛
-  يتضمن قواعد Caveman، ومرشّحات RTK، ومسارات المعالجة المكدّسة، وتركيبات الضغط، والإحصاءات، والتحقق
-- جالب حصة Codex: `open-sse/services/codexQuotaFetcher.ts` — يجلب حصة Codex لاتخاذ قرارات تسليم ترحيل السياق
-- إعادة المحاولة المراعية لفترة التهدئة: `src/sse/services/cooldownAwareRetry.ts` — عمليات إعادة محاولة لكل نموذج خلال فترة التهدئة باستخدام `requestRetry` / `maxRetryIntervalSec` القابلين للتهيئة
-- الجلب الصادر الآمن: `src/shared/network/safeOutboundFetch.ts` — جلب محمي للمزوّد/النموذج مع حماية من SSRF، وحظر عناوين URL الخاصة، وإعادة المحاولة، والمهلة الزمنية
-- حارس عناوين URL الصادرة: `src/shared/network/outboundUrlGuard.ts` — عمليات تحقق من المضيف لعناوين URL الخاصة بالمزوّد؛ يختار `src/shared/network/outboundUrlGuardPolicy.ts` الوضع من `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` و`OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ومفاتيح التبديل الخاصة بهما في لوحة المعلومات (راجع `docs/reference/ENVIRONMENT.md`)
-- الإعدادات الافتراضية لطلبات المزوّد: `open-sse/services/providerRequestDefaults.ts` — القيم الافتراضية `maxTokens` و`temperature` و`thinkingBudgetTokens` على مستوى المزوّد
-- ثوابت مزوّد GLM: `open-sse/config/glmProvider.ts` — نماذج GLM المشتركة، وعناوين URL للحصة، ومهلة GLMT وقيمها الافتراضية
-- المنبع لـ Antigravity: `open-sse/config/antigravityUpstream.ts` — ثوابت عنوان URL الأساسي ومسار الاكتشاف
-- ثوابت عميل Codex: `open-sse/config/codexClient.ts` — قيم وكيل المستخدم وإصدار العميل المرتبطة بالإصدار
-- البيانات الأولية للأسماء البديلة للنماذج: `src/lib/modelAliasSeed.ts` — يهيّئ أكثر من 30 اسمًا بديلًا للهجات عبر الوكلاء عند بدء التشغيل
+- تسليم السياق: `open-sse/services/contextHandoff.ts` — توليد ملخّص التسليم وحقنه لاستراتيجية context-relay
+- الضغط: `open-sse/services/compression/*` — ضغط استباقي قبل ترجمة المزوّد؛
+  يشمل قواعد Caveman، ومرشّحات RTK، وخطوط أنابيب مكدّسة، وتركيبات الضغط، والإحصاءات، والتحقق
+- جالب حصة Codex: `open-sse/services/codexQuotaFetcher.ts` — يجلب حصة Codex لقرارات التسليم في context-relay
+- إعادة المحاولة المدركة للتهدئة: `src/sse/services/cooldownAwareRetry.ts` — إعادة محاولة مع تهدئة لكل نموذج وخيارات قابلة للتكوين `requestRetry` / `maxRetryIntervalSec`
+- الجلب الصادر الآمن: `src/shared/network/safeOutboundFetch.ts` — جلب محروس للمزوّد/النموذج مع حماية من SSRF، وحظر عناوين URL الخاصة، وإعادة المحاولة، والمهلة الزمنية
+- حارس عناوين URL الصادرة: `src/shared/network/outboundUrlGuard.ts` — فحوصات المضيف على عناوين URL الخاصة بالمزوّد؛ ويختار `src/shared/network/outboundUrlGuardPolicy.ts` الوضع من `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS` و`OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ومفاتيح التبديل الخاصة بهما في لوحة التحكم (انظر `docs/reference/ENVIRONMENT.md`)
+- الإعدادات الافتراضية لطلبات المزوّد: `open-sse/services/providerRequestDefaults.ts` — قيم افتراضية على مستوى المزوّد لـ `maxTokens` و`temperature` و`thinkingBudgetTokens`
+- ثوابت مزوّد GLM: `open-sse/config/glmProvider.ts` — نماذج GLM المشتركة، وعناوين URL للحصص، ومهلة GLMT وقيمه الافتراضية
+- مصدر Antigravity الأعلى: `open-sse/config/antigravityUpstream.ts` — ثوابت عنوان URL الأساسي ومسار الاكتشاف
+- ثوابت عميل Codex: `open-sse/config/codexClient.ts` — قيم user-agent وإصدار العميل المُرقّمة
+- بذرة أسماء النماذج المستعارة: `src/lib/modelAliasSeed.ts` — تزرع أكثر من 30 اسمًا مستعارًا للهجات متقاطعة مع الوكلاء عند بدء التشغيل
 
 وحدات طبقة النطاق:
 
 - قواعد التكلفة/الميزانيات: `src/domain/costRules.ts`
-- سياسة الرجوع: `src/domain/fallbackPolicy.ts`
-- محلّل التركيبات: `src/domain/comboResolver.ts`
-- سياسة الحظر: `src/domain/lockoutPolicy.ts`
-- محرّك السياسات: `src/domain/policyEngine.ts` — تقييم مركزي للتسلسل: الحظر ← الميزانية ← الرجوع
-- فهرس رموز الأخطاء: `src/shared/constants/errorCodes.ts`
+- سياسة التراجع: `src/domain/fallbackPolicy.ts`
+- عقد حلّ التركيبات المحجوز: `src/domain/comboResolver.ts`؛ أما التوجيه الفعلي فيستخدم `open-sse/services/combo.ts`
+- سياسة الحظر المؤقت: `src/domain/lockoutPolicy.ts`
+- عقد تقييم السياسات المحجوز: `src/domain/policyEngine.ts`؛ ويفرض مسار الطلب سياسة مفتاح API عبر `src/shared/utils/apiKeyPolicy.ts` وتفويض الهدف المحلول عبر `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- كتالوج رموز الأخطاء: `src/shared/constants/errorCodes.ts`
 - معرّف الطلب: `src/shared/utils/requestId.ts`
 - مهلة الجلب: `src/shared/utils/fetchTimeout.ts`
-- قياس طلبات المعالجة عن بُعد: `src/shared/utils/requestTelemetry.ts`
+- قياس بيانات الطلب: `src/shared/utils/requestTelemetry.ts`
 - الامتثال/التدقيق: `src/lib/compliance/index.ts`
-- مشغّل التقييمات: `src/lib/evals/evalRunner.ts`
-- استمرارية حالة النطاق: `src/lib/db/domainState.ts` — عمليات CRUD في SQLite لسلاسل الرجوع، والميزانيات، وسجلّ التكلفة، وحالة الحظر، وقواطع الدائرة
+- منفّذ التقييمات: `src/lib/evals/evalRunner.ts`
+- استمرارية حالة النطاق: `src/lib/db/domainState.ts` — عمليات CRUD في SQLite لسلاسل التراجع، والميزانيات، وسجلّ التكاليف، وحالة الحظر المؤقت، وقواطع الدوائر
 
-وحدات مزوّدي OAuth ‏(27 ملفًا منفردًا ضمن `src/lib/oauth/providers/`):
+وحدات مزوّدي OAuth (27 ملفًا فرديًا تحت `src/lib/oauth/providers/`):
 
 - فهرس السجلّ: `src/lib/oauth/providers/index.ts`
 - المزوّدون الفرديون: `agy.ts`، `antigravity.ts`، `claude.ts`، `cline.ts`، `codebuddy-cn.ts`، `codebuddy-intl.ts`، `codex.ts`، `cursor.ts`، `devin-desktop.ts`، `ghe-copilot.ts`، `github.ts`، `gitlab-duo.ts`، `grok-cli-oauth.ts`، `grok-cli.ts`، `kilocode.ts`، `kimi-coding.ts`، `kiro.ts`، `muse-code.ts`، `openference.ts`، `qoder.ts`، `trae.ts`، `workbuddy.ts`، `xai-oauth.ts`، `zed-hosted.ts`، `zed.ts`
-- الأدوات المساعدة المشتركة: `codebuddyDeviceAuth.ts` (تدفق جهاز CodeBuddy لـ CN/intl)، `museCodeDeviceResponse.ts`
-- غلاف خفيف: `src/lib/oauth/providers.ts` — يعيد التصدير من الوحدات الفردية
+- مساعدات مشتركة: `codebuddyDeviceAuth.ts` (تدفق الأجهزة لـ CodeBuddy CN/intl)، `museCodeDeviceResponse.ts`
+- غلاف رفيع: `src/lib/oauth/providers.ts` — يعيد التصدير من الوحدات الفردية
 
 ## 5) الخدمات المضمّنة (v3.8.4)
 
@@ -359,167 +359,179 @@ flowchart LR
 
 ## الأنظمة الفرعية الرئيسية (v3.8.0)
 
-### A. محرك Auto Combo
+### أ. محرك Auto Combo
 
-يُجري Auto Combo تقييمًا ديناميكيًا لأهداف التوجيه ويختارها في وقت الطلب، بدلًا من
-الاعتماد على تعريف combo ثابت. وهو يدعم عائلة بادئات النماذج `auto/*`.
+يحدّد Auto Combo أهداف التوجيه ويختارها ديناميكيًا وقت الطلب، بدلاً من
+الاعتماد على تعريف combo ثابت. وهو يشغّل عائلة البادئات النموذجية `auto/*`.
 
-- نقطة دخول المحرك: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
-  `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- المحلّل: `src/domain/comboResolver.ts` (الاكتشاف التلقائي للبادئة `auto/`)
-- لوحة المعلومات: `/dashboard/auto-combo`
-- بيانات القياس عن بُعد: جدول SQLite المسمى `auto_combo_decisions`
+- نقطة دخول المحرك: `open-sse/services/autoCombo/` ‏(`autoComboEngine.ts`،
+  `scoringEngine.ts`، `virtualFactory.ts`، `modePacks.ts`)
+- نقطة دخول الـ combo المباشر: `open-sse/services/combo.ts` ‏(`handleComboChat`، `resolveComboTargets`)، يستدعيها `src/sse/handlers/chat.ts`
+- لوحة التحكم: `/dashboard/auto-combo`
+- القياس عن بُعد: جدول SQLite باسم `auto_combo_decisions`
 
-الإمكانات الرئيسية:
+القدرات الرئيسية:
 
-- **20 استراتيجية توجيه** (الأولوية، المرجّح، الملء أولًا، التناوب، P2C، العشوائي،
-  الأقل استخدامًا، المحسّن من حيث التكلفة، المراعي لإعادة التعيين، نافذة إعادة التعيين، السعة الاحتياطية، المرجّح حسب الحصة،
-  العشوائي الصارم، **auto**، lkgp، المحسّن حسب السياق، المحسّن حسب ذاكرة التخزين المؤقت، ترحيل السياق، **fusion**،
+- **20 استراتيجية توجيه** (priority، weighted، fill-first، round-robin، P2C، random،
+  least-used، cost-optimized، reset-aware، reset-window، headroom، quota-weighted،
+  strict-random، **auto**، lkgp، context-optimized، cache-optimized، context-relay، **fusion**،
   pipeline) —
-  تُعد auto الإضافة الأبرز في v3.8.0؛ أما `fusion` (التوزيع المتشعب على لجنة + توليف الحَكَم،
+  تُعد auto الإضافة الأبرز في v3.8.0؛ أما `fusion` (توزيع الطلبات على لجنة من النماذج + توليف الحكم،
   `open-sse/services/fusion.ts`) فهي جديدة في v3.8.36.
-- **تقييم قائم على 16 عاملًا**: الحصة، والحالة الصحية، ومعكوس التكلفة، ومعكوس زمن الاستجابة، ومدى ملاءمة المهمة،
+- **تقييم بـ 16 عاملاً**: الحصة، الصحة، التكلفة العكسية، زمن الاستجابة العكسي، ملاءمة المهمة،
   وعشرة عوامل أخرى. يوجد الجدول المرجعي للعوامل وأوزانها الافتراضية في
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — وإعادة ذكره هنا
-  ستنشئ موضعًا ثانيًا قد تصبح معلوماته قديمة.
-- **المصنع الافتراضي** ينشئ مجموعات combo مؤقتة عند عدم وجود مجموعة combo مسماة مطابقة،
-  مستمدًا المرشحين من اتصالات موفّري الخدمة النشطة والسليمة.
-- **بادئات Auto**: `auto/coding`، و`auto/cheap`، و`auto/fast`، و`auto/offline`،
-  و`auto/smart`، و`auto/lkgp` — وكل منها مدعوم بملف أوزان مضبوط.
-- **6 حزم أوضاع**: `ship-fast`، و`cost-saver`، و`quality-first`، و`offline-friendly`،
-  و`reliability-first`، و`chaos-mode` — إعدادات مسبقة للأوزان يمكن استدعاؤها من
-  لوحة المعلومات. (يجب عدم الخلط بينها وبين بادئات `auto/*` أعلاه، التي تمثل
-  متغيرات تُطبّق في وقت الطلب.)
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — إعادة ذكره هنا
+  سيجعل له مكانًا ثانيًا قد يصبح قديمًا.
+- **المصنع الافتراضي** يُنشئ combos مؤقتة عندما لا يوجد combo مسمّى مطابق،
+  مستمدًا المرشحين من اتصالات المزوّدين النشطة والسليمة.
+- **بادئات auto**: ‏`auto/coding`، `auto/cheap`، `auto/fast`، `auto/offline`،
+  `auto/smart`، `auto/lkgp` — كل منها مدعوم بملف أوزان مضبوط.
+- **6 حزم أوضاع**: ‏`ship-fast`، `cost-saver`، `quality-first`، `offline-friendly`،
+  `reliability-first` و`chaos-mode` — إعدادات أوزان مسبقة يمكن استدعاؤها من
+  لوحة التحكم. (لا تُخلط بينها وبين بادئات `auto/*` أعلاه، التي هي
+  متغيرات تعمل وقت الطلب.)
 
-للحصول على التفاصيل الخوارزمية الكاملة (صيغ العوامل وضبط الأوزان)، راجع
+للتفاصيل الخوارزمية الكاملة (صيغ العوامل، ضبط الأوزان)، راجع
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. الوكلاء السحابيون
+### ب. وكلاء السحابة (Cloud Agents)
 
-يوفّر Cloud Agents واجهة موحّدة لمنصات وكلاء البرمجة المستضافة التابعة لجهات خارجية (Codex Cloud وDevin
-وJules)، ويضعها خلف دورة حياة موحّدة للمهام مدعومة بقاعدة بيانات. تتطلب جميع نقاط نهاية إنشاء المهام وفحصها
-مصادقة إدارية.
+يغلّف Cloud Agents منصات وكلاء البرمجة المُستضافة من طرف ثالث (Codex Cloud، Devin،
+Jules) خلف دورة حياة موحّدة للمهام مدعومة بقاعدة بيانات. تتطلب جميع نقاط نهاية
+إنشاء المهام وفحصها مصادقة الإدارة.
 
-- جذر الوحدة: `src/lib/cloudAgent/` (`baseAgent.ts`، و`registry.ts`، و`api.ts`،
-  و`types.ts`، و`db.ts`، بالإضافة إلى الأدلة الفرعية الخاصة بكل وكيل ضمن `agents/`)
-- تطبيقات كل وكيل: `agents/codex/`، و`agents/devin/`، و`agents/jules/`
-- نقاط النهاية العامة: `/api/v1/agents/tasks/*` (عرض/إنشاء/جلب/إلغاء)
-- نقاط النهاية الإدارية: `/api/cloud/*` (التوفير، والحالة، والمعالجة الدفعية)
-- لوحة المعلومات: `/dashboard/cloud-agents`
+- جذر الوحدة: `src/lib/cloudAgent/` ‏(`baseAgent.ts`، `registry.ts`، `api.ts`،
+  `types.ts`، `db.ts`، بالإضافة إلى مجلدات فرعية لكل وكيل ضمن `agents/`)
+- تطبيقات كل وكيل: `agents/codex/`، `agents/devin/`، `agents/jules/`
+- نقاط النهاية العامة: `/api/v1/agents/tasks/*` (سرد/إنشاء/جلب/إلغاء)
+- نقاط نهاية الإدارة: `/api/cloud/*` (التوفير، الحالة، الدفعات)
+- لوحة التحكم: `/dashboard/cloud-agents`
 - التخزين: جدول `cloud_agent_tasks`
 
-للحصول على تفاصيل التوفير وOAuth الخاصة بكل وكيل، راجع
+لتفاصيل التوفير وOAuth الخاصة بكل وكيل، راجع
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. ضوابط الحماية
+### ج. الحواجز الوقائية (Guardrails)
 
-وحدة ضوابط الحماية هي طبقة وسيطة قابلة لإعادة التحميل الفوري، تفحص الطلبات
-والاستجابات بحثًا عن معلومات التعريف الشخصية (PII)، وحقن المطالبات، ومحتوى الرؤية غير الآمن. تؤدي
-المخالفات إلى إيقاف الطلب مبكرًا مع HTTP **503** بالإضافة إلى رمز خطأ منظم، مما يسمح
-للجهات المستدعية اللاحقة بإعادة المحاولة أو التفرع.
+وحدة الحواجز الوقائية هي طبقة وسيطة قابلة لإعادة التحميل الفوري تفحص الطلبات
+والاستجابات بحثًا عن معلومات التعريف الشخصية (PII)، وحقن الأوامر (prompt injection)،
+ومحتوى الرؤية غير الآمن. تؤدي الانتهاكات إلى قطع الطلب فورًا برمز HTTP **503**
+مع رمز خطأ منظّم، مما يسمح للمتصلين في المراحل اللاحقة بإعادة المحاولة أو التفرّع.
 
-- جذر الوحدة: `src/lib/guardrails/` (`base.ts`، و`registry.ts`، و`piiMasker.ts`،
-  و`promptInjection.ts`، و`visionBridge.ts`، و`visionBridgeHelpers.ts`)
-- إعادة التحميل الفوري: يراقب السجل تغييرات الإعدادات ويعيد بناء السلسلة في موضعها
-- نقاط الدمج: مدخل معالج المحادثة، ومعالج توليد الصور، ومنقّي الاستجابة
-- عقد HTTP: تظهر المخالفات على هيئة `503` مع `error.code = "GUARDRAIL_VIOLATION"`
+- جذر الوحدة: `src/lib/guardrails/` ‏(`base.ts`، `registry.ts`، `piiMasker.ts`،
+  `promptInjection.ts`، `visionBridge.ts`، `visionBridgeHelpers.ts`)
+- إعادة التحميل الفوري: يراقب السجل تغييرات الإعدادات ويعيد بناء السلسلة في مكانها
+- نقاط الربط: مدخل معالج الدردشة، معالج توليد الصور، مُنقّي الاستجابات
+- عقد HTTP: تظهر الانتهاكات كرمز `503` مع `error.code = "GUARDRAIL_VIOLATION"`
 
-للحصول على تفاصيل إنشاء مجموعات القواعد وضبط العتبات، راجع
+لتأليف مجموعات القواعد وضبط العتبات، راجع
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. طبقة المجال
+### د. طبقة النطاق (Domain Layer)
 
-تجمع مساحة الأسماء `src/domain/` قرارات السياسات في موضع مركزي كي لا تضطر معالجات المسارات
-إلى تجميع منطق التأمين/الميزانية/الرجوع بنفسها.
+تحتوي مساحة الأسماء `src/domain/` على خدمات النطاق وعقود التقييم المحجوزة.
+وهي ليست نقطة دخول إلزامية واحدة للسياسات لكل طلب.
 
-- محرك السياسات: `src/domain/policyEngine.ts` — نقطة دخول واحدة
-  للتقييم السابق للتنفيذ (ترتيب التأمين ← الميزانية ← الرجوع)
+يستدعي مسار الدردشة المباشر `enforceApiKeyPolicy()` من
+`src/shared/utils/apiKeyPolicy.ts`؛ أما تخويل النماذج المحلولة وأعضاء الـ combo
+فمُنفَّذ في `src/sse/handlers/chat/resolvedModelPolicy.ts`. كما يفرض نقطة الدخول
+المستضافة ذاتيًا في `src/app/api/v1/chat/completions/route.ts` سياسة مفاتيح API قبل
+الإرسال. ويمر حل الـ combo عبر `open-sse/services/combo.ts`.
+
+تبقى `src/domain/policyEngine.ts` و`src/domain/comboResolver.ts` و`src/lib/container.ts`
+عقودًا مُختبرة، وليست التوصيل الفعلي لمسار الطلب ذلك. يسجّل الحاوي محرك
+السياسات، لكن مسار طلب الإنتاج المُفحوص لا يقوم بحلّه. تغيير تلك العقود وحدها لا يغيّر
+سياسة الدردشة المباشرة أو توجيه الـ combo؛ فربطها أو إزالتها يتطلب قرارًا تصميميًا منفصلاً.
+
+- محرك السياسات المحجوز: `src/domain/policyEngine.ts` — تقييم القفل ← الميزانية ← الرجوع البديل
 - قواعد التكلفة: `src/domain/costRules.ts`
-- سياسة الرجوع: `src/domain/fallbackPolicy.ts`
-- سياسة التأمين: `src/domain/lockoutPolicy.ts`
+- سياسة الرجوع البديل: `src/domain/fallbackPolicy.ts`
+- سياسة القفل: `src/domain/lockoutPolicy.ts`
 - التوجيه القائم على الوسوم: `src/domain/tagRouter.ts`
-- محلّل combo: `src/domain/comboResolver.ts` — يحوّل أسماء combo وبادئات auto/\*
-  وأهداف النماذج ذات أحرف البدل إلى خطط تنفيذ محددة
-- أداة ربط قواعد الاتصال/النموذج: `src/domain/connectionModelRules.ts`
-- لقطات توفر النماذج: `src/domain/modelAvailability.ts`
-- تتبع انتهاء صلاحية موفّر الخدمة: `src/domain/providerExpiration.ts`
-- ذاكرة التخزين المؤقت للحصص: `src/domain/quotaCache.ts`
+- محلل الـ combo المحجوز: `src/domain/comboResolver.ts` — عقد اختيار مستقل؛ توجيه الـ combo المباشر مُنفَّذ في `open-sse/services/combo.ts`
+- موصّل قواعد الاتصال/النموذج: `src/domain/connectionModelRules.ts`
+- لقطات توفّر النماذج: `src/domain/modelAvailability.ts`
+- تتبّع انتهاء صلاحية المزوّدين: `src/domain/providerExpiration.ts`
+- ذاكرة الحصص المؤقتة: `src/domain/quotaCache.ts`
 - حالة التدهور: `src/domain/degradation.ts`
 - تدقيق الإعدادات: `src/domain/configAudit.ts`
-- منشئ البيانات الوصفية لاستجابة OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- النظام الفرعي للتقييم: `src/domain/assessment/` — مهام تقييم دورية
+- منشئ بيانات استجابة OmniRoute الوصفية: `src/domain/omnirouteResponseMeta.ts`
+- نظام التقييم الفرعي: `src/domain/assessment/` — مهام تقييم دورية
 
-### E. مسار التفويض
+### هـ. خط أنابيب التخويل
 
-يصنّف مسار التفويض كل طلب وارد ويطبّق
-سلسلة السياسات المناسبة قبل التوجيه.
+يصنّف خط أنابيب التخويل كل طلب وارد ويطبّق
+سلسلة السياسات المناسبة قبل الإرسال.
 
-- نقطة دخول المسار: `src/server/authz/pipeline.ts`
-- مصنّف الطلبات: `src/server/authz/classify.ts` — يميّز مسارات التوافق العامة
-  عن المسارات الإدارية
-- قائمة المسارات العامة: `src/shared/constants/publicApiRoutes.ts`
-- السياسات: `src/server/authz/policies/` — شروط قابلة للتركيب
-  (`requireApiKey`، و`requireManagement`، و`requireFreshAuth`، وغيرها)
-- أدوات الرؤوس: `src/server/authz/headers.ts`
-- أداة التحقق: `src/server/authz/assertAuth.ts`
+- نقطة دخول خط المعالجة: `src/server/authz/pipeline.ts`
+- مُصنِّف الطلبات: `src/server/authz/classify.ts` — يميّز مسارات التوافق
+  العامة عن مسارات الإدارة
+- جرد المسارات العامة: `src/shared/constants/publicApiRoutes.ts`
+- السياسات: `src/server/authz/policies/` — محمولات قابلة للتركيب
+  (`requireApiKey`، `requireManagement`، `requireFreshAuth`، إلخ.)
+- أدوات الترويسات المساعدة: `src/server/authz/headers.ts`
+- أداة التحقق المساعدة: `src/server/authz/assertAuth.ts`
 - سياق الطلب: `src/server/authz/context.ts`
 
-تمثّل المسارات العامة والمسارات الإدارية حدًا فاصلًا صارمًا: تتطلب واجهات API الخاصة بالوكلاء/فترات التهدئة
-وتعديلات موفّري الخدمة مصادقة إدارية (HTTP 401 عند غيابها).
+تُعد المسارات العامة مقابل مسارات الإدارة حدًّا صارمًا: تتطلب واجهات برمجة
+التطبيقات الخاصة بالوكيل/فترة التهدئة وعمليات تعديل المزوّدين مصادقة
+الإدارة (HTTP 401 إذا كانت مفقودة).
 
-للاطلاع على القواعد الكاملة لتصنيف المسارات، راجع
+للاطلاع على قواعد تصنيف المسارات الكاملة، راجع
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. آلة الحالات المحدودة لسير العمل والموجّه المدرك للمهام
+### F. آلة الحالات المنتهية لسير العمل والموجّه المدرك للمهام
 
-موجّه قائم على آلة حالات محدودة، موضوع فوق طبقة اختيار combo لتوجيه
-حركة المرور استنادًا إلى مرحلة سير العمل المكتشفة (التخطيط، والتنفيذ،
-والمراجعة) ومدى التقارب مع المهام الخلفية.
+موجّه يعتمد على آلة الحالات المنتهية ويُبنى فوق طبقة اختيار التوليفة لتوجيه
+حركة المرور بناءً على مرحلة سير العمل المكتشفة (التخطيط، التنفيذ،
+المراجعة) وقربها من المهام الخلفية.
 
-- آلة الحالات المحدودة لسير العمل: `open-sse/services/workflowFSM.ts`
+- آلة الحالات المنتهية لسير العمل: `open-sse/services/workflowFSM.ts`
 - الموجّه المدرك للمهام: `open-sse/services/taskAwareRouter.ts`
 - كاشف المهام الخلفية: `open-sse/services/backgroundTaskDetector.ts`
-- مصنّف النوايا: `open-sse/services/intentClassifier.ts`
+- مُصنِّف النوايا: `open-sse/services/intentClassifier.ts`
 
-تُغذّي انتقالات آلة الحالات المحدودة نظامَ تسجيل النقاط في Auto Combo، مع ترجيح النماذج الأقل تكلفة
-لمهام الخلفية/الأتمتة، وترجيح النماذج الأقوى لجولات
+تغذّي انتقالات آلة الحالات المنتهية نظام التقييم في Auto Combo، بحيث تميل
+نحو النماذج الأرخص للمهام الخلفية/الأتمتة ونحو النماذج الأقوى لجولات
 التخطيط/المراجعة التفاعلية.
 
-### G. المرونة الخاصة بمزوّدي الخدمة
+### G. المرونة الخاصة بالمزوّدين
 
-توفّر عدة جهات مزوّدة وحدات مخصّصة للمرونة والتخفّي، تعمل فوق
-طبقات قاطع الدائرة العام / مهلة تهدئة الاتصال / حظر النموذج:
+يأتي العديد من المزوّدين مع وحدات مخصصة للمرونة والتخفي تعتمد على الطبقات
+العامة لقاطع الدائرة / فترة تهدئة الاتصال / حظر النماذج:
 
-- محرّك Antigravity 429: `open-sse/services/antigravity429Engine.ts` (يبدّل
-  الهوية، وينقّي ترويسات الاستجابة، ويدير تتبّع الأرصدة/الإصدارات عبر
-  `antigravityCredits.ts` و`antigravityHeaderScrub.ts` و`antigravityHeaders.ts`
-  و`antigravityIdentity.ts` و`antigravityVersion.ts`)
-- سياسة الحصص في ModelScope: `open-sse/services/modelscopePolicy.ts`
-- CCH في Claude Code (مصافحة قناة التوافق): `open-sse/services/claudeCodeCCH.ts`،
-  بالإضافة إلى `claudeCodeCompatible.ts` و`claudeCodeConstraints.ts` و`claudeCodeExtraRemap.ts`
-  و`claudeCodeToolRemapper.ts`
-- تشكيل البصمة في Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
-- التعمية في Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
+- محرك Antigravity 429: `open-sse/services/antigravity429Engine.ts` (يدوّر
+  الهوية، وينظّف ترويسات الاستجابة، ويدير تتبع الأرصدة/الإصدارات عبر
+  `antigravityCredits.ts`، `antigravityHeaderScrub.ts`، `antigravityHeaders.ts`،
+  `antigravityIdentity.ts`، `antigravityVersion.ts`)
+- سياسة حصص ModelScope: `open-sse/services/modelscopePolicy.ts`
+- مصافحة قناة التوافق Claude Code CCH: `open-sse/services/claudeCodeCCH.ts`،
+  بالإضافة إلى `claudeCodeCompatible.ts`، `claudeCodeConstraints.ts`، `claudeCodeExtraRemap.ts`،
+  `claudeCodeToolRemapper.ts`
+- تشكيل بصمة Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- تشويش Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-للاطلاع على دليل التخفّي الكامل والإرشادات التشغيلية، راجع
-`docs/security/STEALTH_GUIDE.md` (ضمن git؛ غير مُضمَّن في `/docs`).
+للاطلاع على دليل التخفي الكامل والإرشادات التشغيلية، راجع
+`docs/security/STEALTH_GUIDE.md` (في git؛ غير مُجمَّع ضمن `/docs`).
 
-### H. خطافات الويب، وذاكرة التخزين المؤقت للاستدلال، وذاكرة التخزين المؤقت للقراءة
+### H. الويب هوكس وذاكرة التخزين المؤقت للاستدلال وذاكرة التخزين المؤقت للقراءة
 
-- **خطافات الويب** — إرسال صادر لأحداث المزوّد/الحساب/المهمة.
-  - المرسِل: `src/lib/webhookDispatcher.ts`
-  - التخزين: جدول SQLite المسمى `webhooks` (عبر `src/lib/db/webhooks.ts`)
-  - لوحة المعلومات: `/dashboard/webhooks` (الاشتراكات، والأسرار، وسجل إعادة المحاولة)
+- **الويب هوكس** — إرسال صادر لأحداث المزوّد/الحساب/المهمة.
+  - المُرسِل: `src/lib/webhookDispatcher.ts`
+  - التخزين: جدول SQLite باسم `webhooks` (عبر `src/lib/db/webhooks.ts`)
+  - لوحة التحكم: `/dashboard/webhooks` (الاشتراكات، الأسرار، سجل إعادة المحاولة)
   - للاطلاع على تصنيف الأحداث ودلالات إعادة المحاولة، راجع [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **ذاكرة التخزين المؤقت للاستدلال** — كتل استدلال قابلة لإعادة التشغيل للمزوّدين الذين يُصدرون
-  رموز التفكير (Claude وGLMT وغيرهما)، بحيث يمكن للجولات المتتالية تجاوز إعادة التفكير.
+- **ذاكرة التخزين المؤقت للاستدلال** — كتل استدلال قابلة لإعادة التشغيل
+  للمزوّدين الذين يُصدرون رموز تفكير (Claude، GLMT، إلخ.) بحيث يمكن للجولات
+  المتتالية تخطي إعادة التفكير.
   - طبقة قاعدة البيانات: `src/lib/db/reasoningCache.ts`
   - طبقة الخدمة: `open-sse/services/reasoningCache.ts`
   - للاطلاع على دلالات إعادة التشغيل، راجع [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **ذاكرة التخزين المؤقت للقراءة** — ذاكرة تخزين مؤقت قصيرة العمر للاستجابات، تُفهرس حسب التوقيع وتُستخدم
-  لدمج محاولات إعادة الطلب المتطابقة الصادرة من حِزم SDK غير السليمة لدى المصدر.
+- **ذاكرة التخزين المؤقت للقراءة** — ذاكرة تخزين مؤقت قصيرة العمر للاستجابات،
+  مفهرسة بالتوقيع وتُستخدم لدمج المحاولات المتطابقة الصادرة عن SDKs معطوبة
+  في المنبع.
   - طبقة قاعدة البيانات: `src/lib/db/readCache.ts`
-  - نقطة نهاية الإحصاءات: `GET /api/cache/stats`، ولوحة المعلومات في `/dashboard/cache`
+  - نقطة نهاية الإحصاءات: `GET /api/cache/stats`، ولوحة التحكم في `/dashboard/cache`
 
 ## 3) طبقة الاستمرارية
 

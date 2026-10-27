@@ -266,26 +266,26 @@ flowchart LR
 - Конфигурационен пакет: `src/app/api/sync/bundle` (GET, моментна снимка на настройките/доставчиците/комбинациите/ключовете, версионирана чрез ETag)
 - WebSocket: `src/app/api/v1/ws/route.ts` — обработчик на Upgrade за WS клиенти, съвместими с OpenAI
 
-## 2) SSE + ядро за преобразуване
+## 2) SSE + ядро за превод
 
 Основни модули на потока:
 
 - Входна точка: `src/sse/handlers/chat.ts`
 - Основна оркестрация: `open-sse/handlers/chatCore.ts`
 - Адаптери за изпълнение на доставчици: `open-sse/executors/*`
-- Откриване на формат/конфигурация на доставчик: `open-sse/services/provider.ts`
-- Анализиране/разрешаване на модел: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- Логика за резервен акаунт: `open-sse/services/accountFallback.ts`
-- Регистър за преобразуване: `open-sse/translator/index.ts`
+- Разпознаване на формат/конфигурация на доставчик: `open-sse/services/provider.ts`
+- Парсване/резолвиране на модел: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Логика за резервни акаунти (fallback): `open-sse/services/accountFallback.ts`
+- Регистър за преводи: `open-sse/translator/index.ts`
 - Трансформации на потоци: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- Извличане/нормализиране на използването: `open-sse/utils/usageTracking.ts`
-- Анализатор на тагове за разсъждение: `open-sse/utils/thinkTagParser.ts`
-- Обработчик за вграждания: `open-sse/handlers/embeddings.ts`
-- Регистър на доставчиците на вграждания: `open-sse/config/embeddingRegistry.ts`
+- Извличане/нормализация на потреблението: `open-sse/utils/usageTracking.ts`
+- Парсър на think тагове: `open-sse/utils/thinkTagParser.ts`
+- Обработчик на embeddings: `open-sse/handlers/embeddings.ts`
+- Регистър на доставчици на embeddings: `open-sse/config/embeddingRegistry.ts`
 - Обработчик за генериране на изображения: `open-sse/handlers/imageGeneration.ts`
-- Регистър на доставчиците на изображения: `open-sse/config/imageRegistry.ts`
-- Саниране на отговорите: `open-sse/handlers/responseSanitizer.ts`
-- Нормализиране на ролите: `open-sse/services/roleNormalizer.ts`
+- Регистър на доставчици на изображения: `open-sse/config/imageRegistry.ts`
+- Почистване на отговори: `open-sse/handlers/responseSanitizer.ts`
+- Нормализация на роли: `open-sse/services/roleNormalizer.ts`
 
 Услуги (бизнес логика):
 
@@ -293,45 +293,45 @@ flowchart LR
 - Управление на жизнения цикъл на контекста: `open-sse/services/contextManager.ts`
 - Прилагане на IP филтър: `open-sse/services/ipFilter.ts`
 - Проследяване на сесии: `open-sse/services/sessionManager.ts`
-- Премахване на дублиращи се заявки: `open-sse/services/signatureCache.ts`
-- Инжектиране на системна подкана: `open-sse/services/systemPrompt.ts`
-- Управление на бюджета за разсъждение: `open-sse/services/thinkingBudget.ts`
-- Маршрутизиране на модели със заместващи символи: `open-sse/services/wildcardRouter.ts`
-- Управление на ограниченията на честотата: `open-sse/services/rateLimitManager.ts`
-- Прекъсвач на веригата: `src/shared/utils/circuitBreaker.ts`
-- Предаване на контекст: `open-sse/services/contextHandoff.ts` — генериране и инжектиране на обобщение при предаване за стратегията за препредаване на контекст
-- Компресиране: `open-sse/services/compression/*` — проактивно компресиране преди преобразуването за доставчика;
-  включва правила Caveman, RTK филтри, подредени конвейери, комбинации за компресиране, статистика и валидиране
-- Извличане на квота за Codex: `open-sse/services/codexQuotaFetcher.ts` — извлича квотата за Codex за решенията за предаване при препредаване на контекст
-- Повторни опити, съобразени с периода за изчакване: `src/sse/services/cooldownAwareRetry.ts` — повторни опити за отделните модели след период за изчакване с конфигурируеми `requestRetry` / `maxRetryIntervalSec`
-- Безопасно изходящо извличане: `src/shared/network/safeOutboundFetch.ts` — защитено извличане от доставчик/модел със защита срещу SSRF, блокиране на частни URL адреси, повторни опити и изчакване
-- Защита на изходящите URL адреси: `src/shared/network/outboundUrlGuard.ts` — проверки на хостовете в URL адресите на доставчиците; `src/shared/network/outboundUrlGuardPolicy.ts` избира режима от `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` и съответните им превключватели в таблото (вижте `docs/reference/ENVIRONMENT.md`)
-- Стойности по подразбиране за заявките към доставчици: `open-sse/services/providerRequestDefaults.ts` — стойности по подразбиране на ниво доставчик за `maxTokens`, `temperature`, `thinkingBudgetTokens`
-- Константи за доставчика GLM: `open-sse/config/glmProvider.ts` — споделени GLM модели, URL адреси за квоти, изчакване/стойности по подразбиране за GLMT
-- Горен поток на Antigravity: `open-sse/config/antigravityUpstream.ts` — константи за базовия URL адрес и пътя за откриване
-- Константи за клиента Codex: `open-sse/config/codexClient.ts` — версионирани стойности за потребителския агент и версията на клиента
-- Начални псевдоними на модели: `src/lib/modelAliasSeed.ts` — добавя при стартиране над 30 псевдонима между диалекти на различни прокси сървъри
+- Дедупликация на заявки: `open-sse/services/signatureCache.ts`
+- Инжектиране на системен промпт: `open-sse/services/systemPrompt.ts`
+- Управление на бюджета за мислене: `open-sse/services/thinkingBudget.ts`
+- Маршрутизиране на wildcard модели: `open-sse/services/wildcardRouter.ts`
+- Управление на лимитите на заявките: `open-sse/services/rateLimitManager.ts`
+- Прекъсвач (circuit breaker): `src/shared/utils/circuitBreaker.ts`
+- Предаване на контекст: `open-sse/services/contextHandoff.ts` — генериране и инжектиране на обобщение при предаване за стратегията context-relay
+- Компресия: `open-sse/services/compression/*` — проактивна компресия преди превода към доставчика;
+  включва правила Caveman, филтри RTK, наслоени пайплайни, комбинации за компресия, статистики и валидация
+- Извличане на квота на Codex: `open-sse/services/codexQuotaFetcher.ts` — извлича квотата на Codex за решения за предаване при context-relay
+- Повторение с отчитане на cooldown: `src/sse/services/cooldownAwareRetry.ts` — повторни опити с cooldown за всеки модел с конфигурируеми `requestRetry` / `maxRetryIntervalSec`
+- Безопасно изходящо извличане: `src/shared/network/safeOutboundFetch.ts` — защитено извличане на доставчик/модел със SSRF защита, блокиране на частни URL адреси, повторения и таймаут
+- Защита на изходящи URL адреси: `src/shared/network/outboundUrlGuard.ts` — проверки на хоста в URL адресите на доставчиците; `src/shared/network/outboundUrlGuardPolicy.ts` избира режима от `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` и техните превключватели в таблото (виж `docs/reference/ENVIRONMENT.md`)
+- Стойности по подразбиране за заявки към доставчика: `open-sse/services/providerRequestDefaults.ts` — стойности по подразбиране на ниво доставчик за `maxTokens`, `temperature`, `thinkingBudgetTokens`
+- Константи за доставчика GLM: `open-sse/config/glmProvider.ts` — споделени GLM модели, URL адреси за квоти, таймаут/стойности по подразбиране за GLMT
+- Upstream за Antigravity: `open-sse/config/antigravityUpstream.ts` — константи за базов URL адрес и път за откриване
+- Константи за клиента Codex: `open-sse/config/codexClient.ts` — версионирани стойности за user-agent и версия на клиента
+- Начални псевдоними на модели: `src/lib/modelAliasSeed.ts` — зарежда 30+ псевдонима на диалекти между проксита при стартиране
 
 Модули на домейн слоя:
 
 - Правила за разходи/бюджети: `src/domain/costRules.ts`
-- Политика за резервен вариант: `src/domain/fallbackPolicy.ts`
-- Разрешаване на комбинации: `src/domain/comboResolver.ts`
+- Политика за резервно превключване: `src/domain/fallbackPolicy.ts`
+- Запазен договор за резолвиране на комбинации: `src/domain/comboResolver.ts`; реалното маршрутизиране използва `open-sse/services/combo.ts`
 - Политика за блокиране: `src/domain/lockoutPolicy.ts`
-- Механизъм за политики: `src/domain/policyEngine.ts` — централизирана оценка в последователност блокиране → бюджет → резервен вариант
+- Запазен договор за оценяване на политики: `src/domain/policyEngine.ts`; пътят на заявката прилага политиката за API ключове чрез `src/shared/utils/apiKeyPolicy.ts` и авторизацията на резолвираната цел чрез `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Каталог с кодове за грешки: `src/shared/constants/errorCodes.ts`
 - Идентификатор на заявка: `src/shared/utils/requestId.ts`
-- Изчакване при извличане: `src/shared/utils/fetchTimeout.ts`
+- Таймаут на извличане: `src/shared/utils/fetchTimeout.ts`
 - Телеметрия на заявките: `src/shared/utils/requestTelemetry.ts`
 - Съответствие/одит: `src/lib/compliance/index.ts`
-- Изпълнител на оценки: `src/lib/evals/evalRunner.ts`
-- Устойчиво съхранение на състоянието на домейна: `src/lib/db/domainState.ts` — SQLite CRUD за вериги от резервни варианти, бюджети, история на разходите, състояние на блокиране и прекъсвачи на вериги
+- Изпълнение на eval-ове: `src/lib/evals/evalRunner.ts`
+- Персистентност на състоянието на домейна: `src/lib/db/domainState.ts` — SQLite CRUD за вериги за резервно превключване, бюджети, история на разходите, състояние на блокиране, прекъсвачи
 
-Модули за OAuth доставчици (27 отделни файла в `src/lib/oauth/providers/`):
+Модули на OAuth доставчици (27 отделни файла в `src/lib/oauth/providers/`):
 
 - Индекс на регистъра: `src/lib/oauth/providers/index.ts`
 - Отделни доставчици: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Споделени помощни модули: `codebuddyDeviceAuth.ts` (поток за удостоверяване на устройства за CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
+- Споделени помощници: `codebuddyDeviceAuth.ts` (поток на устройство за CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
 - Тънка обвивка: `src/lib/oauth/providers.ts` — реекспортира от отделните модули
 
 ## 5) Вградени услуги (v3.8.4)
@@ -359,166 +359,180 @@ OmniRoute може да инсталира, наблюдава и маршрут
 
 ## Основни подсистеми (v3.8.0)
 
-### A. Механизъм Auto Combo
+### A. Auto Combo Engine
 
 Auto Combo динамично оценява и избира цели за маршрутизиране по време на заявката, вместо
-да разчита на статична дефиниция на комбинация. Той задвижва семейството от префикси на модели `auto/*`.
+да разчита на статична дефиниция на комбо. Той захранва семейството префикси на модели `auto/*`.
 
-- Входна точка на механизма: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- Входна точка на двигателя: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Резолвер: `src/domain/comboResolver.ts` (автоматично разпознаване на префикса `auto/`)
-- Табло за управление: `/dashboard/auto-combo`
+- Входна точка на комбото на живо: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), извиква се от `src/sse/handlers/chat.ts`
+- Табло: `/dashboard/auto-combo`
 - Телеметрия: SQLite таблица `auto_combo_decisions`
 
 Основни възможности:
 
-- **20 стратегии за маршрутизиране** (приоритет, претеглено, първо запълване, циклично, P2C, произволно,
-  най-малко използвано, оптимизирано по цена, съобразено с нулиране, прозорец за нулиране, свободен капацитет, претеглено по квота,
-  строго произволно, **автоматично**, lkgp, оптимизирано по контекст, оптимизирано по кеш, предаване на контекст, **сливане**,
-  конвейер) —
-  автоматичният режим е водещото допълнение във v3.8.0; `fusion` (паралелно изпращане към панел + синтез от оценяващ модел,
-  `open-sse/services/fusion.ts`) е нов във v3.8.36.
-- **Оценяване по 16 фактора**: квота, изправност, обратна цена, обратна латентност, съответствие със задачата и
-  още десет. Каноничната таблица на факторите и техните тегла по подразбиране се намира в
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — повторното ѝ излагане тук би
-  създало второ място, на което може да остарее.
-- **Виртуалната фабрика** материализира временни комбинации, когато не съществува съответстваща именувана комбинация,
-  като избира кандидати от изправни активни връзки към доставчици.
-- **Автоматични префикси**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — всеки от тях се основава на настроен профил от тегла.
-- **6 пакета за режими**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` и `chaos-mode` — предварително зададени конфигурации на теглата, които могат да се извикват от
-  таблото за управление. (Да не се бъркат с префиксите `auto/*` по-горе, които са
-  варианти, прилагани по време на заявката.)
+- **20 стратегии за маршрутизиране** (priority, weighted, fill-first, round-robin, P2C, random,
+  least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
+  strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
+  pipeline) —
+  auto е централното нововъведение във v3.8.0; `fusion` (разклоняване към панел + синтез от съдия,
+  `open-sse/services/fusion.ts`) е ново във v3.8.36.
+- **Оценяване по 16 фактора**: квота, здраве, обратна цена, обратна латентност, съответствие
+  към задачата и още десет. Каноничната таблица на факторите и техните тегла по подразбиране
+  се намира в
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — повторението ѝ тук би създало
+  второ място, където да остарее.
+- **Виртуална фабрика** създава ефемерни комбота, когато не съществува съвпадащо именувано
+  комбо, като черпи кандидати от здрави активни връзки с доставчици.
+- **Auto префикси**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — всеки подкрепен от настроен тегловен профил.
+- **6 пакета режими**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first` и `chaos-mode` — предварително зададени тегловни конфигурации,
+  извикваеми от таблото. (Да не се бъркат с префиксите `auto/*` по-горе, които са
+  варианти по време на заявката.)
 
-За пълни алгоритмични подробности (формули на факторите, настройване на теглата) вижте
+За пълни алгоритмични подробности (формули на факторите, настройка на теглата) вижте
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. Облачни агенти
+### B. Cloud Agents
 
-Cloud Agents обединява хоствани от трети страни платформи за програмни агенти (Codex Cloud, Devin,
-Jules) зад унифициран, поддържан от база данни жизнен цикъл на задачите. Всички крайни точки за създаване/проверка
-на задачи изискват удостоверяване за управление.
+Cloud Agents обвива хоствани платформи за кодови агенти от трети страни (Codex Cloud, Devin,
+Jules) зад унифициран жизнен цикъл на задачите, подкрепен от база данни. Всички крайни точки
+за създаване/инспекция на задачи изискват управленска автентикация.
 
 - Корен на модула: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, както и поддиректории за отделните агенти в `agents/`)
-- Имплементации за отделните агенти: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Публични крайни точки: `/api/v1/agents/tasks/*` (изброяване/създаване/получаване/отмяна)
-- Крайни точки за управление: `/api/cloud/*` (осигуряване, състояние, пакетна обработка)
-- Табло за управление: `/dashboard/cloud-agents`
+  `types.ts`, `db.ts`, плюс поддиректории за всеки агент под `agents/`)
+- Реализации за всеки агент: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Публични крайни точки: `/api/v1/agents/tasks/*` (списък/създаване/получаване/отмяна)
+- Управленски крайни точки: `/api/cloud/*` (провизиране, статус, пакетни операции)
+- Табло: `/dashboard/cloud-agents`
 - Съхранение: таблица `cloud_agent_tasks`
 
-За подробности относно осигуряването и OAuth за отделните агенти вижте
+За провизиране по агент и спецификите на OAuth вижте
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. Защитни механизми
+### C. Guardrails
 
-Модулът за защитни механизми е middleware слой с горещо презареждане, който проверява заявките
-и отговорите за лични данни, инжектиране на подкани и опасно визуално съдържание. Нарушенията
-прекратяват заявката с HTTP **503** и структуриран код за грешка, което позволява
-на извикващите надолу по веригата да направят повторен опит или да изберат друг клон.
+Модулът Guardrails е слой междинен софтуер с горещо презареждане, който проверява заявките
+и отговорите за PII, инжектиране на подкани и опасно визуално съдържание. Нарушенията
+прекъсват заявката незабавно с HTTP **503** плюс структуриран код на грешка, позволявайки
+на последващите извикващи да повторят опита или да разклонят обработката.
 
 - Корен на модула: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
 - Горещо презареждане: регистърът следи за промени в конфигурацията и преизгражда веригата на място
-- Точки на интеграция: входът на обработчика за чат, обработчикът за генериране на изображения, пречиствателят на отговори
-- HTTP договор: нарушенията се връщат като `503` с `error.code = "GUARDRAIL_VIOLATION"`
+- Точки на включване: вход на обработчика на чат, обработчик на генериране на изображения, саниращ механизъм на отговорите
+- HTTP договор: нарушенията се проявяват като `503` с `error.code = "GUARDRAIL_VIOLATION"`
 
-За създаване на набори от правила и настройване на праговете вижте
+За създаване на набори от правила и настройка на прагове вижте
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Домейнен слой
+### D. Слой на домейна
 
-Пространството от имена `src/domain/` централизира решенията за политики, така че обработчиците на маршрути да не
-трябва сами да съставят логиката за блокиране/бюджет/резервен вариант.
+Пространството от имена `src/domain/` съдържа домейн услуги и запазени договори за оценка.
+То не е единствена задължителна входна точка за политики за всяка заявка.
 
-- Механизъм за политики: `src/domain/policyEngine.ts` — единна входна точка за
-  оценяване преди изпълнение (подреждане: блокиране → бюджет → резервен вариант)
-- Правила за разходите: `src/domain/costRules.ts`
+Активният път на чата извиква `enforceApiKeyPolicy()` от
+`src/shared/utils/apiKeyPolicy.ts`; оторизацията на разрешените модели и членовете на комботата
+е реализирана в `src/sse/handlers/chat/resolvedModelPolicy.ts`. Самостоятелно хостваната
+входна точка в `src/app/api/v1/chat/completions/route.ts` също налага политика за API ключове преди
+изпращане. Разрешаването на комбота преминава през `open-sse/services/combo.ts`.
+
+`src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` и `src/lib/container.ts`
+остават тествани договори, а не окабеляването на този път на заявката. Контейнерът регистрира
+двигателя на политиките, но инспектираният производствен път на заявката не го разрешава.
+Само по себе си промяната на тези договори не променя активната политика на чата или
+маршрутизирането на комботата; свързването или премахването им изисква отделно проектантско решение.
+
+- Запазен двигател на политики: `src/domain/policyEngine.ts` — оценка блокиране → бюджет → резервен вариант
+- Правила за разходи: `src/domain/costRules.ts`
 - Политика за резервен вариант: `src/domain/fallbackPolicy.ts`
 - Политика за блокиране: `src/domain/lockoutPolicy.ts`
-- Маршрутизиране въз основа на етикети: `src/domain/tagRouter.ts`
-- Резолвер за комбинации: `src/domain/comboResolver.ts` — разрешава имена на комбинации, префикси auto/\*
-  и цели за модели със заместващи символи до конкретни планове за изпълнение
+- Маршрутизиране на база етикети: `src/domain/tagRouter.ts`
+- Запазен разрешител на комбота: `src/domain/comboResolver.ts` — самостоятелен договор за избор; активното маршрутизиране на комбота е реализирано в `open-sse/services/combo.ts`
 - Обединител на правила за връзки/модели: `src/domain/connectionModelRules.ts`
-- Моментни снимки на наличността на моделите: `src/domain/modelAvailability.ts`
-- Проследяване на изтичането на валидността на доставчиците: `src/domain/providerExpiration.ts`
-- Кеш на квотите: `src/domain/quotaCache.ts`
+- Моментни снимки на наличността на модели: `src/domain/modelAvailability.ts`
+- Проследяване на изтичането при доставчици: `src/domain/providerExpiration.ts`
+- Кеш на квоти: `src/domain/quotaCache.ts`
 - Състояние на деградация: `src/domain/degradation.ts`
 - Одит на конфигурацията: `src/domain/configAudit.ts`
-- Конструктор на метаданни за отговори на OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Подсистема за оценяване: `src/domain/assessment/` — периодични задачи за оценяване
+- Конструктор на метаданни на отговора на OmniRoute: `src/domain/omnirouteResponseMeta.ts`
+- Подсистема за оценка: `src/domain/assessment/` — периодични задачи за оценяване
 
 ### E. Конвейер за оторизация
 
 Конвейерът за оторизация класифицира всяка входяща заявка и прилага
-подходящата верига от политики преди препращането.
+подходящата верига от политики преди изпращане.
 
-- Входна точка на конвейера: `src/server/authz/pipeline.ts`
+- Входна точка на пайплайна: `src/server/authz/pipeline.ts`
 - Класификатор на заявки: `src/server/authz/classify.ts` — разграничава публичните
   маршрути за съвместимост от маршрутите за управление
-- Списък с публични маршрути: `src/shared/constants/publicApiRoutes.ts`
+- Инвентар на публичните маршрути: `src/shared/constants/publicApiRoutes.ts`
 - Политики: `src/server/authz/policies/` — композируеми предикати
   (`requireApiKey`, `requireManagement`, `requireFreshAuth` и др.)
-- Помощни средства за заглавки: `src/server/authz/headers.ts`
+- Помощни инструменти за хедъри: `src/server/authz/headers.ts`
 - Помощна функция за проверки: `src/server/authz/assertAuth.ts`
 - Контекст на заявката: `src/server/authz/context.ts`
 
-Публичните маршрути и маршрутите за управление са строго разграничени: API интерфейсите за агенти/периоди на изчакване и
-промените по доставчиците изискват удостоверяване за управление (HTTP 401, ако липсва).
+Публичните маршрути спрямо маршрутите за управление са строга граница: API-тата за
+agent/cooldown и мутациите на доставчици изискват управленска автентикация
+(HTTP 401, ако липсва).
 
-За пълните правила за класифициране на маршрутите вижте
+За пълните правила за класификация на маршрутите вижте
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. FSM за работни процеси и маршрутизатор, съобразен със задачите
+### F. FSM на работния поток и рутер с отчитане на задачите
 
-Маршрутизатор, управляван от машина с крайни състояния и разположен над избора на комбинация, който насочва
-трафика въз основа на открития етап на работния процес (планиране, изпълнение,
-преглед) и принадлежността към фонова задача.
+Рутер, управляван от краен автомат, разположен над избора на комбо, за насочване
+на трафика въз основа на открития етап на работния поток (планиране, изпълнение,
+преглед) и афинитета към фонови задачи.
 
-- FSM на работния процес: `open-sse/services/workflowFSM.ts`
-- Маршрутизатор, отчитащ задачите: `open-sse/services/taskAwareRouter.ts`
+- FSM на работния поток: `open-sse/services/workflowFSM.ts`
+- Рутер с отчитане на задачите: `open-sse/services/taskAwareRouter.ts`
 - Детектор на фонови задачи: `open-sse/services/backgroundTaskDetector.ts`
 - Класификатор на намерения: `open-sse/services/intentClassifier.ts`
 
-Преходите на FSM се подават към оценяването на Auto Combo, като дават предимство на по-евтини модели
-за фонови задачи и задачи за автоматизация и на по-мощни модели за интерактивни
-етапи на планиране/преглед.
+Преходите на FSM захранват оценяването на Auto Combo, като го отклоняват към
+по-евтини модели за фонови/автоматизационни задачи и към по-мощни модели за
+интерактивни ходове за планиране/преглед.
 
 ### G. Устойчивост, специфична за доставчика
 
-Няколко доставчика предоставят специализирани модули за устойчивост и прикриване, които надграждат
-глобалните слоеве за прекъсвач на веригата / период на изчакване на връзката / блокиране на модели:
+Няколко доставчици се доставят със специализирани модули за устойчивост и скритост,
+които се надграждат върху глобалните слоеве circuit breaker / connection cooldown /
+model lockout:
 
-- Механизъм за Antigravity 429: `open-sse/services/antigravity429Engine.ts` (сменя
-  идентичността, премахва заглавките на отговора, управлява проследяването на кредити/версии чрез
-  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts`)
+- Двигател Antigravity 429: `open-sse/services/antigravity429Engine.ts` (ротира
+  идентичността, почиства хедърите на отговорите, управлява проследяването на
+  кредити/версии чрез `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
+  `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts`)
 - Политика за квоти на ModelScope: `open-sse/services/modelscopePolicy.ts`
-- CCH на Claude Code (ръкостискане на канал за съвместимост): `open-sse/services/claudeCodeCCH.ts`,
-  както и `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+- Claude Code CCH (Compatibility Channel Handshake — ръкостискане на канала за съвместимост): `open-sse/services/claudeCodeCCH.ts`,
+  плюс `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Оформяне на цифровия отпечатък на Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- Оформяне на отпечатъка на Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Обфускация на Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-За пълния наръчник за прикриване и оперативни насоки вижте
-`docs/security/STEALTH_GUIDE.md` (git; не е компилиран в `/docs`).
+За пълния наръчник по скритост и оперативните указания вижте
+`docs/security/STEALTH_GUIDE.md` (git; не е компилирано в `/docs`).
 
-### H. Webhooks, кеш за разсъждения, кеш за четене
+### H. Уебхуци, кеш на разсъжденията, кеш на четене
 
-- **Webhooks** — изходящо изпращане на събития за доставчици/акаунти/задачи.
+- **Уебхуци** — изходящо изпращане за събития на доставчик/акаунт/задача.
   - Диспечер: `src/lib/webhookDispatcher.ts`
-  - Хранилище: SQLite таблицата `webhooks` (чрез `src/lib/db/webhooks.ts`)
-  - Табло: `/dashboard/webhooks` (абонаменти, тайни, история на повторните опити)
+  - Съхранение: SQLite таблица `webhooks` (чрез `src/lib/db/webhooks.ts`)
+  - Табло: `/dashboard/webhooks` (абонаменти, тайни ключове, история на повторните опити)
   - За таксономията на събитията и семантиката на повторните опити вижте [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Кеш за разсъждения** — възпроизводими блокове с разсъждения за доставчици, които генерират
-  токени за мисловен процес (Claude, GLMT и др.), така че при последователни взаимодействия да може да се избегне повторното обмисляне.
-  - Слой за БД: `src/lib/db/reasoningCache.ts`
+- **Кеш на разсъжденията** — блокове за разсъждения с възможност за повторно
+  възпроизвеждане за доставчици, които издават мисловни токени (Claude, GLMT и др.),
+  така че последващите ходове да могат да пропуснат повторното мислене.
+  - Слой на базата данни: `src/lib/db/reasoningCache.ts`
   - Сервизен слой: `open-sse/services/reasoningCache.ts`
-  - За семантиката на възпроизвеждането вижте [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Кеш за четене** — краткотраен кеш за отговори, индексиран по сигнатура и използван за
-  обединяване на идентични повторни опити от повредени SDK на външни системи.
-  - Слой за БД: `src/lib/db/readCache.ts`
+  - За семантиката на повторното възпроизвеждане вижте [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Кеш на четене** — краткотраен кеш на отговори, ключиран по сигнатура, използван
+  за сливане на идентични повторни опити от повредени upstream SDK-та.
+  - Слой на базата данни: `src/lib/db/readCache.ts`
   - Крайна точка за статистика: `GET /api/cache/stats`, табло на `/dashboard/cache`
 
 ## 3) Слой за съхранение на данни
