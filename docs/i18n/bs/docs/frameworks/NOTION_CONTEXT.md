@@ -63,7 +63,7 @@ rezultatom; ako Notion vrati objekat greške, token se briše i poziv ne uspijev
 
 Definisani u `open-sse/mcp-server/tools/notionTools.ts`. Token se razrješava u
 vrijeme poziva putem `getNotionToken()`; ako nijedan nije konfigurisan, alat
-izbacuje grešku `"Notion integracijski token nije konfigurisan. Podesite ga u Settings > Context Sources."`
+izbacuje grešku `"Notion integration token not configured. Set it in Settings > Context Sources."`
 
 | Alat                         | Opseg (Scope)  | Opis                                                                                                         |
 | ---------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------ |

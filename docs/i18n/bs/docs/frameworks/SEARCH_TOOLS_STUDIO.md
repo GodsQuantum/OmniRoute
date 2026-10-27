@@ -75,9 +75,9 @@ Pokreće isti upit/URL paralelno kod najviše **4 pružatelja** (D22):
 | Polje           | Napomene                                                                          |
 | --------------- | --------------------------------------------------------------------------------- |
 | Provajder       | Padajući meni sa statusnom oznakom (konfigurisano / nedostaje / ograničena stopa) |
-| Tip             | `web` ili `vijesti` (samo pretraga)                                               |
+| Tip             | `web` ili `news` (samo pretraga)                                                  |
 | Cijela stranica | Prekidač za scrape — dohvaća cijelu stranicu naspram prvog vidljivog sadržaja     |
-| Format          | `markdown`, `tekst`, ili `html` (samo scrape)                                     |
+| Format          | `markdown`, `text`, ili `html` (samo scrape)                                      |
 | Model za rerank | Opcioni model za rerank nakon pretrage                                            |
 | Istorija        | Sekcija istorije pretrage koja se može skupiti                                    |
 
