@@ -255,10 +255,19 @@ test("CLI compares candidate debt to the event baseline, including merge queues 
   );
   // The immutable seed can retain identities subsequently removed from the catalog.
   // Bootstrap only live rows; retired identities must not become valid debt again.
-  const liveKeys = new Set(FREE_MODEL_BUDGETS.map((entry) => `${entry.provider}/${entry.modelId}`));
+  const liveFingerprints = new Map(
+    FREE_MODEL_BUDGETS.map((entry) => [
+      `${entry.provider}/${entry.modelId}`,
+      catalogFingerprint(entry),
+    ])
+  );
+  // Changed economics (e.g. Requesty trial/training terms) cannot bootstrap
+  // from the old seed either: retain their current evidence in this fixture.
   const allDebt = frozen.entries
-    .map((entry) => `${entry.provider}/${entry.modelId}`)
-    .filter((key) => liveKeys.has(key));
+    .filter(
+      (entry) => liveFingerprints.get(`${entry.provider}/${entry.modelId}`) === entry.catalogHash
+    )
+    .map((entry) => `${entry.provider}/${entry.modelId}`);
   const git = (...args) =>
     execFileSync("git", args, {
       cwd: dir,
@@ -313,7 +322,12 @@ test("CLI compares candidate debt to the event baseline, including merge queues 
       const rejected = run(audited);
       assert.equal(rejected.status, 1, event + rejected.stdout + rejected.stderr);
       assert.match(rejected.stderr, /cannot grow or be reintroduced/);
-      assert.equal(run(bootstrap).status, 0, "initial debt is allowed against policy-free base");
+      const bootstrapped = run(bootstrap);
+      assert.equal(
+        bootstrapped.status,
+        0,
+        "initial unchanged debt is allowed against policy-free base" + bootstrapped.stderr
+      );
       assert.equal(run("HEAD").status, 0, "unchanged debt is allowed");
     }
   } finally {

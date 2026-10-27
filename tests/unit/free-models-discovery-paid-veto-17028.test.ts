@@ -62,11 +62,13 @@ test("#17028 real discovery/cache/sync keep paid catalogued models out of free-o
     },
   });
   const calls = { upstream: 0, discovery: 0 };
+  let upstreamAvailable = false;
   globalThis.fetch = async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : String(input));
     if (url.pathname.includes("__readiness_probe__")) return new Response("", { status: 404 });
     if (url.origin === "https://apihub.agnes-ai.com" && url.pathname === "/v1/models") {
       calls.upstream++;
+      if (!upstreamAvailable) return new Response("offline fixture", { status: 503 });
       return Response.json({ data: entries });
     }
     if (
@@ -79,12 +81,49 @@ test("#17028 real discovery/cache/sync keep paid catalogued models out of free-o
     throw new Error("Unexpected network request in offline catalog fixture");
   };
   const url = `http://localhost/api/providers/${row.id}/models?excludeCustom=true`;
+  // A legacy cache has already discarded the prices. Reading it cannot reconstruct them.
+  await models.replaceSyncedAvailableModelsForConnection("agnes", row.id, [
+    { id: paid.id, name: paid.id },
+  ]);
+  const legacy = await discovery.GET(new Request(url), { params: { id: row.id } });
+  const legacyBody = (await legacy.json()) as { source: string; models: ModelRow[] };
+  assert.equal(legacyBody.source, "cache");
+  assert.equal(legacyBody.models[0].isFree, undefined);
+  assert.equal(calls.upstream, 0);
+  // A 200 fallback is not proof of refresh: its source/warning and old verdict remain visible.
+  const unavailable = await discovery.GET(new Request(url + "&refresh=true"), {
+    params: { id: row.id },
+  });
+  const unavailableBody = (await unavailable.json()) as {
+    source: string;
+    warning?: string;
+    models: ModelRow[];
+  };
+  assert.equal(unavailableBody.source, "cache");
+  assert.match(unavailableBody.warning || "", /unavailable/i);
+  assert.equal(unavailableBody.models[0].isFree, undefined);
+  const failedSync = await sync.POST(
+    new Request(`http://127.0.0.1/api/providers/${row.id}/sync-models`, {
+      method: "POST",
+      headers: buildModelSyncInternalHeaders(),
+    }),
+    { params: Promise.resolve({ id: row.id }) }
+  );
+  assert.equal(failedSync.status, 502);
+  const untouched = await models.getSyncedAvailableModelsForConnection("agnes", row.id);
+  assert.deepEqual(
+    untouched.map((model) => model.id),
+    [paid.id]
+  );
+  assert.equal(untouched[0].isFree, undefined);
+  upstreamAvailable = true;
   const fresh = await discovery.GET(new Request(url + "&refresh=true"), { params: { id: row.id } });
   assert.equal(fresh.status, 200);
+  assert.equal((await fresh.json()).source, "api");
   const cached = await discovery.GET(new Request(url), { params: { id: row.id } });
   const body = (await cached.json()) as { source: string; models: ModelRow[] };
   assert.equal(body.source, "cache");
-  assert.equal(calls.upstream, 1);
+  assert.equal(calls.upstream, 3);
   const response = await sync.POST(
     new Request(`http://127.0.0.1/api/providers/${row.id}/sync-models`, {
       method: "POST",
@@ -93,8 +132,8 @@ test("#17028 real discovery/cache/sync keep paid catalogued models out of free-o
     { params: Promise.resolve({ id: row.id }) }
   );
   assert.equal(response.status, 200);
-  assert.equal(calls.discovery, 1);
-  assert.equal(calls.upstream, 2);
+  assert.equal(calls.discovery, 2);
+  assert.equal(calls.upstream, 4);
   const persisted = await models.getSyncedAvailableModelsForConnection("agnes", row.id);
   assert.deepEqual(
     persisted.map((m) => m.id),
