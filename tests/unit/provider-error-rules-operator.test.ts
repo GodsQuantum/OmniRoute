@@ -333,6 +333,69 @@ describe("operator error rules", () => {
       );
     });
 
+    // Owner decision (2026-10-27): with a catch-all, the effective cooldown is the
+    // LONGER of the catch-all and the provider's own Retry-After / reset hint, so the
+    // default can lengthen a short upstream hint but never cut a real reset short.
+    describe("catch-all vs the provider's retry hint", () => {
+      const approx = (actual: number, expected: number) =>
+        assert.ok(Math.abs(actual - expected) <= 2_000, `expected ~${expected}ms, got ${actual}ms`);
+
+      it("keeps the upstream Retry-After when it is longer than the catch-all (429)", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        const result = checkFallbackError(429, "boom", 0, null, "acme", { "retry-after": "3600" });
+        assert.equal(result.shouldFallback, true);
+        approx(result.cooldownMs, 3_600_000);
+        assert.equal(result.ruleScope, "connection");
+      });
+
+      it("uses the catch-all when the upstream Retry-After is shorter (429)", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        const result = checkFallbackError(429, "boom", 0, null, "acme", { "retry-after": "60" });
+        assert.equal(result.shouldFallback, true);
+        assert.equal(result.cooldownMs, 1_800_000);
+        assert.equal(result.ruleScope, "connection");
+      });
+
+      it("keeps a longer x-ratelimit-reset hint on an unmatched 503", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        const resetAt = Math.floor((Date.now() + 2 * 3_600_000) / 1000);
+        const result = checkFallbackError(503, "Service Unavailable", 0, null, "acme", {
+          "x-ratelimit-reset": String(resetAt),
+        });
+        approx(result.cooldownMs, 2 * 3_600_000);
+      });
+
+      it("keeps a longer Retry-After on a 402 and a 403 too", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        for (const status of [402, 403]) {
+          const result = checkFallbackError(status, "boom", 0, null, "acme", {
+            "retry-after": "7200",
+          });
+          assert.equal(result.shouldFallback, true, `status ${status}`);
+          approx(result.cooldownMs, 7_200_000);
+        }
+      });
+
+      it("uses the catch-all on a 402 and a 403 when the Retry-After is shorter", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        for (const status of [402, 403]) {
+          const result = checkFallbackError(status, "boom", 0, null, "acme", {
+            "retry-after": "30",
+          });
+          assert.equal(result.cooldownMs, 1_800_000, `status ${status}`);
+        }
+      });
+
+      it("an explicit operator rule cooldown is not stretched by the hint", () => {
+        setOperatorProviderErrorDefaults(defaults);
+        setOperatorProviderErrorRules({
+          acme: [{ match: "boom", scope: "connection", cooldownMs: 600_000 }],
+        });
+        const result = checkFallbackError(429, "boom", 0, null, "acme", { "retry-after": "3600" });
+        assert.equal(result.cooldownMs, 600_000);
+      });
+    });
+
     it("checkFallbackError leaves a 400 untouched by the default", () => {
       const before = checkFallbackError(400, "invalid request: bad field", 0, null, "acme");
       setOperatorProviderErrorDefaults(defaults);

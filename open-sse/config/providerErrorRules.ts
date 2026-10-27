@@ -52,6 +52,13 @@ export type ProviderErrorRuleMatch = {
    * error-text classification win, as it does without a default.
    */
   reasonFromStatus?: true;
+  /**
+   * Set when the match came from the operator catch-all default. `checkFallbackError()`
+   * then uses the LONGER of `cooldownMs` and the provider's own retry hint
+   * (Retry-After / x-ratelimit-reset / body hint), so the default never cuts a real
+   * upstream reset short. Explicit rules keep their exact `cooldownMs`.
+   */
+  fromOperatorDefault?: true;
 };
 
 /**
@@ -133,6 +140,7 @@ function matchOperatorDefault(
     reason: fallback.reason ?? catchAllReason(status),
     scope: fallback.scope ?? "connection",
     cooldownMs: fallback.cooldownMs,
+    fromOperatorDefault: true,
     ...(fallback.reason ? {} : { reasonFromStatus: true as const }),
   };
 }

@@ -799,7 +799,12 @@ operator rule and no built-in catalog rule matched, and only to 402, 403, 408,
 401s keep their own handling. With no explicit `reason`, the reason comes from
 the status, the same way `classifyError` does it. Declaring a default counts as
 an operator rule for `hasOperatorRuleForProvider()`, so its `scope` (default
-`"connection"`) is honored. Neither a rule nor a default bypasses the
+`"connection"`) is honored. The effective cooldown of a default is the longer
+of its `cooldownMs` and the provider's own retry hint (`Retry-After`,
+`x-ratelimit-reset` or a reset hint in the body, the same hint the engine
+honors when the connection-cooldown setting "use upstream retry hints" is on),
+so a default can stretch a short upstream hint but never cut a real reset
+short. An explicit operator rule keeps its exact `cooldownMs`. Neither a rule nor a default bypasses the
 connection-cooldown guards in `markAccountUnavailable`: an active, longer
 cooldown is never shortened and a terminal status is never overwritten. The
 built-in text detectors that run earlier in `checkFallbackError` (credits
