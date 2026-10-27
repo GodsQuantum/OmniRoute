@@ -1,4 +1,10 @@
 import { createSseTextTransform, type FieldCategory } from "./sseTextTransform";
+import {
+  bufferField,
+  flushOpenAiTextBuffers,
+  type BufferedField,
+  type TextBuffers,
+} from "./sseTextBuffers";
 import { redactCredentials } from "./guardrails/credentialMasker";
 
 export interface CredentialTransformOptions {
@@ -233,24 +239,25 @@ function redactOutsideDataUrls(text: string): string {
 }
 
 type ChoiceBufferStore = {
-  buffers: Map<string, Record<FieldCategory, string>>;
-  get: (index: string | number) => Record<FieldCategory, string>;
-  takeAll: () => Array<[string, Record<FieldCategory, string>]>;
+  buffers: Map<string, TextBuffers>;
+  get: (index: string | number) => TextBuffers;
+  takeAll: () => Array<[string, TextBuffers]>;
   clearAll: () => void;
 };
 
 function createChoiceBufferStore(
   maxBufferedChoices: number,
-  onEvict: (evicted: Record<FieldCategory, string>, into: Record<FieldCategory, string>) => void
+  onEvict: (evicted: TextBuffers, into: TextBuffers) => void
 ): ChoiceBufferStore {
-  const buffers = new Map<string, Record<FieldCategory, string>>();
-  const get = (index: string | number): Record<FieldCategory, string> => {
+  const buffers = new Map<string, TextBuffers>();
+  const get = (index: string | number): TextBuffers => {
     const key = String(index);
     const existing = buffers.get(key);
     if (existing) return existing;
-    const buf: Record<FieldCategory, string> = {
+    const buf: TextBuffers = {
       content: "",
       reasoning: "",
+      reasoning_content: "",
       toolArgs: "",
       partialJson: "",
     };
@@ -273,6 +280,7 @@ function createChoiceBufferStore(
       for (const buf of buffers.values()) {
         buf.content = "";
         buf.reasoning = "";
+        buf.reasoning_content = "";
         buf.toolArgs = "";
         buf.partialJson = "";
       }
@@ -282,17 +290,14 @@ function createChoiceBufferStore(
 
 function hasRemainingBuffers(store: ChoiceBufferStore): boolean {
   for (const [, buffers] of store.takeAll()) {
-    for (const key of Object.keys(buffers) as FieldCategory[]) {
+    for (const key of Object.keys(buffers) as BufferedField[]) {
       if (buffers[key].length > 0) return true;
     }
   }
   return false;
 }
 
-function pickClaudeFlushBuffer(
-  store: ChoiceBufferStore,
-  blockIndex: number
-): Record<FieldCategory, string> {
+function pickClaudeFlushBuffer(store: ChoiceBufferStore, blockIndex: number): TextBuffers {
   const own = store.get(`${blockIndex}_0`);
   if (Object.values(own).some((v) => v.length > 0)) return own;
   for (const [, candidate] of store.takeAll()) {
@@ -338,110 +343,6 @@ function flushClaudeFormat(
     index: blockIndex,
     delta,
   };
-}
-
-type OpenAiChoice = { index?: unknown; delta?: Record<string, unknown> };
-
-function missingChoiceIndexes(
-  store: ChoiceBufferStore,
-  present: Set<number>
-): Array<{ choiceIdx: number; choiceBuf: Record<FieldCategory, string> }> {
-  const missing: Array<{ choiceIdx: number; choiceBuf: Record<FieldCategory, string> }> = [];
-  for (const [compositeKey, choiceBuf] of store.takeAll()) {
-    const choiceIdx = parseInt(compositeKey.split("_")[0] || "0", 10);
-    if (
-      !present.has(choiceIdx) &&
-      (choiceBuf.content || choiceBuf.reasoning || choiceBuf.toolArgs)
-    ) {
-      missing.push({ choiceIdx, choiceBuf });
-    }
-  }
-  return missing;
-}
-
-function drainTextField(
-  delta: Record<string, unknown>,
-  key: string,
-  value: string,
-  clear: () => void
-): void {
-  if (value) {
-    delta[key] = value;
-    clear();
-  } else {
-    delete delta[key];
-  }
-}
-
-function drainToolCalls(
-  delta: Record<string, unknown>,
-  choiceBuf: Record<FieldCategory, string>,
-  toolEntries: Array<[string, Record<FieldCategory, string>]>
-): void {
-  if (!choiceBuf.toolArgs && toolEntries.length === 0) {
-    delete delta.tool_calls;
-    return;
-  }
-  if (!delta.tool_calls) delta.tool_calls = [];
-  const toolCalls = delta.tool_calls as Array<Record<string, unknown>>;
-  if (choiceBuf.toolArgs) {
-    toolCalls.push({ index: 0, function: { arguments: choiceBuf.toolArgs } });
-    choiceBuf.toolArgs = "";
-  }
-  for (const [key, buf] of toolEntries) {
-    if (!buf.toolArgs) continue;
-    const toolIdx = parseInt(key.split("_")[1] || "0", 10);
-    toolCalls.push({ index: toolIdx, function: { arguments: buf.toolArgs } });
-    buf.toolArgs = "";
-  }
-}
-
-function drainOneChoice(store: ChoiceBufferStore, choice: OpenAiChoice): void {
-  const choiceIdx = typeof choice.index === "number" ? choice.index : 0;
-  const toolEntries = store
-    .takeAll()
-    .filter(([key]) => key.startsWith(`${choiceIdx}_`) && key !== `${choiceIdx}_0`);
-  const choiceBuf = store.get(`${choiceIdx}_0`);
-  if (!choice.delta) choice.delta = {};
-  const delta = choice.delta as Record<string, unknown>;
-  drainTextField(delta, "content", choiceBuf.content, () => {
-    choiceBuf.content = "";
-  });
-  drainTextField(delta, "reasoning_content", choiceBuf.reasoning, () => {
-    choiceBuf.reasoning = "";
-  });
-  drainToolCalls(delta, choiceBuf, toolEntries);
-  if (choiceBuf.partialJson) {
-    delta.partial_json = choiceBuf.partialJson;
-    choiceBuf.partialJson = "";
-  }
-}
-
-function flushOpenAiChoices(
-  store: ChoiceBufferStore,
-  lastJson: Record<string, unknown>
-): Record<string, unknown> {
-  // `lastJson` was already forwarded to the client. Keep only its envelope
-  // (id/model/created) and per-choice index; the flush event carries the held-back
-  // tails alone. Re-sending its delta duplicated tool_calls headers (id/name/
-  // arguments) and corrupted the client-side accumulated arguments.
-  const finalJson = JSON.parse(JSON.stringify(lastJson)) as {
-    choices: OpenAiChoice[];
-    usage?: unknown;
-  };
-  delete finalJson.usage;
-  finalJson.choices = finalJson.choices.map((c) =>
-    typeof c.index === "number" ? { index: c.index, delta: {} } : { delta: {} }
-  );
-  const presentIndexes = new Set(
-    finalJson.choices.map((c) => c.index).filter((idx): idx is number => typeof idx === "number")
-  );
-  for (const { choiceIdx } of missingChoiceIndexes(store, presentIndexes)) {
-    finalJson.choices.push({ index: choiceIdx, delta: {} });
-    presentIndexes.add(choiceIdx);
-  }
-  for (const choice of finalJson.choices) drainOneChoice(store, choice);
-  return finalJson;
 }
 
 function flushResponsesFormat(
@@ -572,8 +473,8 @@ type DrainState = {
   windowSize: number;
   maxBufferedBytes: number;
   bufferedBytes: () => number;
-  replace: (buffers: Record<FieldCategory, string>, field: FieldCategory, rest: string) => void;
-  append: (buffers: Record<FieldCategory, string>, field: FieldCategory, ownText: string) => void;
+  replace: (buffers: TextBuffers, field: BufferedField, rest: string) => void;
+  append: (buffers: TextBuffers, field: BufferedField, ownText: string) => void;
 };
 
 function backOffSurrogate(text: string, cut: number): number {
@@ -625,8 +526,8 @@ function markUnclosedBeginHead(text: string): string {
 
 function drainOverflowHead(
   state: DrainState,
-  buffers: Record<FieldCategory, string>,
-  field: FieldCategory,
+  buffers: TextBuffers,
+  field: BufferedField,
   sanitized: string
 ): string | null {
   const unclosedBegin = sanitized.match(UNCLOSED_BEGIN);
@@ -637,11 +538,7 @@ function drainOverflowHead(
   return null;
 }
 
-function drainOverflow(
-  state: DrainState,
-  buffers: Record<FieldCategory, string>,
-  field: FieldCategory
-): string {
+function drainOverflow(state: DrainState, buffers: TextBuffers, field: BufferedField): string {
   const sanitized = redactOutsideDataUrls(buffers[field]);
   const marked = drainOverflowHead(state, buffers, field, sanitized);
   if (marked !== null) return marked;
@@ -656,8 +553,8 @@ function drainOverflow(
 
 function drainWindow(
   state: DrainState,
-  buffers: Record<FieldCategory, string>,
-  field: FieldCategory,
+  buffers: TextBuffers,
+  field: BufferedField,
   isStopSignal: boolean
 ): string {
   const sanitized = redactOutsideDataUrls(buffers[field]);
@@ -684,7 +581,7 @@ function drainWindow(
 function appendAndDrain(
   state: DrainState,
   store: ChoiceBufferStore,
-  field: FieldCategory,
+  field: BufferedField,
   index: string | number,
   ownText: string,
   isStopSignal: boolean
@@ -705,14 +602,14 @@ function flushRemainingByShape(
   const lastType = typeof last.type === "string" ? (last.type as string) : "";
   if (lastType.startsWith("message") || lastType.startsWith("content_block"))
     return flushClaudeFormat(store, last);
-  if (Array.isArray(last.choices)) return flushOpenAiChoices(store, last);
+  if (Array.isArray(last.choices)) return flushOpenAiTextBuffers(store, last);
   if (lastType.startsWith("response.")) return flushResponsesFormat(store, last, lastType);
   if (Array.isArray(last.candidates)) return flushGeminiFormat(store, last);
   return flushGenericFormat(store, (lastContentJson || lastJson) as Record<string, unknown>);
 }
 
 function flushEmptyStream(
-  getBuffers: (index: string | number) => Record<FieldCategory, string>,
+  getBuffers: (index: string | number) => TextBuffers,
   isJsonStream: boolean
 ): unknown {
   const buffers = getBuffers("0_0");
@@ -735,7 +632,13 @@ export function createCredentialSseTransform(
     bufferedBytes += after.length - before.length;
   };
   const store = createChoiceBufferStore(maxBufferedChoices, (evicted, into) => {
-    for (const field of ["content", "reasoning", "toolArgs", "partialJson"] as const) {
+    for (const field of [
+      "content",
+      "reasoning",
+      "reasoning_content",
+      "toolArgs",
+      "partialJson",
+    ] as const) {
       if (evicted[field]) {
         track(evicted[field], "");
         into[field] += evicted[field];
@@ -764,7 +667,7 @@ export function createCredentialSseTransform(
     lastContentJson: unknown = null
   ): unknown => {
     for (const [, buffers] of store.takeAll()) {
-      for (const key of Object.keys(buffers) as FieldCategory[]) {
+      for (const key of Object.keys(buffers) as BufferedField[]) {
         if (buffers[key]) buffers[key] = markUnclosedBeginHead(redactOutsideDataUrls(buffers[key]));
       }
     }
@@ -776,11 +679,13 @@ export function createCredentialSseTransform(
 
   const processor = (
     text: string,
-    field: FieldCategory,
+    category: FieldCategory,
     isStopSignal = false,
     index: string | number = "0_0",
-    isSnapshot = false
+    isSnapshot = false,
+    fieldName?: string
   ): string => {
+    const field = bufferField(category, fieldName);
     if (isSnapshot) return redactOutsideDataUrls(text);
     return appendAndDrain(state, store, field, index, redactOutsideDataUrls(text), isStopSignal);
   };

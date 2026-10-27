@@ -1,0 +1,1 @@
+- **fix(sse):** Preserve independent `reasoning` and `reasoning_content` fields through streamed PII and credential redaction, and flush only buffered tails without replaying metadata or tool arguments. Refs #17291.
