@@ -11,29 +11,20 @@
 
 ---
 
-## အကျဉ်းချုပ်
+## ဆိုသည်မှာ
 
-OmniRoute သည် provider 376 ခုကို မှတ်ပုံတင်ထားပြီး၊ ၎င်းတို့အနက် catalog entry 155 ခုကို **free/no-auth** ဟု မှတ်သားထားသည်
-(no-auth၊
-free-tier OAuth၊ သို့မဟုတ် free-tier API key —
-[Free Tiers Guide](../getting-started/FREE-TIERS-GUIDE.md) နှင့် အပြည့်အစုံ
-[Free Tiers directory](../reference/FREE_TIERS.md) ကို ကြည့်ပါ)။ အခက်ကတော့ free provider များသည် model quality အားဖြင့် အလွန်ကွာခြားကြသည်။ frontier model ကို ပံ့ပိုးပေးနေသော no-auth provider တစ်ခုက small legacy model ကို ပံ့ပိုးနေသော provider တစ်ခုထက် အများကြီး ပို၍အသုံးဝင်သည်။
+OmniRoute သည် provider 376 ခုကို မှတ်ပုံတင်ထားပြီး၊ ၎င်းတို့ထဲတွင် **အခမဲ့/no-auth** ဟု သတ်မှတ်ထားသော catalog entry 155 ခု ပါဝင်သည် (no-auth၊ free-tier OAuth၊ သို့မဟုတ် free-tier API key — [အခမဲ့ Tier လမ်းညွှန်](../getting-started/FREE-TIERS-GUIDE.md) နှင့် အပြည့်အစုံ [အခမဲ့ Tier directory](../reference/FREE_TIERS.md) ကို ကြည့်ပါ)။ အခက်အခဲမှာ- အခမဲ့ provider များသည် model အရည်အသွေးအရ ကြီးစွာကွာဟနေကြသည်။ frontier model ကို ဝန်ဆောင်မှုပေးနေသော no-auth provider တစ်ခုသည် legacy model အသေးစားကို ဝန်ဆောင်မှုပေးနေသော provider တစ်ခုထက် အလွန်အသုံးဝင်သည်။
 
-**Free Provider Rankings** သည် "**free provider မည်သည့်ခုက အကောင်းဆုံး model ကို ပေးနိုင်သနည်း?**" ဟူသော မေးခွန်းကို ဖြေပေးရန်အတွက် free provider တစ်ခုချင်းစီ၏ catalog ကို
-**Arena AI leaderboard** (human-preference ELO — LMArena chatbot arena နောက်ကွယ်က အယူအဆနှင့်အတူတူဖြစ်သော) မှ
-**crowd-sourced အရည်အသွေးအမှတ်များ** နှင့် ချိတ်ဆက်ပေါင်းစပ်သည်။ ထို့နောက် provider များကို ၎င်းတို့၏ **အကောင်းဆုံး free model** ၏ စွမ်းဆောင်ရည်အလိုက် အဆင့်သတ်မှတ်သည်။
+**အခမဲ့ Provider အဆင့်သတ်မှတ်ချက်များ** (Free Provider Rankings) သည် "**အကောင်းဆုံး model ကို ပေးနိုင်မည့် အခမဲ့ provider မှာ ဘယ်တစ်ခုလဲ?**" ဟူသော မေးခွန်းကို အဖြေပေးသည်။ ၎င်းက အခမဲ့ provider တစ်ခုချင်းစီ၏ catalog ကို **Arena AI leaderboard** (လူ့ဦးစားပေးမှုအခြေပြု ELO — LMArena chatbot arena နောက်ကွယ်ရှိ အယူအဆနှင့် အလားတူဖြစ်သည်) ထံမှ **လူထုပါဝင်ရေးသားထားသော အရည်အသွေး အမှတ်များ** နှင့် ပေါင်းစပ်ခြင်းဖြင့် ဖြစ်သည်။ ထို့နောက် provider များကို ၎င်းတို့၏ **အကောင်းဆုံး အခမဲ့ model** ၏ စွမ်းဆောင်ရည်အလိုက် အဆင့်သတ်မှတ်ထားသည်။
 
-ဤအဆင့်သတ်မှတ်ချက်ကို အရင်းအမြစ် သုံးခုမှ တွက်ချက်ထားသည် —
+ဤအဆင့်သတ်မှတ်ချက်ကို လက်တွေ့ ရင်းမြစ်သုံးခုမှ တွက်ချက်ထားခြင်း ဖြစ်သည်-
 
-1. free-provider စာရင်းများ — `NOAUTH_PROVIDERS`၊ နှင့် `hasFree` ဟု မှတ်သားထားသော
-   `OAUTH_PROVIDERS` / `APIKEY_PROVIDERS` entry များ
+1. အခမဲ့ provider စာရင်းများ — `NOAUTH_PROVIDERS`၊ နှင့် `hasFree` ဟု သတ်မှတ်ထားသော `OAUTH_PROVIDERS` / `APIKEY_PROVIDERS` entry များ
    (`src/shared/constants/providers.ts`)။
-2. provider registry (`open-sse/config/providerRegistry.ts`) မှ provider တစ်ခုချင်းစီ၏
-   model catalog။
-3. Arena ELO sync engine (`src/lib/arenaEloSync.ts`) မှ `model_intelligence` DB table
-   ထဲတွင် သိမ်းဆည်းထားသည့် ELO-အခြေခံ task-fit အမှတ်များ။
+2. provider registry (`open-sse/config/providerRegistry.ts`) ထံမှ provider တစ်ခုချင်းစီ၏ model catalog။
+3. Arena ELO sync engine (`src/lib/arenaEloSync.ts`) က `model_intelligence` DB ဇယားထဲသို့ သိမ်းဆည်းပေးသော ELO-အခြေပြု task-fit အမှတ်များ။
 
-join logic ကို `src/lib/freeProviderRankings.ts` တွင် ရေးထားသည်။
+ပေါင်းစပ်ခြင်း logic သည် `src/lib/freeProviderRankings.ts` တွင် တည်ရှိသည်။
 
 ---
 
@@ -117,112 +108,115 @@ Response ပုံစံ-
 
 ---
 
-## ရမှတ်များ အလုပ်လုပ်ပုံ
+## အမှတ်ပေးစနစ်များ လုပ်ဆောင်ပုံ
 
-### ရင်းမြစ်: Arena AI ဦးဆောင်စာရင်း
+### ရင်းမြစ်- Arena AI leaderboard
 
-Arena ELO စင့်ခ်အင်ဂျင် (`src/lib/arenaEloSync.ts`) သည် Arena AI ဦးဆောင်စာရင်း API
-(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) မှ `text`
-နှင့် `code` ဟူသော ဦးဆောင်စာရင်းနှစ်ခုကို ရယူသည်။ ထို API က အသုံးပြုနိုင်သည့်
-စာရင်းကို ပြန်မပေးသည့်အခါ အင်ဂျင်သည် Hugging Face datasets-server ရှိ တရားဝင်
-`lmarena-ai/leaderboard-dataset` (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` → `text`,
-`coding` → `code`) ကို အစားထိုးအသုံးပြုသည်။ `GET /api/intelligence/sync` သည် `activeSource`, `lastError`
-နှင့် `lastFailedAt` တို့ကို အစီရင်ခံသည်။ ဦးဆောင်စာရင်းရှိ ထည့်သွင်းချက်တစ်ခုစီတွင်
-မော်ဒယ်အမည်၊ ရောင်းချသူ၊ ELO `score`၊ ယုံကြည်မှုကြားကာလနှင့် မဲအရေအတွက်တို့
-ပါဝင်သည်။
+Arena ELO sync engine (`src/lib/arenaEloSync.ts`) သည် Arena AI leaderboard API
+(`https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard`) မှ leaderboard နှစ်ခု —
+`text` နှင့် `code` — ကို ဆွဲယူပါသည်။ ယင်း API မှ အသုံးဝင်သော board မပြန်ပေးသောအခါ၊
+engine သည် Hugging Face datasets-server ပေါ်ရှိ တရားဝင် `lmarena-ai/leaderboard-dataset`
+သို့ fallback ပြန်သွားပါသည် (`src/lib/arenaEloHfSource.ts`, CC-BY-4.0; `overall` →
+`text`, `coding` → `code`)။ `GET /api/intelligence/sync` သည် `activeSource`,
+`lastError` နှင့် `lastFailedAt` ကို report လုပ်ပါသည်။ leaderboard entry တစ်ခုစီတွင်
+model name, vendor, ELO `score`, confidence interval နှင့် vote count ပါဝင်ပါသည်။
 
-ဦးဆောင်စာရင်း အမျိုးအစားများကို OmniRoute လုပ်ဆောင်ချက် အမျိုးအစားများနှင့် အောက်ပါအတိုင်း ချိတ်ဆက်ထားသည်-
+Leaderboard category များကို OmniRoute task category များသို့ အောက်ပါအတိုင်း ချိတ်ဆက်ထားပါသည်-
 
-| Arena ဦးဆောင်စာရင်း | OmniRoute လုပ်ဆောင်ချက် အမျိုးအစားများ            |
-| ------------------- | ------------------------------------------------- |
-| `text`              | `default`, `review`, `documentation`, `debugging` |
-| `code`              | `coding`                                          |
+| Arena leaderboard | OmniRoute task category များ                      |
+| ----------------- | ------------------------------------------------- |
+| `text`            | `default`, `review`, `documentation`, `debugging` |
+| `code`            | `coding`                                          |
 
-### စံညှိခြင်း (လုပ်ဆောင်ချက်နှင့် ကိုက်ညီမှုရမှတ်)
+### Normalization (task-fit score)
 
-မူရင်း ELO ရမှတ်များကို ဦးဆောင်စာရင်းတစ်ခုချင်းအလိုက် **`[0.4, 0.98]` အတွင်းရှိ လုပ်ဆောင်ချက်နှင့် ကိုက်ညီမှုတန်ဖိုး** အဖြစ် စံညှိသည်-
+အကြမ်း ELO score များကို leaderboard တစ်ခုချင်းစီအလိုက် **`[0.4, 0.98]` အတွင်းရှိ task-fit
+တန်ဖိုး** သို့ normalize လုပ်ပါသည်-
 
 ```
 taskFit = 0.4 + 0.58 * ((elo - minElo) / (maxElo - minElo))
 ```
 
-အသုံးပြုသူမှ ထပ်ဆင့်သတ်မှတ်ပြင်ဆင်နိုင်ရန် နေရာချန်ထားသည့်အတွက် ရမှတ်သည် `0` သို့မဟုတ် `1`
-သို့ မည်သည့်အခါမျှ မရောက်ပါ။ ၎င်းသည် API တုံ့ပြန်ချက်တွင် သင်မြင်ရသော `score` အကွက်ဖြစ်ပြီး
-ဒက်ရှ်ဘုတ်ပေါ်တွင် ပြသထားသည့် အညွှန်းလည်း ဖြစ်သည်။
+အဆိုပါ score သည် `0` သို့မဟုတ် `1` သို့ ဘယ်သောအခါမျှ မရောက်ပါ။ user override များအတွက်
+နေရာပိုင်းလွတ် ချန်ထားခြင်း ဖြစ်ပါသည်။ ၎င်းသည် API response တွင် သင်မြင်ရသော `score`
+field နှင့် dashboard ပေါ်တွင် ပြသသော label ဖြစ်ပါသည်။
 
-### ယုံကြည်မှု
+### Confidence
 
-ထည့်သွင်းချက်တစ်ခုစီသည် Arena မဲအရေအတွက်အပေါ် အခြေခံ၍ ယုံကြည်မှုအဆင့်တစ်ခု ရရှိသည်-
+entry တစ်ခုစီသည် Arena vote count ပေါ်မူတည်၍ confidence level တစ်ခု ရရှိပါသည်-
 
-| ယုံကြည်မှု | မဲအရေအတွက် |
-| ---------- | ---------- |
-| `high`     | ≥ 5,000    |
-| `medium`   | ≥ 1,000    |
-| `low`      | < 1,000    |
+| Confidence | Votes   |
+| ---------- | ------- |
+| `high`     | ≥ 5,000 |
+| `medium`   | ≥ 1,000 |
+| `low`      | < 1,000 |
 
-### သိမ်းဆည်းမှုနှင့် ဒေတာသစ်လွင်မှု
+### သိုလှောင်မှုနှင့် ဒေတာသစ်မှု (freshness)
 
-စံညှိထားသော ထည့်သွင်းချက်များကို `source = "arena_elo"` ဖြင့် `model_intelligence` DB ဇယားထဲသို့
-ရေးသွင်းသည် (`src/lib/db/modelIntelligence.ts`)။ ထည့်သွင်းချက်များသည် **7 ရက်ကြာပြီးနောက်
-သက်တမ်းကုန်ဆုံးသည်**။ ထို့ကြောင့် စင့်ခ်လုပ်ခြင်း ရပ်တန့်သွားသော ပံ့ပိုးသူသည်
-အချက်အလက်ဟောင်းများကို ဆက်လက်ပေးပို့မည့်အစား နောက်ဆုံးတွင် စာရင်းမှ ဖယ်ရှားခံရမည်ဖြစ်သည်။
+Normalize လုပ်ပြီးသော entry များကို `source = "arena_elo"` ဖြင့် `model_intelligence` DB
+table ထဲသို့ ရေးသားပါသည် (`src/lib/db/modelIntelligence.ts`)။ Entry များသည် **ရက် ၇ ရက်
+နောက်ပိုင်းတွင် သက်တမ်းကုန်ဆုံးပါသည်**။ ထို့ကြောင့် sync လုပ်ခြင်းကို ရပ်တန့်သွားသော
+provider တစ်ခုသည် stale data ကို ဆက်လက်တင်ပြနေစဉ်မဟုတ်ဘဲ တ်းဖြည်း ပျောက်ကွယ်သွားပါမည်။
 
-စင့်ခ်လုပ်ငန်းစဉ်သည် **ပုံမှန်အားဖြင့် ဖွင့်ထားသည်**-
+ဤ sync သည် **default အတိုင်း ဖွင့်ထားပါသည်**-
 
-- ဆာဗာစတင်ချိန်တွင် တစ်ကြိမ် လုပ်ဆောင်ပြီးနောက် သတ်မှတ်ကာလအလိုက် timer ဖြင့် ဆက်လက်လုပ်ဆောင်သည်
-  (`src/lib/arenaEloSync.ts`, `src/instrumentation-node.ts` မှ ချိတ်ဆက်ထားသည်)။
-- ၎င်းသည် **ပိတ်ဆို့မှုမဖြစ်စေဘဲ မည်သည့်အခါမျှ အရေးကြီးချို့ယွင်းမှု မဖြစ်စေပါ** — မူရင်းရင်းမြစ်မှ
-  ဒေတာရယူမှု မအောင်မြင်ပါက OmniRoute သည် ဆက်လက်လည်ပတ်နေပြီး အဆင့်သတ်မှတ်ချက်များတွင်
-  နောက်ဆုံးရရှိခဲ့သော မှန်ကန်သည့်ဒေတာကိုသာ ပြသသည် (သို့မဟုတ် ဒေတာမရှိသည့် အခြေအနေကို ပြသသည်)။
+- server startup တွင် တစ်ကြိမ် run ပြီး ထို့နောက် periodic timer ပေါ်တွင် run ပါသည်
+  (`src/lib/arenaEloSync.ts`, `src/instrumentation-node.ts` မှ ချိတ်ဆက်ထားပါသည်)။
+- ၎င်းသည် **non-blocking ဖြစ်ပြီး ဘယ်သောအခါမျှ fatal မဖြစ်ပါ** — upstream fetch
+  မအောင်မြင်ပါက OmniRoute သည် ဆက်လက်အလုပ်လုပ်နေပြီး rankings များသည် နောက်ဆုံး
+  ကောင်းမွန်သော ဒေတာ (သို့မဟုတ် empty state) ကို သာပြသပါမည်။
 
-ပတ်ဝန်းကျင် ကိန်းရှင်နှစ်ခုဖြင့် ၎င်းကို ထိန်းချုပ်နိုင်သည်
-([`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md) တွင် မှတ်တမ်းတင်ထားသည်)-
+Environment variable နှစ်ခုက ၎င်းကို ထိန်းချုပ်ပါသည်
+([`docs/reference/ENVIRONMENT.md`](../reference/ENVIRONMENT.md) တွင်
+မှတ်တမ်းတင်ထားပါသည်)-
 
-| ကိန်းရှင်                 | ပုံသေတန်ဖိုး  | ရည်ရွယ်ချက်                                                       |
-| ------------------------- | ------------- | ----------------------------------------------------------------- |
-| `ARENA_ELO_SYNC_ENABLED`  | `true`        | ပြင်ပသို့ စင့်ခ်လုပ်ခြင်းမှ ရွေးချယ်ထွက်ရန် `false` ဟု သတ်မှတ်ပါ။ |
-| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | စက္ကန့်ဖြင့် သတ်မှတ်ထားသော စင့်ခ်ကြားကာလ။                         |
+| Variable                  | Default       | ရည်ရွယ်ချက်                                              |
+| ------------------------- | ------------- | -------------------------------------------------------- |
+| `ARENA_ELO_SYNC_ENABLED`  | `true`        | outbound sync မှ opt out လုပ်ရန် `false` သို့ သတ်မှတ်ပါ။ |
+| `ARENA_ELO_SYNC_INTERVAL` | `86400` (24h) | Sync interval (စက္ကန့်ဖြင့်)။                            |
 
-### ကိုယ်တိုင်စင့်ခ်လုပ်ခြင်း / အခြေအနေ / ရှင်းလင်းခြင်း
+### Manual sync / status / clear
 
-အော်ပရေတာများအတွက် အထောက်အထားစိစစ်ထားသော စီမံခန့်ခွဲမှု endpoint က ကိုယ်တိုင်ထိန်းချုပ်နိုင်စွမ်းကို
-ပံ့ပိုးပေးသည် (`src/app/api/intelligence/sync/route.ts` — စီမံခန့်ခွဲမှု အထောက်အထားစိစစ်ခြင်း လိုအပ်သည်)-
+Operator များအတွက်၊ authentication လုပ်ထားသော management endpoint တစ်ခုက manual control
+ကို ပေးပါသည် (`src/app/api/intelligence/sync/route.ts` — management auth လိုအပ်ပါသည်)-
 
 ```
-GET    /api/intelligence/sync          # လက်ရှိ စင့်ခ်အခြေအနေ (enabled, lastSync, nextSync, intervalMs)
-POST   /api/intelligence/sync          # ကိုယ်တိုင်စင့်ခ်လုပ်မှုကို စတင်ရန်၊ မရေးသွင်းမီ အစမ်းကြည့်ရန် body: { "dryRun": true }
-DELETE /api/intelligence/sync          # စင့်ခ်လုပ်ထားသော arena_elo intelligence ထည့်သွင်းချက်အားလုံးကို ရှင်းလင်းရန်
+GET    /api/intelligence/sync          # လက်ရှိ sync status (enabled, lastSync, nextSync, intervalMs)
+POST   /api/intelligence/sync          # manual sync ကို trigger လုပ်ရန်; ရေးသားခြင်းမလုပ်ဘဲ preview ကြည့်ရန် body: { "dryRun": true }
+DELETE /api/intelligence/sync          # sync လုပ်ထားသော arena_elo intelligence entry အားလုံးကို ရှင်းလင်းရန်
 ```
 
-အဆင့်သတ်မှတ်ချက်စာမျက်နှာတွင် ဒေတာမရှိပါက ကိုယ်တိုင် `POST /api/intelligence/sync` ပြုလုပ်ခြင်း
-(သို့မဟုတ် ဆာဗာကို ရိုးရိုးပြန်လည်စတင်ခြင်း) ဖြင့် ၎င်းကို ပြန်လည်ဖြည့်သွင်းနိုင်သည်။
+Rankings စာမျက်နှာ empty ဖြစ်နေပါက၊ manual `POST /api/intelligence/sync` (သို့မဟုတ် server
+ကို ရိုးရိုးလေး restart လုပ်ခြင်း) ဖြင့် ပြန်လည်ဖြည့်စွက်နိုင်ပါသည်။
 
-### မော်ဒယ်များကို ဦးဆောင်စာရင်းနှင့် ကိုက်ညီအောင် ချိတ်ဆက်ခြင်း
+### Model များကို leaderboard နှင့် ချိတ်ဆက်ခြင်း
 
-Registry မော်ဒယ် ID များနှင့် Arena မော်ဒယ်အမည်များသည် အမြဲတမ်း အတိအကျ တူညီလေ့မရှိပါ။
-အဆင့်သတ်မှတ်ချက်သည် ပြောင်းလွယ်ပြင်လွယ်ရှိသော ကိုက်ညီမှုရှာဖွေခြင်းကို အသုံးပြုသည်
-(`src/lib/freeProviderRankings.ts` ရှိ `findMatchingIntelligence`)-
+Registry model ID များနှင့် Arena model name များသည် အမြဲတမ်း အတိအကျ တူညီခြင်း မရှိပါ။
+Ranking သည် flexible matching ကို အသုံးပြုပါသည် (`src/lib/freeProviderRankings.ts`
+ထဲရှိ `findMatchingIntelligence`)-
 
-1. စံညှိထားသော မော်ဒယ် ID နှင့် အတိအကျ ကိုက်ညီမှု။
-2. နောက်ဆုံးရှိ ဗားရှင်း suffix ကို ဖယ်ရှားပြီးနောက် ကိုက်ညီမှု (ဥပမာ `kimi-k2.6` → `kimi-k2`)။
-3. Prefix ကိုက်ညီမှု (ဦးဆောင်စာရင်းရှိ မော်ဒယ်အမည်သည် registry ID ၏ prefix ဖြစ်ခြင်း)။
+1. Normalized model ID ပေါ်တွင် exact match။
+2. အဆုံးသတ် version suffix ကို ဖယ်ထုတ်ပြီးနောက် match လုပ်ခြင်း (ဥပမာ `kimi-k2.6` →
+   `kimi-k2`)။
+3. Prefix match (leaderboard model name တစ်ခုသည် registry ID ၏ prefix ဖြစ်ခြင်း)။
 
-စင့်ခ်ဘက်တွင် သိရှိထားသော ရောင်းချသူ prefix များ (`anthropic/`, `openai/`, `google/`, …) ကို
-ဖယ်ရှားပြီး alias map အသေးစားတစ်ခုက စံအမည်များကို OmniRoute အတွင်းပိုင်း၌ အသုံးပြုသော
-အမည်ကွဲများအဖြစ် ချဲ့ထွင်ပေးသည်။ ထို့ကြောင့် မော်ဒယ်များကို မည်သည့်အမည်ဖြင့်မဆို
-ဆက်လက်ရှာဖွေနိုင်သည်။
+Sync အခြမ်းတွင်၊ လူသိများသော vendor prefix များ (`anthropic/`, `openai/`, `google/`, …)
+ကို ဖယ်ထုတ်ပြီး၊ alias map အသေးစားတစ်ခုက canonical name များကို OmniRoute အတွင်းပိုင်းတွင်
+အသုံးပြုသော variant များသို့ ချဲ့ထွင်ပေးသောကြောင့် model များသည် မည်သည့် name နဲ့မျှ
+ရှာဖွေတွေ့ရှိနိုင်ဆဲ ဖြစ်ပါသည်။
 
-### ပံ့ပိုးသူတစ်ဦးကို အဆင့်သတ်မှတ်ပုံ
+### Provider တစ်ခုကို rank လုပ်ပုံ
 
-အခမဲ့ပံ့ပိုးသူတစ်ဦးစီအတွက် အင်ဂျင်သည် ၎င်း၏ catalog ရှိ မော်ဒယ်တိုင်းကို အမှတ်ပေးပြီးနောက်-
+Free provider တစ်ခုချင်းစီအတွက်၊ engine သည် ၎င်း၏ catalog ထဲရှိ model တိုင်းကို score
+ပေးပြီး ထို့နောက်-
 
-- **ထိပ်တန်းမော်ဒယ်** = ပံ့ပိုးသူ၏ ရမှတ်အမြင့်ဆုံး မော်ဒယ်။
-- **ပျမ်းမျှရမှတ်** = ထိုပံ့ပိုးသူ၏ ရမှတ်ရှိသော မော်ဒယ်အားလုံး၏ ပျမ်းမျှရမှတ်။
-- **မော်ဒယ်များ** = ပံ့ပိုးသူ၏ မော်ဒယ်များထဲမှ Arena ရမှတ်ရှိသော မော်ဒယ်အရေအတွက်။
+- **Top Model** = provider ၏ score အများဆုံး model။
+- **Avg Score** = ၎င်း provider ၏ score ရထားသော model အားလုံး၏ ပျမ်းမျှ score။
+- **Models** = provider ၏ model မည်မျှစုတွင် Arena score ရှိခဲ့သလဲ။
 
-ပံ့ပိုးသူများကို ဦးစွာ **ထိပ်တန်းမော်ဒယ်ရမှတ်** ဖြင့် စီပြီးနောက် ပျမ်းမျှရမှတ်ဖြင့် စီသည်။
-ဤနည်းလမ်းသည် အနည်းဆုံး အားကောင်းသော အခမဲ့မော်ဒယ်တစ်ခု ပေးအပ်သည့် ပံ့ပိုးသူကို
-အကျိုးရှိစေသည်။
+Provider များကို ပထမဆုံး **top-model score** ဖြင့်၊ ထို့နောက် average score ဖြင့်
+စဉ်ပါသည်။ ဤသို့လုပ်ခြင်းသည် အနည်းဆုံး အားကောင်းသော free model တစ်ခု ပေးဆောင်သော
+provider ကို ဆုချမြှင့်ခြင်း ဖြစ်ပါသည်။
 
 ---
 

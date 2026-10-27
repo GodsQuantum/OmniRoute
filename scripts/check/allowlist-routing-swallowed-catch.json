@@ -93,12 +93,6 @@
       "reason": "clone fallback to original response"
     },
     {
-      "file": "open-sse/services/combo/executeTargetAttempt.ts",
-      "snippet": "errorText = String(errorText);",
-      "count": 1,
-      "reason": "stringify fallback to String()"
-    },
-    {
       "file": "open-sse/services/combo/failureTracker.ts",
       "snippet": "// Best effort — the counter still records the streak, future clears will // retry on the next threshold-cross.",
       "count": 1,
@@ -145,12 +139,6 @@
       "snippet": "return modelIds;",
       "count": 1,
       "reason": "model list fallback"
-    },
-    {
-      "file": "open-sse/services/combo/quotaExhaustion.ts",
-      "snippet": "try { text = await response.clone().text(); } catch { // The status and trusted in-process classification remain availab",
-      "count": 1,
-      "reason": "status preserved, cloned text fallback"
     },
     {
       "file": "open-sse/services/combo/quotaExhaustionCutoff.ts",
