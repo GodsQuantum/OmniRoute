@@ -38,7 +38,13 @@ const { resetDbInstance } = await import("../../src/lib/db/core.ts");
 
 const CONTENT_BUDGET_MS = 100;
 const ANSWER = "ANSWER_15260";
-type Step = { event: string; payload?: unknown; delayMs?: number; bytes?: Uint8Array };
+type Step = {
+  event: string;
+  payload?: unknown;
+  delayMs?: number;
+  bytes?: Uint8Array;
+  yieldMode?: "timer" | "microtask";
+};
 type RunOptions = {
   activeTimeoutMs?: number;
   cancelAfterProgress?: number;
@@ -123,7 +129,11 @@ async function runKiroStream(steps: Step[], options: RunOptions = {}) {
   const producer = (async () => {
     try {
       for (const step of steps) {
-        await sleep(step.delayMs ?? 25, undefined, { signal: controller.signal });
+        if (step.yieldMode === "microtask") {
+          await Promise.resolve();
+        } else {
+          await sleep(step.delayMs ?? 25, undefined, { signal: controller.signal });
+        }
         if (sourceClosed || controller.signal.aborted) return;
         sentSteps.push({ event: step.event, at: performance.now() - startedAt });
         upstream.enqueue(step.bytes ?? kiroEventFrame(step.event, step.payload));
@@ -284,7 +294,12 @@ test(
         steps.push({
           event: "fragment",
           bytes: frame.slice(boundaries[j - 1], boundaries[j]),
-          delayMs: 5,
+          // This case validates framing across chunk boundaries. Real timer
+          // cadence is covered by the reasoning-liveness cases above; using a
+          // timer for every fragment makes scheduler load part of this parser
+          // contract and can spend the entire 100ms watchdog budget before one
+          // complete EventStream frame exists.
+          yieldMode: "microtask",
         });
       }
     }
