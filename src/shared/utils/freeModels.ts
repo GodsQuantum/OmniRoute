@@ -110,11 +110,11 @@ export function isCatalogFreeModel(provider: string, modelId: unknown): boolean 
  * shipped-catalog entry, or a payload signal on a provider with a documented free tier.
  */
 export function isFreeModel(provider: string, model: FreeModelCandidate): boolean {
-  // SiliconFlow's old unconditional free entries were pay-as-you-go (#17028).
-  // With an active price or explicit paid flag, do not trust even an isFree=true
-  // marker or :free suffix: a wrong verdict here can trigger a real charge.
+  // Live paid evidence overrides catalog entries and optimistic free markers (#17028).
+  if (hasPayloadPaidEvidence(model)) return false;
+  // SiliconFlow requires affirmative live evidence; catalog membership is insufficient.
   if (resolveProviderId(provider) === "siliconflow") {
-    return !hasPayloadPaidEvidence(model) && hasPayloadFreeEvidence(model);
+    return hasPayloadFreeEvidence(model);
   }
   if (isCatalogFreeModel(provider, model.id)) return true;
   return providerHasFreeModels(provider) && hasPayloadFreeEvidence(model);
@@ -134,6 +134,13 @@ export interface FreeBadgeCandidate {
   is_free?: unknown;
   pricing?: unknown;
   tags?: unknown;
+}
+
+function toFreeModelCandidate(model: FreeBadgeCandidate): FreeModelCandidate {
+  return {
+    ...model,
+    isFree: typeof model.isFree === "boolean" ? model.isFree : undefined,
+  };
 }
 
 /** Feature flag that turns on the stricter badge rule (default off). */
@@ -161,17 +168,11 @@ export function isModelFreeBadge(
   model: FreeBadgeCandidate,
   options: { strict?: boolean } = {}
 ): boolean {
-  // A display name, truthy string or cached Free badge is not proof against
-  // SiliconFlow billing. Apply the same live-evidence gate as free-only import.
+  // Both badge modes must honor the same paid veto as free-only import.
+  if (hasPayloadPaidEvidence(model)) return false;
+  const candidate = toFreeModelCandidate(model);
   if (resolveProviderId(provider) === "siliconflow") {
-    return isFreeModel(provider, {
-      id: model.id,
-      pricing: model.pricing,
-      free: model.free,
-      isFree: typeof model.isFree === "boolean" ? model.isFree : undefined,
-      is_free: model.is_free,
-      tags: model.tags,
-    });
+    return isFreeModel(provider, candidate);
   }
   if (!options.strict) {
     return (
@@ -179,11 +180,11 @@ export function isModelFreeBadge(
       model.isFree === true ||
       model.id.endsWith(":free") ||
       /\bgr[aá]tis\b|\bfree\b/i.test(model.name || "") ||
-      isFreeModel(provider, { id: model.id, isFree: model.isFree as boolean | undefined })
+      isFreeModel(provider, candidate)
     );
   }
   const explicit = model.isFree === true || model.free === true;
-  if (explicit || isFreeModel(provider, { id: model.id })) return true;
+  if (explicit || isFreeModel(provider, candidate)) return true;
   if (!model.id.endsWith(":free")) return false;
   const registered = getProviderById(resolveProviderId(provider)) != null;
   return !registered || providerHasFreeModels(provider);
@@ -255,7 +256,8 @@ function isFreeForCompatibleImport(model: FreeModelCandidate): boolean {
 /**
  * Decide which fetched models to import. When `importFreeOnly` is false the list
  * passes through unchanged. When true, only free models are kept. Compatible nodes are
- * judged by their payload evidence only; `isFreeModel` (routing, badges) is unchanged.
+ * judged by their payload evidence only; enabling their import option does not grant
+ * them a documented provider free tier for routing.
  */
 export function selectModelsForImport<T extends FreeModelCandidate>(
   provider: string,
