@@ -192,6 +192,14 @@ function yieldCatalogBuildTurn(): Promise<void> {
   return new Promise((resolve) => setImmediate(resolve));
 }
 
+/** `exposeCombosOnly` trims the public catalog; management/lookup callers opt out. */
+function resolveCombosOnly(
+  settings: Record<string, unknown> | null | undefined,
+  options: CatalogResponseOptions
+): boolean {
+  return settings?.exposeCombosOnly === true && options.ignoreExposeCombosOnly !== true;
+}
+
 /**
  * Build unified OpenAI-compatible model catalog response.
  * Reused by `/api/v1/models` and `/api/v1` to avoid semantic drift (T09).
@@ -234,8 +242,7 @@ export async function getUnifiedModelsResponse(
     incrementCcDiscoveryHitCount();
   }
 
-  const combosOnly =
-    settingsForAuth?.exposeCombosOnly === true && options.ignoreExposeCombosOnly !== true;
+  const combosOnly = resolveCombosOnly(settingsForAuth, options);
   try {
     return await resolveCachedCatalogResponse(
       request,
