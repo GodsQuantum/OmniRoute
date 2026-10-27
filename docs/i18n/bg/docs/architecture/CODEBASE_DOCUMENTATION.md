@@ -76,55 +76,55 @@ OmniRoute/
 ```
 src/
 ├── app/                  Страници на App Router + API маршрути
-├── lib/                  Основни библиотеки (БД, удостоверяване, OAuth, умения, памет, …)
-├── domain/               Чист домейнен слой (политики, резервни варианти, разходи, блокиране, …)
-├── server/               Модули само за сървъра (оторизация, CORS, удостоверяване)
-├── shared/               Типове, константи, валидиране, договори, помощни функции (безопасни между различните слоеве)
-├── mitm/                 Помощни функции за прокси тип „човек по средата“ за интеграция с CLI
-├── models/               Метаданни / псевдоними на локални модели
-├── sse/                  Остарели SSE обработчици, които все още се намират в src/ (не в open-sse/)
-├── store/                Хранилища за състояние от страна на клиента
-├── middleware/           Помощни функции за middleware на ниво маршрут (не глобален middleware на Next.js)
-├── scripts/              Скриптове в дървото, които могат да се импортират от кода на приложението
-├── types/                Глобални и споделени TS типове
-├── i18n/                 Езикови пакети
-├── instrumentation.ts    Инструментационна кука на Next.js
+├── lib/                  Основни библиотеки (DB, auth, OAuth, skills, memory, …)
+├── domain/               Чист домейн слой (policy, fallback, cost, lockout, …)
+├── server/               Модули само за сървър (authz, cors, auth)
+├── shared/               Типове, константи, валидация, контракти, утилити (безопасни между границите)
+├── mitm/                 Помощници за man-in-the-middle прокси за интеграция с CLI
+├── models/               Метаданни и псевдоними на локални модели
+├── sse/                  Наследени SSE обработчици, които все още са под src/ (не в open-sse/)
+├── store/                Клиентски хранилища на състоянието
+├── middleware/           Middleware утилити на ниво маршрут (не глобален Next.js middleware)
+├── scripts/              Скриптове в дървото, импортируеми от кода на приложението
+├── types/                Глобални (ambient) и споделени TS типове
+├── i18n/                 Пакети за локализация
+├── instrumentation.ts    Hook за инструментация на Next.js
 ├── instrumentation-node.ts
-└── proxy.ts              Помощен модул от най-високо ниво за инициализиране на прокси
+└── proxy.ts              Помощник за начално зареждане на проксито на най-горно ниво
 ```
 
 ### 3.1 `src/app/` — App Router
 
-App Router предоставя както потребителския интерфейс на таблото, така и публичния/управленския HTTP API.
+App Router предоставя както потребителския интерфейс на таблото за управление, така и публичния/административния HTTP API.
 **Няма глобален middleware** — прихващането се извършва за всеки маршрут поотделно.
 
-Сегменти от най-високо ниво в `src/app/`:
+Сегменти от най-горно ниво под `src/app/`:
 
 | Път                                                                           | Предназначение                                                       |
 | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `api/`                                                                        | Всички HTTP API маршрути (вижте разбивката по-долу)                  |
 | `a2a/`                                                                        | A2A JSON-RPC 2.0 крайна точка (`POST /a2a`)                          |
 | `.well-known/agent.json/`                                                     | Документ за откриване на A2A Agent Card                              |
-| `(dashboard)/`                                                                | Потребителски интерфейс на таблото (група маршрути, без URL префикс) |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Потоци за удостоверяване                                             |
+| `(dashboard)/`                                                                | Интерфейс на таблото за управление (група маршрути, без URL префикс) |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Потоци за автентикация                                               |
 | `landing/`                                                                    | Маркетингова/целева страница                                         |
-| `docs/`                                                                       | Вграден визуализатор на API документация                             |
-| `status/`, `maintenance/`, `offline/`                                         | Оперативни страници                                                  |
+| `docs/`                                                                       | Вграден преглед на API документацията                                |
+| `status/`, `maintenance/`, `offline/`                                         | Експлоатационни страници                                             |
 | `privacy/`, `terms/`                                                          | Правни страници                                                      |
 | `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Статични страници за грешки                                          |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Граници на рамката за грешки/зареждане                               |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Основна обвивка                                                      |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Граници за грешки/зареждане на фреймуърка                            |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Коренова обвивка                                                     |
 
-#### 3.1.1 `src/app/(dashboard)/dashboard/` — Страници на потребителския интерфейс
+#### 3.1.1 `src/app/(dashboard)/dashboard/` — UI страници
 
 `agents`, `analytics`, `api-manager`, `audit`, `auto-combo`, `batch`, `cache`,
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`, плюс основните `page.tsx`, `HomePageClient.tsx`,
+`translator`, `usage`, `webhooks`, плюс кореновите `page.tsx`, `HomePageClient.tsx`,
 `BootstrapBanner.tsx`.
 
-#### 3.1.2 `src/app/api/` — API групи от най-високо ниво
+#### 3.1.2 `src/app/api/` — API групи от най-горно ниво
 
 ```
 src/app/api/
@@ -186,135 +186,133 @@ src/app/api/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — Управление на вградени услуги
+#### 3.1.2a `src/app/api/services/` — Управление на вградените услуги
 
 Маршрути за инсталиране, стартиране, спиране и наблюдение на 9Router и CLIProxyAPI.
-Всички пътища са класифицирани като **LOCAL_ONLY** (само loopback, строго правило #17), защото могат
-да извикват `npm install` и да стартират дъщерни процеси.
+Всички пътища са класифицирани като **LOCAL_ONLY** (само loopback, стриктно правило №17), тъй като
+могат да изпълняват `npm install` и да стартират дъщерни процеси.
 
 ```
 src/app/api/services/
 ├── 9router/
-│   ├── _lib.ts             помощна функция getOrInitSupervisor()
+│   ├── _lib.ts             помощник getOrInitSupervisor()
 │   ├── install/route.ts    POST — npm install чрез execFile
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
 │   ├── update/route.ts     POST — npm install на по-нова версия
 │   ├── rotate-key/route.ts POST — генериране на нов API ключ + рестартиране
-│   ├── status/route.ts     GET  — състояние в реално време + състояние в DB + метаданни за версията
+│   ├── status/route.ts     GET  — статус на живо + статус в БД + метаданни за версията
 │   └── auto-start/route.ts POST — превключване на флага auto_start
 ├── cliproxy/
-│   ├── _lib.ts             помощна функция getOrInitSupervisor()
+│   ├── _lib.ts             помощник getOrInitSupervisor()
 │   ├── install/route.ts    POST — npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
 │   ├── update/route.ts     POST — npm install на по-нова версия
-│   ├── status/route.ts     GET  — състояние в реално време + състояние в DB + метаданни за версията
+│   ├── status/route.ts     GET  — статус на живо + статус в БД + метаданни за версията
 │   └── auto-start/route.ts POST — превключване на флага auto_start
 └── [name]/
-    └── logs/route.ts       GET  — SSE поток с последните записи в дневника (споделен от всички услуги)
+    └── logs/route.ts       GET  — проследяване на логове чрез SSE (споделено от всички услуги)
 ```
 
-Съответстващ потребителски интерфейс на таблото:
+Съответстващият интерфейс на таблото за управление:
 `src/app/(dashboard)/dashboard/providers/services/` — страница с два раздела (CLIProxyAPI + 9Router).
-Обратен прокси за вградения потребителски интерфейс на 9Router:
+Обратно прокси за вградения интерфейс на 9Router:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
-Подробности: `docs/frameworks/EMBEDDED-SERVICES.md`
+Задълбочен преглед: `docs/frameworks/EMBEDDED-SERVICES.md`
 
 #### 3.1.3 `src/app/api/v1/` — публичен API, съвместим с OpenAI
 
 ```
 v1/
-├── accounts/[id]/                       търсене на акаунт
+├── accounts/[id]/                       справка за акаунт
 ├── agents/tasks/[id]/, agents/tasks/    крайни точки за задачи в стил A2A
-├── api/                                 вътрешни помощни функции за API, достъпни под v1/api
+├── api/                                 вътрешни API помощници, достъпни под v1/api
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
 ├── chat/completions/                    Chat Completions (основната крайна точка)
-├── completions/                         наследени текстови допълвания
-├── embeddings/                          векторни представяния
+├── completions/                         остарели текстови допълвания
+├── embeddings/                          ембединги
 ├── files/[id]/, files/                  Files API
-├── _helpers/                            споделени помощни функции за маршрути (без публичен URL)
+├── _helpers/                            споделени помощници за маршрути (без публичен URL)
 ├── images/{edits, generations}/         генериране + редактиране на изображения
-├── issues/                              помощни крайни точки за сортиране на проблеми
-├── management/{proxies}/                маршрути с управленски обхват във v1
-├── messages/{count_tokens}/             съвместимост със съобщения в стил Anthropic
-├── models/                              списък с модели (`route.ts`, `catalog.ts`)
-├── moderations/                         модериране
+├── issues/                              помощни крайни точки за триаж
+├── management/{proxies}/                маршрути с обхват на управление в рамките на v1
+├── messages/{count_tokens}/             съвместимост с messages в стил Anthropic
+├── models/                              списък на моделите (`route.ts`, `catalog.ts`)
+├── moderations/                         модерация
 ├── music/                               генериране на музика
-├── providers/[provider]/                операции за отделните доставчици
+├── providers/[provider]/                операции по доставчик
 ├── quotas/{check}                       проверки на квоти
 ├── registered-keys/                     администриране на регистрирани ключове
-├── rerank/                              преподреждане
-├── responses/[...path]/                 OpenAI Responses API (маршрут, обхващащ всички пътища)
-├── search/                              търсене в мрежата
+├── rerank/                              пренареждане
+├── responses/[...path]/                 OpenAI Responses API (catch-all)
+├── search/                              търсене в уеб
 ├── videos/                              генериране на видео
 ├── ws/                                  WebSocket мост
-└── route.ts                             обработчик на индекса
+└── route.ts                             индексен обработчик
 ```
 
-Всеки файл с маршрут следва един и същ шаблон:
+Всеки файл на маршрут следва един и същ шаблон:
 
 ```
-Маршрут → предварителна CORS заявка → валидиране на тялото чрез Zod → незадължително удостоверяване
-        → прилагане на политиката за API ключове → делегиране към обработчика (open-sse)
+Маршрут → CORS preflight → валидация на тялото със Zod → незадължително удостоверяване
+        → прилагане на политиката за API ключове → делегиране към обработчик (open-sse)
 ```
 
-`v1beta/` е интерфейсът за съвместимост в стил Gemini (тънка обвивка, която преобразува заявките към
-същия конвейер `open-sse/handlers/`).
+`v1beta/` е повърхността за съвместимост в стил Gemini (тънка обвивка, която превежда към същия конвейер `open-sse/handlers/`).
 
 ### 3.2 `src/lib/` — Основни библиотеки
 
-Винаги импортирайте данни, синхронизация, OAuth, умения, памет и др. чрез тези модули.
-Таблицата групира реалните директории и важните файлове от най-високо ниво.
+Винаги импортирайте data, sync, OAuth, skill, memory и т.н. чрез тези модули. Таблицата групира реалните директории и по-важните файлове от най-горно ниво.
 
-| Модул             | Предназначение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | Сървър за протокола A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 умения: анализ на разходите, отчет за състоянието, откриване на доставчици, управление на квоти, интелигентно маршрутизиране, изброяване на възможностите)                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `acp/`            | Протокол за управление на агенти: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `api/`            | Помощни компоненти за вътрешния API: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `auth/`           | `managementPassword.ts` (нулиране на парола / хеширане)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `batches/`        | Услуга за OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `catalog/`        | Синхронизиране на каталога на OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `cloudAgent/`     | Регистър на облачни агенти: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `combos/`         | Помощни функции за разрешаване на комбинации                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `compliance/`     | Одит + одит на доставчици: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `config/`         | Свързващ код за конфигурацията по време на изпълнение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `db/`             | Домейн модули за SQLite (вижте §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `display/`        | Помощни функции за потребителския интерфейс/визуализацията, използвани от отговорите на API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `embeddings/`     | Регистър на услуги за векторни представяния                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `env/`            | Зареждане + преглед на променливите на средата                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `evals/`          | Среда за изпълнение на оценки                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `jobs/`           | Фонови задачи (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `memory/`         | Постоянна памет: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `oauth/`          | Модули за OAuth/импортиране на доставчици (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, както и `services/`, `utils/` и `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                               |
-| `plugins/`        | Зареждане на плъгини (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `providerModels/` | Управление на жизнения цикъл на моделите: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `providers/`      | Помощни модули за доставчици: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `resilience/`     | `settings.ts` — настройки за прекъсвач на веригата, период на изчакване и блокиране                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `runtime/`        | Откриване на функционалности по време на изпълнение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `services/`       | Рамка за вградени услуги: `ServiceSupervisor.ts` (универсален надзорник на дъщерни процеси със заключване на операциите, пръстеновиден буфер и проверка на състоянието), `bootstrap.ts` (регистриране на ниво процес и автоматично стартиране), `registry.ts` (съответствие инструмент → надзорник), `apiKey.ts` (хранилище за ключове с AES-256-GCM), `modelSync.ts` (периодично синхронизиране на модели), `ringBuffer.ts` (5 MB цикличен буфер за регистрационни съобщения), `healthCheck.ts` (HTTP проверка на състоянието), `types.ts`, `embedWsProxy.ts` (WebSocket прокси), `installers/{ninerouter,cliproxy}.ts`. Вижте `docs/frameworks/EMBEDDED-SERVICES.md`                                    |
-| `agentSkills/`    | Каталог и генератор за Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → записва `skills/{id}/SKILL.md`), `openapiParser.ts` (извлича REST крайни точки от OpenAPI спецификация), `cliRegistryParser.ts` (извлича CLI подкоманди от bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Използва се от REST маршрутите (`/api/agent-skills/*`), MCP инструментите (`omniroute_agent_skills_*`) и A2A умението `list-capabilities`. Вижте [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
-| `skills/`         | Рамка за умения: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, както и `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `spend/`          | `batchWriter.ts` (буфер за отложен запис)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `sync/`           | `bundle.ts`, `tokens.ts` (облачна синхронизация)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `system/`         | Помощни инструменти на системно ниво                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `translator/`     | Свързващ код за транслатора от най-високо ниво (делегира към `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `usage/`          | Отчитане на използването: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `versionManager/` | Автоматично актуализиране + манифест на версиите                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `ws/`             | WebSocket мост                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `zed-oauth/`      | OAuth процес за редактора Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Модул             | Предназначение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a2a/`            | Сървър за A2A протокол: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 умения: анализ на разходите, доклад за състоянието, откриване на доставчици, управление на квоти, интелигентно маршрутизиране, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `api/`            | Вътрешни помощни функции за API: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `auth/`           | `managementPassword.ts` (нулиране на парола / хеширане)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `batches/`        | Услуга за OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `catalog/`        | Синхронизация на каталога на OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `cloudAgent/`     | Регистър на облачни агенти: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `combos/`         | Помощни функции за разрешаване на комбинации                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `compliance/`     | Одит + одит на доставчици: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `config/`         | Свързваща логика за конфигурация по време на изпълнение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `db/`             | Домейн модули на SQLite (вж. §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `display/`        | Помощни функции за UI/показване, използвани от отговорите на API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `embeddings/`     | Регистър на услуги за embeddings                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `env/`            | Зареждане на env + интроспекция                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `evals/`          | Изпълнителна среда за Eval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `jobs/`           | Фонови задачи (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `memory/`         | Постоянна памет: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `oauth/`          | Модули на OAuth/import доставчици (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, както и `services/`, `utils/` и `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                     |
+| `plugins/`        | Зареждащ модул на плъгини (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `providerModels/` | Жизнен цикъл на управляваните модели: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `providers/`      | Помощни модули за доставчици: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `resilience/`     | `settings.ts` — настройки за прекъсвач на веригата, период на охлаждане и блокиране                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `runtime/`        | Откриване на възможностите на средата за изпълнение                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `services/`       | Рамка за вградени услуги: `ServiceSupervisor.ts` (универсален супервайзор на дъщерни процеси със заключване на операции, кръгов буфер и проверка на здравето), `bootstrap.ts` (регистрация на ниво процес и автоматично стартиране), `registry.ts` (съпоставяне инструмент → супервайзор), `apiKey.ts` (хранилище за ключове AES-256-GCM), `modelSync.ts` (периодична синхронизация на моделите), `ringBuffer.ts` (5 MB кръгов буфер за логове), `healthCheck.ts` (HTTP проверка на здравето), `types.ts`, `embedWsProxy.ts` (WebSocket прокси), `installers/{ninerouter,cliproxy}.ts`. Вж. `docs/frameworks/EMBEDDED-SERVICES.md`                                                                      |
+| `agentSkills/`    | Каталог и генератор на Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → записва `skills/{id}/SKILL.md`), `openapiParser.ts` (извлича REST крайни точки от OpenAPI спецификация), `cliRegistryParser.ts` (извлича CLI подкоманди от bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Използва се от REST маршрутите (`/api/agent-skills/*`), MCP инструментите (`omniroute_agent_skills_*`) и A2A умението `list-capabilities`. Вж. [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | Рамка за умения: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, плюс `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `spend/`          | `batchWriter.ts` (буфер с отложено записване)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `sync/`           | `bundle.ts`, `tokens.ts` (облачна синхронизация)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `system/`         | Помощни функции на системно ниво                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `translator/`     | Свързващ слой на преводача на горно ниво (делегира към `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `usage/`          | Отчитане на потреблението: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `versionManager/` | Автоматично обновяване + манифест на версиите                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `ws/`             | WebSocket мост                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `zed-oauth/`      | OAuth поток на редактора Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
-Файлове от най-високо ниво в `src/lib/`:
+Файлове на горно ниво в `src/lib/`:
 
-- Старият обобщаващ модул `localDb.ts` беше премахнат — потребителите импортират директно конкретни модули от `src/lib/db/*`.
+- Старият barrel файл `localDb.ts` беше премахнат — консуматорите импортират директно конкретни модули от `src/lib/db/*`.
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -328,14 +326,14 @@ v1/
 
 #### 3.2.1 `src/lib/db/`
 
-Единична SQLite база данни (`getDbInstance()` в `core.ts`, журнализиране чрез WAL).
-**Никога не пишете необработен SQL в маршрути или обработчици** — използвайте тези модули.
+Едноинстанционна (Singleton) база данни SQLite (`getDbInstance()` в `core.ts`, WAL журналиране).
+**Никога не пишете чист SQL в маршрути или обработчици** — минавайте през тези модули.
 
 ![Преглед на схемата на базата данни (избрани основни таблици)](../diagrams/exported/db-schema-overview.svg)
 
 > Източник: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-Домейн модули (всеки управлява една или повече таблици): `apiKeys.ts`, `backup.ts`,
+Домейн модули (всеки отговаря за една или повече таблици): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -352,7 +350,7 @@ v1/
 `migrations/` съдържа 168 версионирани `.sql` файла (идемпотентни, транзакционни) и се
 изпълнява от `migrationRunner.ts` при стартиране.
 
-Таблици, създадени чрез миграциите (общо 123):
+Таблици, създадени в миграциите (общо 123):
 
 `a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
 `combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
@@ -368,31 +366,41 @@ v1/
 `routing_decisions`, `semantic_cache`, `session_account_affinity`,
 `skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
 `tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (плюс виртуални FTS5 таблици за търсене в паметта).
+`webhooks` (плюс FTS5 виртуални таблици за търсене в паметта).
 
 ### 3.3 `src/domain/` — Домейн слой
 
-Чиста бизнес логика без входно-изходни операции. Импортира се от маршрути и обработчици.
+Домейн услуги и контракти за оценяване. Някои модули се извикват от активния
+път на заявките; други остават самостоятелни контракти. Не приемайте, че цялата тази
+директория е лишена от I/O или че промяната на всеки модул засяга продукционното
+маршрутизиране.
+
+Активните повърхности на политиките са `src/shared/utils/apiKeyPolicy.ts` и
+`src/sse/handlers/chat/resolvedModelPolicy.ts`. Активната обработка на combo и
+разрешаването на цели използват `open-sse/services/combo.ts`. Тестваните контракти
+`policyEngine.ts` и `comboResolver.ts`, заедно с `src/lib/container.ts`, не са
+свързващата логика (wiring) на инспектирания път на chat заявките. Дръжте ги отделно
+от тези активни повърхности, когато планирате промяна в маршрутизирането.
 
 | Файл                                       | Предназначение                                           |
 | ------------------------------------------ | -------------------------------------------------------- |
-| `policyEngine.ts`                          | Определяне на правила от най-високо ниво                 |
-| `fallbackPolicy.ts`                        | Дърво за вземане на решения при резервно преминаване     |
+| `policyEngine.ts`                          | Запазен контракт за оценяване на политики                |
+| `fallbackPolicy.ts`                        | Дърво на решенията за fallback                           |
 | `costRules.ts`                             | Правила за изчисляване на разходите                      |
 | `lockoutPolicy.ts`                         | Решения за блокиране на модели                           |
-| `tagRouter.ts`                             | Маршрутизиране въз основа на етикети                     |
-| `comboResolver.ts`                         | Определяне на комбинация от заявка → списък с цели       |
-| `connectionModelRules.ts`                  | Филтри за модели за всяка връзка                         |
-| `modelAvailability.ts`                     | Проверка за наличност на модел                           |
-| `degradation.ts`                           | Преходи към режим с ограничена функционалност            |
+| `tagRouter.ts`                             | Маршрутизиране на база тагове                            |
+| `comboResolver.ts`                         | Запазен контракт за избор на combo                       |
+| `connectionModelRules.ts`                  | Филтри на модели за всяка връзка                         |
+| `modelAvailability.ts`                     | Проверка за наличност на модели                          |
+| `degradation.ts`                           | Преходи към деградиран режим                             |
 | `providerExpiration.ts`                    | Откриване на изтекли акаунти/ключове                     |
 | `quotaCache.ts`                            | Кеширани решения за квоти                                |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Помощни функции за формата на отговора                   |
+| `responses.ts`, `omnirouteResponseMeta.ts` | Помощни функции за формата на отговорите                 |
 | `configAudit.ts`                           | Одит на промените в конфигурацията                       |
 | `assessment/`                              | Оценяване на модели (съгласно RFC, частично реализирано) |
-| `types.ts`                                 | Споделени типове за домейна                              |
+| `types.ts`                                 | Споделени домейн типове                                  |
 
-### 3.4 `src/server/` — Само за сървъра
+### 3.4 `src/server/` — Само за сървър
 
 Не може да се импортира от клиентски компоненти.
 
@@ -401,23 +409,23 @@ server/
 ├── auth/loginGuard.ts
 ├── authz/
 │   ├── classify.ts        Класифицира маршрутите като публични или за управление
-│   ├── assertAuth.ts      Помощна функция за проверки
-│   ├── context.ts         Контекст за оторизация за всяка заявка
+│   ├── assertAuth.ts      Помощна функция за проверки (assertion)
+│   ├── context.ts         Контекст за authz за всяка заявка
 │   ├── headers.ts
-│   ├── pipeline.ts        Конвейер за оторизация
-│   ├── policies/          Конкретни правила
+│   ├── pipeline.ts        Authz pipeline
+│   ├── policies/          Конкретни политики
 │   └── types.ts
-└── cors/origins.ts        Списък с разрешени източници за CORS
+└── cors/origins.ts        Списък с разрешени CORS произходи
 ```
 
-### 3.5 `src/shared/` — Безопасно за споделяне
+### 3.5 `src/shared/` — Безопасни за споделяне
 
-Разделено на специализирани поддиректории:
+Разделен на фокусирани поддиректории:
 
-- `constants/` — `providers.ts` (каталог на доставчици, валидиран със Zod), `models.ts`,
+- `constants/` — `providers.ts` (валидиран със Zod каталог на доставчици), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (списък със забранени стойности), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (списък със забранени), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
@@ -432,14 +440,14 @@ server/
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, както и помощни функции и компоненти за таблото за управление в `services/`, `network/`,
+  `a11yAudit.ts`, плюс hooks и компоненти на таблото за управление в `services/`, `network/`,
   `middleware/`, `schemas/`, `hooks/`, `components/`.
-- `components/` — API на компонентите на таблото за управление (`index.tsx` централен модул за реекспорт: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …). Примитивите са адаптери над
-  включения в хранилището комплект (`packages/ui-kit`, импортиран чрез подпът на компонент, например
-  `@omniroute/ui-kit/button`), така че екраните запазват своите импорти, докато маркировката е
-  тази на комплекта. Обвивката е `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
-  (`SidebarProvider`/`SidebarInset` от комплекта) със `Sidebar.tsx` и `Header.tsx`; иконите преминават
+- `components/` — API на компонентите на таблото за управление (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …). Примитивите са адаптери върху
+  вградения (vendored) kit (`packages/ui-kit`, импортиран чрез подпът на компонент, например
+  `@omniroute/ui-kit/button`), така че екраните запазват своите импорти, докато маркирането идва от
+  kit-а. Обвивката (shell) е `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (kit `SidebarProvider`/`SidebarInset`) със `Sidebar.tsx` и `Header.tsx`; иконите преминават
   през `Icon.tsx` и `constants/iconMap.ts`. Вижте `docs/architecture/DESIGN_SYSTEM.md`.
 
 ---
@@ -697,42 +705,43 @@ bin/
 
 ---
 
-## 9. Конвейер за заявки (обобщение)
+## 9. Конвейер на заявките (Обобщение)
 
-![Конвейер за заявки (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
+![Конвейер на заявките (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
 > Източник: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Клиентска заявка
+Client request
   → /v1/chat/completions (route.ts)
-     Проверка на CORS предварителната заявка
-     Валидиране чрез Zod (chatCompletionsSchema в shared/validation/schemas.ts)
-     Удостоверяване (extractApiKey + isValidApiKey ИЛИ requireManagementAuth)
-     Механизъм за политики (src/server/authz/pipeline.ts)
-     Защитни механизми (маскиране на PII, инжектиране в подкани, мост за визуално съдържание)
+     CORS preflight check
+     Zod validation (chatCompletionsSchema in shared/validation/schemas.ts)
+     Auth (extractApiKey + isValidApiKey OR requireManagementAuth)
+     Route authorization (src/server/authz/pipeline.ts)
+     API-key policy (src/shared/utils/apiKeyPolicy.ts; enforced on the selected path)
+     Guardrails (PII masker, prompt injection, vision bridge)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
-     Проверка на кеша (семантичен кеш + кеш за четене)
-     Ограничаване на честотата (rateLimitManager, accountSemaphore)
-     Комбинирано маршрутизиране (ако моделът се преобразува до комбинация)
-       comboResolver → цикъл за всяка цел → handleSingleModel()
+     Cache check (semantic + read cache)
+     Rate limit (rateLimitManager, accountSemaphore)
+     Combo routing (if model resolves to a combo)
+       resolveComboTargets (open-sse/services/combo.ts) → per-target dispatch
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       извличане от външната услуга → повторен опит/експоненциално изчакване чрез accountFallback
+       fetch upstream → retry/backoff via accountFallback
      translateResponse() (open-sse/translator/response/*)
-     SSE поток ИЛИ JSON отговор
-     Ако се използва Responses API: TransformStream чрез open-sse/transformer/responsesTransformer.ts
-  → Одит за съответствие (src/lib/compliance/)
-  → Отговор към клиента
+     SSE stream OR JSON response
+     If Responses API: TransformStream via open-sse/transformer/responsesTransformer.ts
+  → Compliance audit (src/lib/compliance/)
+  → Response to client
 ```
 
-### Състояние по време на изпълнение за устойчивост (три механизма)
+### Състояние на устойчивостта по време на изпълнение (три механизма)
 
-| Механизъм                          | Обхват                     | Къде                                                                                                           |
-| ---------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Прекъсвач на веригата за доставчик | Целият доставчик           | `src/shared/utils/circuitBreaker.ts`, съхранява се в `domain_circuit_breakers`                                 |
-| Период на изчакване за връзка      | Един акаунт/ключ           | `markAccountUnavailable()` в `src/sse/services/auth.ts`; използва се от `accountFallback.checkFallbackError()` |
-| Блокиране на модел                 | Доставчик + връзка + модел | `open-sse/services/accountFallback.ts`, съхранява се в `domain_lockout_state`                                  |
+| Механизъм                           | Обхват                     | Къде                                                                                                           |
+| ----------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Прекъсвач на веригата на доставчика | Целия доставчик            | `src/shared/utils/circuitBreaker.ts`, запазва се в `domain_circuit_breakers`                                   |
+| Охлаждане на връзката               | Един акаунт/ключ           | `markAccountUnavailable()` в `src/sse/services/auth.ts`; използва се от `accountFallback.checkFallbackError()` |
+| Блокиране на модел                  | Доставчик + връзка + модел | `open-sse/services/accountFallback.ts`, запазва се в `domain_lockout_state`                                    |
 
 Вижте [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) и специалния раздел в
 [CLAUDE.md](../../CLAUDE.md).
