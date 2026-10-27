@@ -170,7 +170,7 @@ for (const profile of ["ci", "quality"]) {
   for (const status of ["failure", "cancelled", "skipped", "pending", "unknown"]) {
     test(`${profile}: an applicable required job cannot pass as ${status}`, () => {
       const needs = needsFor(profile);
-      const id = profile === "ci" ? "test-vitest" : "fast-vitest";
+      const id = profile === "ci" ? "test-vitest" : "fast-gates";
       needs[id].result = status;
       assert.notEqual(run(needs, context, profile).verdict, "PASS");
     });

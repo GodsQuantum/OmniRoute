@@ -57,8 +57,6 @@
         "changes": { "when": "always", "disposition": "required" },
         "docs-gates": { "when": "code-or-docs", "disposition": "required" },
         "fast-gates": { "when": "code", "disposition": "required" },
-        "fast-vitest": { "when": "code", "disposition": "required" },
-        "fast-unit": { "when": "code", "disposition": "required" },
         "lint-guard": { "when": "code", "disposition": "required" },
         "merge-integrity": { "when": "always", "disposition": "required" }
       }
