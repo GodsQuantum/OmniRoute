@@ -18,6 +18,10 @@ const SCRIPT = fileURLToPath(
 const SHARED_GRACE_PRELOAD = fileURLToPath(
   new URL("../fixtures/cancel-closed-pr-runs-shared-grace-preload.mjs", import.meta.url)
 );
+const LOOPBACK_READINESS_PRELOAD = fileURLToPath(
+  new URL("../fixtures/cancel-closed-pr-runs-loopback-readiness-preload.mjs", import.meta.url)
+);
+const LOOPBACK_READINESS_PATH = "/__omniroute_cancel_test_ready__";
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const ctx = {
   prNumber: 42,
@@ -61,6 +65,11 @@ async function runCli(
 ): Promise<{ code: number; stdout: string; stderr: string; requests: RecordedRequest[] }> {
   const requests: RecordedRequest[] = [];
   const server = createServer((request, response) => {
+    if (request.method === "GET" && request.url === LOOPBACK_READINESS_PATH) {
+      response.writeHead(204);
+      response.end();
+      return;
+    }
     const recorded = { method: request.method ?? "GET", path: request.url ?? "/" };
     requests.push(recorded);
     const result = reply(recorded);
@@ -76,24 +85,28 @@ async function runCli(
   try {
     const address = server.address();
     assert.ok(address && typeof address === "object");
-    child = spawn(process.execPath, [SCRIPT], {
-      env: {
-        ...process.env,
-        GH_TOKEN: "test-token",
-        GITHUB_API_URL: `http://127.0.0.1:${address.port}`,
-        REPO,
-        PR_NUMBER: "42",
-        HEAD_REF: "fix/thing",
-        HEAD_REPO: REPO,
-        HEAD_SHA: "head-current",
-        SELF_RUN_ID: "999",
-        CANCEL_POLL_INTERVAL_MS: "0",
-        CANCEL_NORMAL_GRACE_MS: "0",
-        CANCEL_DEADLINE_MS: "3000",
-        ...envPatch,
-      },
-      stdio: ["ignore", "pipe", "pipe"],
-    });
+    child = spawn(
+      process.execPath,
+      ["--import", pathToFileURL(LOOPBACK_READINESS_PRELOAD).href, SCRIPT],
+      {
+        env: {
+          GH_TOKEN: "test-token",
+          GITHUB_API_URL: `http://127.0.0.1:${address.port}`,
+          REPO,
+          PR_NUMBER: "42",
+          HEAD_REF: "fix/thing",
+          HEAD_REPO: REPO,
+          HEAD_SHA: "head-current",
+          SELF_RUN_ID: "999",
+          CANCEL_POLL_INTERVAL_MS: "0",
+          CANCEL_NORMAL_GRACE_MS: "0",
+          CANCEL_DEADLINE_MS: "3000",
+          OMNIROUTE_CANCEL_TEST_LOOPBACK_READY: "1",
+          ...envPatch,
+        },
+        stdio: ["ignore", "pipe", "pipe"],
+      }
+    );
     child.stdout.setEncoding("utf8").on("data", (chunk) => (stdout += chunk));
     child.stderr.setEncoding("utf8").on("data", (chunk) => (stderr += chunk));
     timeout = setTimeout(() => child?.kill("SIGKILL"), 8_000);
