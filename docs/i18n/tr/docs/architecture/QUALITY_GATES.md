@@ -68,7 +68,7 @@ MCP/autoCombo Vitest paketini de çalıştırır. Zorunlu iş sonucu, matrisin h
 kapsar; tek bir parçanın başarısız olması veya iptal edilmesi aday kabulünü tesis edemez.
 
 Gecelik gözlemci, ilk makbuzdaki MCP yürütmesi dâhil olmak üzere her UI parçası için
-ayrı bir tam aday makbuzunu saklar. Dört makbuzun, günlüklerin ve eşleşen yürütme
+tam olarak aynı adaya ait ayrı bir makbuzu saklar. Dört makbuzun, günlüklerin ve eşleşen yürütme
 kimliklerinin tamamı gereklidir. Yerel `npm run test:vitest:ui` hâlâ eksiksiz paketi
 seçer; tek bir `--shard` çalıştırması yalnızca kısmi kanıttır.
 

@@ -58,7 +58,7 @@ takardar shaida ba. Ingancin fayil ba hujjar sahihancin aiwatarwa ko promotion n
 ### Ƙarfin aiwatar da UI
 
 CI yana gudanar da cikakken kundin UI a matsayin matrix shards huɗu na `test-vitest`, kowannensu yana da
-workers biyu aƙalla ga kowane shard da wa’adin aikin minti 15 da ake da shi. Shard na farko yana kuma gudanar da
+workers da ba su wuce biyu ba ga kowane shard da wa’adin aikin minti 15 da ake da shi. Shard na farko yana kuma gudanar da
 MCP/autoCombo Vitest suite. Sakamakon aikin da ake buƙata yana rufe kowane ɓangaren matrix; gazawa
 ko soke shard guda ɗaya ba zai iya tabbatar da karɓar ɗan takara ba.
 

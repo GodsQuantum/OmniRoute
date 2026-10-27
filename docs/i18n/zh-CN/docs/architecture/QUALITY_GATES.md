@@ -41,7 +41,7 @@ CLI 会拒绝检出 SHA 与事件 SHA 不匹配的情况。工作流测试会将
 `scripts/quality/validate-release-acceptance.mjs` 会归并所提供的计划及其
 清单；它并不能证明该计划覆盖了完整的发布流水线。即使该计划为
 `VERIFIED`，其报告仍会明确设置 `releaseAcceptance: false`。
-`release-acceptance.yml` 工作流仍使用影子固件，而非真实的构建、打包、启动或
+`release-acceptance.yml` 工作流仍使用影子测试数据，而非真实的构建、打包、启动或
 晋级收据。
 
 CLI 要求使用 `--evidence-root` 来验证保留的证据。文件按

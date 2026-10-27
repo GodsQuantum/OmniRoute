@@ -62,7 +62,7 @@ worker mbili kwa kila shard na kikomo cha muda kilichopo cha dakika 15 kwa kazi.
 suite ya Vitest ya MCP/autoCombo. Matokeo ya kazi ya lazima hushughulikia kila sehemu ya matrix; kushindwa
 au kughairiwa kwa shard moja hakuwezi kuthibitisha uidhinishaji wa mgombea.
 
-Observer ya kila usiku huhifadhi risiti tofauti ya mgombea kamili kwa kila shard ya UI,
+Observer ya kila usiku huhifadhi risiti tofauti inayohusishwa na mgombea huyo huyo (exact-candidate) kwa kila shard ya UI,
 ikiwemo utekelezaji wa MCP katika risiti ya kwanza. Risiti zote nne, logi na vitambulisho vya utekelezaji
 vinavyolingana vinahitajika. `npm run test:vitest:ui` ya ndani bado huchagua
 suite kamili; utekelezaji mmoja wa `--shard` ni ushahidi wa sehemu tu.

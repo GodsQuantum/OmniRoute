@@ -16555,7 +16555,7 @@
         },
         "ha": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "5a6cb131146c7631af570bd3900da48ce70902653e58cb1835b092b30aef6c3f",
+          "target_hash": "274ed40879330ce0afbc06a8f002e5cf8e572354ce4840954c4dc2ad914f1ce6",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",
@@ -17239,7 +17239,7 @@
         },
         "sw": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "a024ea52513bb954fd96b1e9dbbc67e385c063a63e2cc427acb4b18a8d7afb6c",
+          "target_hash": "03c0dd1e5d971b8a70a067c5574395ed34a0197d0c95d8f77324354882d16122",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",
@@ -17315,7 +17315,7 @@
         },
         "tr": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "10f598e224622641c7b77e96cb144bd428d19e9fdc1dfcb0e0d05e229c1f57b8",
+          "target_hash": "20e9ea5ec377350c3da3f9b7d9a06dd93e2f6e4628d297756d37dafb622e89e0",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",
@@ -17391,7 +17391,7 @@
         },
         "zh-CN": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "42dd3b98d78ec09fbb381574db881bac8adc166698310107b3cc18989b4e1fd5",
+          "target_hash": "d256127b923349055441780efa2ba79c47854109747c79236aea0f5dacd43bdb",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",
@@ -17448,7 +17448,7 @@
         },
         "yo": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "486d175d233c529b9009f5713b5e9ec688dcb25d4f36d3a46afd1456cce5682e",
+          "target_hash": "a3af4b5c4178aa138200d55ab9012ef48aaca2c8fcab1d3816a1b31fec0dacb1",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",
@@ -17467,7 +17467,7 @@
         },
         "bs": {
           "source_hash": "19d62cab2a84ba9f7102d4eefb0ba4e35821f997b863c38a7ae06afd59e47944",
-          "target_hash": "42992fb14cce93c36322c405458f6620b6ddd0641a7553b7d285dfbc156d002a",
+          "target_hash": "abff8e522492f07b4efcac9038f7afb735652739e2f3cad59c2abc67caa30412",
           "section_hashes": [
             "67dc4021ab63",
             "a5f00500f172",

@@ -58,7 +58,7 @@ receipt tí ó ti pẹ́ sílẹ̀. Ìpéye fáìlì kì í ṣe ẹ̀rí òtít
 ### Agbára ìmúṣẹ UI
 
 CI máa ń ṣiṣẹ́ gbogbo àkójọ UI gẹ́gẹ́ bí shard matrix `test-vitest` mẹ́rin, tí ọ̀kọ̀ọ̀kan ní
-ó pọ̀ jù worker méjì lọ fún shard kọ̀ọ̀kan àti àkókò ìparí iṣẹ́ ìṣẹ́jú 15 tó ti wà. Shard àkọ́kọ́ tún máa ń ṣiṣẹ́
+worker tí kò ju méjì lọ fún shard kọ̀ọ̀kan àti àkókò ìparí iṣẹ́ ìṣẹ́jú 15 tó ti wà. Shard àkọ́kọ́ tún máa ń ṣiṣẹ́
 suite Vitest MCP/autoCombo. Àbájáde iṣẹ́ dandan bo gbogbo ẹsẹ̀ matrix; ìkùnà
 tàbí ìfagilé shard kan kò lè fi ìdí gbigba olùdíje wọlé múlẹ̀.
 
