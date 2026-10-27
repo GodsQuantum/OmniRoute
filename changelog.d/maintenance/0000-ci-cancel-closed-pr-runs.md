@@ -1,1 +1,1 @@
-- **ci:** closing a PR now cancels its queued and running workflow runs, so they stop holding hosted-runner slots against the organization's concurrent-job limit.
+- **ci:** closing a same-repository PR now cleans up only runs whose PR ownership is revalidated, and reports success only after GitHub confirms a terminal state.
