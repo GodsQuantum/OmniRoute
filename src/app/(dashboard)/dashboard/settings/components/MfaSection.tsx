@@ -46,23 +46,10 @@ function errorMessage(data: unknown, fallback: string): string {
   }
   return fallback;
 }
+type Translate = ReturnType<typeof useTranslations>;
 
-/**
- * Settings → Security: opt-in TOTP two-factor login for the dashboard (and `omniroute
- * connect`). Enrollment is two-step — the secret is only stored once a code from the
- * authenticator verifies — and the recovery codes are shown exactly once.
- */
-export default function MfaSection() {
-  const t = useTranslations("settings");
-  const tc = useTranslations("common");
+function useMfaStatus() {
   const [status, setStatus] = useState<MfaStatus | null>(null);
-  const [mode, setMode] = useState<Mode>("idle");
-  const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
-  const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
-  const [backupCodes, setBackupCodes] = useState<string[]>([]);
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   const loadStatus = () => {
     void fetchMfaStatus().then((next) => {
@@ -80,6 +67,19 @@ export default function MfaSection() {
     };
   }, []);
 
+  return { status, loadStatus };
+}
+
+/** Form state and the setup → enable → disable calls; every call shares one busy/error path. */
+function useMfaFlow(t: Translate, loadStatus: () => void) {
+  const [mode, setMode] = useState<Mode>("idle");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
   const reset = (next: Mode = "idle") => {
     setMode(next);
     setPassword("");
@@ -88,63 +88,263 @@ export default function MfaSection() {
     if (next === "idle") setEnrollment(null);
   };
 
-  const startEnrollment = async () => {
+  const submit = async (
+    url: string,
+    body: Record<string, string>,
+    onOk: (data: Record<string, unknown>) => void
+  ) => {
     setBusy(true);
     setError("");
-    const { ok, data } = await postJson("/api/auth/mfa/setup", { password });
+    const { ok, data } = await postJson(url, body);
     setBusy(false);
     if (!ok) {
       setError(errorMessage(data, t("errorOccurred")));
       return;
     }
-    setEnrollment({ secret: data.secret, qrCodeDataUri: data.qrCodeDataUri });
-    setCode("");
-    setMode("verify");
+    onOk(data);
   };
+
+  const startEnrollment = () =>
+    submit("/api/auth/mfa/setup", { password }, (data) => {
+      setEnrollment({
+        secret: data.secret as string,
+        qrCodeDataUri: data.qrCodeDataUri as string,
+      });
+      setCode("");
+      setMode("verify");
+    });
 
   const confirmEnrollment = async () => {
     if (!enrollment) return;
-    setBusy(true);
-    setError("");
-    const { ok, data } = await postJson("/api/auth/mfa/enable", {
-      password,
-      secret: enrollment.secret,
-      code,
+    await submit("/api/auth/mfa/enable", { password, secret: enrollment.secret, code }, (data) => {
+      setBackupCodes(Array.isArray(data.backupCodes) ? (data.backupCodes as string[]) : []);
+      setEnrollment(null);
+      setPassword("");
+      setCode("");
+      setMode("codes");
+      loadStatus();
     });
-    setBusy(false);
-    if (!ok) {
-      setError(errorMessage(data, t("errorOccurred")));
-      return;
-    }
-    setBackupCodes(Array.isArray(data.backupCodes) ? data.backupCodes : []);
-    setEnrollment(null);
-    setPassword("");
-    setCode("");
-    setMode("codes");
-    loadStatus();
   };
 
-  const disable = async () => {
-    setBusy(true);
-    setError("");
-    const { ok, data } = await postJson("/api/auth/mfa/disable", { password, code });
-    setBusy(false);
-    if (!ok) {
-      setError(errorMessage(data, t("errorOccurred")));
-      return;
-    }
+  const disable = () =>
+    submit("/api/auth/mfa/disable", { password, code }, () => {
+      reset();
+      loadStatus();
+    });
+
+  const dismissBackupCodes = () => {
+    setBackupCodes([]);
     reset();
-    loadStatus();
   };
 
-  const copyBackupCodes = async () => {
-    try {
-      await navigator.clipboard.writeText(backupCodes.join("\n"));
-    } catch {
-      // Clipboard can be unavailable (http, permissions): the codes stay on screen.
-    }
+  return {
+    ...{ mode, password, setPassword, code, setCode, enrollment, backupCodes, error, busy },
+    ...{ reset, startEnrollment, confirmEnrollment, disable, dismissBackupCodes },
   };
+}
 
+type MfaFlow = ReturnType<typeof useMfaFlow>;
+
+async function copyToClipboard(lines: string[]) {
+  try {
+    await navigator.clipboard.writeText(lines.join("\n"));
+  } catch {
+    // Clipboard can be unavailable (http, permissions): the codes stay on screen.
+  }
+}
+
+function FormActions({ flow, children }: { flow: MfaFlow; children: React.ReactNode }) {
+  const tc = useTranslations("common");
+  return (
+    <div className="flex justify-end gap-2">
+      <Button variant="ghost" onClick={() => flow.reset()} disabled={flow.busy}>
+        {tc("cancel")}
+      </Button>
+      {children}
+    </div>
+  );
+}
+
+function PasswordInput({
+  flow,
+  t,
+  autoFocus,
+}: {
+  flow: MfaFlow;
+  t: Translate;
+  autoFocus?: boolean;
+}) {
+  return (
+    <Input
+      label={t("currentPassword")}
+      type="password"
+      placeholder={t("enterCurrentPassword")}
+      value={flow.password}
+      onChange={(e) => flow.setPassword(e.target.value)}
+      autoFocus={autoFocus}
+      disabled={flow.busy}
+    />
+  );
+}
+
+function BackupCodesPanel({ flow, t }: { flow: MfaFlow; t: Translate }) {
+  const tc = useTranslations("common");
+  return (
+    <div className="flex flex-col gap-3 rounded-lg border border-border bg-warning-bg p-4">
+      <p className="font-medium">{t("mfaBackupCodesTitle")}</p>
+      <p className="text-sm text-text-muted">{t("mfaBackupCodesDesc")}</p>
+      <div className="grid grid-cols-2 gap-2 font-mono text-sm">
+        {flow.backupCodes.map((backupCode) => (
+          <code key={backupCode} className="px-2 py-1 rounded bg-surface">
+            {backupCode}
+          </code>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          icon="content_copy"
+          onClick={() => void copyToClipboard(flow.backupCodes)}
+        >
+          {tc("copy")}
+        </Button>
+        <Button variant="primary" size="sm" onClick={flow.dismissBackupCodes}>
+          {tc("done")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function IdlePanel({ flow, t, status }: { flow: MfaFlow; t: Translate; status: MfaStatus }) {
+  const enabled = status.enabled === true;
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <p className="text-sm text-text-muted">
+        {enabled
+          ? t("mfaBackupCodesRemaining", { count: status.backupCodesRemaining })
+          : t("mfaRecoveryHint")}
+      </p>
+      <Button
+        variant={enabled ? "secondary" : "primary"}
+        size="sm"
+        onClick={() => flow.reset(enabled ? "disable" : "start")}
+      >
+        {enabled ? t("disable") : t("enable")}
+      </Button>
+    </div>
+  );
+}
+
+function StartPanel({ flow, t }: { flow: MfaFlow; t: Translate }) {
+  const tc = useTranslations("common");
+  return (
+    <div className="flex flex-col gap-3">
+      <PasswordInput flow={flow} t={t} autoFocus />
+      <FormActions flow={flow}>
+        <Button
+          variant="primary"
+          onClick={flow.startEnrollment}
+          loading={flow.busy}
+          disabled={!flow.password}
+        >
+          {tc("continue")}
+        </Button>
+      </FormActions>
+    </div>
+  );
+}
+
+function VerifyPanel({
+  flow,
+  t,
+  enrollment,
+}: {
+  flow: MfaFlow;
+  t: Translate;
+  enrollment: Enrollment;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm text-text-muted">{t("mfaScanQr")}</p>
+      <div className="flex flex-col sm:flex-row gap-4 items-start">
+        {/* eslint-disable-next-line @next/next/no-img-element -- server-rendered PNG data URI; next/image adds nothing for an inline QR */}
+        <img
+          src={enrollment.qrCodeDataUri}
+          alt={t("mfaTitle")}
+          width={180}
+          height={180}
+          className="rounded-lg bg-white p-2"
+        />
+        <div className="flex flex-col gap-1 min-w-0">
+          <p className="text-xs font-medium text-text-muted">{t("mfaManualKey")}</p>
+          <code className="font-mono text-sm break-all select-all">{enrollment.secret}</code>
+        </div>
+      </div>
+      <Input
+        label={t("mfaCodeLabel")}
+        type="text"
+        inputMode="numeric"
+        autoComplete="one-time-code"
+        placeholder="123456"
+        value={flow.code}
+        onChange={(e) => flow.setCode(e.target.value)}
+        autoFocus
+        disabled={flow.busy}
+      />
+      <FormActions flow={flow}>
+        <Button
+          variant="primary"
+          onClick={flow.confirmEnrollment}
+          loading={flow.busy}
+          disabled={!flow.code}
+        >
+          {t("enable")}
+        </Button>
+      </FormActions>
+    </div>
+  );
+}
+
+function DisablePanel({ flow, t }: { flow: MfaFlow; t: Translate }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm text-text-muted">{t("mfaDisableDesc")}</p>
+      <PasswordInput flow={flow} t={t} autoFocus />
+      <Input
+        label={t("mfaCodeLabel")}
+        type="text"
+        autoComplete="one-time-code"
+        placeholder="123456"
+        value={flow.code}
+        onChange={(e) => flow.setCode(e.target.value)}
+        disabled={flow.busy}
+      />
+      <FormActions flow={flow}>
+        <Button
+          variant="danger"
+          onClick={flow.disable}
+          loading={flow.busy}
+          disabled={!flow.password || !flow.code}
+        >
+          {t("disable")}
+        </Button>
+      </FormActions>
+    </div>
+  );
+}
+
+/**
+ * Settings → Security: opt-in TOTP two-factor login for the dashboard (and `omniroute
+ * connect`). Enrollment is two-step — the secret is only stored once a code from the
+ * authenticator verifies — and the recovery codes are shown exactly once.
+ */
+export default function MfaSection() {
+  const t = useTranslations("settings");
+  const tc = useTranslations("common");
+  const { status, loadStatus } = useMfaStatus();
+  const flow = useMfaFlow(t, loadStatus);
   const enabled = status?.enabled === true;
 
   return (
@@ -167,157 +367,14 @@ export default function MfaSection() {
             {t("mfaRecoverySwitchActive")}
           </p>
         )}
-
-        {mode === "codes" && (
-          <div className="flex flex-col gap-3 rounded-lg border border-border bg-warning-bg p-4">
-            <p className="font-medium">{t("mfaBackupCodesTitle")}</p>
-            <p className="text-sm text-text-muted">{t("mfaBackupCodesDesc")}</p>
-            <div className="grid grid-cols-2 gap-2 font-mono text-sm">
-              {backupCodes.map((backupCode) => (
-                <code key={backupCode} className="px-2 py-1 rounded bg-surface">
-                  {backupCode}
-                </code>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Button variant="secondary" size="sm" icon="content_copy" onClick={copyBackupCodes}>
-                {tc("copy")}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  setBackupCodes([]);
-                  reset();
-                }}
-              >
-                {tc("done")}
-              </Button>
-            </div>
-          </div>
+        {flow.mode === "codes" && <BackupCodesPanel flow={flow} t={t} />}
+        {flow.mode === "idle" && status && <IdlePanel flow={flow} t={t} status={status} />}
+        {flow.mode === "start" && <StartPanel flow={flow} t={t} />}
+        {flow.mode === "verify" && flow.enrollment && (
+          <VerifyPanel flow={flow} t={t} enrollment={flow.enrollment} />
         )}
-
-        {mode === "idle" && status && (
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-text-muted">
-              {enabled
-                ? t("mfaBackupCodesRemaining", { count: status.backupCodesRemaining })
-                : t("mfaRecoveryHint")}
-            </p>
-            <Button
-              variant={enabled ? "secondary" : "primary"}
-              size="sm"
-              onClick={() => reset(enabled ? "disable" : "start")}
-            >
-              {enabled ? t("disable") : t("enable")}
-            </Button>
-          </div>
-        )}
-
-        {mode === "start" && (
-          <div className="flex flex-col gap-3">
-            <Input
-              label={t("currentPassword")}
-              type="password"
-              placeholder={t("enterCurrentPassword")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoFocus
-              disabled={busy}
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => reset()} disabled={busy}>
-                {tc("cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={startEnrollment}
-                loading={busy}
-                disabled={!password}
-              >
-                {tc("continue")}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {mode === "verify" && enrollment && (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm text-text-muted">{t("mfaScanQr")}</p>
-            <div className="flex flex-col sm:flex-row gap-4 items-start">
-              {/* eslint-disable-next-line @next/next/no-img-element -- server-rendered PNG data URI; next/image adds nothing for an inline QR */}
-              <img
-                src={enrollment.qrCodeDataUri}
-                alt={t("mfaTitle")}
-                width={180}
-                height={180}
-                className="rounded-lg bg-white p-2"
-              />
-              <div className="flex flex-col gap-1 min-w-0">
-                <p className="text-xs font-medium text-text-muted">{t("mfaManualKey")}</p>
-                <code className="font-mono text-sm break-all select-all">{enrollment.secret}</code>
-              </div>
-            </div>
-            <Input
-              label={t("mfaCodeLabel")}
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              placeholder="123456"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              autoFocus
-              disabled={busy}
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => reset()} disabled={busy}>
-                {tc("cancel")}
-              </Button>
-              <Button variant="primary" onClick={confirmEnrollment} loading={busy} disabled={!code}>
-                {t("enable")}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {mode === "disable" && (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm text-text-muted">{t("mfaDisableDesc")}</p>
-            <Input
-              label={t("currentPassword")}
-              type="password"
-              placeholder={t("enterCurrentPassword")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoFocus
-              disabled={busy}
-            />
-            <Input
-              label={t("mfaCodeLabel")}
-              type="text"
-              autoComplete="one-time-code"
-              placeholder="123456"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              disabled={busy}
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => reset()} disabled={busy}>
-                {tc("cancel")}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={disable}
-                loading={busy}
-                disabled={!password || !code}
-              >
-                {t("disable")}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {error && <p className="text-sm text-error">{error}</p>}
+        {flow.mode === "disable" && <DisablePanel flow={flow} t={t} />}
+        {flow.error && <p className="text-sm text-error">{flow.error}</p>}
       </div>
     </Card>
   );
