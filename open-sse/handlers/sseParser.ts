@@ -7,6 +7,8 @@ import {
   TRUNCATED_STREAM_RESPONSES_INCOMPLETE_REASON,
   hasSseDoneMarker,
   markTruncatedStreamBody,
+  isCompleteToolCallArguments,
+  withholdCutToolCalls,
 } from "./sseParser/truncation.ts";
 
 /**
@@ -281,7 +283,10 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
   // #18432 — output but neither a finish_reason nor [DONE]: the upstream stream was
   // cut, so do not report the partial answer as a clean stop.
   const producedOutput =
-    contentParts.length > 0 || refusalParts.length > 0 || reasoningParts.length > 0;
+    contentParts.length > 0 ||
+    refusalParts.length > 0 ||
+    reasoningParts.length > 0 ||
+    accumulatedToolCalls.size > 0;
   const streamCut = !sawFinishReason && producedOutput && !hasSseDoneMarker(rawSSE);
   if (streamCut) {
     finishReason = TRUNCATED_STREAM_FINISH_REASON;
@@ -300,11 +305,15 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
     message.reasoning_content = joinedReasoning;
   }
 
-  const finalToolCalls = [...accumulatedToolCalls.values()].filter(Boolean).sort((a, b) => {
+  const sortedToolCalls = [...accumulatedToolCalls.values()].filter(Boolean).sort((a, b) => {
     const ai = Number.isInteger(a?.index) ? a.index : 0;
     const bi = Number.isInteger(b?.index) ? b.index : 0;
     return ai - bi;
   });
+  // #18460 follow-up — a cut stream must not present a half-written call as executable.
+  const finalToolCalls = withholdCutToolCalls(streamCut, sortedToolCalls, (toolCall) =>
+    isCompleteToolCallArguments(toolCall.function?.arguments)
+  );
   if (finalToolCalls.length > 0) {
     finishReason = "tool_calls"; // T18 normalization
     message.tool_calls = finalToolCalls;
@@ -332,6 +341,22 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
 }
 
 /**
+ * Whether a buffered Claude tool_use block is complete (#18460 follow-up): its streamed
+ * `input_json_delta` text is a whole JSON object, or, when nothing was streamed, the
+ * upstream closed the block (`content_block_stop`) or the `content_block_start` already
+ * carried a non-empty `input`.
+ */
+function isClaudeToolUseComplete(
+  block: { inputJson: string; input: unknown },
+  closedByUpstream: boolean
+): boolean {
+  if (block.inputJson.trim().length > 0) {
+    return isCompleteToolCallArguments(block.inputJson);
+  }
+  return closedByUpstream || Object.keys(toRecord(block.input)).length > 0;
+}
+
+/**
  * Convert Claude-style SSE events into a single non-streaming message object.
  * Used when Claude-compatible upstreams stream even for stream=false.
  */
@@ -351,6 +376,7 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   let stopSequence = null;
   let sawClaudeEvent = false;
   let sawClaudeTerminal = false;
+  const closedBlockIndexes = new Set<number>();
 
   const mergeUsage = (incoming) => {
     const usageRecord = toRecord(incoming);
@@ -469,6 +495,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
       continue;
     }
 
+    if (eventType === "content_block_stop") {
+      closedBlockIndexes.add(toNumber(payload.index, -1));
+    }
+
     if (eventType === "message_stop") {
       sawClaudeTerminal = true;
     }
@@ -490,6 +520,7 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   if (!sawClaudeEvent) return null;
 
   const content = [];
+  const toolUseCompleteness: boolean[] = [];
   for (const block of [...blocks.values()].sort((a, b) => a.index - b.index)) {
     if (block.type === "text") {
       if (block.text) content.push({ type: "text", text: block.text });
@@ -509,6 +540,7 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
 
     const input = block.inputJson.trim().length > 0 ? tryParseJson(block.inputJson) : block.input;
     content.push({ type: "tool_use", id: block.id, name: block.name, input });
+    toolUseCompleteness.push(isClaudeToolUseComplete(block, closedBlockIndexes.has(block.index)));
   }
 
   // #18432 — content but no message_stop / stop_reason / [DONE]: the stream was cut.
@@ -516,6 +548,8 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   if (streamCut) {
     stopReason = TRUNCATED_STREAM_CLAUDE_STOP_REASON;
   }
+  // #18460 follow-up — a tool_use cut mid input_json_delta must not reach the client.
+  const keptToolUses = withholdCutToolCalls(streamCut, toolUseCompleteness, Boolean);
 
   return markTruncatedStreamBody(
     {
@@ -523,7 +557,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
       type: "message",
       role,
       model,
-      content,
+      content:
+        keptToolUses.length === toolUseCompleteness.length
+          ? content
+          : content.filter((block) => block.type !== "tool_use"),
       stop_reason: stopReason,
       ...(stopSequence ? { stop_sequence: stopSequence } : {}),
       ...(Object.keys(usage).length > 0 ? { usage } : {}),
@@ -752,6 +789,22 @@ function resolveResponsesTerminalStatus(
     : { status };
 }
 
+/**
+ * Output of a cut Responses stream without its unfinished calls (#18460 follow-up). A
+ * `function_call` is complete when its `arguments` is a whole JSON object, or empty with
+ * the item already `completed` by the upstream. Same all-or-nothing rule as the chat and
+ * Claude parsers (`withholdCutToolCalls`).
+ */
+function withholdCutResponsesFunctionCalls(streamCut: boolean, items: unknown[]): unknown[] {
+  const calls = items.filter((item) => toRecord(item).type === "function_call");
+  const kept = withholdCutToolCalls(streamCut, calls, (item) => {
+    const record = toRecord(item);
+    return isCompleteToolCallArguments(record.arguments, record.status === "completed");
+  });
+  if (kept.length === calls.length) return items;
+  return items.filter((item) => toRecord(item).type !== "function_call");
+}
+
 export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
   const lines = String(rawSSE || "").split("\n");
   const events = [];
@@ -963,14 +1016,16 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     !!terminalResponse,
     responsesOutputHasContent(chosenOutput)
   );
+  // #18460 follow-up — a function_call cut mid arguments must not reach the client.
   const streamCut = !terminalResponse && terminalStatus.status === "incomplete";
+  const finalOutput = withholdCutResponsesFunctionCalls(streamCut, chosenOutput);
 
   return markTruncatedStreamBody(
     {
       id: picked.id != null ? String(picked.id) : `resp_${Date.now()}`,
       object: picked.object || "response",
       model: picked.model || fallbackModel || "unknown",
-      output: chosenOutput.map((item) => {
+      output: finalOutput.map((item) => {
         const record = toRecord(item);
         return {
           ...record,
