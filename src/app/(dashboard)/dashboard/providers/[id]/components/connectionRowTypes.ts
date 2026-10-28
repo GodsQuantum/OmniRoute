@@ -1,6 +1,7 @@
 import type { PrefixShadowedDiagnostic } from "@/shared/utils/providerConnectionStatus";
 import type { CodexGlobalServiceMode } from "@/lib/providers/codexFastTier";
 import type { CodexAccountPoolProjection } from "@omniroute/open-sse/services/codexAccount/index.ts";
+import type { DiscoveryStateRecord } from "@/lib/db/discoveryState";
 import type { ProviderQuotaCacheEntry } from "../hooks/useProviderQuota";
 
 export interface ConnectionRowConnection {
@@ -26,6 +27,7 @@ export interface ConnectionRowConnection {
   expiresAt?: string;
   tokenExpiresAt?: string;
   syncedModelsAt?: string | null;
+  discoveryState?: DiscoveryStateRecord | null;
   maxConcurrent?: number | null;
   authType?: string;
   proxyEnabled?: boolean;
