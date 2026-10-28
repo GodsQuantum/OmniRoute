@@ -267,7 +267,7 @@ export default function ProviderErrorRulesCard() {
   const save = async () => {
     if (!draft) return;
     const result = serializeErrorRulesDraft(draft);
-    if (!result.ok) {
+    if (result.ok === false) {
       setIssues(result.issues);
       return;
     }
