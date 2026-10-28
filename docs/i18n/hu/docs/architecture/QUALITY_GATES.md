@@ -40,10 +40,9 @@ ellenőrizni kell a megfelelő hosztolt kapacitást.
 Minden JSON-nyugta azonosítja a checkoutolt SHA-t, a munkafolyamat futását és a kísérletet.
 A CLI elutasítja, ha a checkout és az esemény SHA-ja eltér. A munkafolyamat-tesztek a
 szabályzatbeli tagságot az eredményfeladat `needs` listájához kötik, így egy új vagy
-eltávolított sáv nem tűnhet el észrevétlenül. A nyugták a saját munkafolyamatukat fedik le,
-nem pedig a közzétételt, az üzembe helyezést vagy egy meglévő tanácsadó jellegű vizsgáló
-belső működését. Mindkét ellenőrzésnév aktiválása az ágszabályokban külön adminisztratív
-módosítás; ezeknek a feladatoknak a hozzáadása önmagában nem védi az ágat.
+eltávolított sáv nem tűnhet el észrevétlenül. A nyugták a saját munkafolyamatukra vonatkoznak, nem pedig a közzétételre, a telepítésre vagy egy meglévő tanácsadó jellegű vizsgáló belső működésére. Az alkalmazandó ellenőrzések kötelezővé tétele az ágszabályokban külön adminisztratív módosítás; a feladataik meghatározása önmagában nem védi az ágat.
+
+Az `API Route Typecheck` egy független munkafolyamat-ellenőrzés, amely kívül esik mindkét összesített eredményen és a helyi teljes megfigyelő statikus profilján. Az eredményét külön vizsgálja meg az adott jelölthöz. A `.github/workflows/api-route-typecheck.yml` a `main` vagy `release/**` ágra irányuló PR-ek, az e két ágcsalád valamelyikére történő pushok, valamint kézi indítás esetén fut le. Nem rendelkezik útvonalszűrővel. A PR célágának módosítása új ellenőrzést kér; a törzs vagy a cím szerkesztése a csak megfigyelésre szolgáló `Admission not requested / API Route Typecheck` nevet használja, és nem helyettesítheti a befogadási ellenőrzést. A munkafolyamat nem deklarál összevonásicsoport-triggert. Minden olyan összevonási sor bevezetése előtt, amely megköveteli ezt az ellenőrzést, először biztosítani kell, hogy az ellenőrzés az adott eseménynél is lefusson.
 
 ### UI-végrehajtási kapacitás
 
@@ -70,6 +69,21 @@ előzetes összevonás nem biztonságos vegyes függvény-/blokklefedettség ese
 hibás formátumú vagy inkompatibilis szilánkok meghiúsítják a befogadást. A sikertelen
 tesztszilánkok nyers diagnosztikai lefedettségét külön őrzik meg; ez nem kerülhet be
 a végső összevonásba.
+
+### Az egységtesztek végrehajtási előrehaladásának nyugtái
+
+A megosztott `test:unit:ci:shard` parancs a `primary`, `dashboard` és `serial`
+fázisokat a `scripts/ci/unit-progress-reporter.mjs` segítségével rögzíti. A szokásos tesztjelentés
+továbbra is elérhető. Egy külön, kizárólag metaadatokat tartalmazó nyugta rögzíti az egyes fájlok feldolgozásának kezdetét és befejezését,
+egy 30 másodpercenkénti állapotjelzés pedig felsorolja a még aktív fájlokat és az eltelt idejüket. A rendszer
+csak az engedélyezési listán szereplő végrehajtási metaadatokat rögzíti; a tesztleírásokat, a kimenetet, a hibák törzsét és a teljes
+környezetet nem szerializálja.
+
+A CI és a Quality a JSONL-fájlokat `unit-progress-ci-<run>-<attempt>-<shard>`, illetve
+`unit-progress-quality-<run>-<attempt>-<shard>` néven őrzi meg. A feladat időtúllépése megakadályozhatja a későbbi feltöltést;
+a már kibocsátott állapotjelzések továbbra is diagnosztikai bizonyítékként szolgálnak. Az állapotjelzések hiánya
+blokkolt vagy leállított futtatófolyamatra is utalhat. Ezek a nyugták megőrzik a meglévő tesztkiválasztást,
+párhuzamosságot, határidőket és kilépési állapotot; nem minősülnek a jelöltek elfogadásáról szóló döntésnek.
 
 ### Megőrzött bizonyítékok az elfogadási eredmények összesítőjében
 
@@ -112,6 +126,14 @@ hogy egy kapu ténylegesen lefutott.
 
 A szkriptek a `scripts/check/` (szabályzatkapuk) és a `scripts/quality/`
 (racsnis mechanizmus) alatt találhatók. A CI hiteles forrása a `.github/workflows/ci.yml`.
+
+### A közzétett alapdokumentáció állapota
+
+A `.github/workflows/i18n-base-health.yml` a dokumentáció állapotát figyeli a `main` és a `release/v*` ágakra történő kiválasztott leküldések után, valamint kézi indításkor. Szűrői lefedik a dokumentációt, a gyökérszintű Markdown-fájlokat, az `llm.txt` fájlt, a fordítási állapotot és konfigurációt, valamint a kapcsolódó i18n-eszközöket. Az egyetlen `Published base documentation health` feladat hosztolt Ubuntut használ, ötperces időkorláttal. Csak olvasási műveleteket végző ellenőrzést hajt végre, és diagnosztikai bizonylatot ír függőségek telepítése, fordítás vagy állapotátvétel nélkül.
+
+A `scripts/i18n/check-base-health.mjs` megköveteli, hogy ne legyenek forráskivonatbeli inkonzisztenciák, hiányzó célok, célkivonatbeli inkonzisztenciák, elavult fordítások vagy szakaszgyorsítótárbeli inkonzisztenciák. Emellett ellenőrzi az alapdokumentumok és területi beállítások aktuális hatókörét, valamint annak rögzített eredetét. Érvénytelen kontextus, hiányos lefedettség vagy megszakított ellenőrző esetén az eredmény `INCOMPLETE`; megerősített eltérés esetén pedig `FAIL`. Mindkettő sikertelenséget jelző kilépési állapotot ad vissza. A bizonylat a checkout SHA-értékéhez, a munkafolyamathoz, a futtatáshoz és a próbálkozáshoz van kötve, és `i18n-base-health-<sha>-<run>-<attempt>` néven őrződik meg.
+
+Ez a közzétett alap független megfigyelése. Nem ad hozzá PR- vagy merge-group-eseményt, kötelező PR-ellenőrzést, npm-álnevet vagy statikus vizsgálati profilhoz tartozó elemet. A meglévő differenciális PR-szabályzat és az alapul szolgáló ellenőrző tájékoztató jellegű besorolásai ettől elkülönülnek. A sikeres feltöltés nem változtathatja a sikertelen állapot-ellenőrzés eredményét PASS értékre.
 
 ### Kiadási PR gyorsított útvonala (`quality.yml`)
 
@@ -242,12 +264,12 @@ A `main` vagy `release/**` ágra irányuló pull requestek esetén ez a feladat 
 
 ### Feladat: `i18n-ui-coverage`
 
-| Szkript                               | Mit ellenőriz                                                                                                                                                                                                                        | Blokkoló                |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `check-ui-keys-coverage` (beágyazott) | A felhasználói felület i18n-kulcsainak lefedettsége ≥ 65%                                                                                                                                                                            | Igen                    |
-| `check-ui-value-drift` (beágyazott)   | Egy átírt angol **érték** nem hagy maga után elavult fordítást                                                                                                                                                                       | Igen                    |
-| `check-new-key-coverage` (beágyazott) | Egy **új** angol kulcs minden területi beállításhoz le van fordítva — a `__MISSING__:` jelölő elutasításra kerül                                                                                                                     | Igen                    |
-| `check-translation-ratio`             | A valódi fordítások területi beállításonkénti aránya (az angollal azonos / helyőrző / hiányzó bejegyzések az engedélyezési listán kívül) nem haladhatja meg a `config/quality/i18n-translation-baseline.json` értékét plusz a tűrést | **Tájékoztató jellegű** |
+| Szkript                               | Mit ellenőriz                                                                                                                                                                                                                        | Blokkoló     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| `check-ui-keys-coverage` (beágyazott) | A felhasználói felület i18n-kulcsainak lefedettsége ≥ 65%                                                                                                                                                                            | Igen         |
+| `check-ui-value-drift` (beágyazott)   | Egy átírt angol **érték** nem hagy maga után elavult fordítást                                                                                                                                                                       | Igen         |
+| `check-new-key-coverage` (beágyazott) | Egy **új** angol kulcs minden területi beállításhoz le van fordítva — a `__MISSING__:` jelölő elutasításra kerül                                                                                                                     | Igen         |
+| `check-translation-ratio`             | A valódi fordítások területi beállításonkénti aránya (az angollal azonos / helyőrző / hiányzó bejegyzések az engedélyezési listán kívül) nem haladhatja meg a `config/quality/i18n-translation-baseline.json` értékét plusz a tűrést | **Blokkoló** |
 
 A `fetch-depth: 0` beállítás szükséges — az értékeltérés ellenőrzése az `en.json` fájlt a merge base állapotával hasonlítja össze.
 
@@ -278,7 +300,19 @@ npm run i18n:check-value-drift:warn     # csak jelentés
 BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 ```
 
-A folyamat 0-s kilépési kóddal és `SKIP reason=base-unresolved` üzenettel zárul, ha az alapkatalógus nem olvasható (sekély klón az alapreferencia nélkül), a `check-openapi-breaking` működését követve.
+Az értékeltérés- és az újkulcs-ellenőrzés ugyanazt a megváltoztathatatlan összehasonlítást használja a
+`scripts/i18n/resolve-ui-diff-base.mjs` fájlból. A munkafolyamat ugyanazokat a bázis-, báziscsúcs- és
+jelölt-SHA-kat adja át mindkét ellenőrzésnek. A PR-/bázis-újracélzási, push- és merge-group-futtatások az eseményük
+kontextusát használják. Egy jelölt ág kézi indításához annak pontos nyitott PR-ja vagy az explicit
+`i18n_base_sha` bemenet szükséges. A `main` vagy `release/vX.Y.Z` ág explicit bemenet nélküli,
+kézi indítású vagy ütemezett vizsgálata az utolsó commitot annak első szülőjével hasonlítja össze; ez nem
+az összes örökölt fordítási adósság auditja. A helyi futtatáshoz explicit összehasonlítási bázis szükséges,
+például a fenti `BASE_REF` parancs.
+
+A hiányzó vagy nem egyértelmű összehasonlítási kontextus, az olvashatatlan vagy érvénytelen kötelező katalógus,
+valamint a módosult jelölt `INCOMPLETE` eredményt ad **2**-es kilépési kóddal, figyelmeztetési módban is.
+A katalógusok beolvasása a `scripts/i18n/read-ui-catalog.mjs` használatával történik; a beolvasási hibákat
+nem helyettesíti üres objektumokkal. Sem az elérhetetlen bázis, sem a hiányos bemenet nem eredményez PASS állapotot.
 
 ### Feladat: `i18n`
 
@@ -300,7 +334,7 @@ Csak pull requestek esetén fut.
 
 ### Feladat: `test-vitest`
 
-A `build` után fut. Hiba esetén blokkolja az összevonást.
+Szükséges hozzá a `changes` besorolási feladat. A vonatkozó mátrixszegmensek sikertelenség esetén blokkolják az egyesítést.
 
 | Tesztcsomag      | Ellenőrzi                                                            | Blokkoló                                                                                                                           |
 | ---------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -378,9 +412,9 @@ különbségét számítja ki):
 - **blokkoló** — a PR ciklomatikus/kognitív komplexitási szabálysértéseket vagy nem használt exportokat
   adott hozzá az általa módosított fájlokban (`complexityNewCode=`, `cognitiveComplexityNewCode=`,
   `deadExportsNewCode=` a naplóban);
-- **tájékoztató** — a globális összesítés összevetése a befagyasztott alapértékkel. Az örökölt
-  eltérés soha nem tesz sikertelenné egy vétlen PR-t; az eltérést a kiadási egyeztetéskor ismét
-  befagyasztjuk, és a tartalékot figyelő feladat követi nyomon.
+- **tájékoztató** — a globális összesített érték a rögzített alapértékhez képest. Az örökölt eltérés
+  soha nem buktat el egy vétlen PR-t; az eltérést nyomon követik, hogy a kiadási egyeztetéskor
+  kijavítsák, és a tartalékkapacitást figyelő feladat is ellenőrzi.
 
 A `check:file-size` a saját szabályai szerint használja a bázisreferenciát
 (`scripts/check/check-file-size.mjs`, #8522): ellenőrzi a fában található összes forrás- és
@@ -588,7 +622,11 @@ engedélyezési listával csak a minőség hamis látszatát kelti.
 
 1. Hozd létre a `scripts/check/check-<name>.mjs` (vagy `.ts`) fájlt. A szabályzati kapuk 0/1 kilépési kóddal lépnek ki.
    A racsnis jellegű kapuk a `collect-metrics.mjs` segítségével mérőszámot írnak a `quality-metrics.json` fájlba.
-2. Add hozzá a `"check:<name>": "node scripts/check/check-<name>.mjs"` bejegyzést a `package.json` fájlhoz.
+2. Adja hozzá a `"check:<name>": "node scripts/check/check-<name>.mjs"` bejegyzést a `package.json` fájlhoz, és
+   szinkronizálja az aliast és annak pontos parancsát a `config/quality/gate-manifest.json` fájlban.
+   Alkalmazza ugyanezt a szinkronizálást egy meglévő ellenőrzési alias módosításakor vagy eltávolításakor.
+   Futtassa az `npm run check:gate-manifest` parancsot; a pre-commit hook és a CI módosításbesorolása
+   kikényszeríti ezt a szerződést.
 3. Kösd be a `.github/workflows/ci.yml` megfelelő feladatába
    (szabályzat → `lint` vagy `docs-sync-strict`; racsni → `quality-gate`).
 4. Ha rendelkezik engedélyezési listával, alkalmazd rá a `reportStaleEntries()` függvényt a

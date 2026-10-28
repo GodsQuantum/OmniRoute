@@ -36,9 +36,18 @@ izvršitelje; prije uvođenja mora se provjeriti dostatan hostirani kapacitet.
 Svaka JSON potvrda identificira dohvaćeni SHA, izvođenje tijeka rada i pokušaj.
 CLI odbija nepodudaranje SHA-a dohvaćene verzije i događaja. Testovi tijeka rada vežu članstvo u politici
 uz popis `needs` posla koji daje ishod, tako da nova ili uklonjena staza ne može neprimjetno nestati.
-Potvrde obuhvaćaju vlastiti tijek rada, a ne objavu, implementaciju ni unutarnji rad
-postojećeg savjetodavnog skenera. Aktiviranje obaju naziva provjera u pravilima grane
-zasebna je administrativna promjena; dodavanje tih poslova samo po sebi ne štiti granu.
+Potvrde obuhvaćaju vlastiti tijek rada, a ne objavljivanje, implementaciju ili unutarnje funkcioniranje
+postojećeg savjetodavnog skenera. Postavljanje primjenjivih provjera kao obaveznih u pravilima grane
+zasebna je administrativna promjena; samo definiranje njihovih zadataka ne štiti granu.
+
+`API Route Typecheck` neovisna je provjera tijeka rada, izvan obje zbirne konačne ocjene
+i statičkog profila lokalnog potpunog promatrača. Zasebno pregledajte njezin rezultat za točno određenog
+kandidata. `.github/workflows/api-route-typecheck.yml` pokreće se za PR-ove prema granama `main` ili
+`release/**`, slanja promjena u bilo koju od tih obitelji grana te ručno pokretanje. Nema filtar putanja.
+Promjena ciljne grane PR-a zahtijeva novu provjeru; izmjene tijela/naslova koriste naziv namijenjen samo promatranju
+`Admission not requested / API Route Typecheck` i ne mogu zamijeniti provjeru prihvata.
+Tijek rada ne deklarira okidač grupe za spajanje. Svako uvođenje reda čekanja za spajanje koje zahtijeva
+ovu provjeru najprije mora osigurati njezino izvršavanje za taj događaj.
 
 ### Kapacitet izvršavanja korisničkog sučelja
 
@@ -61,6 +70,21 @@ SHA-u kandidata, okruženju izvođenja, korijenu izvornog koda i sažecima podat
 pragove pokrivenosti. Ulazni podaci zadržavaju c8-ov globalni redoslijed naziva datoteka; prethodno spajanje po fragmentima nije sigurno
 za mješovitu pokrivenost funkcija/blokova. Nedostajući, neispravni ili nekompatibilni fragmenti dovode do neuspjeha prihvata.
 Neuspješni fragmenti testova zasebno zadržavaju neobrađene dijagnostičke podatke o pokrivenosti; oni ne mogu ući u završno spajanje.
+
+### Potvrde napretka izvršavanja jediničnih testova
+
+Zajednička naredba `test:unit:ci:shard` bilježi faze `primary`, `dashboard` i `serial`
+putem datoteke `scripts/ci/unit-progress-reporter.mjs`. Uobičajeno izvješće o testiranju ostaje
+dostupno. Zasebna potvrda koja sadrži samo metapodatke bilježi početak i dovršetak svake datoteke,
+a signal aktivnosti svakih 30 sekundi navodi datoteke koje su još uvijek aktivne i vrijeme njihova izvršavanja. Bilježe
+se samo dopušteni metapodaci o izvršavanju; opisi testova, izlazni podaci, sadržaji pogrešaka i cjelokupno
+okruženje ne serijaliziraju se.
+
+CI i Quality zadržavaju JSONL datoteke kao `unit-progress-ci-<run>-<attempt>-<shard>` i
+`unit-progress-quality-<run>-<attempt>-<shard>`. Istek vremena zadatka može spriječiti kasniji prijenos;
+već emitirani signali aktivnosti ostaju dijagnostički dokaz. Izostanak signala aktivnosti također može upućivati
+na blokiran ili prekinut proces izvršitelja. Ove potvrde zadržavaju postojeći odabir testova,
+istodobnost, rokove i izlazni status; one nisu odluke o prihvaćanju kandidata.
 
 ### Sačuvani dokazi u modulu za objedinjavanje prihvaćanja
 
@@ -98,6 +122,27 @@ služi kao referenca, a ne kao dokaz da je kontrola stvarno izvršena.
 
 Skripte se nalaze pod `scripts/check/` (kontrole politika) i `scripts/quality/` (mehanizam postupnog pooštravanja).
 Izvor istine za CI jest `.github/workflows/ci.yml`.
+
+### Stanje dokumentacije objavljene baze
+
+`.github/workflows/i18n-base-health.yml` prati stanje dokumentacije nakon odabranih
+slanja na `main` i `release/v*` te pri ručnom pokretanju. Njegovi filtri obuhvaćaju dokumentaciju,
+korijenske Markdown datoteke, `llm.txt`, stanje/konfiguraciju prijevoda i relevantne i18n alate.
+Jedini posao `Published base documentation health` koristi hostirani Ubuntu i vremensko ograničenje
+od pet minuta. Izvodi provjeru valjanosti samo za čitanje i zapisuje dijagnostičku potvrdu bez
+instalacije ovisnosti, prevođenja ili usvajanja stanja.
+
+`scripts/i18n/check-base-health.mjs` zahtijeva da nema nedosljednosti izvornog hasha, nedostajućeg cilja, ciljnog hasha,
+zastarjelog prijevoda ni predmemorije odjeljaka. Također provjerava trenutačni opseg osnovnih
+dokumenata/lokalizacija i zabilježeno podrijetlo. Nevažeći kontekst, nepotpuna pokrivenost
+ili prekinuti alat za provjeru daju rezultat `INCOMPLETE`; potvrđeno odstupanje daje `FAIL`. Oba
+vraćaju izlazni status neuspjeha. Potvrda je vezana uz SHA preuzete verzije, tijek rada, izvođenje i
+pokušaj te se čuva kao `i18n-base-health-<sha>-<run>-<attempt>`.
+
+Ovo je neovisno praćenje objavljene baze. Ne dodaje događaj PR-a ili
+grupe spajanja, obaveznu PR provjeru, npm pseudonim ni člana profila statičkog skeniranja.
+Postojeća diferencijalna PR pravila i savjetodavne klasifikacije temeljnog alata za provjeru
+ostaju odvojeni. Uspješan prijenos ne može neuspješan rezultat provjere stanja pretvoriti u PASS.
 
 ### Ubrzani put za PR izdanja (`quality.yml`)
 
@@ -225,12 +270,12 @@ Za pull requestove prema `main` ili `release/**`, ovaj se zadatak pokreće samo 
 
 ### Zadatak: `i18n-ui-coverage`
 
-| Skripta                           | Provjerava                                                                                                                                                                                                                | Blokira          |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `check-ui-keys-coverage` (inline) | Pokrivenost UI i18n ključeva iznosi ≥ 65 %                                                                                                                                                                                | Da               |
-| `check-ui-value-drift` (inline)   | Izmijenjena engleska **vrijednost** ne ostavlja za sobom zastarjeli prijevod                                                                                                                                              | Da               |
-| `check-new-key-coverage` (inline) | **Novi** engleski ključ preveden je u svakom lokalitetu — oznaka `__MISSING__:` se odbija                                                                                                                                 | Da               |
-| `check-translation-ratio`         | Omjer stvarnih prijevoda po lokalitetu (stavke identične engleskom / rezervirana mjesta / stavke koje nedostaju izvan popisa dopuštenih) ne smije premašiti `config/quality/i18n-translation-baseline.json` + toleranciju | **Savjetodavno** |
+| Skripta                           | Provjerava                                                                                                                                                                                                                | Blokira         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `check-ui-keys-coverage` (inline) | Pokrivenost UI i18n ključeva iznosi ≥ 65 %                                                                                                                                                                                | Da              |
+| `check-ui-value-drift` (inline)   | Izmijenjena engleska **vrijednost** ne ostavlja za sobom zastarjeli prijevod                                                                                                                                              | Da              |
+| `check-new-key-coverage` (inline) | **Novi** engleski ključ preveden je u svakom lokalitetu — oznaka `__MISSING__:` se odbija                                                                                                                                 | Da              |
+| `check-translation-ratio`         | Omjer stvarnih prijevoda po lokalitetu (stavke identične engleskom / rezervirana mjesta / stavke koje nedostaju izvan popisa dopuštenih) ne smije premašiti `config/quality/i18n-translation-baseline.json` + toleranciju | **Blokirajuće** |
 
 Zahtijeva `fetch-depth: 0` — kontrola odstupanja vrijednosti uspoređuje `en.json` s bazom spajanja.
 
@@ -274,8 +319,19 @@ npm run i18n:check-value-drift:warn     # samo izvješće
 BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 ```
 
-Završava kodom 0 uz `SKIP reason=base-unresolved` kada se osnovni katalog ne može pročitati (plitki
-klon bez osnovne reference), po uzoru na `check-openapi-breaking`.
+Gateovi za odstupanje vrijednosti i nove ključeve dijele jednu nepromjenjivu usporedbu iz
+`scripts/i18n/resolve-ui-diff-base.mjs`. Tijek rada prosljeđuje isti osnovni SHA, SHA vrha osnove i
+SHA kandidata objema provjerama. Izvršavanja za PR/promjenu ciljne osnove, push i merge-group upotrebljavaju kontekst svojeg događaja.
+Pokretanje za granu kandidata zahtijeva njezin točan otvoreni PR ili eksplicitni unos
+`i18n_base_sha`. Pokretanje ili zakazano promatranje grane `main` ili `release/vX.Y.Z`
+bez tog unosa uspoređuje posljednji commit s njegovim prvim roditeljem; to nije revizija
+svih naslijeđenih dugova prijevoda. Lokalno pokretanje zahtijeva eksplicitnu osnovu za usporedbu,
+primjerice gornju naredbu `BASE_REF`.
+
+Nedostajući ili dvosmislen kontekst usporedbe, nečitljiv ili nevaljan obvezni katalog te
+promijenjeni kandidat daju rezultat `INCOMPLETE` s izlaznim kodom **2**, uključujući način rada s upozorenjima.
+Katalozi se čitaju pomoću `scripts/i18n/read-ui-catalog.mjs`; pogreške čitanja ne zamjenjuju se
+praznim objektima. Ni nedostupna osnova ni nepotpun unos ne daju rezultat PASS.
 
 ### Posao: `i18n`
 
@@ -297,7 +353,7 @@ Pokreće se samo za zahtjeve za povlačenje.
 
 ### Posao: `test-vitest`
 
-Pokreće se nakon `build`. U slučaju neuspjeha blokira spajanje.
+Zahtijeva posao klasifikacije `changes`. Neuspjeh primjenjivih dijelova matrice blokira spajanje.
 
 | Skup testova     | Provjerava                                                             | Blokirajuće                                                                                                          |
 | ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -370,8 +426,9 @@ izmijenio** (`scripts/check/newCodeMode.mjs`: baza spajanja materijalizira se u 
 
 - **blokirajuće** — PR je dodao kršenja ciklomatske/kognitivne složenosti ili mrtve izvoze u datotekama koje je izmijenio
   (`complexityNewCode=`, `cognitiveComplexityNewCode=`, `deadExportsNewCode=` u zapisniku);
-- **savjetodavno** — globalni zbroj u odnosu na zamrznutu početnu vrijednost. Naslijeđeno odstupanje nikada ne ruši
-  nedužan PR; odstupanje se ponovno zamrzava pri usklađivanju izdanja, a nadzire ga zadatak za praćenje rezerve.
+- **savjetodavno** — ukupni globalni iznos u odnosu na zamrznutu referentnu vrijednost. Naslijeđeno odstupanje nikada ne označava
+  nedužni PR crvenim; odstupanje se prati radi ispravka tijekom usklađivanja izdanja, a nadzire ga
+  zadatak za praćenje rezerve.
 
 `check:file-size` koristi osnovnu referencu prema vlastitim pravilima (`scripts/check/check-file-size.mjs`, #8522):
 provjerava svaku izvornu i testnu datoteku u stablu, čita broj redaka svake datoteke u osnovi PR-a
@@ -574,7 +631,11 @@ popis dopuštenih stavki stvara lažan osjećaj kvalitete.
 
 1. Izradite `scripts/check/check-<name>.mjs` (ili `.ts`). Kontrole pravila završavaju izlaznim kodom 0/1.
    Zaporne kontrole šalju metriku u `quality-metrics.json` putem `collect-metrics.mjs`.
-2. Dodajte `"check:<name>": "node scripts/check/check-<name>.mjs"` u `package.json`.
+2. Dodajte `"check:<name>": "node scripts/check/check-<name>.mjs"` u `package.json` i
+   sinkronizirajte alias i njegovu točnu naredbu u `config/quality/gate-manifest.json`.
+   Primijenite istu sinkronizaciju pri izmjeni ili uklanjanju postojećeg aliasa za provjeru valjanosti.
+   Pokrenite `npm run check:gate-manifest`; pre-commit hook i klasifikacija promjena u CI-ju
+   osiguravaju poštivanje ovog ugovora.
 3. Povežite je u `.github/workflows/ci.yml` pod odgovarajućim zadatkom
    (pravilo → `lint` ili `docs-sync-strict`; zaporna kontrola → `quality-gate`).
 4. Ako ima popis dopuštenih stavki, primijenite `reportStaleEntries()` iz

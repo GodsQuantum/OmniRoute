@@ -36,9 +36,18 @@ körmiljöer; tillräcklig hostad kapacitet måste verifieras före utrullning.
 Varje JSON-kvitto identifierar utcheckad SHA, arbetsflödeskörning och försök.
 CLI:t avvisar en avvikelse mellan SHA för utcheckning och händelse. Arbetsflödestester binder policymedlemskap
 till utfallsjobbets `needs`-lista så att ett nytt eller borttaget spår inte kan försvinna obemärkt.
-Kvittona omfattar det egna arbetsflödet, inte publicering, driftsättning eller den interna
-funktionen hos en befintlig rådgivande skanner. Att aktivera båda kontrollnamnen i grenreglerna är en
-separat administrativ ändring; tillägg av dessa jobb skyddar inte i sig en gren.
+Kvittensen täcker sitt eget arbetsflöde, inte publicering, driftsättning eller de interna delarna
+av en befintlig advisory-skanner. Att göra de tillämpliga kontrollerna obligatoriska i grenreglerna
+är en separat administrativ ändring; att definiera deras jobb skyddar inte i sig en gren.
+
+`API Route Typecheck` är en oberoende arbetsflödeskontroll, utanför både de aggregerade utlåtandena
+och den lokala fullständiga observatörens statiska profil. Granska dess resultat separat för den exakta
+kandidaten. `.github/workflows/api-route-typecheck.yml` körs för PR:er till `main` eller
+`release/**`, pushar till endera grenfamiljen samt manuell körning. Det har inget sökvägsfilter.
+Ändringar av målgren för en PR begär en ny kontroll; redigeringar av brödtext/rubrik använder det observationsspecifika namnet
+`Admission not requested / API Route Typecheck` och kan inte ersätta antagningskontrollen.
+Arbetsflödet deklarerar ingen utlösare för sammanslagningsgrupper. En lansering av en sammanslagningskö som kräver
+den här kontrollen måste först säkerställa att den körs för den händelsen.
 
 ### Körningskapacitet för användargränssnittet
 
@@ -61,6 +70,21 @@ kandidatens SHA, körmiljö, källrot och datahashar och kör sedan c8:s rapport
 täckningströsklar. Indata behåller c8:s globala filnamnsordning; försammanfogning per shard är osäker
 för blandad funktions-/blocktäckning. Saknade, felaktiga eller inkompatibla shardar gör att godkännandet misslyckas.
 Misslyckade testshardar behåller rå diagnostisk täckning separat; den får inte ingå i den slutliga sammanfogningen.
+
+### Kvittenser för enhetskörningens förlopp
+
+Det gemensamma kommandot `test:unit:ci:shard` registrerar faserna `primary`, `dashboard` och `serial`
+via `scripts/ci/unit-progress-reporter.mjs`. Den vanliga testrapporten förblir
+tillgänglig. En separat kvittens som endast innehåller metadata registrerar när varje fil startas och slutförs,
+och ett 30-sekunders pulsslag listar de filer som fortfarande är aktiva samt deras förflutna körtid. Den registrerar
+endast exekveringsmetadata som finns i tillåtelselistan; testbeskrivningar, utdata, felmeddelanden och den fullständiga
+miljön serialiseras inte.
+
+CI och Quality behåller JSONL-filerna som `unit-progress-ci-<run>-<attempt>-<shard>` och
+`unit-progress-quality-<run>-<attempt>-<shard>`. En tidsgräns för jobbet kan förhindra den senare uppladdningen;
+redan utsända pulsslag finns kvar som diagnostiskt underlag. Saknade pulsslag kan även tyda på
+en blockerad eller avslutad runner-process. Dessa kvittenser bevarar det befintliga testurvalet,
+parallelliteten, tidsgränserna och slutstatusen; de utgör inte beslut om godkännande av kandidater.
 
 ### Bevarade bevis i sammanställningen av acceptansresultat
 
@@ -98,6 +122,28 @@ hostad täckning, testmatriser, paket- eller driftsättningsbevis. Textinventeri
 
 Skripten finns under `scripts/check/` (policygrindar) och `scripts/quality/` (ratchet-motor).
 Källan till sanning för CI är `.github/workflows/ci.yml`.
+
+### Hälsostatus för publicerad basdokumentation
+
+`.github/workflows/i18n-base-health.yml` övervakar dokumentationens hälsostatus efter utvalda
+pushar till `main` och `release/v*` samt vid manuell körning. Dess filter omfattar dokumentation,
+Markdown-filer i roten, `llm.txt`, översättningstillstånd/-konfiguration och relevanta i18n-verktyg.
+Det enda jobbet, `Published base documentation health`, använder en driftad Ubuntu-miljö och en
+tidsgräns på fem minuter. Det utför skrivskyddad validering och skriver ett diagnostiskt kvitto
+utan att installera beroenden, översätta eller överta tillstånd.
+
+`scripts/i18n/check-base-health.mjs` kräver att det inte finns några inkonsekvenser avseende
+källhashar, saknade mål, målhashar, inaktuella översättningar eller sektionscache. Det validerar
+även det aktuella omfånget för kärndokument och språkversioner samt dess registrerade proveniens.
+Ogiltig kontext, ofullständig täckning eller en avbruten kontroll ger `INCOMPLETE`; bekräftad
+avvikelse ger `FAIL`. Båda returnerar en felstatus vid avslut. Kvittot är bundet till utcheckningens
+SHA, arbetsflödet, körningen och försöket och sparas som `i18n-base-health-<sha>-<run>-<attempt>`.
+
+Detta är en oberoende observation av den publicerade basen. Den lägger inte till någon PR- eller
+merge-group-händelse, någon obligatorisk PR-kontroll, något npm-alias eller någon medlem i en
+profil för statisk genomsökning. Den befintliga differentiella PR-policyn och den underliggande
+kontrollens rådgivande klassificeringar förblir separata. En lyckad uppladdning kan inte omvandla
+ett misslyckat hälsoresultat till PASS.
 
 ### Snabbspår för release-PR (`quality.yml`)
 
@@ -225,12 +271,12 @@ För pull requests till `main` eller `release/**` körs jobbet endast för kandi
 
 ### Jobb: `i18n-ui-coverage`
 
-| Skript                            | Validerar                                                                                                                                                                                                | Blockerande    |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `check-ui-keys-coverage` (inline) | Täckningen för UI-i18n-nycklar är ≥ 65 %                                                                                                                                                                 | Ja             |
-| `check-ui-value-drift` (inline)   | Ett omskrivet engelskt **värde** lämnar inte kvar någon inaktuell översättning                                                                                                                           | Ja             |
-| `check-new-key-coverage` (inline) | En **ny** engelsk nyckel är översatt i varje språkvariant — en `__MISSING__:`-markör avvisas                                                                                                             | Ja             |
-| `check-translation-ratio`         | Andelen riktiga översättningar per språkvariant (identiska med engelska/platshållare/saknade löv utanför tillåtelselistan) får inte överstiga `config/quality/i18n-translation-baseline.json` + marginal | **Rådgivande** |
+| Skript                            | Validerar                                                                                                                                                                                                | Blockerande     |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `check-ui-keys-coverage` (inline) | Täckningen för UI-i18n-nycklar är ≥ 65 %                                                                                                                                                                 | Ja              |
+| `check-ui-value-drift` (inline)   | Ett omskrivet engelskt **värde** lämnar inte kvar någon inaktuell översättning                                                                                                                           | Ja              |
+| `check-new-key-coverage` (inline) | En **ny** engelsk nyckel är översatt i varje språkvariant — en `__MISSING__:`-markör avvisas                                                                                                             | Ja              |
+| `check-translation-ratio`         | Andelen riktiga översättningar per språkvariant (identiska med engelska/platshållare/saknade löv utanför tillåtelselistan) får inte överstiga `config/quality/i18n-translation-baseline.json` + marginal | **Blockerande** |
 
 Kräver `fetch-depth: 0` — kontrollen för värdeavvikelse jämför `en.json` mot sammanslagningsbasen.
 
@@ -273,8 +319,19 @@ npm run i18n:check-value-drift:warn     # endast rapport
 BASE_REF=origin/release/vX.Y.Z npm run i18n:check-value-drift
 ```
 
-Avslutas med kod 0 och `SKIP reason=base-unresolved` när baskatalogen inte kan läsas (ytlig
-klon utan basreferensen), i likhet med `check-openapi-breaking`.
+Spärrarna för värdedrift och nya nycklar delar en oföränderlig jämförelse från
+`scripts/i18n/resolve-ui-diff-base.mjs`. Arbetsflödet skickar samma bas-, bastopp- och
+kandidat-SHA-värden till båda kontrollerna. Körningar för PR/byte av målgren, push och merge-grupp använder sin
+händelsekontext. Vid manuell körning för en kandidatgren krävs dess exakta öppna PR eller den uttryckliga
+indatan `i18n_base_sha`. Manuell eller schemalagd observation av `main` eller `release/vX.Y.Z`
+utan denna indata jämför den senaste committen med dess första förälder; det är inte en granskning av
+all nedärvd översättningsskuld. Lokal körning kräver en uttrycklig jämförelsebas,
+exempelvis kommandot `BASE_REF` ovan.
+
+Saknad eller tvetydig jämförelsekontext, en oläsbar eller ogiltig obligatorisk katalog och
+en ändrad kandidat ger `INCOMPLETE` med slutkod **2**, även i varningsläge.
+Kataloger läses med `scripts/i18n/read-ui-catalog.mjs`; läsfel ersätts inte
+med tomma objekt. Varken en otillgänglig bas eller ofullständig indata resulterar i PASS.
 
 ### Jobb: `i18n`
 
@@ -296,7 +353,7 @@ Körs endast för pull requests.
 
 ### Jobb: `test-vitest`
 
-Körs efter `build`. Blockerar sammanslagning vid fel.
+Kräver klassificeringsjobbet `changes`. Tillämpliga matrisdelar blockerar sammanslagning vid fel.
 
 | Testsvit         | Validerar                                                   | Blockerande                                                                                                    |
 | ---------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -370,7 +427,8 @@ Vid `pull_request`-händelser skickar `quality.yml` `--base-ref <PR base SHA>` t
 - **blockerande** — PR:en lade till cyklomatiska/kognitiva överträdelser eller oanvända exporter i filer som den ändrade
   (`complexityNewCode=`, `cognitiveComplexityNewCode=`, `deadExportsNewCode=` i loggen);
 - **rådgivande** — den globala totalsumman jämfört med den frysta baslinjen. Ärvd avvikelse gör aldrig en
-  oskyldig PR röd; avvikelsen fryses om vid versionsavstämning och övervakas av marginaljobbet.
+  oskyldig PR röd; avvikelsen spåras för korrigering vid versionsavstämningen och övervakas av
+  marginaljobbet.
 
 `check:file-size` använder basreferensen enligt sina egna villkor (`scripts/check/check-file-size.mjs`, #8522):
 det kontrollerar varje käll- och testfil i trädet, läser varje fils radantal vid PR-basen
@@ -574,7 +632,11 @@ tillåtelselista ger en falsk känsla av kvalitet.
 
 1. Skapa `scripts/check/check-<name>.mjs` (eller `.ts`). Policygrindar avslutas med 0/1.
    Grindar av spärrhaketyp skriver ett mätvärde till `quality-metrics.json` via `collect-metrics.mjs`.
-2. Lägg till `"check:<name>": "node scripts/check/check-<name>.mjs"` i `package.json`.
+2. Lägg till `"check:<name>": "node scripts/check/check-<name>.mjs"` i `package.json` och
+   synkronisera aliaset och dess exakta kommando i `config/quality/gate-manifest.json`.
+   Tillämpa samma synkronisering när du ändrar eller tar bort ett befintligt valideringsalias.
+   Kör `npm run check:gate-manifest`; pre-commit-hooken och CI:s ändringsklassificering
+   upprätthåller detta kontrakt.
 3. Koppla in den i `.github/workflows/ci.yml` under lämpligt jobb
    (policy → `lint` eller `docs-sync-strict`; spärrhake → `quality-gate`).
 4. Om den har en tillåtelselista ska du använda `reportStaleEntries()` från
