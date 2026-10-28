@@ -48,8 +48,10 @@ const PORTABLE_COMBO_KEYS = [
 /** Install-local step fields: connection refs and ids (step ids embed connection ids). */
 const LOCAL_STEP_KEYS = new Set(["id", "connectionId", "allowedConnectionIds"]);
 
+// Anchored: matches whole credential-shaped keys only (`token`, `sessionToken`,
+// `x-api-key`, `cookie`, ...), never config knobs like `reasoningTokenBufferEnabled`.
 const CREDENTIAL_KEY_PATTERN =
-  /^(api[_-]?key|secret|client[_-]?secret|password|authorization|(access|refresh|bearer)[_-]?token)$/i;
+  /^((x[_-])?api[_-]?key|secret|client[_-]?secret|passw(or)?d|(proxy[_-]?)?authorization|(set[_-]?)?cookie|private[_-]?key|((access|refresh|bearer|session|auth|id)[_-]?)?token)$/i;
 
 export const combosImportFileSchema = z.object({
   _meta: z

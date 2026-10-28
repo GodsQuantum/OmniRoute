@@ -75,7 +75,16 @@ test("export returns only combos with _meta.version and strips ids, connections 
         allowedConnectionIds: ["conn-123", "conn-456"],
       },
     ],
-    config: { maxRetries: 2, nadir: { apiKey: "sk-secret-nadir", baseUrl: "https://n.example" } },
+    config: {
+      maxRetries: 2,
+      nadir: { apiKey: "sk-secret-nadir", baseUrl: "https://n.example" },
+      // `config` is passthrough: credential-shaped extras must not travel either.
+      token: "tok-secret-1",
+      sessionToken: "sess-secret-2",
+      headers: { "x-api-key": "hdr-secret-3", "X-Trace": "keep-me" },
+      privateKey: "pk-secret-4",
+      cookie: "ck-secret-5",
+    },
   });
   await combosDb.createCombo({
     name: "hidden-quota",
@@ -117,6 +126,16 @@ test("export returns only combos with _meta.version and strips ids, connections 
   assert.equal((config.nadir as JsonRecord).apiKey, undefined);
   assert.equal((config.nadir as JsonRecord).baseUrl, "https://n.example");
   assert.ok(!raw.includes("sk-secret-nadir"), "no secret leaks anywhere in the file");
+  for (const secret of [
+    "tok-secret-1",
+    "sess-secret-2",
+    "hdr-secret-3",
+    "pk-secret-4",
+    "ck-secret-5",
+  ]) {
+    assert.ok(!raw.includes(secret), `credential-shaped config value ${secret} leaked`);
+  }
+  assert.equal((config.headers as JsonRecord)["X-Trace"], "keep-me", "non-credential keys stay");
   assert.ok(!raw.includes("conn-123"), "no connection id leaks anywhere in the file");
 });
 
@@ -262,6 +281,32 @@ test("import replace rolls back everything when an entry fails mid-way", async (
   );
   assert.equal(response.status, 400);
   assert.deepEqual(await comboNames(), ["keep-me"], "transaction rolled back");
+});
+
+test("import strips credential-shaped keys from a hand-edited file before writing", async () => {
+  const response = await importRoute.POST(
+    importRequest(
+      fileWith([
+        {
+          name: "edited",
+          models: [{ providerId: "openai", model: "openai/gpt-4o" }],
+          config: {
+            maxRetries: 1,
+            token: "tok-secret-1",
+            headers: { "X-Api-Key": "hdr-secret-3" },
+            nadir: { apiKey: "sk-secret-nadir" },
+          },
+        },
+      ])
+    )
+  );
+  assert.equal(response.status, 200);
+  const [saved] = (await combosDb.getCombos()) as JsonRecord[];
+  const stored = JSON.stringify(saved);
+  for (const secret of ["tok-secret-1", "hdr-secret-3", "sk-secret-nadir"]) {
+    assert.ok(!stored.includes(secret), `imported credential ${secret} was persisted`);
+  }
+  assert.equal((saved.config as JsonRecord).maxRetries, 1);
 });
 
 test("import rejects an invalid entry with 400, sanitized message, and writes nothing", async () => {
