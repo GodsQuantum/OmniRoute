@@ -76,44 +76,44 @@ OmniRoute/
 ```
 src/
 ├── app/                  Ibe App Router + ụzọ API
-├── lib/                  Ọbá akwụkwọ ndị bụ isi (DB, auth, OAuth, skills, memory, …)
-├── domain/               Otu domain dị ọcha (policy, fallback, cost, lockout, …)
-├── server/               Modul ndị bụ naanị nke server (authz, cors, auth)
-├── shared/               Ụdị, constants, nkwenye, contracts, utils (nke dị mma n'ofe ókèala)
+├── lib/                  Isi ọbá akwụkwọ (DB, auth, OAuth, skills, memory, …)
+├── domain/               Oyi akwa ngalaba dị ọcha (policy, fallback, cost, lockout, …)
+├── server/               Modul sava naanị (authz, cors, auth)
+├── shared/               Ụdị, ndị a na-agbanwe agbanwe, nkwenye, nkwekọrịta, ngwa ọrụ (nchebe n'ofe oke)
 ├── mitm/                 Ndị enyemaka proxy man-in-the-middle maka njikọ CLI
-├── models/               Metadata model mpaghara / aliasing
-├── sse/                  Ndị na-achịkwa SSE ochie nke ka nọ n'okpuru src/ (ọ bụghị open-sse/)
-├── store/                Ebe nchekwa steeti nke akụkụ client
-├── middleware/           Ngwaọrụ middleware nke ọkwa ụzọ (ọ bụghị middleware zuru ụwa ọnụ nke Next.js)
-├── scripts/              Scripts dị n'ime osisi nke koodu ngwa nwere ike ịbubata
-├── types/                Ụdị TS ambient na nke a na-ekekọrịta
-├── i18n/                 Ngwugwu locale
-├── instrumentation.ts    Hook instrumentation nke Next.js
+├── models/               Metadata ụdị mpaghara / ịkpọ aha ọzọ
+├── sse/                  Ndị njikwa SSE ochie ka dị n'okpuru src/ (ọ bụghị open-sse/)
+├── store/                Ụlọ nchekwa ọnọdụ n'akụkụ klient
+├── middleware/           Ngwa ọrụ middleware n'ọkwa ụzọ (ọ bụghị middleware zuru ụwa ọnụ nke Next.js)
+├── scripts/              Scripts dị n'ime osisi nke koodu ngwa nwere ike ibubata
+├── types/                Ụdị TS gburugburu na nke a na-ekerịta
+├── i18n/                 Ngwugwu asụsụ mpaghara
+├── instrumentation.ts    Hụkụ instrumentation nke Next.js
 ├── instrumentation-node.ts
-└── proxy.ts              Onye enyemaka bootstrap proxy nke ọkwa kacha elu
+└── proxy.ts              Onye enyemaka mbido proxy n'ọkwa kachasị elu
 ```
 
 ### 3.1 `src/app/` — App Router
 
-App Router na-egosi ma UI dashboard na API HTTP nke ọha/njikwa.
-**Enweghị middleware zuru ụwa ọnụ** — a na-eme ntchịkwa n'ụzọ ọ bụla.
+App Router na-ekpughe ma UI dashboard ma API HTTP ọha/njikwa.
+**Enweghị middleware zuru ụwa ọnụ** — a na-eme nkwụsịtụ n'otu ụzọ ọ bụla.
 
-Nkeji ndị dị n'ọkwa kacha elu n'okpuru `src/app/`:
+Ngalaba ndị dị n'ọkwa kachasị elu n'okpuru `src/app/`:
 
-| Ụzọ                                                                           | Ọrụ                                        |
+| Ụzọ                                                                           | Ebumnuche                                  |
 | ----------------------------------------------------------------------------- | ------------------------------------------ |
-| `api/`                                                                        | Ụzọ API HTTP niile (lee nkewa dị n'okpuru) |
-| `a2a/`                                                                        | Ebe ngwụcha A2A JSON-RPC 2.0 (`POST /a2a`) |
+| `api/`                                                                        | Ụzọ HTTP API niile (lee nkọwa n'okpuru)    |
+| `a2a/`                                                                        | Ebe njedebe A2A JSON-RPC 2.0 (`POST /a2a`) |
 | `.well-known/agent.json/`                                                     | Akwụkwọ nchọpụta A2A Agent Card            |
 | `(dashboard)/`                                                                | UI Dashboard (otu ụzọ, enweghị prefix URL) |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Usoro nyocha                               |
-| `landing/`                                                                    | Ibe ahịa/landing                           |
-| `docs/`                                                                       | Ihe ngosi akwụkwọ API etinyere n'ime       |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Usoro nkwenye                              |
+| `landing/`                                                                    | Ibe mgbasa ozi/mbata                       |
+| `docs/`                                                                       | Ihe nlele akwụkwọ API agbakwunyere         |
 | `status/`, `maintenance/`, `offline/`                                         | Ibe ọrụ                                    |
 | `privacy/`, `terms/`                                                          | Ibe iwu                                    |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Ibe njehie kwụsiri ike                     |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Ókèala njehie/ibujide nke framework        |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Mkpọ root                                  |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Ibe njehie static                          |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Oke njehie/ibu nke framework               |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Shei mgbọrọgwụ                             |
 
 #### 3.1.1 `src/app/(dashboard)/dashboard/` — Ibe UI
 
@@ -121,10 +121,10 @@ Nkeji ndị dị n'ọkwa kacha elu n'okpuru `src/app/`:
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`, gbakwunyere root `page.tsx`, `HomePageClient.tsx`,
+`translator`, `usage`, `webhooks`, tinyere mgbọrọgwụ `page.tsx`, `HomePageClient.tsx`,
 `BootstrapBanner.tsx`.
 
-#### 3.1.2 `src/app/api/` — Ọtụ API nke ọkwa kacha elu
+#### 3.1.2 `src/app/api/` — Otu API ndị dị n'ọkwa kachasị elu
 
 ```
 src/app/api/
@@ -177,144 +177,142 @@ src/app/api/
 ├── token-health/
 ├── translator/
 ├── tunnels/
-├── services/   Njikwa ọrụ etinyere n'ime (9router, cliproxy) — LOCAL_ONLY
+├── services/   Njikwa ọrụ agbakwunyere (9router, cliproxy) — LOCAL_ONLY
 ├── upstream-proxy/
 ├── usage/
-├── v1/         API ọha kwadoro OpenAI
-├── v1beta/     Nkwado ụdị Gemini
+├── v1/         API ọha dakọtara na OpenAI
+├── v1beta/     Ndakọ ụdị Gemini
 ├── version-manager/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — Njikwa Ọrụ etinyere n'ime
+#### 3.1.2a `src/app/api/services/` — Njikwa Ọrụ Agbakwunyere
 
-Ụzọ maka ịwụnye, ịmalite, ịkwụsị, na nleba anya 9Router na CLIProxyAPI.
-A kọwapụtara ụzọ niile dị ka **LOCAL_ONLY** (naanị loopback, iwu siri ike #17) n'ihi na ha
-nwere ike ịkpọ `npm install` ma mụọ usoro ụmụaka (child processes).
+Ụzọ maka ịwụnye, ịmalite, ịkwụsị, na ileba anya 9Router na CLIProxyAPI.
+A na-ekewa ụzọ niile dị ka **LOCAL_ONLY** (loopback naanị, iwu siri ike #17) n'ihi na ha
+nwere ike ịkpọ `npm install` ma mụọ usoro ụmụaka.
 
 ```
 src/app/api/services/
 ├── 9router/
-│   ├── _lib.ts             getOrInitSupervisor() enyemaka
-│   ├── install/route.ts    POST — npm install site na execFile
+│   ├── _lib.ts             getOrInitSupervisor() helper
+│   ├── install/route.ts    POST — npm install via execFile
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install ụdị ọhụrụ
-│   ├── rotate-key/route.ts POST — mepụta igodo API ọhụrụ + malite ọzọ
-│   ├── status/route.ts     GET  — ọnọdụ dị ndụ + nke DB + metadata ụdị
-│   └── auto-start/route.ts POST — gbanwee auto_start flag
+│   ├── update/route.ts     POST — npm install newer version
+│   ├── rotate-key/route.ts POST — generate new API key + restart
+│   ├── status/route.ts     GET  — live + DB status + version metadata
+│   └── auto-start/route.ts POST — toggle auto_start flag
 ├── cliproxy/
-│   ├── _lib.ts             getOrInitSupervisor() enyemaka
+│   ├── _lib.ts             getOrInitSupervisor() helper
 │   ├── install/route.ts    POST — npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install ụdị ọhụrụ
-│   ├── status/route.ts     GET  — ọnọdụ dị ndụ + nke DB + metadata ụdị
-│   └── auto-start/route.ts POST — gbanwee auto_start flag
+│   ├── update/route.ts     POST — npm install newer version
+│   ├── status/route.ts     GET  — live + DB status + version metadata
+│   └── auto-start/route.ts POST — toggle auto_start flag
 └── [name]/
-    └── logs/route.ts       GET  — SSE log tail (ọrụ niile na-ekekọrịta ya)
+    └── logs/route.ts       GET  — SSE log tail (shared by all services)
 ```
 
-UI dashboard kwekọrọ ya:
-`src/app/(dashboard)/dashboard/providers/services/` — peeji taabụ abụọ (CLIProxyAPI + 9Router).
-Reverse proxy maka UI etinyere nke 9Router:
+UI dashboard kwekọrọ:
+`src/app/(dashboard)/dashboard/providers/services/` — ibe nwere taabụ abụọ (CLIProxyAPI + 9Router).
+Proxy ntụgharị maka UI etinyere n'ime 9Router:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
 Nyocha miri emi: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-#### 3.1.3 `src/app/api/v1/` — API ọha dakọtara na OpenAI
+#### 3.1.3 `src/app/api/v1/` — API ọha na-adakọrịta na OpenAI
 
 ```
 v1/
-├── accounts/[id]/                       ịchọpụta akaụntụ
-├── agents/tasks/[id]/, agents/tasks/    endpoint ọrụ ụdị A2A
-├── api/                                 enyemaka API ime a kpughee n'okpuru v1/api
+├── accounts/[id]/                       account lookup
+├── agents/tasks/[id]/, agents/tasks/    A2A-flavored task endpoints
+├── api/                                 internal API helpers exposed under v1/api
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
-├── chat/completions/                    Chat Completions (endpoint bụ isi)
-├── completions/                         Ndezu ederede ochie
+├── chat/completions/                    Chat Completions (the main endpoint)
+├── completions/                         Legacy text completions
 ├── embeddings/                          Embeddings
 ├── files/[id]/, files/                  Files API
-├── _helpers/                            Enyemaka ụzọ ekekọrịtara (enweghị URL ọha)
-├── images/{edits, generations}/         Ịmepụta ihe oyiyi + ndezi
-├── issues/                              Endpoint enyemaka nhọpụta
-├── management/{proxies}/                Ụzọ nke nchịkwa n'ime v1
-├── messages/{count_tokens}/             Nkwenye ozi ụdị Anthropic
-├── models/                              Ndepụta model (`route.ts`, `catalog.ts`)
-├── moderations/                         Nhachapụ ọdịnaya
-├── music/                               Ịmepụta egwú
-├── providers/[provider]/                Ọrụ nye onye na-enye ọ bụla
-├── quotas/{check}                       Nnwale quota
-├── registered-keys/                     Nchịkwa igodo edebanyere aha
-├── rerank/                              Nhazigharịa ọkwa
-├── responses/[...path]/                 OpenAI Responses API (na-ejide ihe niile)
-├── search/                              Ịchọ webụ
-├── videos/                              Ịmepụta vidiyo
-├── ws/                                  Njikọ WebSocket
-└── route.ts                             Nhazi index
+├── _helpers/                            Shared route helpers (no public URL)
+├── images/{edits, generations}/         Image gen + edit
+├── issues/                              Triage helper endpoints
+├── management/{proxies}/                Management-scoped routes inside v1
+├── messages/{count_tokens}/             Anthropic-style messages compat
+├── models/                              Model listing (`route.ts`, `catalog.ts`)
+├── moderations/                         Moderation
+├── music/                               Music gen
+├── providers/[provider]/                Per-provider operations
+├── quotas/{check}                       Quota probes
+├── registered-keys/                     Registered key admin
+├── rerank/                              Reranking
+├── responses/[...path]/                 OpenAI Responses API (catch-all)
+├── search/                              Web search
+├── videos/                              Video gen
+├── ws/                                  WebSocket bridge
+└── route.ts                             Index handler
 ```
 
-Faịlụ ụzọ ọ bụla na-agbaso otu ụkpụrụ a:
+Faịlụ ụzọ ọ bụla na-agbaso otu ụkpụrụ:
 
 ```
-Ụzọ → CORS preflight → nyocha Zod body → auth nhọrọ
-      → ịmejupụta iwu igodo API → ịkẹnye ọrụ nhazi (open-sse)
+Route → CORS preflight → Zod body validation → optional auth
+      → API key policy enforcement → handler delegation (open-sse)
 ```
 
-`v1beta/` bụ elu nkwenye ụdị Gemini (otu mkpọda gbachara nke na-atụgharị n'ime
-otu pipeline `open-sse/handlers/` ahụ).
+`v1beta/` bụ elu ndakọrịta ụdị Gemini (ihe mkpuchi dị gịrịgịrị nke na-atụgharị banye n'otu pipeline `open-sse/handlers/`).
 
-### 3.2 `src/lib/` — Ọbá akwụkwọ ndị bụ isi
+### 3.2 `src/lib/` — Ọbá akwụkwọ isi
 
-Bubata data, sync, OAuth, skill, memory, wdg site na modul ndị a mgbe niile.
-Tebul ahụ na-agwakọta nchekwa ndị dị adị na faịlụ elu ndị a ma ama.
+Na-ebubata data, sync, OAuth, skill, memory, wdg mgbe niile site na modul ndị a. Tebụl ahụ na-achịkọta folda ndị dị adị na faịlụ ndị dị n'elu a ma ama.
 
-| Ngalaba           | Ebumnuche                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | Ihe nkesa usoro A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (nkà 6: nyocha ọnụ ahịa, akụkọ ahụ ike, ịchọpụta ndị na-enye ohere, njikwa oke, ntuzi ụzọ nwere ọgụgụ isi, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `api/`            | Ndị enyemaka API nke ime: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `auth/`           | `managementPassword.ts` (ịtọgharị okwuntughe / hashing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `batches/`        | Ọrụ OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `catalog/`        | Ịmekọrịta katalogi OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `cloudAgent/`     | Ndekọ ndị nnọchi anya cloud: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `combos/`         | Ndị enyemaka ngwọta combo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `compliance/`     | Nyocha + nyocha onye na-enye: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `config/`         | Ihe njikọ nhazi runtime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `db/`             | Modul ngalaba SQLite (lee §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `display/`        | Ndị enyemaka UI/ngosi nke nzaghachi API na-eji                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `embeddings/`     | Ndekọ ọrụ embedding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `env/`            | Ibudata env + nyocha ime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `evals/`          | Oge arụmọrụ nyocha                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `jobs/`           | Ọrụ ndabere (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `memory/`         | Ncheta na-adịgide: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `oauth/`          | Mmodulu ndị na-enye OAuth/mbubata (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, gbakwụnye `services/`, `utils/`, na `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                        |
-| `plugins/`        | Ihe nbudata plugin (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `providerModels/` | Usoro ndụ model a na-achịkwa: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `providers/`      | Ndị enyemaka provider: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `resilience/`     | `settings.ts` — ntọala maka circuit breaker, cooldown, na lockout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `runtime/`        | Nchọpụta atụmatụ runtime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `services/`       | Usoro ọrụ etinyere n'ime: `ServiceSupervisor.ts` (onye nlekọta child-process izugbe nwere igbachi ọrụ, ring buffer, na onye nlele ahụ ike), `bootstrap.ts` (ndebanye na ọkwa usoro na mmalite akpaghị aka), `registry.ts` (maapụ ngwá ọrụ → onye nlekọta), `apiKey.ts` (ebe nchekwa igodo AES-256-GCM), `modelSync.ts` (mmekọrịta model kwa oge), `ringBuffer.ts` (buffer ndekọ gburugburu nke 5 MB), `healthCheck.ts` (nyocha ahụ ike HTTP), `types.ts`, `embedWsProxy.ts` (proxy WebSocket), `installers/{ninerouter,cliproxy}.ts`. Lee `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                               |
-| `agentSkills/`    | Ndetu Agent Skills + onye na-emepụta: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → na-ede `skills/{id}/SKILL.md`), `openapiParser.ts` (na-ewepụta REST endpoints site na OpenAPI spec), `cliRegistryParser.ts` (na-ewepụta CLI subcommands site na bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). REST routes (`/api/agent-skills/*`), ngwá ọrụ MCP (`omniroute_agent_skills_*`), na A2A skill `list-capabilities` na-eji ya. Lee [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
-| `skills/`         | Usoro Skill: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, tinyere `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `spend/`          | `batchWriter.ts` (buffer nke na-ede n'azụ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `sync/`           | `bundle.ts`, `tokens.ts` (Nhazi Cloud)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `system/`         | Ndị enyemaka ọkwa sistemụ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `translator/`     | Ihe njikọ translator n'ọkwa kacha elu (na-eziga ọrụ n'ime `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `usage/`          | Akaụntụ ojiji: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `versionManager/` | Mmelite akpaghị aka + manifest ụdị                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `ws/`             | Àjà WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `zed-oauth/`      | Usoro OAuth nke Zed editor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Modul             | Ebumnobi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `a2a/`            | Sava protocol A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (nka 6: cost analysis, health report, provider discovery, quota management, smart routing, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `api/`            | Ndị enyemaka API nke ime: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `auth/`           | `managementPassword.ts` (tọgharịa paswọọdụ / hashing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `batches/`        | Ọrụ OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `catalog/`        | Ndakọrịta katalọgụ OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `cloudAgent/`     | Ndekọ ndị nnọchiteanya igwe ojii: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `combos/`         | Ndị enyemaka idozi ngwakọ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `compliance/`     | Nyocha + nyocha onye na-enye ọrụ: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `config/`         | Ihe njikọ nhazi oge ọrụ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `db/`             | Modul ngalaba SQLite (lee §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `display/`        | Ndị enyemaka UI/ihe ngosi ndị azịza API na-eji                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `embeddings/`     | Ndekọ ọrụ embedding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `env/`            | Ibu gburugburu ebe obibi + nyocha ime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `evals/`          | Oge ọsọ eval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `jobs/`           | Ọrụ ndị na-aga n'azụ (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `memory/`         | Ebe nchekwa na-adịgide adịgide: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `oauth/`          | Modul ndị na-enye OAuth/mbubata (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, tinyere `services/`, `utils/`, na `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                    |
+| `plugins/`        | Ihe na-ebu plugin (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `providerModels/` | Usoro ndụ model a na-achịkwa: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `providers/`      | Ndị enyemaka provider: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `resilience/`     | `settings.ts` — ntọala maka ihe nbibi sekit, oge nkwụsị, na mkpọchi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `runtime/`        | Nchọpụta njirimara n'oge ọ na-agba                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `services/`       | Usoro ọrụ agbakwunyere: `ServiceSupervisor.ts` (supervisor nke usoro ụmụaka izugbe nwere mkpọchi arụmọrụ, ring buffer, na onye na-enyocha ahụike), `bootstrap.ts` (ndebanye aha n'ọkwa usoro na mmalite akpaka), `registry.ts` (map ngwá ọrụ → supervisor), `apiKey.ts` (ebe nchekwa igodo AES-256-GCM), `modelSync.ts` (mmekọrịta model oge oge), `ringBuffer.ts` (buffer log okirikiri 5 MB), `healthCheck.ts` (nyocha ahụike HTTP), `types.ts`, `embedWsProxy.ts` (proxy WebSocket), `installers/{ninerouter,cliproxy}.ts`. Lee `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                              |
+| `agentSkills/`    | Ndepụta na generator nke Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → na-ede `skills/{id}/SKILL.md`), `openapiParser.ts` (na-ewepụta REST endpoints site na OpenAPI spec), `cliRegistryParser.ts` (na-ewepụta CLI subcommands site na bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). A na-eji ya site na REST routes (`/api/agent-skills/*`), MCP tools (`omniroute_agent_skills_*`), na A2A skill `list-capabilities`. Lee [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | Usoro nkà: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, tinyere `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `spend/`          | `batchWriter.ts` (bọfa ide-azụ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `sync/`           | `bundle.ts`, `tokens.ts` (Ndakọrịta igwe ojii)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `system/`         | Ndị enyemaka n'ọkwa sistemụ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `translator/`     | Njikọ ntụgharị asụsụ n'ọkwa kachasị elu (na-enyefe na `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `usage/`          | Ndekọ ojiji: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `versionManager/` | Mmelite akpaaka + ndepụta ụdị mbipute                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `ws/`             | Àkwà mmiri WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `zed-oauth/`      | Usoro OAuth nke editọ Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
-Faịlụ ndị n'ọkwa kacha elu na `src/lib/`:
+Faịlụ ndị dị n'ọkwa kachasị elu na `src/lib/`:
 
-- Ewepụla barrel `localDb.ts` ochie — ndị na-eji ya arụ ọrụ na-ebubata modul `src/lib/db/*` kpọmkwem ozugbo.
+- E wepụrụ `localDb.ts` barrel ochie — ndị na-eji ya na-ebubata modul `src/lib/db/*` kpọmkwem.
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -328,14 +326,14 @@ Faịlụ ndị n'ọkwa kacha elu na `src/lib/`:
 
 #### 3.2.1 `src/lib/db/`
 
-Nchekwa data SQLite otu naanị (`getDbInstance()` n'ime `core.ts`, WAL journaling).
-**Ị ghaghi ide SQL kpọmkwem na routes ma ọ bụ handlers** — gafere modul ndị a.
+Nchekwa data SQLite singleton (`getDbInstance()` na `core.ts`, ndekọ WAL).
+**Edebela SQL mbụ n'ime ụzọ ma ọ bụ ndị njikwa** — gafee modul ndị a.
 
-![Nlele schema nchekwa data (tebụl ndị bụ isi a họpụtara)](../diagrams/exported/db-schema-overview.svg)
+![Nchịkọta atụmatụ nchekwa data (tebụl isi ahọpụtara)](../diagrams/exported/db-schema-overview.svg)
 
 > Isi mmalite: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-Modul domain (nke ọ bụla na-elekọta otu ma ọ bụ karịa tebụl): `apiKeys.ts`, `backup.ts`,
+Modul ngalaba (nke ọ bụla nwere otu tebụl ma ọ bụ karịa): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -349,10 +347,10 @@ Modul domain (nke ọ bụla na-elekọta otu ma ọ bụ karịa tebụl): `api
 `syncTokens.ts`, `tierConfig.ts`, `upstreamProxy.ts`, `versionManager.ts`,
 `webhooks.ts`.
 
-`migrations/` nwere faịlụ `.sql` 168 nwere nọmba ụdịdị (idempotent, transactional) nke
-`migrationRunner.ts` na-agba ọsọ mgbe a na-amalite usoro ahụ.
+`migrations/` na-ejide faịlụ `.sql` 168 nwere nsụgharị (idempotent, transactional) ma
+`migrationRunner.ts` na-arụ ya na mbido.
 
-Tebụl e mepụtara n'ofe migrations niile (gụnyere 123):
+Tebụl ndị e mepụtara n'ofe migrations (123 niile):
 
 `a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
 `combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
@@ -368,72 +366,66 @@ Tebụl e mepụtara n'ofe migrations niile (gụnyere 123):
 `routing_decisions`, `semantic_cache`, `session_account_affinity`,
 `skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
 `tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (tinyere tebụl mebere FTS5 maka ịchọ memory).
+`webhooks` (tinyere tebụl FTS5 mebere maka nchọpụta ebe nchekwa).
 
-### 3.3 `src/domain/` — Ọkwa domain
+### 3.3 `src/domain/` — Ọkwa ngalaba
 
-Ọrụ domain na nkwekọrịta nyocha. Ụzọ arịrịọ dị ndụ na-akpọ ụfọdụ modul;
-ndị ọzọ ka dị ka nkwekọrịta nke ha na-eku n'onwe ha. Echekwala na ndekọ
-a dum enweghị I/O ma ọ bụ na ịgbanwe modul ọ bụla na-emetụta routing mmepụta.
+Ndị ọrụ ngalaba na nkwekọrịta nyocha. A na-akpọ ụfọdụ modul site n'ụzọ arịrịọ dị ndụ; ndị ọzọ na-anọgide dị ka nkwekọrịta kwụụrụ onwe ha. Echekwala na ndekọ a dum enweghị I/O ma ọ bụ na ịgbanwe modul ọ bụla na-emetụta nhazi mmepụta.
 
-Ihu policy dị ndụ bụ `src/shared/utils/apiKeyPolicy.ts` na
-`src/sse/handlers/chat/resolvedModelPolicy.ts`. Njikwa combo dị ndụ na
-mmezi ebumnuche na-eji `open-sse/services/combo.ts`. Nkwekọrịta
-`policyEngine.ts` na `comboResolver.ts` a nwanyere, tinyere
-`src/lib/container.ts`, abụghị njikọ nke ụzọ arịrịọ chat a nyochachara.
-Dobe ha iche na ihu ndị ahụ na-arụ ọrụ mgbe ị na-eme atụmatụ mgbanwe routing.
+Ebe amụma na-arụ ọrụ bụ `src/shared/utils/apiKeyPolicy.ts` na
+`src/sse/handlers/chat/resolvedModelPolicy.ts`. Njikwa combo na-arụ ọrụ na mkpebi ebumnuche na-eji `open-sse/services/combo.ts`. Nkwekọrịta `policyEngine.ts` na `comboResolver.ts` a nwalere, yana `src/lib/container.ts`, abụghị njikọ nke ụzọ arịrịọ chat a nyochara. Debe ha iche na ebe ndị ahụ na-arụ ọrụ mgbe ị na-eme atụmatụ mgbanwe nhazi ụzọ.
 
-| Faịlụ                                      | Ọrụ ya                                            |
-| ------------------------------------------ | ------------------------------------------------- |
-| `policyEngine.ts`                          | Nkwekọrịta nyocha policy e debeere n'akụkụ        |
-| `fallbackPolicy.ts`                        | Osisi mkpebi fallback                             |
-| `costRules.ts`                             | Iwu ịgbakọ ọnụ ahịa                               |
-| `lockoutPolicy.ts`                         | Mkpebi igbachi model                              |
-| `tagRouter.ts`                             | Routing dabere na tag                             |
-| `comboResolver.ts`                         | Nkwekọrịta nhọrọ combo e debeere n'akụkụ          |
-| `connectionModelRules.ts`                  | Ihe nzacha model maka njikọ ọ bụla                |
-| `modelAvailability.ts`                     | Nlele ịdị adị nke model                           |
-| `degradation.ts`                           | Mgbanwe ọnọdụ ebelatara                           |
-| `providerExpiration.ts`                    | Nchọpụta akaụntụ/igodo gụchara oge                |
-| `quotaCache.ts`                            | Mkpebi quota echekwara na cache                   |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Ndị na-enyere aka n'ụdịdị nzaghachi               |
-| `configAudit.ts`                           | Nnyocha mgbanwe nhazi                             |
-| `assessment/`                              | Ntụle model (dị ka RFC, e mepụtara ya n'ụzọ pịrị) |
-| `types.ts`                                 | Ụdị domain a kesara                               |
+| Faịlụ                                      | Ebumnuche                                                        |
+| ------------------------------------------ | ---------------------------------------------------------------- |
+| `policyEngine.ts`                          | Nkwekọrịta nyocha amụma echekwara                                |
+| `fallbackPolicy.ts`                        | Osisi mkpebi ndabere                                             |
+| `costRules.ts`                             | Iwu ngụkọ ọnụ ahịa                                               |
+| `lockoutPolicy.ts`                         | Mkpebi mkpọchi model                                             |
+| `tagRouter.ts`                             | Nhazi ụzọ dabere na tag                                          |
+| `comboResolver.ts`                         | Nkwekọrịta nhọrọ combo echekwara                                 |
+| `connectionModelRules.ts`                  | Ihe nzacha model kwa njikọ                                       |
+| `modelAvailability.ts`                     | Nyocha nnweta model                                              |
+| `degradation.ts`                           | Mgbanwe ọnọdụ nrụrụ aka                                          |
+| `providerExpiration.ts`                    | Nchọpụta akaụntụ/igodo merela agadi                              |
+| `quotaCache.ts`                            | Mkpebi quota echekwara na cache                                  |
+| `responses.ts`, `omnirouteResponseMeta.ts` | Ndị enyemaka ụdị nzaghachi                                       |
+| `configAudit.ts`                           | Nyocha mgbanwe nhazi                                             |
+| `assessment/`                              | Nyocha model (dịka RFC si dị, etinyegoro ya n'ọrụ n'akụkụ ụfọdụ) |
+| `types.ts`                                 | Ụdị ngalaba ekesara                                              |
 
-### 3.4 `src/server/` — Naanị sava
+### 3.4 `src/server/` — Naanị server
 
-Enweghị ike ịbubata ya site na akụrụngwa client.
+Enweghị ike ibubata ya site na kọmponent client.
 
 ```
 server/
 ├── auth/loginGuard.ts
 ├── authz/
-│   ├── classify.ts        Na-ekewa ụzọ dị ka nke ọha megide nke njikwa
-│   ├── assertAuth.ts      Ihe enyemaka nkwenye
-│   ├── context.ts         Ọnọdụ authz maka arịrị ọ bụla
+│   ├── classify.ts        Na-ekewa ụzọ dịka nke ọha ma ọ bụ nke njikwa
+│   ├── assertAuth.ts      Onye enyemaka assertion
+│   ├── context.ts         Context authz kwa arịrịọ
 │   ├── headers.ts
 │   ├── pipeline.ts        Pipeline authz
-│   ├── policies/          Iwu ndị e kọwara nke ọma
+│   ├── policies/          Policies ndị kọwapụtara
 │   └── types.ts
-└── cors/origins.ts        Ndepụta ndị a nabatara nke isi CORS
+└── cors/origins.ts        Ndepụta origin CORS anabatara
 ```
 
-### 3.5 `src/shared/` — O dị nchebe ikesa ya
+### 3.5 `src/shared/` — Ihe a pụrụ ịkekọrịta n'enweghị nsogbu
 
-Kewara ya n'ime ndekọ obere ndị lekwasịrị anya n'otu isiokwu:
+Kewaa ya n'ime obere folda ndị lekwasịrị anya:
 
-- `constants/` — `providers.ts` (ndepụta ndị na-enye ihe nke Zod kwadoro), `models.ts`,
+- `constants/` — `providers.ts` (katalọgụ provider akwadoro site na Zod), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (ndepụta ndị a machibidoro), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (denylist), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
-- `validation/` — `schemas.ts` (ihe dị ka Zod schemas 80), `compressionConfigSchemas.ts`,
+- `validation/` — `schemas.ts` (~80 schema Zod), `compressionConfigSchemas.ts`,
   `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
-- `contracts/` — nkwekọrịta API ọha a zigara na npm.
-- `types/` — ụdị TS ndị a na-ekekọrịta.
+- `contracts/` — nkwekọrịta API ọha ezigara npm.
+- `types/` — ụdị TS a na-ekekọrịta.
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
   `cors.ts`, `featureFlags.ts`,
@@ -441,15 +433,15 @@ Kewara ya n'ime ndekọ obere ndị lekwasịrị anya n'otu isiokwu:
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, tinyere hooks/components nke dashboard dị n'okpuru `services/`, `network/`,
+  `a11yAudit.ts`, tinyekwuru hooks/components dashboard n'okpuru `services/`, `network/`,
   `middleware/`, `schemas/`, `hooks/`, `components/`.
-- `components/` — API akụkụ dashboard (`index.tsx` barrel: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …). Primitives bụ ndị ntụgharị n'elu
-  kit a tinyere n'ime koodu (`packages/ui-kit`, nke a na-ebubata site na subpath akụkụ dị ka
-  `@omniroute/ui-kit/button`), ka ihuenyo wee debe imports ha ebe markup bụ
-  nke kit. Shell bụ `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
-  (`SidebarProvider`/`SidebarInset` nke kit) tinyere `Sidebar.tsx` na `Header.tsx`; akara ngosi
-  na-agafe `Icon.tsx` na `constants/iconMap.ts`. Lee `docs/architecture/DESIGN_SYSTEM.md`.
+- `components/` — API nke component dashboard (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …). Primitives bụ ndị adapter n'elu kit
+  ewetara (`packages/ui-kit`, a na-ebubata ya site na subpath component dịka
+  `@omniroute/ui-kit/button`), ya mere screens na-ejigide imports ha ebe markup bụ nke
+  kit ahụ. Shei bụ `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (kit `SidebarProvider`/`SidebarInset`) yana `Sidebar.tsx` na `Header.tsx`; a na-enweta icons
+  site na `Icon.tsx` na `constants/iconMap.ts`. Lee `docs/architecture/DESIGN_SYSTEM.md`.
 
 ---
 
@@ -710,45 +702,45 @@ A haziri ya n'ime folda nta 6 dịka ebumnuche ha si dị.
 
 ---
 
-## 9. Ọwa Nhazi Arịrị (Nchịkọta)
+## 9. Usoro arịrịọ (Nchịkọta)
 
-![Ọwa nhazi arịrị (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
+![Usoro arịrịọ (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
 > Isi mmalite: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Arịrị onye ahịa
+Arịrịọ onye ahịa
   → /v1/chat/completions (route.ts)
-     Nyocha CORS preflight
-     Nkwenye Zod (chatCompletionsSchema na shared/validation/schemas.ts)
-     Nkwenye njirimara (extractApiKey + isValidApiKey MA Ọ BỤ requireManagementAuth)
-     Nkwenye ikike ụzọ (src/server/authz/pipeline.ts)
-     Iwu API-key (src/shared/utils/apiKeyPolicy.ts; a na-amanye ya na ụzọ a họọrọ)
-     Ihe nchedo (onye na-ezobe PII, prompt injection, vision bridge)
+     Nyocha CORS tupu arịrịọ
+     Nyocha Zod (chatCompletionsSchema na shared/validation/schemas.ts)
+     Nyocha njirimara (extractApiKey + isValidApiKey OR requireManagementAuth)
+     Ikike ụzọ (src/server/authz/pipeline.ts)
+     Iwu igodo API (src/shared/utils/apiKeyPolicy.ts; a na-etinye ya na ụzọ ahọpụtara)
+     Ihe nchebe (ihe mkpuchi PII, prompt injection, àkwà mmiri vision)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
      Nyocha cache (semantic + cache ọgụgụ)
      Oke ọnụego (rateLimitManager, accountSemaphore)
-     Ịhazi ụzọ combo (ọ bụrụ na model gbazitere ka ọ bụrụ combo)
-       resolveComboTargets (open-sse/services/combo.ts) → izipu kwa ebumnuche
+     Usoro nhazi combo (ọ bụrụ na model na-egosi combo)
+       resolveComboTargets (open-sse/services/combo.ts) → izipu nye ebumnuche ọ bụla
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       nweta n'elu isi → ịgbanwa ọzọ/backoff site na accountFallback
+       weta upstream → nwalegharịa/backoff site na accountFallback
      translateResponse() (open-sse/translator/response/*)
-     SSE stream MA Ọ BỤ nzaghachi JSON
-     Ọ bụrụ Responses API: TransformStream site na open-sse/transformer/responsesTransformer.ts
-  → Nyocha ịrube isi (src/lib/compliance/)
+     iyi SSE MA Ọ BỤ nzaghachi JSON
+     Ọ bụrụ na Responses API: TransformStream site na open-sse/transformer/responsesTransformer.ts
+  → Nyocha nrube isi (src/lib/compliance/)
   → Nzaghachi nye onye ahịa
 ```
 
-### Ọnọdụ oge ọrụ nke ịdịte aka (usoro atọ)
+### Ọnọdụ runtime nke nnọgidesi ike (usoro atọ)
 
-| Usoro                     | Mkpuchi                      | Ebe                                                                                                         |
-| ------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Ọgbaji sekit onye na-enye | Onye na-enye dum             | `src/shared/utils/circuitBreaker.ts`, echekwara na `domain_circuit_breakers`                                |
-| Nju oyi njikọ             | Otu akaụntụ/igodo            | `markAccountUnavailable()` na `src/sse/services/auth.ts`; nke `accountFallback.checkFallbackError()` na-eri |
-| Mkpọchi model             | Onye na-enye + njikọ + model | `open-sse/services/accountFallback.ts`, echekwara na `domain_lockout_state`                                 |
+| Usoro                             | Oke                          | Ebe                                                                                                         |
+| --------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Ihe nkwụsị sekit onye na-enye ọrụ | Onye na-enye ọrụ niile       | `src/shared/utils/circuitBreaker.ts`, echekwara na `domain_circuit_breakers`                                |
+| Oge izu ike njikọ                 | Otu akaụntụ/igodo            | `markAccountUnavailable()` na `src/sse/services/auth.ts`; nke `accountFallback.checkFallbackError()` na-eji |
+| Mkpọchi model                     | Onye na-enye + njikọ + model | `open-sse/services/accountFallback.ts`, echekwara na `domain_lockout_state`                                 |
 
-Lee [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) na ngalaba pụrụ iche dị na
+Lee [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) na ngalaba a raara nye na
 [CLAUDE.md](../../CLAUDE.md).
 
 ---

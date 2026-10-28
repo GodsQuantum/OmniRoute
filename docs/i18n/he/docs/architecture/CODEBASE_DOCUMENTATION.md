@@ -71,58 +71,58 @@ OmniRoute/
 
 ---
 
-## 3. `src/` — יישום Next.js
+## 3. `src/` — אפליקציית Next.js
 
 ```
 src/
-├── app/                  דפי App Router ונתיבי API
-├── lib/                  ספריות ליבה (DB, אימות, OAuth, מיומנויות, זיכרון, …)
-├── domain/               שכבת תחום טהורה (מדיניות, fallback, עלות, נעילה, …)
-├── server/               מודולים לצד שרת בלבד (authz, cors, auth)
-├── shared/               טיפוסים, קבועים, תיקוף, חוזים, כלי עזר (בטוחים לשימוש חוצה-גבולות)
-├── mitm/                 עוזרי פרוקסי Man-in-the-middle לאינטגרציית CLI
-├── models/               מטא-דאטה של מודלים מקומיים / שמות חלופיים
+├── app/                  דפי App Router + נתיבי API
+├── lib/                  ספריות ליבה (DB, אימות, OAuth, כישורים, זיכרון, …)
+├── domain/               שכבת דומיין טהורה (מדיניות, fallback, עלות, lockout, …)
+├── server/               מודולים בצד שרת בלבד (authz, cors, auth)
+├── shared/               טיפוסים, קבועים, ולידציה, חוזים, כלי עזר (בטוחים חוצה-גבולות)
+├── mitm/                 עזרי פרוקסי man-in-the-middle לשילוב CLI
+├── models/               מטא-נתוני מודלים מקומיים / כינויים
 ├── sse/                  מטפלי SSE מדור קודם שעדיין נמצאים תחת src/ (לא open-sse/)
-├── store/                מאגרי מצב בצד לקוח
-├── middleware/           כלי middleware ברמת נתיב (לא middleware גלובלי של Next.js)
-├── scripts/              סקריפטים בתוך העץ הניתנים לייבוא מקוד האפליקציה
+├── store/                מאגרי מצב בצד הלקוח
+├── middleware/           כלי עזר למידלוור ברמת נתיב (לא מידלוור גלובלי של Next.js)
+├── scripts/              סקריפטים בתוך העץ הניתנים לייבוא על ידי קוד האפליקציה
 ├── types/                טיפוסי TS אמביינטיים ומשותפים
-├── i18n/                 חבילות לוקליזציה
-├── instrumentation.ts    הוק instrumentation של Next.js
+├── i18n/                 חבילות לוקאל
+├── instrumentation.ts    ווי instrumentation של Next.js
 ├── instrumentation-node.ts
-└── proxy.ts              עוזר אתחול פרוקסי ברמה העליונה
+└── proxy.ts              עזר אתחול פרוקסי ברמה העליונה
 ```
 
 ### 3.1 `src/app/` — App Router
 
-ה-App Router חושף הן את ממשק המשתמש של לוח הבקרה והן את ה-HTTP API הציבורי/הניהולי.
-**אין middleware גלובלי** — היירוט מתבצע ברמת נתיב בודד.
+ה-App Router חושף גם את ממשק המשתמש של הדשבורד וגם את ה-HTTP API הציבורי/ניהולי.
+אין **מידלוור גלובלי** — היירוט מתבצע ברמת כל נתיב.
 
 מקטעים ברמה העליונה תחת `src/app/`:
 
-| נתיב                                                                          | מטרה                                          |
-| ----------------------------------------------------------------------------- | --------------------------------------------- |
-| `api/`                                                                        | כל נתיבי ה-HTTP API (ראו פירוט להלן)          |
-| `a2a/`                                                                        | נקודת קצה A2A JSON-RPC 2.0 (`POST /a2a`)      |
-| `.well-known/agent.json/`                                                     | מסמך גילוי של A2A Agent Card                  |
-| `(dashboard)/`                                                                | ממשק לוח הבקרה (קבוצת נתיבים, ללא קידומת URL) |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | זרימות אימות                                  |
-| `landing/`                                                                    | דף שיווק/נחיתה                                |
-| `docs/`                                                                       | מציג תיעוד API מוטבע                          |
-| `status/`, `maintenance/`, `offline/`                                         | דפים תפעוליים                                 |
-| `privacy/`, `terms/`                                                          | דפים משפטיים                                  |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | דפי שגיאה סטטיים                              |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | גבולות שגיאה/טעינה של הפריימוורק              |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | מעטפת שורש                                    |
+| נתיב                                                                          | מטרה                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------ |
+| `api/`                                                                        | כל נתיבי ה-HTTP API (פירוט בהמשך)          |
+| `a2a/`                                                                        | נקודת קצה A2A JSON-RPC 2.0 (`POST /a2a`)   |
+| `.well-known/agent.json/`                                                     | מסמך גילוי כרטיס סוכן A2A                  |
+| `(dashboard)/`                                                                | ממשק דשבורד (קבוצת נתיבים, ללא קידומת URL) |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | תהליכי אימות                               |
+| `landing/`                                                                    | עמוד שיווקי/נחיתה                          |
+| `docs/`                                                                       | מציג תיעוד API מוטמע                       |
+| `status/`, `maintenance/`, `offline/`                                         | עמודים תפעוליים                            |
+| `privacy/`, `terms/`                                                          | עמודים משפטיים                             |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | עמודי שגיאה סטטיים                         |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | גבולות שגיאה/טעינה של הפריימוורק           |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | מעטפת שורש                                 |
 
-#### 3.1.1 `src/app/(dashboard)/dashboard/` — דפי UI
+#### 3.1.1 `src/app/(dashboard)/dashboard/` — עמודי ממשק משתמש
 
 `agents`, `analytics`, `api-manager`, `audit`, `auto-combo`, `batch`, `cache`,
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`, ובנוסף `page.tsx`, `HomePageClient.tsx`,
-`BootstrapBanner.tsx` בשורש.
+`translator`, `usage`, `webhooks`, וכן `page.tsx` שורש, `HomePageClient.tsx`,
+`BootstrapBanner.tsx`.
 
 #### 3.1.2 `src/app/api/` — קבוצות API ברמה העליונה
 
@@ -177,49 +177,49 @@ src/app/api/
 ├── token-health/
 ├── translator/
 ├── tunnels/
-├── services/   ניהול שירותים מוטבעים (9router, cliproxy) — LOCAL_ONLY
+├── services/   ניהול שירותים מוטמעים (9router, cliproxy) — LOCAL_ONLY
 ├── upstream-proxy/
 ├── usage/
-├── v1/         API ציבורי תואם-OpenAI
+├── v1/         API ציבורי תואם OpenAI
 ├── v1beta/     תאימות בסגנון Gemini
 ├── version-manager/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — ניהול שירותים מוטבעים
+#### 3.1.2a `src/app/api/services/` — ניהול שירותים מוטמעים
 
 נתיבים להתקנה, הפעלה, עצירה וניטור של 9Router ו-CLIProxyAPI.
-כל הנתיבים מסווגים כ-**LOCAL_ONLY** (loopback בלבד, כלל קשיח מס' 17) מכיוון שהם
-יכולים להריץ `npm install` וליצור תהליכי בן.
+כל הנתיבים מסווגים כ-**LOCAL_ONLY** (loopback בלבד, כלל קשיח #17) מכיוון שהם
+יכולים להפעיל `npm install` ולשגר תהליכי בן.
 
 ```
 src/app/api/services/
 ├── 9router/
-│   ├── _lib.ts             getOrInitSupervisor() helper
-│   ├── install/route.ts    POST — npm install via execFile
+│   ├── _lib.ts             עזר getOrInitSupervisor()
+│   ├── install/route.ts    POST — התקנת npm באמצעות execFile
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install newer version
-│   ├── rotate-key/route.ts POST — generate new API key + restart
-│   ├── status/route.ts     GET  — live + DB status + version metadata
-│   └── auto-start/route.ts POST — toggle auto_start flag
+│   ├── update/route.ts     POST — התקנת גרסה חדשה יותר של npm
+│   ├── rotate-key/route.ts POST — יצירת מפתח API חדש + הפעלה מחדש
+│   ├── status/route.ts     GET  — סטטוס חי + מסד נתונים + מטא-נתוני גרסה
+│   └── auto-start/route.ts POST — החלפת דגל auto_start
 ├── cliproxy/
-│   ├── _lib.ts             getOrInitSupervisor() helper
-│   ├── install/route.ts    POST — npm install
+│   ├── _lib.ts             עזר getOrInitSupervisor()
+│   ├── install/route.ts    POST — התקנת npm
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install newer version
-│   ├── status/route.ts     GET  — live + DB status + version metadata
-│   └── auto-start/route.ts POST — toggle auto_start flag
+│   ├── update/route.ts     POST — התקנת גרסה חדשה יותר של npm
+│   ├── status/route.ts     GET  — סטטוס חי + מסד נתונים + מטא-נתוני גרסה
+│   └── auto-start/route.ts POST — החלפת דגל auto_start
 └── [name]/
-    └── logs/route.ts       GET  — SSE log tail (shared by all services)
+    └── logs/route.ts       GET  — זנב לוג SSE (משותף לכל השירותים)
 ```
 
-ממשק הדשבורד המתאים:
-`src/app/(dashboard)/dashboard/providers/services/` — עמוד בן שתי לשוניות (CLIProxyAPI + 9Router).
-פרוקסי הפוך עבור ממשק המשתמש המוטמע של 9Router:
+ממשק לוח הבקרה המתאים:
+`src/app/(dashboard)/dashboard/providers/services/` — עמוד בעל שני לשוניות (CLIProxyAPI + 9Router).
+פרוקסי הפוך עבור ממשק 9Router המוטמע:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
 צלילה לעומק: `docs/frameworks/EMBEDDED-SERVICES.md`
@@ -228,91 +228,93 @@ src/app/api/services/
 
 ```
 v1/
-├── accounts/[id]/                       account lookup
-├── agents/tasks/[id]/, agents/tasks/    A2A-flavored task endpoints
-├── api/                                 internal API helpers exposed under v1/api
+├── accounts/[id]/                       איתור חשבון
+├── agents/tasks/[id]/, agents/tasks/    נקודות קצה למשימות בסגנון A2A
+├── api/                                 עזרי API פנימיים החשופים תחת v1/api
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
-├── chat/completions/                    Chat Completions (the main endpoint)
-├── completions/                         Legacy text completions
+├── chat/completions/                    Chat Completions (נקודת הקצה הראשית)
+├── completions/                         השלמות טקסט מדור קודם
 ├── embeddings/                          Embeddings
 ├── files/[id]/, files/                  Files API
-├── _helpers/                            Shared route helpers (no public URL)
-├── images/{edits, generations}/         Image gen + edit
-├── issues/                              Triage helper endpoints
-├── management/{proxies}/                Management-scoped routes inside v1
-├── messages/{count_tokens}/             Anthropic-style messages compat
-├── models/                              Model listing (`route.ts`, `catalog.ts`)
-├── moderations/                         Moderation
-├── music/                               Music gen
-├── providers/[provider]/                Per-provider operations
-├── quotas/{check}                       Quota probes
-├── registered-keys/                     Registered key admin
-├── rerank/                              Reranking
-├── responses/[...path]/                 OpenAI Responses API (catch-all)
-├── search/                              Web search
-├── videos/                              Video gen
-├── ws/                                  WebSocket bridge
-└── route.ts                             Index handler
+├── _helpers/                            עזרי מסלול משותפים (ללא כתובת URL ציבורית)
+├── images/{edits, generations}/         יצירת תמונות + עריכה
+├── issues/                              נקודות קצה לעזר למיון
+├── management/{proxies}/                מסלולים בהיקף ניהול בתוך v1
+├── messages/{count_tokens}/             תאימות הודעות בסגנון Anthropic
+├── models/                              רישום מודלים (`route.ts`, `catalog.ts`)
+├── moderations/                         מודרציה
+├── music/                               יצירת מוזיקה
+├── providers/[provider]/                פעולות לפי ספק
+├── quotas/{check}                       בדיקות מכסה
+├── registered-keys/                     ניהול מפתחות רשומים
+├── rerank/                              דירוג מחדש
+├── responses/[...path]/                 OpenAI Responses API (תפיסת הכל)
+├── search/                              חיפוש ברשת
+├── videos/                              יצירת וידאו
+├── ws/                                  גשר WebSocket
+└── route.ts                             מטפל אינדקס
 ```
 
-כל קובץ נתיב עוקב אחר אותו דפוס:
+כל קובץ מסלול פועל לפי אותה תבנית:
 
 ```
-Route → CORS preflight → Zod body validation → optional auth
-      → API key policy enforcement → handler delegation (open-sse)
+מסלול → בדיקת preflight של CORS → אימות גוף עם Zod → אימות אופציונלי
+      → אכיפת מדיניות מפתח API → האצלה למטפל (open-sse)
 ```
 
-`v1beta/` הוא שכבת התאימות בסגנון Gemini (עטיפה דקה שמתרגמת לאותו צינור `open-sse/handlers/`).
+`v1beta/` הוא משטח התאימות בסגנון Gemini (עטיפה דקה שמתרגמת לאותה צינור עיבוד
+`open-sse/handlers/`).
 
 ### 3.2 `src/lib/` — ספריות ליבה
 
-יש לייבא תמיד נתונים, סנכרון, OAuth, מיומנויות, זיכרון וכדומה דרך מודולים אלה. הטבלה מקבצת את התיקיות בפועל ואת קבצי הרמה העליונה הבולטים.
+תמיד ייבא נתונים, סנכרון, OAuth, מיומנות, זיכרון וכו' דרך מודולים אלה. הטבלה
+מקבצת את הספריות בפועל ואת הקבצים הבולטים ברמה העליונה.
 
-| מודול             | מטרה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | שרת פרוטוקול A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 יכולות: ניתוח עלויות, דוח תקינות, גילוי ספקים, ניהול מכסות, ניתוב חכם, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `api/`            | עוזרי API פנימיים: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `auth/`           | `managementPassword.ts` (איפוס סיסמה / גיבוב)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `batches/`        | שירות OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `catalog/`        | סנכרון קטלוג OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `cloudAgent/`     | מרשם סוכני ענן: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `combos/`         | פונקציות עזר לפענוח שילובים                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `compliance/`     | ביקורת + ביקורת ספקים: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `config/`         | קוד דבק לקונפיגורציית זמן ריצה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `db/`             | מודולי תחום של SQLite (ראו §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `display/`        | פונקציות עזר לתצוגה/UI המשמשות בתגובות API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `embeddings/`     | מרשם שירותי אמבדינגים                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `env/`            | טעינת סביבה + אינטרוספקציה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `evals/`          | זמן ריצה של Eval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `jobs/`           | משימות רקע (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `memory/`         | זיכרון מתמשך: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `oauth/`          | מודולי ספקי OAuth/ייבוא (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, ובנוסף `services/`, `utils/`, ו-`constants/oauth.ts`                                                                                                                                                                                                                                                                                                              |
-| `plugins/`        | טוען התוספים (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `providerModels/` | מחזור חיי מודלים מנוהלים: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `providers/`      | כלי עזר לספקים: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `resilience/`     | `settings.ts` — הגדרות עבור מפסק מעגל (circuit breaker), תקופת צינון (cooldown), נעילה (lockout)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `runtime/`        | זיהוי תכונות בזמן ריצה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `services/`       | מסגרת שירותים מוטמעים: `ServiceSupervisor.ts` (מפקח תהליכי-בן גנרי עם נעילת פעולות, חציץ טבעתי, בודק תקינות), `bootstrap.ts` (רישום ברמת התהליך והפעלה אוטומטית), `registry.ts` (מיפוי כלי → מפקח), `apiKey.ts` (מאגר מפתחות AES-256-GCM), `modelSync.ts` (סנכרון מודלים תקופתי), `ringBuffer.ts` (חציץ לוג מעגלי של 5 MB), `healthCheck.ts` (בדיקת תקינות HTTP), `types.ts`, `embedWsProxy.ts` (פרוקסי WebSocket), `installers/{ninerouter,cliproxy}.ts`. ראה `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                                                                  |
-| `agentSkills/`    | קטלוג Agent Skills + מחולל: `catalog.ts` ‏(getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` ‏(generateAgentSkills ← כותב את `skills/{id}/SKILL.md`), `openapiParser.ts` (מחלץ נקודות קצה של REST ממפרט OpenAPI), `cliRegistryParser.ts` (מחלץ תתי-פקודות CLI מתוך bin/cli-registry), `schemas.ts` ‏(Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` ‏(AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). נצרך על ידי נתיבי REST ‏(`/api/agent-skills/*`), כלי MCP ‏(`omniroute_agent_skills_*`), ויכולת A2A בשם `list-capabilities`. ראה [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
-| `skills/`         | מסגרת סקילים: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, ובנוסף `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `spend/`          | `batchWriter.ts` (חוצץ כתיבה מעוכבת)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `sync/`           | `bundle.ts`, `tokens.ts` (סנכרון ענן)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `system/`         | פונקציות עזר ברמת המערכת                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `translator/`     | קוד דבק של המתרגם ברמה העליונה (מאציל ל-`open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `usage/`          | תחשיב שימוש: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `versionManager/` | עדכון אוטומטי + מניפסט גרסאות                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `ws/`             | גשר WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `zed-oauth/`      | זרימת OAuth של עורך Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| מודול             | מטרה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a2a/`            | שרת פרוטוקול A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 מיומנויות: ניתוח עלויות, דוח תקינות, גילוי ספקים, ניהול מכסות, ניתוב חכם, רשימת יכולות)                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `api/`            | עוזרי API פנימיים: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `auth/`           | `managementPassword.ts` (איפוס סיסמה / גיבוב)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `batches/`        | שירות OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `catalog/`        | סנכרון קטלוג OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `cloudAgent/`     | רישום סוכני ענן: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `combos/`         | עזרי פתרון של קומבו                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `compliance/`     | ביקורת + ביקורת ספקים: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `config/`         | דבק תצורה בזמן ריצה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `db/`             | מודולי דומיין של SQLite (ראה §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `display/`        | עזרי ממשק משתמש/תצוגה המשמשים בתגובות API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `embeddings/`     | רישום שירותי הטמעה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `env/`            | טעינת סביבה + התבוננות פנימית                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `evals/`          | סביבת הרצה של הערכות (Eval)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `jobs/`           | משימות רקע (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `memory/`         | זיכרון מתמשך: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `oauth/`          | מודולי ספק OAuth/ייבוא (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, ובנוסף `services/`, `utils/`, ו-`constants/oauth.ts`                                                                                                                                                                                                                                                                                                  |
+| `plugins/`        | טוען תוספים (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `providerModels/` | מחזור חיים של מודלים מנוהלים: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `providers/`      | עזרי ספק: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `resilience/`     | `settings.ts` — הגדרות עבור מפסק מעגל, צינון ונעילה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `runtime/`        | זיהוי תכונות בזמן ריצה                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `services/`       | מסגרת שירותים מוטמעים: `ServiceSupervisor.ts` (מפקח כללי לתהליכי בן עם נעילת פעולה, חוצץ טבעתי, ובודק בריאות), `bootstrap.ts` (רישום והפעלה אוטומטית ברמת התהליך), `registry.ts` (מיפוי כלי → מפקח), `apiKey.ts` (מאגר מפתחות AES-256-GCM), `modelSync.ts` (סנכרון מודלים תקופתי), `ringBuffer.ts` (חוצץ לוג מעגלי בגודל 5 MB), `healthCheck.ts` (בדיקת בריאות HTTP), `types.ts`, `embedWsProxy.ts` (פרוקסי WebSocket), `installers/{ninerouter,cliproxy}.ts`. ראה `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                                                 |
+| `agentSkills/`    | קטלוג ומחולל של Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → כותב `skills/{id}/SKILL.md`), `openapiParser.ts` (מחלץ נקודות קצה REST ממפרט OpenAPI), `cliRegistryParser.ts` (מחלץ תתי-פקודות CLI מתוך bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). נצרך על ידי נתיבי REST (`/api/agent-skills/*`), כלי MCP (`omniroute_agent_skills_*`), וכישורי A2A `list-capabilities`. ראה [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | מסגרת כישורים: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, ובנוסף `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `spend/`          | `batchWriter.ts` (חוצץ write-behind)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `sync/`           | `bundle.ts`, `tokens.ts` (סנכרון ענן)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `system/`         | עזרים ברמת המערכת                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `translator/`     | שכבת חיבור של המתרגם ברמה העליונה (מעבירה אל `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `usage/`          | חשבונאות שימוש: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `versionManager/` | עדכון אוטומטי + מניפסט גרסאות                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `ws/`             | גשר WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `zed-oauth/`      | תהליך OAuth של עורך Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
-קבצים ברמה העליונה ב-`src/lib/`:
+קבצים ברמה העליונה ב־`src/lib/`:
 
-- קובץ ה-barrel הישן `localDb.ts` הוסר — הצרכנים מייבאים ישירות מודולים ספציפיים מתוך `src/lib/db/*`.
+- החבילה הישנה מסוג barrel `localDb.ts` הוסרה — צרכנים מייבאים מודולים ספציפיים של `src/lib/db/*` ישירות.
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -326,14 +328,14 @@ Route → CORS preflight → Zod body validation → optional auth
 
 #### 3.2.1 `src/lib/db/`
 
-מסד נתונים SQLite יחיד (Singleton) (`getDbInstance()` ב-`core.ts`, עם journaling מסוג WAL).
-**לעולם אל תכתבו SQL גולמי ב-routes או ב-handlers** — עברו דרך המודולים האלה.
+מסד נתונים SQLite יחיד (Singleton) (`getDbInstance()` ב-`core.ts`, רישום יומן WAL).
+**לעולם אל תכתבו SQL גולמי בנתיבים או במטפלים** — עברו דרך המודולים האלה.
 
-![סקירת סכמת מסד הנתונים (טבלאות ליבה נבחרות)](../diagrams/exported/db-schema-overview.svg)
+![סקירת סכימת מסד נתונים (טבלאות ליבה נבחרות)](../diagrams/exported/db-schema-overview.svg)
 
 > מקור: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-מודולי תחום (כל אחד בעלים של טבלה אחת או יותר): `apiKeys.ts`, `backup.ts`,
+מודולי דומיין (כל אחד אחראי על טבלה אחת או יותר): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -347,10 +349,9 @@ Route → CORS preflight → Zod body validation → optional auth
 `syncTokens.ts`, `tierConfig.ts`, `upstreamProxy.ts`, `versionManager.ts`,
 `webhooks.ts`.
 
-התיקייה `migrations/` מכילה 168 קבצי `.sql` עם ניהול גרסאות (אידמפוטנטיים, טרנזקטיביים)
-ומופעלת על ידי `migrationRunner.ts` בעת האתחול.
+התיקייה `migrations/` מכילה 168 קבצי `.sql` עם גרסאות (אידמפוטנטיים וטרנזקציוניים), והם מופעלים על ידי `migrationRunner.ts` בעת האתחול.
 
-טבלאות שנוצרו לאורך ה-migrations (123 בסך הכול):
+טבלאות שנוצרו לאורך המיגרציות (123 בסך הכול):
 
 `a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
 `combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
@@ -366,39 +367,33 @@ Route → CORS preflight → Zod body validation → optional auth
 `routing_decisions`, `semantic_cache`, `session_account_affinity`,
 `skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
 `tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (בתוספת טבלאות וירטואליות של FTS5 לחיפוש זיכרונות).
+`webhooks` (בתוספת טבלאות וירטואליות FTS5 לחיפוש זיכרון).
 
-### 3.3 `src/domain/` — שכבת התחום
+### 3.3 `src/domain/` — שכבת דומיין
 
-שירותי תחום וחוזי הערכה. חלק מהמודולים נקראים מנתיב הבקשות החי; אחרים נשארים חוזים
-עצמאיים. אל תניחו שכל התיקייה הזו נקייה מ-I/O או ששינוי של כל מודול משפיע על
-הניתוב בפרודקשן.
+שירותי דומיין וחוזי הערכה. חלק מהמודולים נקראים בנתיב הבקשה הפעיל; אחרים נשארים חוזים עצמאיים. אל תניחו שהתיקייה כולה נקייה מ-I/O או ששינוי בכל מודול משפיע על ניתוב בייצור.
 
-משטחי המדיניות החיים הם `src/shared/utils/apiKeyPolicy.ts` ו-
-`src/sse/handlers/chat/resolvedModelPolicy.ts`. טיפול חי ב-combos ופתרון יעדים
-משתמשים ב-`open-sse/services/combo.ts`. החוזים הנבדקים `policyEngine.ts` ו-
-`comboResolver.ts`, יחד עם `src/lib/container.ts`, אינם החיווט של נתיב בקשת הצ'אט
-שנבדק. שמרו אותם נפרדים מהמשטחים הפעילים האלה כשמתכננים שינוי ניתוב.
+משטחי המדיניות הפעילים הם `src/shared/utils/apiKeyPolicy.ts` ו-`src/sse/handlers/chat/resolvedModelPolicy.ts`. טיפול בקומבו חי ופתרון יעדים משתמשים ב-`open-sse/services/combo.ts`. החוזים הנבדקים `policyEngine.ts` ו-`comboResolver.ts`, יחד עם `src/lib/container.ts`, אינם החיווט של נתיב בקשת הצ'אט הנבדק. הפרידו בינם לבין משטחים פעילים אלה בעת תכנון שינוי ניתוב.
 
 | קובץ                                       | מטרה                                |
 | ------------------------------------------ | ----------------------------------- |
 | `policyEngine.ts`                          | חוזה הערכת מדיניות שמור             |
-| `fallbackPolicy.ts`                        | עץ החלטות של fallback               |
-| `costRules.ts`                             | כללי חישוב עלות                     |
-| `lockoutPolicy.ts`                         | החלטות נעילת מודל                   |
+| `fallbackPolicy.ts`                        | עץ החלטות גיבוי                     |
+| `costRules.ts`                             | כללי חישוב עלויות                   |
+| `lockoutPolicy.ts`                         | החלטות נעילת מודלים                 |
 | `tagRouter.ts`                             | ניתוב מבוסס תגיות                   |
-| `comboResolver.ts`                         | חוזה בחירת combo שמור               |
-| `connectionModelRules.ts`                  | מסנני מודלים לכל חיבור              |
+| `comboResolver.ts`                         | חוזה בחירת קומבו שמור               |
+| `connectionModelRules.ts`                  | מסנני מודלים לפי חיבור              |
 | `modelAvailability.ts`                     | בדיקת זמינות מודל                   |
-| `degradation.ts`                           | מעברי מצב מופחת                     |
+| `degradation.ts`                           | מעברי מצב מושפל                     |
 | `providerExpiration.ts`                    | זיהוי חשבון/מפתח שפג תוקפם          |
-| `quotaCache.ts`                            | החלטות מכסה שמורות במטמון           |
+| `quotaCache.ts`                            | החלטות מכסה במטמון                  |
 | `responses.ts`, `omnirouteResponseMeta.ts` | עוזרי צורת תגובה                    |
 | `configAudit.ts`                           | ביקורת שינויי תצורה                 |
-| `assessment/`                              | הערכת מודלים (לפי RFC, ממומש חלקית) |
-| `types.ts`                                 | טיפוסי תחום משותפים                 |
+| `assessment/`                              | הערכת מודלים (לפי RFC, מיושם חלקית) |
+| `types.ts`                                 | טיפוסי דומיין משותפים               |
 
-### 3.4 `src/server/` — צד שרת בלבד
+### 3.4 `src/server/` — שרת בלבד
 
 לא ניתן לייבא מרכיבי לקוח.
 
@@ -406,30 +401,30 @@ Route → CORS preflight → Zod body validation → optional auth
 server/
 ├── auth/loginGuard.ts
 ├── authz/
-│   ├── classify.ts        מסווג נתיבים כציבוריים מול נתיבי ניהול
-│   ├── assertAuth.ts      פונקציית עזר מסוג assertion
-│   ├── context.ts         הקשר הרשאות (authz) לכל בקשה
+│   ├── classify.ts        מסווג נתיבים כציבוריים לעומת ניהול
+│   ├── assertAuth.ts      עוזר assertion
+│   ├── context.ts         הקשר authz לכל בקשה
 │   ├── headers.ts
-│   ├── pipeline.ts        צינור ההרשאות (authz)
+│   ├── pipeline.ts        צינור authz
 │   ├── policies/          מדיניות קונקרטית
 │   └── types.ts
-└── cors/origins.ts        רשימת המקורות המאושרים (allowlist) של CORS
+└── cors/origins.ts        רשימת היתר של מקורות CORS
 ```
 
 ### 3.5 `src/shared/` — בטוח לשיתוף
 
-מחולק לתתי-תיקיות ממוקדות-נושא:
+מחולק לתת-ספריות ממוקדות:
 
-- `constants/` — `providers.ts` (קטלוג ספקים המאומת באמצעות Zod), `models.ts`,
+- `constants/` — `providers.ts` (קטלוג ספקים מאומת באמצעות Zod), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
   `headers.ts`, `upstreamHeaders.ts` (רשימת חסימה), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
-- `validation/` — `schemas.ts` (~80 סכמות Zod), `compressionConfigSchemas.ts`,
+- `validation/` — `schemas.ts` (כ-80 סכימות Zod), `compressionConfigSchemas.ts`,
   `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
-- `contracts/` — חוזי API ציבוריים המפורסמים ל-npm.
+- `contracts/` — חוזי API ציבוריים הנשלחים ל-npm.
 - `types/` — טיפוסי TS משותפים.
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
@@ -438,15 +433,15 @@ server/
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, ובנוסף הוקים ורכיבים של הדשבורד תחת `services/`, `network/`,
+  `a11yAudit.ts`, בנוסף ל-hooks ולרכיבים של לוח המחוונים תחת `services/`, `network/`,
   `middleware/`, `schemas/`, `hooks/`, `components/`.
-- `components/` — ממשק ה-API של רכיבי הדשבורד (barrel של `index.tsx`: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …). הפרימיטיבים הם מתאמים (adapters) מעל
-  ערכת ה-UI המוטמעת (`packages/ui-kit`, המיובאת לפי נתיב-משנה של רכיב, כגון
-  `@omniroute/ui-kit/button`), כך שהמסכים שומרים על הייבוא שלהם בעוד שה-markup
-  מגיע מהערכה. המעטפת היא `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
-  (`SidebarProvider`/`SidebarInset` של הערכה) יחד עם `Sidebar.tsx` ו-`Header.tsx`;
-  אייקונים עוברים דרך `Icon.tsx` ו-`constants/iconMap.ts`. ראו `docs/architecture/DESIGN_SYSTEM.md`.
+- `components/` — ה-API של רכיבי לוח המחוונים (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …). הפרימיטיבים הם אדפטרים מעל ערכת
+  הרכיבים המוטמעת (`packages/ui-kit`, המיובאת דרך תת-נתיב של רכיב כגון
+  `@omniroute/ui-kit/button`), כך שהמסכים שומרים על הייבואים שלהם בעוד�ה-markup הוא של
+  הערכה. ה-shell הוא `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (מתוך הערכה `SidebarProvider`/`SidebarInset`) עם `Sidebar.tsx` ו-`Header.tsx`; האייקונים עוברים
+  דרך `Icon.tsx` ו-`constants/iconMap.ts`. ראו `docs/architecture/DESIGN_SYSTEM.md`.
 
 ---
 
@@ -707,46 +702,45 @@ bin/
 
 ---
 
-## 9. צנרת הבקשות (סיכום)
+## 9. צינור בקשות (סיכום)
 
-![צנרת הבקשות (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
+![צינור בקשות (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
 > מקור: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Client request
+בקשת לקוח
   → /v1/chat/completions (route.ts)
-     CORS preflight check
-     Zod validation (chatCompletionsSchema in shared/validation/schemas.ts)
-     Auth (extractApiKey + isValidApiKey OR requireManagementAuth)
-     Route authorization (src/server/authz/pipeline.ts)
-     API-key policy (src/shared/utils/apiKeyPolicy.ts; enforced on the selected path)
-     Guardrails (PII masker, prompt injection, vision bridge)
+     בדיקת CORS preflight
+     אימות Zod (chatCompletionsSchema ב-shared/validation/schemas.ts)
+     אימות (extractApiKey + isValidApiKey או requireManagementAuth)
+     הרשאת נתיב (src/server/authz/pipeline.ts)
+     מדיניות מפתח API (src/shared/utils/apiKeyPolicy.ts; נאכפת בנתיב הנבחר)
+     מעקות בטיחות (מסנן PII, הזרקת פרומפט, גשר חזותי)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
-     Cache check (semantic + read cache)
-     Rate limit (rateLimitManager, accountSemaphore)
-     Combo routing (if model resolves to a combo)
-       resolveComboTargets (open-sse/services/combo.ts) → per-target dispatch
+     בדיקת מטמון (סמנטי + מטמון קריאה)
+     הגבלת קצב (rateLimitManager, accountSemaphore)
+     ניתוב Combo (אם המודל ממופה ל-Combo)
+       resolveComboTargets (open-sse/services/combo.ts) → שליחה לכל יעד
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       fetch upstream → retry/backoff via accountFallback
+       שליפה מהשרת במעלה הזרם → ניסיון חוזר/המתנה מדורגת באמצעות accountFallback
      translateResponse() (open-sse/translator/response/*)
-     SSE stream OR JSON response
-     If Responses API: TransformStream via open-sse/transformer/responsesTransformer.ts
-  → Compliance audit (src/lib/compliance/)
-  → Response to client
+     זרם SSE או תגובת JSON
+     אם Responses API: TransformStream באמצעות open-sse/transformer/responsesTransformer.ts
+  → ביקורת תאימות (src/lib/compliance/)
+  → תגובה ללקוח
 ```
 
-### מצב החוסן בזמן ריצה (שלושה מנגנונים)
+### מצב ריצה של חוסן (שלושה מנגנונים)
 
-| מנגנון           | היקף               | מיקום                                                                                                       |
+| מנגנון           | היקף               | היכן                                                                                                        |
 | ---------------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
-| מפסק מעגל של ספק | הספק כולו          | `src/shared/utils/circuitBreaker.ts`, נשמר ב־`domain_circuit_breakers`                                      |
-| צינון חיבור      | חשבון/מפתח אחד     | `markAccountUnavailable()` ב־`src/sse/services/auth.ts`; נצרך על ידי `accountFallback.checkFallbackError()` |
-| נעילת מודל       | ספק + חיבור + מודל | `open-sse/services/accountFallback.ts`, נשמר ב־`domain_lockout_state`                                       |
+| מפסק מעגל של ספק | כל הספק            | `src/shared/utils/circuitBreaker.ts`, נשמר ב-`domain_circuit_breakers`                                      |
+| צינון חיבור      | חשבון/מפתח אחד     | `markAccountUnavailable()` ב-`src/sse/services/auth.ts`; נצרך על ידי `accountFallback.checkFallbackError()` |
+| נעילת מודל       | ספק + חיבור + מודל | `open-sse/services/accountFallback.ts`, נשמר ב-`domain_lockout_state`                                       |
 
-ראו [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) ואת הסעיף הייעודי ב־
-[CLAUDE.md](../../CLAUDE.md).
+ראו [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) ואת הקטע הייעודי ב-[CLAUDE.md](../../CLAUDE.md).
 
 ---
 

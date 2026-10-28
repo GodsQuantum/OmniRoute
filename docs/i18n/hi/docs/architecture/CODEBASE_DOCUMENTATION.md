@@ -95,25 +95,25 @@ src/
 
 ### 3.1 `src/app/` — App Router
 
-App Router डैशबोर्ड UI और सार्वजनिक/प्रबंधन HTTP API दोनों को एक्सपोज़ करता है।
-यहाँ **कोई ग्लोबल मिडलवेयर नहीं है** — इंटरसेप्शन प्रति-रूट किया जाता है।
+App Router डैशबोर्ड UI और सार्वजनिक/प्रबंधन HTTP API दोनों प्रदान करता है।
+यहाँ **कोई ग्लोबल मिडलवेयर नहीं** है — इंटरसेप्शन प्रति-रूट किया जाता है।
 
-`src/app/` के अंतर्गत टॉप-लेवल सेगमेंट:
+`src/app/` के अंतर्गत शीर्ष-स्तरीय सेगमेंट:
 
-| पथ                                                                            | उद्देश्य                                         |
-| ----------------------------------------------------------------------------- | ------------------------------------------------ |
-| `api/`                                                                        | सभी HTTP API रूट (नीचे विवरण देखें)              |
-| `a2a/`                                                                        | A2A JSON-RPC 2.0 एंडपॉइंट (`POST /a2a`)          |
-| `.well-known/agent.json/`                                                     | A2A Agent Card डिस्कवरी दस्तावेज़                |
-| `(dashboard)/`                                                                | डैशबोर्ड UI (रूट ग्रुप, कोई URL प्रीफ़िक्स नहीं) |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | ऑथ फ़्लो                                         |
-| `landing/`                                                                    | मार्केटिंग/लैंडिंग पेज                           |
-| `docs/`                                                                       | एम्बेडेड API डॉक्स व्यूअर                        |
-| `status/`, `maintenance/`, `offline/`                                         | ऑपरेशनल पेज                                      |
-| `privacy/`, `terms/`                                                          | कानूनी पेज                                       |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | स्टैटिक एरर पेज                                  |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | फ्रेमवर्क एरर/लोडिंग बाउंडरी                     |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | रूट शेल                                          |
+| पथ                                                                            | उद्देश्य                                        |
+| ----------------------------------------------------------------------------- | ----------------------------------------------- |
+| `api/`                                                                        | सभी HTTP API रूट (नीचे विवरण देखें)             |
+| `a2a/`                                                                        | A2A JSON-RPC 2.0 एंडपॉइंट (`POST /a2a`)         |
+| `.well-known/agent.json/`                                                     | A2A एजेंट कार्ड डिस्कवरी दस्तावेज़              |
+| `(dashboard)/`                                                                | डैशबोर्ड UI (रूट समूह, कोई URL प्रीफ़िक्स नहीं) |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | प्रमाणीकरण फ़्लो                                |
+| `landing/`                                                                    | मार्केटिंग/लैंडिंग पेज                          |
+| `docs/`                                                                       | एम्बेडेड API दस्तावेज़ व्यूअर                   |
+| `status/`, `maintenance/`, `offline/`                                         | परिचालन पेज                                     |
+| `privacy/`, `terms/`                                                          | कानूनी पेज                                      |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | स्टैटिक त्रुटि पेज                              |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | फ़्रेमवर्क त्रुटि/लोडिंग सीमाएँ                 |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | रूट शेल                                         |
 
 #### 3.1.1 `src/app/(dashboard)/dashboard/` — UI पेज
 
@@ -122,9 +122,9 @@ App Router डैशबोर्ड UI और सार्वजनिक/प्
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
 `translator`, `usage`, `webhooks`, साथ ही रूट `page.tsx`, `HomePageClient.tsx`,
-`BootstrapBanner.tsx`।
+`BootstrapBanner.tsx`.
 
-#### 3.1.2 `src/app/api/` — टॉप-लेवल API समूह
+#### 3.1.2 `src/app/api/` — शीर्ष-स्तरीय API समूह
 
 ```
 src/app/api/
@@ -186,23 +186,23 @@ src/app/api/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — एम्बेडेड सेवाएँ प्रबंधन
+#### 3.1.2a `src/app/api/services/` — एम्बेडेड सेवा प्रबंधन
 
-9Router और CLIProxyAPI को इंस्टॉल, स्टार्ट, स्टॉप और मॉनिटर करने के लिए रूट।
-सभी पथ **LOCAL_ONLY** वर्गीकृत हैं (केवल लूपबैक, हार्ड नियम #17) क्योंकि वे
-`npm install` को invoke कर सकते हैं और चाइल्ड प्रोसेस spawn कर सकते हैं।
+9Router और CLIProxyAPI को इंस्टॉल करने, शुरू करने, रोकने और मॉनिटर करने के लिए रूट।
+सभी पथ **LOCAL_ONLY** के रूप में वर्गीकृत हैं (केवल लूपबैक, कठोर नियम #17) क्योंकि वे
+`npm install` को आमंत्रित कर सकते हैं और चाइल्ड प्रोसेस स्पॉन कर सकते हैं।
 
 ```
 src/app/api/services/
 ├── 9router/
 │   ├── _lib.ts             getOrInitSupervisor() हेल्पर
-│   ├── install/route.ts    POST — execFile के माध्यम से npm install
+│   ├── install/route.ts    POST — execFile के ज़रिए npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install नए वर्शन के लिए
-│   ├── rotate-key/route.ts POST — नई API कुंजी जनरेट करें + रीस्टार्ट
-│   ├── status/route.ts     GET  — लाइव + DB स्थिति + वर्शन मेटाडेटा
+│   ├── update/route.ts     POST — नया वर्ज़न npm install करें
+│   ├── rotate-key/route.ts POST — नई API key जनरेट करें + रीस्टार्ट करें
+│   ├── status/route.ts     GET  — लाइव + DB स्थिति + वर्ज़न मेटाडेटा
 │   └── auto-start/route.ts POST — auto_start फ़्लैग टॉगल करें
 ├── cliproxy/
 │   ├── _lib.ts             getOrInitSupervisor() हेल्पर
@@ -210,15 +210,15 @@ src/app/api/services/
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install नए वर्शन के लिए
-│   ├── status/route.ts     GET  — लाइव + DB स्थिति + वर्शन मेटाडेटा
+│   ├── update/route.ts     POST — नया वर्ज़न npm install करें
+│   ├── status/route.ts     GET  — लाइव + DB स्थिति + वर्ज़न मेटाडेटा
 │   └── auto-start/route.ts POST — auto_start फ़्लैग टॉगल करें
 └── [name]/
     └── logs/route.ts       GET  — SSE लॉग टेल (सभी सेवाओं द्वारा साझा)
 ```
 
-संगत डैशबोर्ड UI:
-`src/app/(dashboard)/dashboard/providers/services/` — दो-टैब वाला पेज (CLIProxyAPI + 9Router)।
+संबंधित डैशबोर्ड UI:
+`src/app/(dashboard)/dashboard/providers/services/` — दो-टैब पेज (CLIProxyAPI + 9Router)।
 9Router एम्बेडेड UI के लिए रिवर्स प्रॉक्सी:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
@@ -234,20 +234,20 @@ v1/
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
 ├── chat/completions/                    Chat Completions (मुख्य एंडपॉइंट)
-├── completions/                         लेगसी टेक्स्ट कम्प्लीशन
-├── embeddings/                          एम्बेडिंग
+├── completions/                         लेगेसी टेक्स्ट कम्प्लीशन
+├── embeddings/                          Embeddings
 ├── files/[id]/, files/                  Files API
 ├── _helpers/                            साझा रूट हेल्पर (कोई सार्वजनिक URL नहीं)
 ├── images/{edits, generations}/         इमेज जनरेशन + एडिट
 ├── issues/                              ट्रायाज हेल्पर एंडपॉइंट
 ├── management/{proxies}/                v1 के अंदर मैनेजमेंट-स्कोप्ड रूट
-├── messages/{count_tokens}/             Anthropic-शैली messages कम्पैट
+├── messages/{count_tokens}/             Anthropic-शैली messages संगतता
 ├── models/                              मॉडल लिस्टिंग (`route.ts`, `catalog.ts`)
 ├── moderations/                         मॉडरेशन
 ├── music/                               म्यूज़िक जनरेशन
-├── providers/[provider]/                प्रोवाइडर-वार ऑपरेशन
+├── providers/[provider]/                प्रति-प्रोवाइडर ऑपरेशन
 ├── quotas/{check}                       कोटा प्रोब
-├── registered-keys/                     रजिस्टर्ड कुंजी एडमिन
+├── registered-keys/                     रजिस्टर्ड key एडमिन
 ├── rerank/                              रीरैंकिंग
 ├── responses/[...path]/                 OpenAI Responses API (कैच-ऑल)
 ├── search/                              वेब सर्च
@@ -256,65 +256,63 @@ v1/
 └── route.ts                             इंडेक्स हैंडलर
 ```
 
-हर रूट फ़ाइल समान पैटर्न का पालन करती है:
+हर रूट फ़ाइल एक ही पैटर्न का पालन करती है:
 
 ```
-रूट → CORS प्रीफ़्लाइट → Zod बॉडी वैलिडेशन → वैकल्पिक ऑथ
-      → API कुंजी नीति एनफ़ोर्समेंट → हैंडलर डेलिगेशन (open-sse)
+रूट → CORS प्रीफ़्लाइट → Zod बॉडी वैलिडेशन → वैकल्पिक auth
+      → API key नीति प्रवर्तन → handler डेलीगेशन (open-sse)
 ```
 
-`v1beta/` Gemini-शैली का कम्पैट सरफ़ेस है (एक पतला रैपर जो उसी
-`open-sse/handlers/` पाइपलाइन में अनुवादित करता है)।
+`v1beta/` Gemini-शैली की संगतता सतह है (एक पतला रैपर जो उसी `open-sse/handlers/` पाइपलाइन में अनुवाद करता है)।
 
-### 3.2 `src/lib/` — कोर लाइब्रेरी
+### 3.2 `src/lib/` — कोर लाइब्रेरीज़
 
-डेटा, सिंक, OAuth, स्किल, मेमोरी आदि हमेशा इन्हीं मॉड्यूल के माध्यम से इम्पोर्ट करें।
-नीचे दी गई तालिका वास्तविक डायरेक्टरियों और उल्लेखनीय टॉप-लेवल फ़ाइलों को समूहित करती है।
+डेटा, सिंक, OAuth, स्किल, मेमोरी आदि को हमेशा इन मॉड्यूल्स के माध्यम से इम्पोर्ट करें। तालिका वास्तविक डायरेक्टरीज़ और उल्लेखनीय टॉप-लेवल फ़ाइलों को समूहित करती है।
 
-| मॉड्यूल           | उद्देश्य                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Module            | उद्देश्य                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | A2A प्रोटोकॉल सर्वर: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 स्किल्स: लागत विश्लेषण, स्वास्थ्य रिपोर्ट, प्रदाता खोज, कोटा प्रबंधन, स्मार्ट रूटिंग, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `a2a/`            | A2A प्रोटोकॉल सर्वर: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 स्किल्स: लागत विश्लेषण, स्वास्थ्य रिपोर्ट, प्रदाता खोज, कोटा प्रबंधन, स्मार्ट रूटिंग, क्षमताओं की सूची)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `api/`            | आंतरिक API हेल्पर: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `api/`            | आंतरिक API हेल्पर्स: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `auth/`           | `managementPassword.ts` (पासवर्ड रीसेट / हैशिंग)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `batches/`        | OpenAI Batches API सेवा (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `catalog/`        | OpenRouter कैटलॉग सिंक (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `cloudAgent/`     | क्लाउड एजेंट रजिस्ट्री: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `combos/`         | कॉम्बो रिज़ॉल्यूशन हेल्पर                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `combos/`         | कॉम्बो रिज़ॉल्यूशन हेल्पर्स                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `compliance/`     | ऑडिट + प्रोवाइडर ऑडिट: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `config/`         | रनटाइम कॉन्फ़िग ग्लू                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `db/`             | SQLite डोमेन मॉड्यूल (§3.2.1 देखें)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `display/`        | API प्रतिक्रियाओं द्वारा उपयोग किए जाने वाले UI/डिस्प्ले हेल्पर                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `db/`             | SQLite डोमेन मॉड्यूल (देखें §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `display/`        | API रिस्पॉन्स में उपयोग किए जाने वाले UI/डिस्प्ले हेल्पर्स                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `embeddings/`     | एम्बेडिंग सेवा रजिस्ट्री                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `env/`            | एनवी लोडिंग + इंट्रोस्पेक्शन                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `env/`            | Env लोडिंग + इंट्रोस्पेक्शन                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `evals/`          | Eval रनटाइम                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `jobs/`           | बैकग्राउंड जॉब्स (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `memory/`         | स्थायी मेमोरी: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `memory/`         | स्थायी मेमरी: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `oauth/`          | OAuth/इम्पोर्ट प्रोवाइडर मॉड्यूल (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, साथ ही `services/`, `utils/`, और `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                |
+| `oauth/`          | OAuth/आयात प्रोवाइडर मॉड्यूल (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, साथ ही `services/`, `utils/`, और `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                    |
 | `plugins/`        | प्लगइन लोडर (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `providerModels/` | प्रबंधित मॉडल जीवनचक्र: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `providers/`      | प्रोवाइडर हेल्पर: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `providerModels/` | प्रबंधित मॉडल लाइफ़साइकिल: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `providers/`      | प्रोवाइडर सहायक: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `resilience/`     | `settings.ts` — सर्किट ब्रेकर, कूलडाउन, लॉकआउट के लिए सेटिंग्स                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `runtime/`        | रनटाइम फीचर डिटेक्शन                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `runtime/`        | रनटाइम फ़ीचर डिटेक्शन                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `services/`       | एम्बेडेड सर्विसेज़ फ्रेमवर्क: `ServiceSupervisor.ts` (ऑपरेशन लॉक, रिंग बफर, हेल्थ चेकर के साथ सामान्य चाइल्ड-प्रोसेस सुपरवाइज़र), `bootstrap.ts` (प्रोसेस-स्तरीय रजिस्ट्रेशन और ऑटो-स्टार्ट), `registry.ts` (टूल → सुपरवाइज़र मैप), `apiKey.ts` (AES-256-GCM की स्टोर), `modelSync.ts` (आवधिक मॉडल सिंक), `ringBuffer.ts` (5 MB सर्कुलर लॉग बफर), `healthCheck.ts` (HTTP हेल्थ प्रोब), `types.ts`, `embedWsProxy.ts` (WebSocket प्रॉक्सी), `installers/{ninerouter,cliproxy}.ts`. देखें `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                                                                     |
-| `agentSkills/`    | एजेंट स्किल्स कैटलॉग + जेनरेटर: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → `skills/{id}/SKILL.md` लिखता है), `openapiParser.ts` (OpenAPI spec से REST एंडपॉइंट निकालता है), `cliRegistryParser.ts` (bin/cli-registry से CLI सबकमांड निकालता है), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport)। इन्हें REST रूट्स (`/api/agent-skills/*`), MCP टूल्स (`omniroute_agent_skills_*`) और A2A स्किल `list-capabilities` द्वारा इस्तेमाल किया जाता है। देखें [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md)। |
-| `skills/`         | स्किल फ्रेमवर्क: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, साथ ही `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `services/`       | एम्बेडेड सेवाएँ फ़्रेमवर्क: `ServiceSupervisor.ts` (ऑपरेशन लॉक, रिंग बफ़र, हेल्थ चेकर के साथ सामान्य चाइल्ड-प्रोसेस सुपरवाइज़र), `bootstrap.ts` (प्रोसेस-स्तरीय पंजीकरण और ऑटो-स्टार्ट), `registry.ts` (टूल → सुपरवाइज़र मैप), `apiKey.ts` (AES-256-GCM कुंजी स्टोर), `modelSync.ts` (आवधिक मॉडल सिंक), `ringBuffer.ts` (5 MB वृत्ताकार लॉग बफ़र), `healthCheck.ts` (HTTP हेल्थ प्रोब), `types.ts`, `embedWsProxy.ts` (WebSocket प्रॉक्सी), `installers/{ninerouter,cliproxy}.ts`. देखें `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                                                                    |
+| `agentSkills/`    | Agent Skills कैटलॉग + जनरेटर: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → `skills/{id}/SKILL.md` लिखता है), `openapiParser.ts` (OpenAPI स्पेक से REST एंडपॉइंट्स निकालता है), `cliRegistryParser.ts` (bin/cli-registry से CLI सबकमांड्स निकालता है), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). इसका उपयोग REST राउट्स (`/api/agent-skills/*`), MCP टूल्स (`omniroute_agent_skills_*`), और A2A स्किल `list-capabilities` द्वारा किया जाता है। देखें [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | स्किल फ़्रेमवर्क: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, साथ ही `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `spend/`          | `batchWriter.ts` (राइट-बिहाइंड बफ़र)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `sync/`           | `bundle.ts`, `tokens.ts` (क्लाउड सिंक)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `system/`         | सिस्टम-स्तरीय हेल्पर                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `translator/`     | टॉप-लेवल ट्रांसलेटर ग्लू (`open-sse/translator/` में डेलिगेट करता है)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `system/`         | सिस्टम-स्तरीय सहायक                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `translator/`     | शीर्ष-स्तरीय ट्रांसलेटर ग्लू (`open-sse/translator/` में डेलीगेट करता है)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `usage/`          | उपयोग लेखांकन: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `versionManager/` | ऑटो-अपडेट + वर्ज़न मैनिफ़ेस्ट                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `versionManager/` | स्वतः-अपडेट + संस्करण मैनिफ़ेस्ट                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `ws/`             | WebSocket ब्रिज                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `zed-oauth/`      | Zed एडिटर OAuth फ़्लो                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
-`src/lib/` में टॉप-लेवल फ़ाइलें:
+`src/lib/` में शीर्ष-स्तरीय फ़ाइलें:
 
-- पुराना `localDb.ts` बैरल हटा दिया गया है — उपभोक्ता अब सीधे विशिष्ट `src/lib/db/*` मॉड्यूल इम्पोर्ट करते हैं।
+- पुराना `localDb.ts` बैरल हटा दिया गया — कंज़्यूमर सीधे विशिष्ट `src/lib/db/*` मॉड्यूल आयात करते हैं।
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -329,13 +327,13 @@ v1/
 #### 3.2.1 `src/lib/db/`
 
 सिंगलटन SQLite डेटाबेस (`core.ts` में `getDbInstance()`, WAL जर्नलिंग)।
-**routes या handlers में कभी भी कच्चा SQL न लिखें** — इन मॉड्यूलों के माध्यम से ही जाएँ।
+**रूट्स या हैंडलर्स में कच्चा SQL कभी न लिखें** — इन मॉड्यूल्स के माध्यम से जाएँ।
 
-![डेटाबेस स्कीमा अवलोकन (चयनित कोर तालिकाएँ)](../diagrams/exported/db-schema-overview.svg)
+![डेटाबेस स्कीमा का अवलोकन (चयनित मुख्य टेबल्स)](../diagrams/exported/db-schema-overview.svg)
 
 > स्रोत: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-डोमेन मॉड्यूल (प्रत्येक एक या अधिक तालिकाओं का स्वामी है): `apiKeys.ts`, `backup.ts`,
+डोमेन मॉड्यूल्स (प्रत्येक एक या अधिक टेबल्स का स्वामी है): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -349,10 +347,9 @@ v1/
 `syncTokens.ts`, `tierConfig.ts`, `upstreamProxy.ts`, `versionManager.ts`,
 `webhooks.ts`.
 
-`migrations/` में 168 वर्ज़न की गई `.sql` फ़ाइलें रखी गई हैं (idempotent, transactional) और
-बूट के समय `migrationRunner.ts` द्वारा इन्हें execute किया जाता है।
+`migrations/` में 168 वर्ज़नित `.sql` फ़ाइलें हैं (इडेम्पोटेंट, ट्रांज़ैक्शनल), और बूट पर इन्हें `migrationRunner.ts` द्वारा निष्पादित किया जाता है।
 
-migrations के दौरान बनाई गई तालिकाएँ (कुल 123):
+माइग्रेशन्स के दौरान बनाई गई टेबल्स (कुल 123):
 
 `a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
 `combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
@@ -368,72 +365,69 @@ migrations के दौरान बनाई गई तालिकाएँ (
 `routing_decisions`, `semantic_cache`, `session_account_affinity`,
 `skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
 `tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (साथ ही मेमोरी सर्च के लिए FTS5 वर्चुअल तालिकाएँ)।
+`webhooks` (साथ ही मेमोरी सर्च के लिए FTS5 वर्चुअल टेबल्स)।
 
 ### 3.3 `src/domain/` — डोमेन लेयर
 
-डोमेन सेवाएँ और मूल्यांकन अनुबंध। कुछ मॉड्यूल live request path द्वारा कॉल किए जाते हैं;
-अन्य standalone अनुबंधों के रूप में रहते हैं। यह न मानें कि यह पूरी डायरेक्टरी
-I/O से मुक्त है या कि हर मॉड्यूल में बदलाव करने से production routing प्रभावित होती है।
+डोमेन सेवाएँ और मूल्यांकन कॉन्ट्रैक्ट्स। कुछ मॉड्यूल्स लाइव रिक्वेस्ट पाथ द्वारा कॉल किए जाते हैं; अन्य स्टैंडअलोन कॉन्ट्रैक्ट्स बने रहते हैं। यह न मानें कि यह पूरी डायरेक्टरी I/O से मुक्त है या हर मॉड्यूल बदलने से प्रोडक्शन राउटिंग प्रभावित होती है।
 
-live policy surfaces `src/shared/utils/apiKeyPolicy.ts` और
-`src/sse/handlers/chat/resolvedModelPolicy.ts` हैं। Live combo handling और target
-resolution `open-sse/services/combo.ts` का उपयोग करते हैं। परीक्षित `policyEngine.ts` और
-`comboResolver.ts` अनुबंध, `src/lib/container.ts` के साथ मिलकर, निरीक्षण किए गए chat
-request path की wiring नहीं हैं। routing परिवर्तन की योजना बनाते समय उन्हें उन active
-surfaces से अलग रखें।
+लाइव पॉलिसी सरफेस `src/shared/utils/apiKeyPolicy.ts` और
+`src/sse/handlers/chat/resolvedModelPolicy.ts` हैं। लाइव कॉम्बो हैंडलिंग और टार्गेट
+रिज़ॉल्यूशन `open-sse/services/combo.ts` का उपयोग करते हैं। टेस्ट किए गए `policyEngine.ts` और
+`comboResolver.ts` कॉन्ट्रैक्ट्स, `src/lib/container.ts` सहित, निरीक्षित चैट रिक्वेस्ट पाथ की
+वायरिंग नहीं हैं। राउटिंग परिवर्तन की योजना बनाते समय इन्हें उन सक्रिय सरफेस से अलग रखें।
 
 | फ़ाइल                                      | उद्देश्य                                          |
 | ------------------------------------------ | ------------------------------------------------- |
-| `policyEngine.ts`                          | आरक्षित policy-evaluation अनुबंध                  |
-| `fallbackPolicy.ts`                        | Fallback निर्णय वृक्ष                             |
+| `policyEngine.ts`                          | आरक्षित पॉलिसी-मूल्यांकन कॉन्ट्रैक्ट              |
+| `fallbackPolicy.ts`                        | फ़ॉलबैक निर्णय ट्री                               |
 | `costRules.ts`                             | लागत गणना नियम                                    |
-| `lockoutPolicy.ts`                         | मॉडल lockout निर्णय                               |
-| `tagRouter.ts`                             | Tag-आधारित routing                                |
-| `comboResolver.ts`                         | आरक्षित combo-selection अनुबंध                    |
-| `connectionModelRules.ts`                  | प्रति-connection मॉडल फ़िल्टर                     |
+| `lockoutPolicy.ts`                         | मॉडल लॉकआउट निर्णय                                |
+| `tagRouter.ts`                             | टैग-आधारित राउटिंग                                |
+| `comboResolver.ts`                         | आरक्षित कॉम्बो-चयन कॉन्ट्रैक्ट                    |
+| `connectionModelRules.ts`                  | प्रति-कनेक्शन मॉडल फ़िल्टर                        |
 | `modelAvailability.ts`                     | मॉडल उपलब्धता जाँच                                |
-| `degradation.ts`                           | Degraded-mode संक्रमण                             |
-| `providerExpiration.ts`                    | समाप्त खाता/key का पता लगाना                      |
-| `quotaCache.ts`                            | कैश किए गए quota निर्णय                           |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Response आकार helpers                             |
-| `configAudit.ts`                           | Config परिवर्तन audit                             |
+| `degradation.ts`                           | डिग्रेडेड-मोड ट्रांज़िशन                          |
+| `providerExpiration.ts`                    | एक्सपायर्ड अकाउंट/की डिटेक्शन                     |
+| `quotaCache.ts`                            | कैश्ड कोटा निर्णय                                 |
+| `responses.ts`, `omnirouteResponseMeta.ts` | रिस्पॉन्स शेप हेल्पर्स                            |
+| `configAudit.ts`                           | कॉन्फ़िग परिवर्तन ऑडिट                            |
 | `assessment/`                              | मॉडल मूल्यांकन (RFC के अनुसार, आंशिक रूप से लागू) |
-| `types.ts`                                 | साझा डोमेन प्रकार                                 |
+| `types.ts`                                 | साझा डोमेन टाइप्स                                 |
 
-### 3.4 `src/server/` — केवल-सर्वर
+### 3.4 `src/server/` — सर्वर-केवल
 
-client components से import नहीं किया जा सकता।
+क्लाइंट कंपोनेंट्स से इसे आयात नहीं किया जा सकता।
 
 ```
 server/
 ├── auth/loginGuard.ts
 ├── authz/
-│   ├── classify.ts        रूट्स को पब्लिक बनाम मैनेजमेंट के रूप में वर्गीकृत करता है
+│   ├── classify.ts        रूट्स को public बनाम management के रूप में वर्गीकृत करता है
 │   ├── assertAuth.ts      असर्शन हेल्पर
-│   ├── context.ts         प्रति-रिक्वेस्ट authz कॉन्टेक्स्ट
+│   ├── context.ts         प्रति-अनुरोध authz संदर्भ
 │   ├── headers.ts
 │   ├── pipeline.ts        Authz पाइपलाइन
-│   ├── policies/          कंक्रीट पॉलिसियां
+│   ├── policies/          ठोस नीतियाँ
 │   └── types.ts
-└── cors/origins.ts        CORS ओरिजिन अनुमति-सूची
+└── cors/origins.ts        CORS ओरिजिन अनुमत-सूची
 ```
 
 ### 3.5 `src/shared/` — साझा करने के लिए सुरक्षित
 
-केंद्रित सबडायरेक्टरियों में विभाजित:
+केंद्रित उपनिर्देशिकाओं में विभाजित किया गया है:
 
-- `constants/` — `providers.ts` (Zod-सत्यापित प्रोवाइडर कैटलॉग), `models.ts`,
+- `constants/` — `providers.ts` (Zod द्वारा वैलिडेट किया गया प्रोवाइडर कैटलॉग), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (डिनाइलिस्ट), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (अस्वीकृत-सूची), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
-  `sidebarVisibility.ts`, `visionBridgeDefaults.ts`।
+  `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
 - `validation/` — `schemas.ts` (~80 Zod स्कीमा), `compressionConfigSchemas.ts`,
-  `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`।
-- `contracts/` — npm पर शिप किए गए पब्लिक API कॉन्ट्रैक्ट।
-- `types/` — साझा TS टाइप।
+  `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
+- `contracts/` — npm पर शिप किए जाने वाले सार्वजनिक API कॉन्ट्रैक्ट्स।
+- `types/` — साझा TS टाइप्स।
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
   `cors.ts`, `featureFlags.ts`,
@@ -441,17 +435,15 @@ server/
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, साथ ही `services/`, `network/`, `middleware/`, `schemas/`,
-  `hooks/`, `components/` के अंतर्गत डैशबोर्ड हुक/कंपोनेंट।
+  `a11yAudit.ts`, साथ ही `services/`, `network/`,
+  `middleware/`, `schemas/`, `hooks/`, `components/` के अंतर्गत डैशबोर्ड हुक्स/कंपोनेंट्स।
 - `components/` — डैशबोर्ड कंपोनेंट API (`index.tsx` बैरल: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …)। प्रिमिटिव वेंडर्ड किट
-  (`packages/ui-kit`, जिसे कंपोनेंट सबपाथ जैसे `@omniroute/ui-kit/button` से
-  इम्पोर्ट किया जाता है) के ऊपर एडाप्टर हैं, इसलिए स्क्रीन अपने इम्पोर्ट बनाए
-  रखती हैं जबकि मार्कअप किट का होता है। शेल `layouts/DashboardLayout.tsx` →
-  `layouts/DashboardShell.tsx` (किट `SidebarProvider`/`SidebarInset`) है, जिसमें
-  `Sidebar.tsx` और `Header.tsx` शामिल हैं; आइकन `Icon.tsx` और
-  `constants/iconMap.ts` के माध्यम से जाते हैं।
-  `docs/architecture/DESIGN_SYSTEM.md` देखें।
+  `Select`, `Modal`, `Card`, `DataTable`, …)। प्रिमिटिव्स वेंडर किए गए किट के ऊपर
+  एडाप्टर हैं (`packages/ui-kit`, जिसे `@omniroute/ui-kit/button` जैसे कंपोनेंट सबपाथ द्वारा
+  इम्पोर्ट किया जाता है), इसलिए स्क्रीन्स अपने इम्पोर्ट्स बनाए रखते हैं जबकि मार्कअप
+  किट का होता है। शेल `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (किट `SidebarProvider`/`SidebarInset`) है, साथ में `Sidebar.tsx` और `Header.tsx`; आइकन्स
+  `Icon.tsx` और `constants/iconMap.ts` के माध्यम से जाते हैं। देखें `docs/architecture/DESIGN_SYSTEM.md`।
 
 ---
 
@@ -742,15 +734,15 @@ Client request
   → Response to client
 ```
 
-### रेज़ीलिएंस रनटाइम स्थिति (तीन तंत्र)
+### रेज़िलिएंस रनटाइम स्थिति (तीन तंत्र)
 
-| तंत्र                   | दायरा                      | कहाँ                                                                                                             |
-| ----------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| प्रोवाइडर सर्किट ब्रेकर | संपूर्ण प्रोवाइडर          | `src/shared/utils/circuitBreaker.ts`, `domain_circuit_breakers` में संग्रहीत                                     |
-| कनेक्शन कूलडाउन         | एक खाता/कुंजी              | `src/sse/services/auth.ts` में `markAccountUnavailable()`; `accountFallback.checkFallbackError()` द्वारा उपभुक्त |
-| मॉडल लॉकआउट             | प्रोवाइडर + कनेक्शन + मॉडल | `open-sse/services/accountFallback.ts`, `domain_lockout_state` में संग्रहीत                                      |
+| तंत्र                   | स्कोप                      | कहाँ                                                                                                           |
+| ----------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| प्रोवाइडर सर्किट ब्रेकर | संपूर्ण प्रोवाइडर          | `src/shared/utils/circuitBreaker.ts`, `domain_circuit_breakers` में परसिस्ट                                    |
+| कनेक्शन कूलडाउन         | एक खाता/कुंजी              | `src/sse/services/auth.ts` में `markAccountUnavailable()`; `accountFallback.checkFallbackError()` द्वारा उपयोग |
+| मॉडल लॉकआउट             | प्रोवाइडर + कनेक्शन + मॉडल | `open-sse/services/accountFallback.ts`, `domain_lockout_state` में परसिस्ट                                     |
 
-[RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) तथा [CLAUDE.md](../../CLAUDE.md) में समर्पित अनुभाग देखें।
+देखें [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) और [CLAUDE.md](../../CLAUDE.md) में समर्पित अनुभाग।
 
 ---
 
