@@ -271,68 +271,68 @@ flowchart LR
 ዋና የፍሰት ሞጁሎች:
 
 - መግቢያ: `src/sse/handlers/chat.ts`
-- ዋና ማስቀናጃ: `open-sse/handlers/chatCore.ts`
+- ዋና ማስተባበሪያ: `open-sse/handlers/chatCore.ts`
 - የአቅራቢ አፈጻጸም አስማሚዎች: `open-sse/executors/*`
-- የቅርጸት መለያ/የአቅራቢ ውቅር: `open-sse/services/provider.ts`
-- የሞዴል መተንተን/ፍታህ: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- የመለያ ምትኬ ሎጂክ: `open-sse/services/accountFallback.ts`
-- የትርጉም መዝገብ: `open-sse/translator/index.ts`
-- የስትሪም ለውጦች: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
+- የቅርጸት መለየት/የአቅራቢ ውቅር: `open-sse/services/provider.ts`
+- ሞዴል መንታት/መፍታት: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- የመለያ ተተኪ ሎጂክ: `open-sse/services/accountFallback.ts`
+- የትርጉም ምዝገባ: `open-sse/translator/index.ts`
+- የጅረት ለውጦች: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - የአጠቃቀም ማውጣት/መደበኛ ማድረግ: `open-sse/utils/usageTracking.ts`
-- የThink ታግ ፓርሰር: `open-sse/utils/thinkTagParser.ts`
-- የኤምቤዲንግ አያያዥ: `open-sse/handlers/embeddings.ts`
-- የኤምቤዲንግ አቅራቢ መዝገብ: `open-sse/config/embeddingRegistry.ts`
-- የምስል ማመንጫ አያያዥ: `open-sse/handlers/imageGeneration.ts`
-- የምስል አቅራቢ መዝገብ: `open-sse/config/imageRegistry.ts`
+- የThink መለያ መንቻ: `open-sse/utils/thinkTagParser.ts`
+- የኢምቤዲንግ አስተናጋጅ: `open-sse/handlers/embeddings.ts`
+- የኢምቤዲንግ አቅራቢ ምዝገባ: `open-sse/config/embeddingRegistry.ts`
+- የምስል ማመንጫ አስተናጋጅ: `open-sse/handlers/imageGeneration.ts`
+- የምስል አቅራቢ ምዝገባ: `open-sse/config/imageRegistry.ts`
 - የምላሽ ማጽዳት: `open-sse/handlers/responseSanitizer.ts`
 - የሚና መደበኛ ማድረግ: `open-sse/services/roleNormalizer.ts`
 
-አገልግሎቶች (የንግድ ሎጂክ):
+አገልግሎቶች (የቢዝነስ ሎጂክ):
 
 - የመለያ ምርጫ/ነጥብ መስጠት: `open-sse/services/accountSelector.ts`
-- የአውድ ህይወት ዑደት አስተዳደር: `open-sse/services/contextManager.ts`
+- የኮንቴክስት ሕይወት ዑደት አስተዳደር: `open-sse/services/contextManager.ts`
 - የIP ማጣሪያ አፈጻጸም: `open-sse/services/ipFilter.ts`
 - የክፍለ ጊዜ ክትትል: `open-sse/services/sessionManager.ts`
-- የጥያቄ ቅጂ ማስወገድ: `open-sse/services/signatureCache.ts`
-- የስርዓት ፕሮምፕት መክተት: `open-sse/services/systemPrompt.ts`
-- የአስተሳሰብ በጀት አስተዳደር: `open-sse/services/thinkingBudget.ts`
-- የዋይልድካርድ ሞዴል ራውቲንግ: `open-sse/services/wildcardRouter.ts`
+- የጥያቄ ድገም ማስወገድ: `open-sse/services/signatureCache.ts`
+- የስርዓት ፕሮምፕት ማስገባት: `open-sse/services/systemPrompt.ts`
+- የማሰብ በጀት አስተዳደር: `open-sse/services/thinkingBudget.ts`
+- የዋይልድካርድ ሞዴል ማስተላለፍ: `open-sse/services/wildcardRouter.ts`
 - የፍጥነት ገደብ አስተዳደር: `open-sse/services/rateLimitManager.ts`
-- የሰርኪት ሰባሪ: `src/shared/utils/circuitBreaker.ts`
-- የአውድ ርክክብ: `open-sse/services/contextHandoff.ts` — ለcontext-relay ስትራቴጂ የርክክብ ማጠቃለያ ማመንጨት እና መክተት
-- መጨባጠፍ: `open-sse/services/compression/*` — ከአቅራቢ ትርጉም በፊት ቀዳሚ መጨባጠፍ;
-  የCaveman ህጎችን፣ RTK ማጣሪያዎችን፣ ተደራራቢ ፓይፕላይኖችን፣ የመጨባጠፍ ኮምቦዎችን፣ ስታቲስቲክስን እና ማረጋገጫን ያካትታል
-- የCodex ኮታ ማምጫ: `open-sse/services/codexQuotaFetcher.ts` — ለcontext-relay ርክክብ ውሳኔዎች የCodex ኮታን ያመጣል
-- ማቀዝቀዣን የሚገነዘብ እንደገና ሙከራ: `src/sse/services/cooldownAwareRetry.ts` — በእያንዳንዱ ሞዴል የማቀዝቀዣ እንደገና ሙከራዎች ከሚዋቀሩ `requestRetry` / `maxRetryIntervalSec` ጋር
-- ደህንነቱ የተጠበቀ ወጭ ማምጫ: `src/shared/network/safeOutboundFetch.ts` — በSSRF ጥበቃ፣ የግል-URL ማገድ፣ እንደገና ሙከራ እና ጊዜ ማብቂያ የተጠበቀ የአቅራቢ/ሞዴል ማምጫ
-- የወጭ URL ጥበቃ: `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ URLዎች ላይ የአስተናጋጅ ምርመራዎች; `src/shared/network/outboundUrlGuardPolicy.ts` ሁነታውን ከ`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`፣ ከ`OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` እና ከዳሽቦርድ መቀየሪያዎቻቸው ይመርጣል (ይመልከቱ `docs/reference/ENVIRONMENT.md`)
+- ወሰን ሰባሪ: `src/shared/utils/circuitBreaker.ts`
+- የኮንቴክስት ርክክብ: `open-sse/services/contextHandoff.ts` — ለኮንቴክስት-ሪሌይ ስልት የርክክብ ማጠቃለያ ማመንጨት እና ማስገባት
+- ማጭበር: `open-sse/services/compression/*` — ከአቅራቢ ትርጉም በፊት ቀዳሚ ማጭበር;
+  የCaveman ህጎችን፣ RTK ማጣሪያዎችን፣ የተከማቹ ፓይፕላይኖችን፣ የማጭበሪያ ኮምቦዎችን፣ ስታቲስቲክስን እና ማረጋገጫን ያካትታል
+- የCodex ኮታ ማምጫ: `open-sse/services/codexQuotaFetcher.ts` — ለኮንቴክስት-ሪሌይ ርክክብ ውሳኔዎች የCodex ኮታ ያመጣል
+- እረፍት-ንቁ ዳግም ሙከራ: `src/sse/services/cooldownAwareRetry.ts` — በእያንዳንዱ ሞዴል የእረፍት ዳግም ሙከራዎች ከሊዋቀር ከሚችል `requestRetry` / `maxRetryIntervalSec` ጋር
+- ደህንነቱ የተጠበቀ ውጪ ማምጣት: `src/shared/network/safeOutboundFetch.ts` — የተጠበቀ አቅራቢ/ሞዴል ማምጣት ከSSRF ጥበቃ፣ የግል URL እገዳ፣ ዳግም ሙከራ እና ጊዜ ማብቂያ ጋር
+- የውጪ URL ጠባቂ: `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ URLs ላይ የአስተናጋጅ ምርመራዎች; `src/shared/network/outboundUrlGuardPolicy.ts` ሁነታውን ከ`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`፣ `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` እና ከዳሽቦርድ ቀያሪዎቻቸው ይመርጣል (`docs/reference/ENVIRONMENT.md` ይመልከቱ)
 - የአቅራቢ ጥያቄ ነባሮች: `open-sse/services/providerRequestDefaults.ts` — የአቅራቢ-ደረጃ `maxTokens`፣ `temperature`፣ `thinkingBudgetTokens` ነባሮች
-- የGLM አቅራቢ ቋሚዎች: `open-sse/config/glmProvider.ts` — የተጋሩ GLM ሞዴሎች፣ የኮታ URLዎች፣ የGLMT ጊዜ ማብቂያ/ነባሮች
-- የAntigravity አፕስትሪም: `open-sse/config/antigravityUpstream.ts` — የመሠረት URL እና የፍለጋ መንገድ ቋሚዎች
-- የCodex ደንበኛ ቋሚዎች: `open-sse/config/codexClient.ts` — ስሪት ያላቸው user-agent እና client-version እሴቶች
-- የሞዴል ቅኝት ዘር: `src/lib/modelAliasSeed.ts` — በአስጀመር ጊዜ 30+ የክሮስ-ፕሮክሲ ዘዬ ቅኝቶችን ይዘርጋል
+- የGLM አቅራቢ ቋሚዎች: `open-sse/config/glmProvider.ts` — የተጋሩ GLM ሞዴሎች፣ ኮታ URLs፣ GLMT ጊዜ ማብቂያ/ነባሮች
+- Antigravity አፕስትሪም: `open-sse/config/antigravityUpstream.ts` — መሠረታዊ URL እና የግኝት መንገድ ቋሚዎች
+- የCodex ደንበኛ ቋሚዎች: `open-sse/config/codexClient.ts` — ስሪት ያለባቸው ተጠቃሚ-ወኪል እና ደንበኛ-ስሪት እሴቶች
+- የሞዴል ቅጽል ስም ዘር: `src/lib/modelAliasSeed.ts` — በማስጀመሪያ ጊዜ 30+ የፕሮክሲ-መሻገሪያ ዲያሌክት ቅጽል ስሞችን ይዘራል
 
-የዶሜን ንብርብር ሞጁሎች:
+የጎራ ንብርብር ሞጁሎች:
 
 - የወጪ ህጎች/በጀቶች: `src/domain/costRules.ts`
-- የምትኬ ፖሊሲ: `src/domain/fallbackPolicy.ts`
-- የተያዘ የኮምቦ-ፍታህ ውል: `src/domain/comboResolver.ts`; ሕያው ራውቲንግ `open-sse/services/combo.ts` ይጠቀማል
-- የመቆለፍ ፖሊሲ: `src/domain/lockoutPolicy.ts`
-- የተያዘ የፖሊሲ-ግምገማ ውል: `src/domain/policyEngine.ts`; የጥያቄ መንገዱ የAPI-ቁልፍ ፖሊሲን በ`src/shared/utils/apiKeyPolicy.ts` እና የተፈታ ዒላማ ፈቃድን በ`src/sse/handlers/chat/resolvedModelPolicy.ts` ያስፈጽማል
+- የተተኪ ፖሊሲ: `src/domain/fallbackPolicy.ts`
+- የተያዘ የኮምቦ መፍትሔ ውል: `src/domain/comboResolver.ts`; ቀጥታ ማስተላለፊያ `open-sse/services/combo.ts` ይጠቀማል
+- የመቆለፊያ ፖሊሲ: `src/domain/lockoutPolicy.ts`
+- የተያዘ የፖሊሲ ግምገማ ውል: `src/domain/policyEngine.ts`; የጥያቄው መንገድ የAPI-ቁልፍ ፖሊሲን በ`src/shared/utils/apiKeyPolicy.ts` እና የተፈታ ዒላማ ፈቃድን በ`src/sse/handlers/chat/resolvedModelPolicy.ts` በኩል ያስፈጽማል
 - የስህተት ኮዶች ካታሎግ: `src/shared/constants/errorCodes.ts`
 - የጥያቄ መታወቂያ: `src/shared/utils/requestId.ts`
-- የማምጫ ጊዜ ማብቂያ: `src/shared/utils/fetchTimeout.ts`
+- የማምጣት ጊዜ ማብቂያ: `src/shared/utils/fetchTimeout.ts`
 - የጥያቄ ቴሌሜትሪ: `src/shared/utils/requestTelemetry.ts`
-- ታዛዥነት/ኦዲት: `src/lib/compliance/index.ts`
-- የኢቫል አሂድ: `src/lib/evals/evalRunner.ts`
-- የዶሜን ሁኔታ መቆየት: `src/lib/db/domainState.ts` — ለምትኬ ሰንሰለቶች፣ በጀቶች፣ የወጪ ታሪክ፣ የመቆለፍ ሁኔታ፣ ሰርኪት ሰባሪዎች የSQLite CRUD
+- ተገዢነት/ኦዲት: `src/lib/compliance/index.ts`
+- የግምገማ አሂድ: `src/lib/evals/evalRunner.ts`
+- የጎራ ሁኔታ ቆይታ: `src/lib/db/domainState.ts` — ለተተኪ ሰንሰለቶች፣ በጀቶች፣ የወጪ ታሪክ፣ የመቆለፊያ ሁኔታ እና ወሰን ሰባሪዎች የSQLite CRUD
 
-የOAuth አቅራቢ ሞጁሎች (በ`src/lib/oauth/providers/` ስር 27 ግለለብ ፋይሎች):
+የOAuth አቅራቢ ሞጁሎች (በ`src/lib/oauth/providers/` ስር ያሉ 27 ግለሰብ ፋይሎች):
 
-- የመዝገብ ማውጫ: `src/lib/oauth/providers/index.ts`
-- ግለለብ አቅራቢዎች: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
+- የምዝገባ ማውጫ: `src/lib/oauth/providers/index.ts`
+- ግለሰብ አቅራቢዎች: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
 - የተጋሩ ረዳቶች: `codebuddyDeviceAuth.ts` (የCodeBuddy CN/intl መሣሪያ ፍሰት), `museCodeDeviceResponse.ts`
-- ቀጭን መጠምጠሚያ: `src/lib/oauth/providers.ts` — ከግለለብ ሞጁሎች እንደገና ይላካል
+- ቀጭን ራፐር: `src/lib/oauth/providers.ts` — ከግለሰብ ሞጁሎች ዳግም-ላክ ያደርጋል
 
 ## 5) የተካተቱ አገልግሎቶች (v3.8.4)
 
@@ -359,141 +359,178 @@ OmniRoute በአካባቢው የሚሰሩና **የተካተቱ አገልግሎ�
 
 ## ዋና ንዑስ ስርዓቶች (v3.8.0)
 
-### A. የ Auto Combo ሞተር
+### ሀ. Auto Combo ሞተር
 
-Auto Combo በጥያቄ ጊዜ የራውቲንግ ዒላማዎችን በተለዋዋጭ ሁኔታ ነጥብ በመስጠት ይመርጣል፣ በቋሚ የኮምቦ ትርጓሜ ላይ መተማመንን ሳይሆን። ይህ የ `auto/*` ሞዴል ቅድመ-ቅጥያ ቤተሰብን ያንቀሳቅሳል።
+Auto Combo በጥያቄ ጊዜ የማዞሪያ ዒላማዎችን በተለዋዋጭ ሁኔታ ደረጃ ሰጥቶ ይመርጣል፣ ይልቁንም በቋሚ ኮምቦ ትርጓሜ ላይ አይተማመንም። የ `auto/*` ሞዴል ቅድመ-ቅጥያ ቤተሰብን ኃይል ይሰጣል።
 
-- የሞተሩ መግቢያ፡ `open-sse/services/autoCombo/` (`autoComboEngine.ts`, `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- የቀጥታ ኮምቦ መግቢያ፡ `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`)፣ በ `src/sse/handlers/chat.ts` የሚጠራ
-- ዳሽቦርድ፡ `/dashboard/auto-combo`
-- ቴሌሜትሪ፡ `auto_combo_decisions` የ SQLite ሰንጠረዥ
+- የሞተር መግቢያ፦ `open-sse/services/autoCombo/` (`autoComboEngine.ts`፣
+  `scoringEngine.ts`፣ `virtualFactory.ts`፣ `modePacks.ts`)
+- የቀጥታ ኮምቦ መግቢያ፦ `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`)፣ በ `src/sse/handlers/chat.ts` የሚጠራ
+- ዳሽቦርድ፦ `/dashboard/auto-combo`
+- ቴሌሜትሪ፦ `auto_combo_decisions` የ SQLite ሰንጠረዥ
 
-ዋና ችሎታዎች፡
+ዋና ችሎታዎች፦
 
-- **20 የራውቲንግ ስልቶች** (priority, weighted, fill-first, round-robin, P2C, random, least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted, strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**, pipeline) — auto በ v3.8.0 ውስጥ ዋናው ተጨማሪ ነው፤ `fusion` (የፓነል fan-out + የዳኝ ሲንተሲስ፣ `open-sse/services/fusion.ts`) በ v3.8.36 ውስጥ አዲስ ነው።
-- **16-ምክንያት ነጥብ መስጠት**፡ quota፣ health፣ inverse cost፣ inverse latency፣ task fit እና ሌሎች አስር። የምክንያቶቹ እና የነባሪ ክብደቶቻቸው ኦፊሴላዊ ሰንጠረዥ በ [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) ውስጥ ይገኛል — እዚህ እንደገና መጥቀስ ሊሻረው የሚችል ሁለተኛ ቦታ ይሰጣል።
-- **ምናባዊ ፋብሪካ (virtual factory)** የሚዛመድ የተሰየመ ኮምቦ በሌለ ጊዜ ጊዜያዊ ኮምቦዎችን ይፈጥራል፣ እጩዎችን ከጤናማ ንቁ የአቅራቢ ግንኙነቶች ይወስዳል።
-- **የ auto ቅድመ-ቅጥያዎች**፡ `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`, `auto/smart`, `auto/lkgp` — እያንዳንዳቸው በተስተካከለ የክብደት መገለጫ (weight profile) የተደገፉ ናቸው።
-- **6 የሁነታ ጥቅሎች**፡ `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`, `reliability-first` እና `chaos-mode` — ከዳሽቦርድ ሊጠሩ የሚችሉ ቅድም-ዝግጅት የክብደት ውቅሮች። (ከላይ ከተገለጹት `auto/*` ቅድመ-ቅጥያዎች ጋር አይደባለቁ፤ እነዚያ የጥያቄ-ጊዜ ተለዋዋጮች ናቸው።)
+- **20 የማዞሪያ ስልቶች** (priority, weighted, fill-first, round-robin, P2C, random,
+  least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
+  strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
+  pipeline) —
+  auto በ v3.8.0 ውስጥ ዋናው ተጨማሪ ነው፤ `fusion` (የፓነል fan-out + የዳኝ ውህደት፣
+  `open-sse/services/fusion.ts`) በ v3.8.36 አዲስ ነው።
+- **16-ምክንያት ደረጃ አሰጣጥ**፦ quota፣ health፣ inverse cost፣ inverse latency፣ task fit እና
+  አሥር ሌሎች። የምክንያቶችና የነባሪ ክብደቶቻቸው ዋና ሰንጠረዥ በ
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) ውስጥ ይገኛል — እዚህ መድገም
+  ከዘመነ በዋለበት ሁለተኛ ቦታ ይፈጥራል።
+- **ምናባዊ ፋብሪካ** ተመሳሳይ ስም ያለው ኮምቦ ሲጎድል ጊዜያዊ ኮምቦዎችን ይፈጥራል፣ እጩዎችን
+  ከጤናማ ንቁ የአቅራቢ ግንኙነቶች ያገኛል።
+- **የ auto ቅድመ-ቅጥያዎች**፦ `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — እያንዳንዱ በተስተካከለ የክብደት መገለጫ የተደገፈ ነው።
+- **6 የሞድ ጥቅሎች**፦ `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first` እና `chaos-mode` — ከዳሽቦርዱ ሊጠሩ የሚችሉ ቀደም-የተዘጋጁ የክብደት
+  ውቅረቶች። (ከላይ ካሉት `auto/*` ቅድመ-ቅጥያዎች ጋር አይደባለቁ፣ እነዚያ የጥያቄ-ጊዜ
+  ተለዋዋጮች ናቸው።)
 
-ለሙሉ የአልጎሪዝም ዝርዝር (የምክንያት ቀመሮች፣ የክብደት ማስተካከያ)፣ [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md)ን ይመልከቱ።
+ለሙሉ የአልጎሪዝም ዝርዝር (የምክንያት ቀመሮች፣ የክብደት ማስተካከያ)፣
+[`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) ይመልከቱ።
 
-### B. የደመና ወኪሎች (Cloud Agents)
+### ለ. Cloud Agents
 
-Cloud Agents በሶስተኛ ወገኖች የተከሉ የኮድ-ወኪል መድረኮችን (Codex Cloud፣ Devin፣ Jules) በአንድ ዓይነት በዳታቤዝ-ተመሠረተ የተግባር ሕይወት-ዑደት ስር ያስቀምጣል። ሁሉም የተግባር መፍጠሪያ/መፈተሻ መጨረሻዎች (endpoints) የአስተዳደር ማረጋገጫ (authentication) ይፈልጋሉ።
+Cloud Agents የሶስተኛ ወገን የሚስተናገዱ የኮድ-ወኪል መድረኮችን (Codex Cloud፣ Devin፣
+Jules) በአንድ አይነት በዳታቤዝ-የተደገፈ የተግባር የህይወት ዑደት በስተጀርባ ይጠቅልላል። ሁሉም
+የተግባር መፍጠር/ምርመራ ኢንድፖይንቶች የአስተዳደር ማረጋገጫ ይጠይቃሉ።
 
-- የሞጁሉ ሥር፡ `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`, `types.ts`, `db.ts`, ሲጨምር በ `agents/` ሥር ላሉ በወኪል የተከፋፈሉ ንዑስ ማውጫዎች)
-- በወኪል የተከፋፈሉ ትግበራዎች፡ `agents/codex/`, `agents/devin/`, `agents/jules/`
-- የሕዝባዊ መጨረሻዎች፡ `/api/v1/agents/tasks/*` (ዝርዝር/ፍጠር/አምጣ/ሰርዝ)
-- የአስተዳደር መጨረሻዎች፡ `/api/cloud/*` (መዘጋጀት፣ ሁኔታ፣ ቡድናዊ)
-- ዳሽቦርድ፡ `/dashboard/cloud-agents`
-- ማከማቻ፡ `cloud_agent_tasks` ሰንጠረዥ
+- የሞጁል ሥር፦ `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
+  `types.ts`, `db.ts`፣ እንዲሁም በ `agents/` ስር ያሉ የእያንዳንዱ ወኪል ንዑስ ዳይሬክቶሪዎች)
+- የእያንዳንዱ ወኪል ትግበራዎች፦ `agents/codex/`, `agents/devin/`, `agents/jules/`
+- ይፋዊ ኢንድፖይንቶች፦ `/api/v1/agents/tasks/*` (ዝርዝር/ፍጠራ/ማግኘት/ሰርዝ)
+- የአስተዳደር ኢንድፖይንቶች፦ `/api/cloud/*` (ፕሮቪዥኒንግ፣ ሁኔታ፣ ባች)
+- ዳሽቦርድ፦ `/dashboard/cloud-agents`
+- ማከማቻ፦ `cloud_agent_tasks` ሰንጠረዥ
 
-ለእያንዳንዱ ወኪል መዘጋጀት እና የ OAuth ዝርዝሮች፣ [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md)ን ይመልከቱ።
+ስለ እያንዳንዱ ወኪል ፕሮቪዥኒንግ እና OAuth ዝርዝሮች፣
+[`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md) ይመልከቱ።
 
-### C. ጥበቃዎች (Guardrails)
+### ሐ. Guardrails
 
-የ guardrails ሞጁል ጥያቄዎችን እና ምላሾችን ለ PII፣ ለ prompt injection እና ለደህንነቱ የጎደለው የእይታ (vision) ይዘት የሚመረምር በሙቀት-እንደገና-ሊጫን የሚችል የሚድልዌር ንብርብር ነው። ጥሰቶች ጥያቄውን በ HTTP **503** እና በተቀረጸ የስህተት ኮድ ያቋርጣሉ፣ ይህም የቀጣይ ጠሪዎች እንደገና እንዲሞክሩ ወይም እንዲከፋፈሉ ያስችላል።
+የ guardrails ሞጁል ጥያቄዎችንና ምላሾችን ለ PII፣ ለ prompt injection እና ለደህንነቱ
+የጠለቀ የዕይታ ይዘት የሚፈትሽ፣ በፍጥነት እንደገና-ሊጫን የሚችል middleware ሽፋን ነው።
+ጥሰቶች ጥያቄውን በ HTTP **503** እና በተዋቀረ የስህተት ኮድ በአጭሩ ያቋርጣሉ፣ ይህም ወደ ታች
+ያሉ ጠሪዎች እንደገና እንዲሞክሩ ወይም እንዲከፋፈሉ ያስችላል።
 
-- የሞጁሉ ሥር፡ `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- በሙቀት እንደገና መጫን፡ ሬጂስትሪው የውቅረት ለውጦችን ይከታተላል እና ሰንሰለቱን በቦታው ላይ እንደገና ይገነባል
-- የማገናኛ ነጥቦች፡ የቻት አስተናጋጅ መግቢያ፣ የምስል ማመንጨት አስተናጋጅ፣ የምላሽ ማጽጃ
-- የ HTTP ውል፡ ጥሰቶች ከ `error.code = "GUARDRAIL_VIOLATION"` ጋር እንደ `503` ይወጣሉ
+- የሞጁል ሥር፦ `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
+  `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
+- ፈጣን እንደገና መጫኛ (Hot reload)፦ ሬጂስትሪው የውቅረት ለውጦችን ይከታተላል እና ሰንሰለቱን በቦታው ላይ እንደገና ይገነባል
+- የግንኙነት ነጥቦች፦ የቻት መያዣ መግቢያ፣ የምስል ማመንጨት መያዣ፣ የምላሽ ማጽጃ
+- የ HTTP ኮንትራት፦ ጥሰቶች እንደ `503` ከ `error.code = "GUARDRAIL_VIOLATION"` ጋር ይታያሉ
 
-ለህጎች ስብስብ ዝግጅት እና የደረጃ (threshold) ማስተካከያ፣ [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md)ን ይመልከቱ።
+ስለ ህጎች ስብስብ ማዘጋጀት እና የገደብ ማስተካከያ፣
+[`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md) ይመልከቱ።
 
-### D. የጎራ ንብርብር (Domain Layer)
+### መ. የጎራ ሽፋን
 
-የ `src/domain/` ኔምስፔስ የጎራ አገልግሎቶችን እና የተያዙ የግምገማ ውሎችን ይዟል። ለእያንዳንዱ ጥያቄ አንድ አስገዳጅ የፖሊሲ መግቢያ ነጥብ አይደለም።
+የ `src/domain/` ኔምስፔስ የጎራ አገልግሎቶችን እና የተያዙ የግምገማ ኮንትራቶችን ይዟል።
+ለእያንዳንዱ ጥያቄ አንድ ግዴታ የፖሊሲ መግቢያ ነጥብ አይደለም።
 
-የቀጥታ ቻት መንገድ `enforceApiKeyPolicy()`ን ከ `src/shared/utils/apiKeyPolicy.ts` ይጠራል፤ የተፈቱ ሞዴሎች እና የኮምቦ አባላት ፈቃድ መስጠት (authorization) በ `src/sse/handlers/chat/resolvedModelPolicy.ts` ውስጥ ተግብሯል። በ `src/app/api/v1/chat/completions/route.ts` ውስጥ ያለው ራስ-አስተናጋጅ (self-hosted) መግቢያም ከመላክ በፊት የ API-ቁልፍ ፖሊሲ ያስፈጽማል። የኮምቦ መፍታት (resolution) በ `open-sse/services/combo.ts` በኩል ይካሄዳል።
+የቀጥታ ቻት መንገድ `enforceApiKeyPolicy()`ን ከ
+`src/shared/utils/apiKeyPolicy.ts` ይጠራል፤ የተፈቱ ሞዴሎች እና የኮምቦ አባላት ፈቃድ
+ማረጋገጫ በ `src/sse/handlers/chat/resolvedModelPolicy.ts` ውስጥ ተተግብሯል። በ
+`src/app/api/v1/chat/completions/route.ts` ውስጥ ያለው ራስ-አስተናጋጅ መግቢያም ከመላክ በፊት
+የ API-key ፖሊሲ ያስፈጽማል። የኮምቦ መፍታት በ `open-sse/services/combo.ts` በኩል ይካሄዳል።
 
-`src/domain/policyEngine.ts`፣ `src/domain/comboResolver.ts` እና `src/lib/container.ts` የተፈተኑ ውሎች እንደሆኑ ይቀጥላሉ፤ የዚያ የጥያቄ መንገድ ሽምግልና (wiring) አይደሉም። ኮንቴይነሩ የፖሊሲ ሞተሩን ይመዘግባል፣ ግን የተመረመረው የምርት ጥያቄ መንገድ አይፈታውም። እነዚያን ውሎች ብቻ መለወጥ የቀጥታ ቻት ፖሊሲን ወይም የኮምቦ ራውቲንግን አይለውጥም፤ ማገናኘት ወይም ማስወገዳቸው የተለየ የንድፍ ውሳኔ ይፈልጋል።
+`src/domain/policyEngine.ts`፣ `src/domain/comboResolver.ts` እና `src/lib/container.ts`
+የተሞከሩ ኮንትራቶች እንደሆኑ ይቀጥላሉ፣ የዚያ የጥያቄ መንገድ ማገጃ ሳይሆኑ። ኮንቴይነሩ የፖሊሲ ሞተሩን
+ይመዘግባል፣ ነገር ግን የተፈተሸው የምርት ጥያቄ መንገድ አይፈታውም። እነዚያን ኮንትራቶች ብቻ መቀየር
+የቀጥታ ቻት ፖሊሲን ወይም የኮምቦ ማዞሪያን አይለውጥም፤ ማገናኘት ወይም ማስወገዳቸው የተለየ
+የንድፍ ውሳኔ ይጠይቃል።
 
-- የተያዘ የፖሊሲ ሞተር፡ `src/domain/policyEngine.ts` — መዘጋት → በጀት → የተካ (fallback) ግምገማ
-- የወጪ ህጎች፡ `src/domain/costRules.ts`
-- የተካ (fallback) ፖሊሲ፡ `src/domain/fallbackPolicy.ts`
-- የመዘጋት ፖሊሲ፡ `src/domain/lockoutPolicy.ts`
-- በመለያ ላይ የተመሠረተ ራውቲንግ፡ `src/domain/tagRouter.ts`
-- የተያዘ ኮምቦ ፈቺ፡ `src/domain/comboResolver.ts` — በራሱ የሚቆም የምርጫ ውል፤ የቀጥታ ኮምቦ ራውቲንግ በ `open-sse/services/combo.ts` ውስጥ ተግብሯል
-- የግንኙነት/ሞዴል ህግ አገናኝ፡ `src/domain/connectionModelRules.ts`
-- የሞዴል ተገኝነት ስናፕሾቶች፡ `src/domain/modelAvailability.ts`
-- የአቅራቢ ማብቂያ ክትትል፡ `src/domain/providerExpiration.ts`
-- የኮታ ካሽ፡ `src/domain/quotaCache.ts`
-- የማዳከም ሁኔታ፡ `src/domain/degradation.ts`
-- የውቅረት ኦዲት፡ `src/domain/configAudit.ts`
-- የ OmniRoute ምላሽ ሜታዳታ ሰሪ፡ `src/domain/omnirouteResponseMeta.ts`
-- የግምገማ ንዑስ ስርዓት፡ `src/domain/assessment/` — የወቅታዊ ግምገማ ሥራዎች
+- የተያዘ የፖሊሲ ሞተር፦ `src/domain/policyEngine.ts` — lockout → budget → fallback ግምገማ
+- የወጪ ህጎች፦ `src/domain/costRules.ts`
+- የተከላ ፖሊሲ፦ `src/domain/fallbackPolicy.ts`
+- የመዘጋት ፖሊሲ፦ `src/domain/lockoutPolicy.ts`
+- በመለያ ላይ የተመሰረተ ማዞሪያ፦ `src/domain/tagRouter.ts`
+- የተያዘ ኮምቦ ፋቺ፦ `src/domain/comboResolver.ts` — ራሱን የቻለ የምርጫ ኮንትራት፤ የቀጥታ ኮምቦ ማዞሪያ በ `open-sse/services/combo.ts` ውስጥ ተተግብሯል
+- የግንኙነት/ሞዴል ህግ አቆራኝ፦ `src/domain/connectionModelRules.ts`
+- የሞዴል ተገኝነት ስናፕሾቶች፦ `src/domain/modelAvailability.ts`
+- የአቅራቢ ጊዜ-ማብቂያ ክትትል፦ `src/domain/providerExpiration.ts`
+- የኮታ መሸጎጫ፦ `src/domain/quotaCache.ts`
+- የቅነሳ ሁኔታ፦ `src/domain/degradation.ts`
+- የውቅረት ኦዲት፦ `src/domain/configAudit.ts`
+- የ OmniRoute ምላሽ ሜታዳታ ግንቢ፦ `src/domain/omnirouteResponseMeta.ts`
+- የግምገማ ንዑስ ስርዓት፦ `src/domain/assessment/` — ለየጊዜው የሚካሄዱ የግምገማ ስራዎች
 
-### E. የፍቃድ ፓይፕላይን (Authorization Pipeline)
+### ሠ. የፈቃድ ፓይፕላይን
 
-የፍቃድ ፓይፕላይን እያንዳንዱን ገቢ ጥያቄ ይመድባል እና ተገቢውን የፖሊሲ ሰንሰለት ከመላክ በፊት ይተገብራል።
+የፈቃድ ፓይፕላይኑ እያንዳንዱን ገቢ ጥያቄ ይመድባል እና ከመላክ በፊት ተገቢውን
+የፖሊሲ ሰንሰለት ይተግብራል።
 
 - የፓይፕላይን መግቢያ፦ `src/server/authz/pipeline.ts`
-- የጥያቄ ምደባ፦ `src/server/authz/classify.ts` — የሕዝባዊ ስምምነት
-  መስመሮችን ከአስተዳደር መስመሮች ይለያል
-- የሕዝባዊ መስመሮች ዝርዝር፦ `src/shared/constants/publicApiRoutes.ts`
+- የጥያቄ ምደባ፦ `src/server/authz/classify.ts` — ሕዝባዊ የሆኑትን የኮምፓቲቢሊቲ
+  መንገዶች ከአስተዳደር መንገዶች ይለያል
+- የሕዝባዊ መንገዶች ዝርዝር፦ `src/shared/constants/publicApiRoutes.ts`
 - ፖሊሲዎች፦ `src/server/authz/policies/` — ሊጣመሩ የሚችሉ ፕሬዲኬቶች
-  (`requireApiKey`, `requireManagement`, `requireFreshAuth`, ወዘተ.)
-- የራስጌ መሣሪያዎች፦ `src/server/authz/headers.ts`
+  (`requireApiKey`, `requireManagement`, `requireFreshAuth` ወዘተ.)
+- የሄደር መሣሪያዎች፦ `src/server/authz/headers.ts`
 - የማረጋገጫ ረዳት፦ `src/server/authz/assertAuth.ts`
 - የጥያቄ አውድ፦ `src/server/authz/context.ts`
 
-የሕዝባዊ እና የአስተዳደር መስመሮች ጽኑ ድንበር ናቸው፦ የኤጀንት/cooldown APIዎች እና
+የሕዝባዊ እና የአስተዳደር መንገዶች ጥብቅ ወሰን ናቸው፦ agent/cooldown APIዎች እና
 የአቅራቢ ለውጦች የአስተዳደር ማረጋገጫ ይፈልጋሉ (ከጎደለ HTTP 401)።
 
-ለሙሉ የመስመር ምደባ ህጎች፣ ይመልከቱ
-[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
+ለሙሉ የመንገድ ምደባ ህጎች፣
+[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md)ን ይመልከቱ።
 
 ### F. የስራ ፍሰት FSM እና ተግባር-ንቁ ራውተር
 
-በተገኘው የስራ ፍሰት ደረጃ (እቅድ ማውጣት፣ አፈጻጸም፣
-ግምገማ) እና በዳራ-ተግባር ቅርበት ላይ ተመስርቶ ትራፊክ ለማስተናገድ ከኮምቦ ምርጫ
-ላይ የተተከለ ተቆይቶ-ሁኔታ-ማሽን የሚጎተት ራውተር።
+ከኮምቦ ምርጫ በላይ በንብርብር የተቀመጠ፣ በተገኘው የስራ ፍሰት ደረጃ (እቅድ አሠራር፣
+አፈጻጸም፣ ግምገማ) እና በጀርባ-ተግባር ተዛማጅነት ላይ ተኮረ ትራፊክን ለመምራት
+በተወሰነ-ሁኔታ-ማሽን (finite-state-machine) የሚንቀሳቀስ ራውተር።
 
 - የስራ ፍሰት FSM፦ `open-sse/services/workflowFSM.ts`
 - ተግባር-ንቁ ራውተር፦ `open-sse/services/taskAwareRouter.ts`
-- የዳራ ተግባር መለያ፦ `open-sse/services/backgroundTaskDetector.ts`
-- የዓላማ ምደባ፦ `open-sse/services/intentClassifier.ts`
+- የጀርባ ተግባር መለያ፦ `open-sse/services/backgroundTaskDetector.ts`
+- የአላማ ምደባ፦ `open-sse/services/intentClassifier.ts`
 
-የFSM ሽግግሮች ወደ Auto Combo ነጥብ አሰጣጥ ይገባሉ፣ ለዳራ/አውቶሜሽን ተግባሮች
-ወደ ርካሽ ሞዴሎች እና ለኢንተራክቲቭ እቅድ/ግምገማ ዙሮች ወደ ኃይለኛ ሞዴሎች ያዘንብላሉ።
+የFSM ሽግግሮች ወደ Auto Combo ነጥብ አሰጣጥ ይገባሉ፤ ለጀርባ/አውቶሜሽን
+ተግባሮች ወደ ርካሽ ሞዴሎች እና ለበይነገጽ እቅድ/ግምገማ ዙሮች ወደ ጠንካራ
+ሞዴሎች ያዘንብላሉ።
 
-### G. አቅራቢ-ልዩ መቋቋም
+### G. አቅራቢ-ተኮር የመቋቋም አቅም
 
-በርካታ አቅራቢዎች በዓለማዊው ሰርኪት ብሬከር / የግንኙነት ማቀላቀያ / የሞዴል መዘግያ
-ንብርብሮች ላይ የሚገነቡ ልዩ የመቋቋም እና የስቴልዝ ሞጁሎችን ያዘሉ ናቸው፦
+አንዳንድ አቅራቢዎች በአጠቃላይ የሰርኪት ሰባሪ / የግንኙነት ማቀዝቀዣ / የሞዴል መዘጋት
+ንብርብሮች ላይ የሚጫኑ ልዩ የመቋቋም እና የስቴልዝ ሞጁሎችን ያቀርባሉ፦
 
 - Antigravity 429 ሞተር፦ `open-sse/services/antigravity429Engine.ts` (ማንነትን
-  ይለዋወጣል፣ የምላሽ ራስጌዎችን ያጸዳል፣ የክሬዲት/ስሪት ክትትልን በ
-  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts` ያካሂዳል)
+  ይለውጣል፣ የምላሽ ሄደሮችን ያነጻል፣ የክሬዲት/ስሪት ክትትልን በ
+  `antigravityCredits.ts`፣ `antigravityHeaderScrub.ts`፣ `antigravityHeaders.ts`፣
+  `antigravityIdentity.ts`፣ `antigravityVersion.ts` ያካሂዳል)
 - የModelScope ኮታ ፖሊሲ፦ `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (የስምምነት ቻናል እጅ መጠባበቅ)፦ `open-sse/services/claudeCodeCCH.ts`,
-  በተጨማሪም `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+- Claude Code CCH (የኮምፓቲቢሊቲ ቻናል ሃንድሼክ)፦ `open-sse/services/claudeCodeCCH.ts`፣
+  በተጨማሪም `claudeCodeCompatible.ts`፣ `claudeCodeConstraints.ts`፣ `claudeCodeExtraRemap.ts`፣
   `claudeCodeToolRemapper.ts`
-- የClaude Code ፊንገርፕሪንት ቅርጽ አሠራር፦ `open-sse/services/claudeCodeFingerprint.ts`
-- የClaude Code ማደበቅ፦ `open-sse/services/claudeCodeObfuscation.ts`
+- የClaude Code ፊንገርፕሪንት ቅርጽ ማሠራት፦ `open-sse/services/claudeCodeFingerprint.ts`
+- የClaude Code ኦብፈስኬሽን፦ `open-sse/services/claudeCodeObfuscation.ts`
 
-ለሙሉ የስቴልዝ መመሪያ እና የአሠራር ምክር፣ `docs/security/STEALTH_GUIDE.md`
-ይመልከቱ (git; ወደ `/docs` አልተገነባም)።
+ለሙሉ የስቴልዝ ፕሌይቡክ እና የአሠራር መመሪያ፣
+`docs/security/STEALTH_GUIDE.md`ን ይመልከቱ (git; ወደ `/docs` አልተጣመረም)።
 
-### H. ዌብሁኮች፣ የምክንያት ካሽ፣ የንባብ ካሽ
+### H. ዌብሁኮች፣ የአስተሳሰብ ካሽ፣ የንባብ ካሽ
 
-- **ዌብሁኮች** — ለአቅራቢ/መለያ/ተግባር ክስተቶች ወጪ ላክ።
+- **ዌብሁኮች** — ለአቅራቢ/መለያ/ተግባር ክስተቶች ወደ ውጭ የሚላክ ላክ።
   - ላኪ፦ `src/lib/webhookDispatcher.ts`
-  - ማከማቻ፦ `webhooks` የSQLite ሠንጠረዥ (በ`src/lib/db/webhooks.ts` አማካይነት)
-  - ዳሽቦርድ፦ `/dashboard/webhooks` (ምዝገባዎች፣ ሚስጥሮች፣ የድገም ሙከራ ታሪክ)
-  - ለክስተት ምድባ እና የድገም ሙከራ ትርጉም፣ [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md) ይመልከቱ።
-- **የምክንያት ካሽ** — የማሰብ ቶከኖችን ለሚያወጡ አቅራቢዎች (Claude, GLMT, ወዘተ.)
-  እንደገና ሊጫወቱ የሚችሉ የምክንያት ብሎኮች፣ ተከታታይ ዙሮች እንደገና ማሰብን እንዲዝለሉ።
-  - የDB ንብርብር፦ `src/lib/db/reasoningCache.ts`
+  - ማከማቻ፦ `webhooks` SQLite ሰንጠረዥ (በ`src/lib/db/webhooks.ts` አማካኝነት)
+  - ዳሽቦርድ፦ `/dashboard/webhooks` (ምዝገባዎች፣ ሚስጥሮች፣ የእንደገና ሙከራ ታሪክ)
+  - ለክስተት ምደባ እና የእንደገና ሙከራ ስነ-ትርጉም፣ [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md)ን ይመልከቱ።
+- **የአስተሳሰብ ካሽ** — የማሰብ ቶከኖችን (thinking tokens) ለሚያውጡ አቅራቢዎች
+  (Claude፣ GLMT ወዘተ) እንደገና ሊጫወቱ የሚችሉ የአስተሳሰብ ብሎኮች፣ እንዲሁም
+  ተከታታይ ዙሮች እንደገና ማሰብን ማለፍ እንዲችሉ።
+  - የዳታቤዝ ንብርብር፦ `src/lib/db/reasoningCache.ts`
   - የአገልግሎት ንብርብር፦ `open-sse/services/reasoningCache.ts`
-  - ለድገም ትርጉም፣ [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md) ይመልከቱ።
-- **የንባብ ካሽ** — በፊርማ ቁልፍ የሚሠራ አጭር-ዕድሜ ያለው የምላሽ ካሽ፣ ከተሰበሩ
-  የላይኛው SDKዎች የሚመነጩ ተመሳሳይ ድገሞችን ለማዋሃድ ጥቅም ላይ ይውላል።
-  - የDB ንብርብር፦ `src/lib/db/readCache.ts`
-  - የስታቲስቲክስ መጨረሻ፦ `GET /api/cache/stats`፣ ዳሽቦርድ በ`/dashboard/cache`
+  - ለእንደገና መጫወት ስነ-ትርጉም፣ [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md)ን ይመልከቱ።
+- **የንባብ ካሽ** — በፊርማ ቁልፍ የሚሠራ አጭር-ዕድሜ ያለው የምላሽ ካሽ፣ ከተበላሹ
+  የላይኛው ፍሰት SDKዎች የሚመነጩ አንድ ዓይነት የሆኑትን እንደገና ሙከራዎች ለማዋሃድ
+  ጥቅም ላይ ይውላል።
+  - የዳታቤዝ ንብርብር፦ `src/lib/db/readCache.ts`
+  - የስታቲስቲክስ ኤንድፖይንት፦ `GET /api/cache/stats`፣ ዳሽቦርድ በ`/dashboard/cache`
 
 ## 3) የመረጃ ቋሚነት ንብርብር
 

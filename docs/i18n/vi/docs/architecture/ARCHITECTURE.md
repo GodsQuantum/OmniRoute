@@ -266,7 +266,7 @@ Các miền quản lý:
 - Gói cấu hình: `src/app/api/sync/bundle` (GET, ảnh chụp nhanh cài đặt/nhà cung cấp/tổ hợp/khóa được quản lý phiên bản bằng ETag)
 - WebSocket: `src/app/api/v1/ws/route.ts` — trình xử lý nâng cấp dành cho các ứng dụng khách WS tương thích với OpenAI
 
-## 2) SSE + Lõi chuyển đổi
+## 2) SSE + lõi dịch (Translation Core)
 
 Các module luồng chính:
 
@@ -276,18 +276,18 @@ Các module luồng chính:
 - Phát hiện định dạng/cấu hình provider: `open-sse/services/provider.ts`
 - Phân tích/phân giải model: `src/sse/services/model.ts`, `open-sse/services/model.ts`
 - Logic fallback tài khoản: `open-sse/services/accountFallback.ts`
-- Registry chuyển đổi: `open-sse/translator/index.ts`
+- Registry dịch: `open-sse/translator/index.ts`
 - Biến đổi stream: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - Trích xuất/chuẩn hóa usage: `open-sse/utils/usageTracking.ts`
-- Bộ phân tích thẻ think: `open-sse/utils/thinkTagParser.ts`
-- Bộ xử lý embedding: `open-sse/handlers/embeddings.ts`
+- Trình phân tích thẻ think: `open-sse/utils/thinkTagParser.ts`
+- Trình xử lý embedding: `open-sse/handlers/embeddings.ts`
 - Registry provider embedding: `open-sse/config/embeddingRegistry.ts`
-- Bộ xử lý tạo ảnh: `open-sse/handlers/imageGeneration.ts`
+- Trình xử lý tạo ảnh: `open-sse/handlers/imageGeneration.ts`
 - Registry provider ảnh: `open-sse/config/imageRegistry.ts`
 - Làm sạch response: `open-sse/handlers/responseSanitizer.ts`
 - Chuẩn hóa role: `open-sse/services/roleNormalizer.ts`
 
-Services (logic nghiệp vụ):
+Các service (logic nghiệp vụ):
 
 - Lựa chọn/chấm điểm tài khoản: `open-sse/services/accountSelector.ts`
 - Quản lý vòng đời context: `open-sse/services/contextManager.ts`
@@ -297,20 +297,20 @@ Services (logic nghiệp vụ):
 - Chèn system prompt: `open-sse/services/systemPrompt.ts`
 - Quản lý ngân sách thinking: `open-sse/services/thinkingBudget.ts`
 - Định tuyến model wildcard: `open-sse/services/wildcardRouter.ts`
-- Quản lý rate limit: `open-sse/services/rateLimitManager.ts`
+- Quản lý giới hạn tốc độ: `open-sse/services/rateLimitManager.ts`
 - Circuit breaker: `src/shared/utils/circuitBreaker.ts`
 - Bàn giao context: `open-sse/services/contextHandoff.ts` — tạo và chèn tóm tắt handoff cho chiến lược context-relay
-- Nén: `open-sse/services/compression/*` — nén chủ động trước khi chuyển đổi provider;
-  bao gồm quy tắc Caveman, bộ lọc RTK, pipeline xếp chồng, combo nén, thống kê và xác thực
-- Trình lấy quota Codex: `open-sse/services/codexQuotaFetcher.ts` — lấy quota Codex phục vụ quyết định handoff context-relay
-- Retry nhận biết cooldown: `src/sse/services/cooldownAwareRetry.ts` — retry theo cooldown từng model với `requestRetry` / `maxRetryIntervalSec` có thể cấu hình
-- Fetch outbound an toàn: `src/shared/network/safeOutboundFetch.ts` — fetch provider/model được bảo vệ với chống SSRF, chặn URL private, retry và timeout
-- Bảo vệ URL outbound: `src/shared/network/outboundUrlGuard.ts` — kiểm tra host trên URL provider; `src/shared/network/outboundUrlGuardPolicy.ts` chọn chế độ từ `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, và các toggle dashboard tương ứng (xem `docs/reference/ENVIRONMENT.md`)
-- Giá trị mặc định request provider: `open-sse/services/providerRequestDefaults.ts` — giá trị mặc định `maxTokens`, `temperature`, `thinkingBudgetTokens` cấp provider
+- Nén: `open-sse/services/compression/*` — nén chủ động trước khi dịch cho provider;
+  bao gồm quy tắc Caveman, bộ lọc RTK, pipeline xếp chồng, combo nén, thống kê và validation
+- Trình lấy quota Codex: `open-sse/services/codexQuotaFetcher.ts` — lấy quota Codex cho các quyết định handoff context-relay
+- Retry nhận biết cooldown: `src/sse/services/cooldownAwareRetry.ts` — retry theo cooldown của từng model với `requestRetry` / `maxRetryIntervalSec` có thể cấu hình
+- Fetch outbound an toàn: `src/shared/network/safeOutboundFetch.ts` — fetch provider/model được bảo vệ với SSRF guard, chặn URL private, retry và timeout
+- Bảo vệ URL outbound: `src/shared/network/outboundUrlGuard.ts` — kiểm tra host trên URL provider; `src/shared/network/outboundUrlGuardPolicy.ts` chọn chế độ từ `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` và các toggle tương ứng trên dashboard (xem `docs/reference/ENVIRONMENT.md`)
+- Giá trị mặc định request của provider: `open-sse/services/providerRequestDefaults.ts` — các mặc định `maxTokens`, `temperature`, `thinkingBudgetTokens` ở cấp provider
 - Hằng số provider GLM: `open-sse/config/glmProvider.ts` — model GLM dùng chung, URL quota, timeout/mặc định GLMT
-- Upstream Antigravity: `open-sse/config/antigravityUpstream.ts` — hằng số base URL và đường dẫn discovery
-- Hằng số client Codex: `open-sse/config/codexClient.ts` — giá trị user-agent và client-version theo phiên bản
-- Seed alias model: `src/lib/modelAliasSeed.ts` — khởi tạo 30+ alias phương ngữ cross-proxy khi khởi động
+- Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — hằng số base URL và đường dẫn discovery
+- Hằng số client Codex: `open-sse/config/codexClient.ts` — các giá trị user-agent và client-version theo phiên bản
+- Seed alias model: `src/lib/modelAliasSeed.ts` — khởi tạo hơn 30 alias phương ngôn xuyên proxy lúc khởi động
 
 Các module tầng domain:
 
@@ -318,7 +318,7 @@ Các module tầng domain:
 - Chính sách fallback: `src/domain/fallbackPolicy.ts`
 - Hợp đồng phân giải combo dự trữ: `src/domain/comboResolver.ts`; định tuyến thực tế sử dụng `open-sse/services/combo.ts`
 - Chính sách lockout: `src/domain/lockoutPolicy.ts`
-- Hợp đồng đánh giá chính sách dự trữ: `src/domain/policyEngine.ts`; luồng request thực thi chính sách API-key qua `src/shared/utils/apiKeyPolicy.ts` và ủy quyền mục tiêu đã phân giải qua `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Hợp đồng đánh giá chính sách dự trữ: `src/domain/policyEngine.ts`; luồng request thực thi chính sách API-key thông qua `src/shared/utils/apiKeyPolicy.ts` và ủy quyền mục tiêu đã phân giải thông qua `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Danh mục mã lỗi: `src/shared/constants/errorCodes.ts`
 - Request ID: `src/shared/utils/requestId.ts`
 - Timeout fetch: `src/shared/utils/fetchTimeout.ts`
@@ -359,15 +359,15 @@ Tìm hiểu chuyên sâu: `docs/frameworks/EMBEDDED-SERVICES.md`
 
 ## Các hệ thống con chính (v3.8.0)
 
-### A. Engine Auto Combo
+### A. Auto Combo Engine
 
-Auto Combo chấm điểm động và chọn các đích định tuyến tại thời điểm yêu cầu, thay vì
-dựa vào một định nghĩa combo tĩnh. Nó vận hành nhóm tiền tố model `auto/*`.
+Auto Combo tự động chấm điểm và chọn các mục tiêu định tuyến tại thời điểm yêu cầu, thay vì
+dựa vào một định nghĩa combo tĩnh. Nó vận hành họ tiền tố model `auto/*`.
 
 - Điểm vào của engine: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Điểm vào combo trực tiếp: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), được gọi bởi `src/sse/handlers/chat.ts`
-- Dashboard: `/dashboard/auto-combo`
+- Điểm vào combo thực tế: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), được gọi bởi `src/sse/handlers/chat.ts`
+- Bảng điều khiển: `/dashboard/auto-combo`
 - Telemetry: bảng SQLite `auto_combo_decisions`
 
 Các khả năng chính:
@@ -376,114 +376,116 @@ Các khả năng chính:
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto là bổ sung nổi bật trong v3.8.0; `fusion` (fan-out theo panel + tổng hợp bởi judge,
-  `open-sse/services/fusion.ts`) mới xuất hiện trong v3.8.36.
-- **Chấm điểm 16 yếu tố**: quota, health, chi phí nghịch đảo, độ trễ nghịch đảo, độ phù hợp
-  với tác vụ và mười yếu tố khác. Bảng chuẩn về các yếu tố và trọng số mặc định của chúng
-  nằm trong [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — nhắc lại ở đây sẽ
-  tạo thêm một nơi thứ hai có thể bị lỗi thời.
-- **Virtual factory** hiện thực hóa các combo tạm thời khi không có combo được đặt tên nào
-  khớp, lấy ứng viên từ các kết nối provider đang hoạt động và khỏe mạnh.
-- **Các tiền tố auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  auto là bổ sung tiêu điểm trong v3.8.0; `fusion` (fan-out theo panel + tổng hợp bởi judge,
+  `open-sse/services/fusion.ts`) mới có trong v3.8.36.
+- **Chấm điểm 16 yếu tố**: quota, health, inverse cost, inverse latency, task fit và
+  mười yếu tố khác. Bảng chuẩn về các yếu tố và trọng số mặc định của chúng nằm trong
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — trình bày lại ở đây sẽ
+  tạo thêm một nơi nữa có nguy cơ bị lỗi thời.
+- **Virtual factory** hiện thực hóa các combo tạm thời (ephemeral) khi không có combo
+  được đặt tên nào khớp, lấy ứng viên từ các kết nối provider đang hoạt động và khỏe mạnh.
+- **Tiền tố auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
   `auto/smart`, `auto/lkgp` — mỗi tiền tố được hỗ trợ bởi một hồ sơ trọng số đã được tinh chỉnh.
 - **6 gói chế độ (mode pack)**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` và `chaos-mode` — các cấu hình trọng số đặt sẵn có thể gọi từ
-  dashboard. (Không nên nhầm lẫn với các tiền tố `auto/*` ở trên, vốn là các biến thể tại
-  thời điểm yêu cầu.)
+  `reliability-first` và `chaos-mode` — các cấu hình trọng số định sẵn có thể gọi từ
+  bảng điều khiển. (Không nên nhầm lẫn với các tiền tố `auto/*` ở trên, vốn là
+  các biến thể tại thời điểm yêu cầu.)
 
-Để biết chi tiết đầy đủ về thuật toán (công thức yếu tố, tinh chỉnh trọng số), xem
+Để biết đầy đủ chi tiết thuật toán (công thức yếu tố, tinh chỉnh trọng số), xem
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
 ### B. Cloud Agents
 
-Cloud Agents bao bọc các nền tảng code-agent được lưu trữ bởi bên thứ ba (Codex Cloud, Devin,
-Jules) sau một vòng đời tác vụ thống nhất được hỗ trợ bởi cơ sở dữ liệu. Tất cả các endpoint
+Cloud Agents bao bọc các nền tảng code agent do bên thứ ba lưu trữ (Codex Cloud, Devin,
+Jules) phía sau một vòng đời tác vụ thống nhất dựa trên DB. Tất cả các endpoint
 tạo/kiểm tra tác vụ đều yêu cầu xác thực quản trị.
 
 - Thư mục gốc của module: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, cùng các thư mục con theo từng agent trong `agents/`)
-- Các triển khai theo từng agent: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Các endpoint công khai: `/api/v1/agents/tasks/*` (liệt kê/tạo/xem/hủy)
-- Các endpoint quản trị: `/api/cloud/*` (cung cấp, trạng thái, hàng loạt)
-- Dashboard: `/dashboard/cloud-agents`
+  `types.ts`, `db.ts`, cùng các thư mục con theo từng agent bên dưới `agents/`)
+- Triển khai theo từng agent: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Endpoint công khai: `/api/v1/agents/tasks/*` (list/create/get/cancel)
+- Endpoint quản trị: `/api/cloud/*` (provisioning, status, batch)
+- Bảng điều khiển: `/dashboard/cloud-agents`
 - Lưu trữ: bảng `cloud_agent_tasks`
 
-Để biết chi tiết về cung cấp và OAuth cho từng agent, xem
+Để biết thông tin chi tiết về provisioning và OAuth theo từng agent, xem
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
 ### C. Guardrails
 
-Module guardrails là một lớp middleware có thể nạp lại nóng (hot-reload), dùng để kiểm tra
-các yêu cầu và phản hồi nhằm phát hiện PII, prompt injection và nội dung hình ảnh không an
-toàn. Các vi phạm sẽ ngắt yêu cầu với HTTP **503** kèm theo một mã lỗi có cấu trúc, cho phép
-các phía gọi ở hạ nguồn thử lại hoặc rẽ nhánh.
+Module guardrails là một lớp middleware có thể hot-reload, kiểm tra các yêu cầu
+và phản hồi để phát hiện PII, prompt injection và nội dung hình ảnh (vision) không an toàn.
+Các vi phạm sẽ cắt ngang (short-circuit) yêu cầu với HTTP **503** kèm một mã lỗi
+có cấu trúc, cho phép các caller phía dưới thử lại hoặc rẽ nhánh.
 
 - Thư mục gốc của module: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Nạp lại nóng: registry theo dõi các thay đổi cấu hình và dựng lại chuỗi xử lý ngay tại chỗ
-- Các điểm tích hợp: điểm vào của chat handler, handler tạo hình ảnh, bộ lọc phản hồi
+- Hot reload: registry theo dõi các thay đổi cấu hình và xây dựng lại chuỗi tại chỗ
+- Điểm gắn vào (wire-in): điểm vào của chat handler, handler tạo ảnh, response sanitizer
 - Hợp đồng HTTP: các vi phạm hiển thị dưới dạng `503` với `error.code = "GUARDRAIL_VIOLATION"`
 
-Để biết cách viết ruleset và tinh chỉnh ngưỡng, xem
+Để biết về cách viết ruleset và tinh chỉnh ngưỡng, xem
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
 ### D. Tầng Domain
 
-Namespace `src/domain/` chứa các dịch vụ miền (domain service) và các hợp đồng đánh giá
-dự phòng. Nó không phải là một điểm vào chính sách bắt buộc duy nhất cho mọi yêu cầu.
+Namespace `src/domain/` chứa các dịch vụ domain và các hợp đồng đánh giá dự trữ.
+Nó không phải là một điểm vào chính sách bắt buộc duy nhất cho mọi yêu cầu.
 
-Đường dẫn chat trực tiếp gọi `enforceApiKeyPolicy()` từ
-`src/shared/utils/apiKeyPolicy.ts`; việc ủy quyền các model đã phân giải và các thành viên
-combo được triển khai trong `src/sse/handlers/chat/resolvedModelPolicy.ts`. Điểm vào
-self-hosted trong `src/app/api/v1/chat/completions/route.ts` cũng thực thi chính sách
-API key trước khi điều phối. Việc phân giải combo chạy qua `open-sse/services/combo.ts`.
+Đường dẫn chat thực tế gọi `enforceApiKeyPolicy()` từ
+`src/shared/utils/apiKeyPolicy.ts`; việc ủy quyền các model đã được phân giải và các
+thành viên combo được triển khai trong `src/sse/handlers/chat/resolvedModelPolicy.ts`.
+Điểm vào self-hosted trong `src/app/api/v1/chat/completions/route.ts` cũng thực thi
+chính sách API key trước khi điều phối. Việc phân giải combo chạy qua
+`open-sse/services/combo.ts`.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` và `src/lib/container.ts`
-vẫn là các hợp đồng đã được kiểm thử, chứ không phải là phần nối dây của đường dẫn yêu cầu
-đó. Container có đăng ký policy engine, nhưng đường dẫn yêu cầu production đã được kiểm tra
-không phân giải nó. Chỉ thay đổi các hợp đồng đó không làm thay đổi chính sách chat trực tiếp
-hay định tuyến combo; việc kết nối hoặc gỡ bỏ chúng đòi hỏi một quyết định thiết kế riêng.
+vẫn là các hợp đồng đã được kiểm thử, chứ không phải phần nối dây (wiring) của đường dẫn
+yêu cầu đó. Container đăng ký policy engine, nhưng đường dẫn yêu cầu production đã được
+khảo sát không phân giải nó. Chỉ riêng việc thay đổi các hợp đồng đó không làm thay đổi
+chính sách chat thực tế hay định tuyến combo; việc kết nối hoặc loại bỏ chúng đòi hỏi
+một quyết định thiết kế riêng.
 
-- Policy engine dự phòng: `src/domain/policyEngine.ts` — đánh giá lockout → ngân sách → fallback
+- Policy engine dự trữ: `src/domain/policyEngine.ts` — đánh giá lockout → budget → fallback
 - Quy tắc chi phí: `src/domain/costRules.ts`
 - Chính sách fallback: `src/domain/fallbackPolicy.ts`
 - Chính sách lockout: `src/domain/lockoutPolicy.ts`
-- Định tuyến dựa trên thẻ (tag): `src/domain/tagRouter.ts`
-- Bộ phân giải combo dự phòng: `src/domain/comboResolver.ts` — hợp đồng lựa chọn độc lập; định tuyến combo trực tiếp được triển khai trong `open-sse/services/combo.ts`
-- Bộ nối quy tắc kết nối/model: `src/domain/connectionModelRules.ts`
-- Snapshot tình trạng sẵn sàng của model: `src/domain/modelAvailability.ts`
-- Theo dõi thời hạn của provider: `src/domain/providerExpiration.ts`
+- Định tuyến dựa trên tag: `src/domain/tagRouter.ts`
+- Bộ phân giải combo dự trữ: `src/domain/comboResolver.ts` — hợp đồng lựa chọn độc lập; định tuyến combo thực tế được triển khai trong `open-sse/services/combo.ts`
+- Bộ nối quy tắc connection/model: `src/domain/connectionModelRules.ts`
+- Các snapshot về tính khả dụng của model: `src/domain/modelAvailability.ts`
+- Theo dõi thời hạn hết hạn của provider: `src/domain/providerExpiration.ts`
 - Cache quota: `src/domain/quotaCache.ts`
-- Trạng thái suy giảm: `src/domain/degradation.ts`
+- Trạng thái suy giảm (degradation): `src/domain/degradation.ts`
 - Kiểm toán cấu hình: `src/domain/configAudit.ts`
-- Bộ dựng metadata phản hồi OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Hệ thống con đánh giá: `src/domain/assessment/` — các tác vụ đánh giá định kỳ
+- Bộ xây dựng metadata phản hồi OmniRoute: `src/domain/omnirouteResponseMeta.ts`
+- Hệ thống con assessment: `src/domain/assessment/` — các job đánh giá định kỳ
 
 ### E. Pipeline ủy quyền
 
-Pipeline ủy quyền phân loại mọi yêu cầu đến và áp dụng chuỗi chính sách phù hợp trước khi
-điều phối.
+Pipeline ủy quyền phân loại mọi yêu cầu đến và áp dụng
+chuỗi chính sách phù hợp trước khi điều phối.
 
 - Điểm vào pipeline: `src/server/authz/pipeline.ts`
 - Bộ phân loại request: `src/server/authz/classify.ts` — phân biệt các route
-  tương thích công khai với các route quản lý
+  tương thích công khai với các route quản trị
 - Danh mục route công khai: `src/shared/constants/publicApiRoutes.ts`
-- Chính sách: `src/server/authz/policies/` — các predicate có thể kết hợp
+- Policies: `src/server/authz/policies/` — các predicate có thể tổ hợp
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, v.v.)
 - Tiện ích header: `src/server/authz/headers.ts`
-- Hàm trợ giúp assertion: `src/server/authz/assertAuth.ts`
+- Helper kiểm tra: `src/server/authz/assertAuth.ts`
 - Ngữ cảnh request: `src/server/authz/context.ts`
 
-Route công khai và route quản lý là một ranh giới cứng: các API agent/cooldown và
-các mutation của provider yêu cầu xác thực quản lý (HTTP 401 nếu thiếu).
+Rancho giới giữa route công khai và route quản trị là bất biến: các API
+agent/cooldown và các mutation provider yêu cầu xác thực quản trị (HTTP 401 nếu thiếu).
 
-Để xem toàn bộ quy tắc phân loại route, hãy tham khảo
+Để xem toàn bộ quy tắc phân loại route, tham khảo
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
 ### F. Workflow FSM và Router nhận biết tác vụ
 
-Một router điều khiển bằng máy trạng thái hữu hạn (FSM) nằm phía trên lớp chọn
-combo, dùng để điều hướng lưu lượng dựa trên giai đoạn workflow được phát hiện
+Một router điều khiển bằng máy trạng thái hữu hạn (finite-state-machine) nằm phía trên
+lớp chọn combo để điều hướng lưu lượng dựa trên giai đoạn workflow được phát hiện
 (lập kế hoạch, thực thi, review) và mức độ liên quan đến tác vụ nền.
 
 - Workflow FSM: `open-sse/services/workflowFSM.ts`
@@ -491,19 +493,19 @@ combo, dùng để điều hướng lưu lượng dựa trên giai đoạn workf
 - Bộ phát hiện tác vụ nền: `open-sse/services/backgroundTaskDetector.ts`
 - Bộ phân loại ý định: `open-sse/services/intentClassifier.ts`
 
-Các chuyển đổi trạng thái của FSM được đưa vào cơ chế chấm điểm của Auto Combo,
-ưu tiên các model rẻ hơn cho các tác vụ nền/tự động hóa và ưu tiên các model
-mạnh hơn cho các lượt lập kế hoạch/review mang tính tương tác.
+Các chuyển trạng thái của FSM được đưa vào cơ chế chấm điểm của Auto Combo, ưu tiên
+các model rẻ hơn cho các tác vụ nền/tự động hóa và ưu tiên các model mạnh hơn cho
+các lượt lập kế hoạch/review tương tác.
 
-### G. Khả năng chịu lỗi theo từng provider
+### G. Khả năng phục hồi theo từng provider
 
-Một số provider đi kèm các module chịu lỗi và stealth chuyên dụng, hoạt động
-dựa trên các lớp circuit breaker / connection cooldown / model lockout toàn cục:
+Một số provider đi kèm các module phục hồi và stealth chuyên dụng, hoạt động dựa trên
+các lớp circuit breaker / connection cooldown / model lockout toàn cục:
 
-- Engine Antigravity 429: `open-sse/services/antigravity429Engine.ts` (xoay vòng
-  identity, làm sạch header phản hồi, điều khiển việc theo dõi credits/phiên bản
-  thông qua `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
-  `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts`)
+- Engine xử lý 429 của Antigravity: `open-sse/services/antigravity429Engine.ts` (xoay vòng
+  danh tính, làm sạch response header, điều khiển việc theo dõi credits/phiên bản thông qua
+  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
+  `antigravityIdentity.ts`, `antigravityVersion.ts`)
 - Chính sách quota ModelScope: `open-sse/services/modelscopePolicy.ts`
 - Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
   cùng với `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
@@ -511,26 +513,24 @@ dựa trên các lớp circuit breaker / connection cooldown / model lockout to�
 - Định hình fingerprint Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Obfuscation Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Để xem toàn bộ playbook stealth và hướng dẫn vận hành, hãy tham khảo
-`docs/security/STEALTH_GUIDE.md` (git; không được biên dịch vào `/docs`).
+Để xem toàn bộ playbook stealth và hướng dẫn vận hành, tham khảo
+`docs/security/STEALTH_GUIDE.md` (trong git; không được biên dịch vào `/docs`).
 
 ### H. Webhooks, Reasoning Cache, Read Cache
 
-- **Webhooks** — điều phối gửi đi (outbound) cho các sự kiện provider/tài khoản/tác vụ.
-  - Bộ điều phối: `src/lib/webhookDispatcher.ts`
+- **Webhooks** — gửi sự kiện outbound cho các sự kiện provider/tài khoản/tác vụ.
+  - Dispatcher: `src/lib/webhookDispatcher.ts`
   - Lưu trữ: bảng SQLite `webhooks` (thông qua `src/lib/db/webhooks.ts`)
-  - Dashboard: `/dashboard/webhooks` (subscriptions, secrets, lịch sử retry)
-  - Để xem phân loại sự kiện và ngữ nghĩa retry, hãy tham khảo [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Reasoning Cache** — các khối suy luận có thể phát lại cho các provider phát
-  sinh thinking token (Claude, GLMT, v.v.) để các lượt liên tiếp có thể bỏ qua
-  việc suy luận lại.
-  - Tầng DB: `src/lib/db/reasoningCache.ts`
-  - Tầng service: `open-sse/services/reasoningCache.ts`
-  - Để xem ngữ nghĩa phát lại, hãy tham khảo [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Read Cache** — cache phản hồi tồn tại ngắn hạn, được khóa theo chữ ký
-  (signature) và dùng để gộp các lần retry giống hệt nhau từ các SDK upstream
-  bị lỗi.
-  - Tầng DB: `src/lib/db/readCache.ts`
+  - Dashboard: `/dashboard/webhooks` (subscription, secret, lịch sử retry)
+  - Để xem phân loại sự kiện và ngữ nghĩa retry, tham khảo [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Reasoning Cache** — các khối reasoning có thể phát lại cho những provider phát sinh
+  thinking token (Claude, GLMT, v.v.) để các lượt liên tiếp có thể bỏ qua việc suy luận lại.
+  - Lớp DB: `src/lib/db/reasoningCache.ts`
+  - Lớp service: `open-sse/services/reasoningCache.ts`
+  - Để xem ngữ nghĩa phát lại, tham khảo [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Read Cache** — bộ nhớ đệm phản hồi ngắn hạn, khóa theo chữ ký, dùng để
+  gộp các lần retry giống hệt nhau từ các SDK upstream bị lỗi.
+  - Lớp DB: `src/lib/db/readCache.ts`
   - Endpoint thống kê: `GET /api/cache/stats`, dashboard tại `/dashboard/cache`
 
 ## 3) Lớp lưu trữ

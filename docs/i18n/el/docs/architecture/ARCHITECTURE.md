@@ -266,7 +266,7 @@ flowchart LR
 - Πακέτο ρυθμίσεων: `src/app/api/sync/bundle` (GET, στιγμιότυπο ρυθμίσεων/παρόχων/συνδυασμών/κλειδιών με έκδοση ETag)
 - WebSocket: `src/app/api/v1/ws/route.ts` — Χειριστής Αναβάθμισης για πελάτες WS συμβατούς με OpenAI
 
-## 2) SSE + Πυρήνας Μετάφρασης
+## 2) SSE + Πυρήνας μετάφρασης
 
 Κύρια modules ροής:
 
@@ -280,59 +280,59 @@ flowchart LR
 - Μετασχηματισμοί ροής: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - Εξαγωγή/κανονικοποίηση χρήσης: `open-sse/utils/usageTracking.ts`
 - Αναλυτής ετικετών think: `open-sse/utils/thinkTagParser.ts`
-- Χειριστής embeddings: `open-sse/handlers/embeddings.ts`
+- Χειριστής embedding: `open-sse/handlers/embeddings.ts`
 - Μητρώο παρόχων embedding: `open-sse/config/embeddingRegistry.ts`
 - Χειριστής δημιουργίας εικόνων: `open-sse/handlers/imageGeneration.ts`
 - Μητρώο παρόχων εικόνων: `open-sse/config/imageRegistry.ts`
-- Εξυγίανση αποκρίσεων: `open-sse/handlers/responseSanitizer.ts`
+- Εξυγίανση απαντήσεων: `open-sse/handlers/responseSanitizer.ts`
 - Κανονικοποίηση ρόλων: `open-sse/services/roleNormalizer.ts`
 
 Υπηρεσίες (επιχειρησιακή λογική):
 
-- Επιλογή/βαθμολόγηση λογαριασμών: `open-sse/services/accountSelector.ts`
+- Επιλογή/βαθμολόγηση λογαριασμού: `open-sse/services/accountSelector.ts`
 - Διαχείριση κύκλου ζωής πλαισίου: `open-sse/services/contextManager.ts`
 - Επιβολή φίλτρου IP: `open-sse/services/ipFilter.ts`
-- Παρακολούθηση συνεδριών: `open-sse/services/sessionManager.ts`
-- Απαλοιφή διπλότυπων αιτημάτων: `open-sse/services/signatureCache.ts`
+- Παρακολούθηση συνεδρίας: `open-sse/services/sessionManager.ts`
+- Αφαίρεση διπλότυπων αιτημάτων: `open-sse/services/signatureCache.ts`
 - Έγχυση system prompt: `open-sse/services/systemPrompt.ts`
 - Διαχείριση προϋπολογισμού thinking: `open-sse/services/thinkingBudget.ts`
-- Δρομολόγηση μοντέλων με χαρακτήρα μπαλαντέρ: `open-sse/services/wildcardRouter.ts`
-- Διαχείριση ορίου ρυθμού: `open-sse/services/rateLimitManager.ts`
+- Δρομολόγηση μοντέλων με μπαλαντέρ: `open-sse/services/wildcardRouter.ts`
+- Διαχείριση ορίων ρυθμού: `open-sse/services/rateLimitManager.ts`
 - Διακόπτης κυκλώματος: `src/shared/utils/circuitBreaker.ts`
 - Παράδοση πλαισίου: `open-sse/services/contextHandoff.ts` — δημιουργία και έγχυση σύνοψης παράδοσης για τη στρατηγική context-relay
 - Συμπίεση: `open-sse/services/compression/*` — προληπτική συμπίεση πριν από τη μετάφραση του παρόχου·
-  περιλαμβάνει κανόνες Caveman, φίλτρα RTK, στοιβαγμένες pipelines, συνδυασμούς συμπίεσης, στατιστικά και επικύρωση
+  περιλαμβάνει κανόνες Caveman, φίλτρα RTK, στοιβαγμένες διοχετεύσεις, συνδυασμούς συμπίεσης, στατιστικά και επικύρωση
 - Ανάκτηση ποσόστωσης Codex: `open-sse/services/codexQuotaFetcher.ts` — ανακτά την ποσόστωση Codex για αποφάσεις παράδοσης context-relay
-- Επανάληψη με επίγνωση cooldown: `src/sse/services/cooldownAwareRetry.ts` — επαναλήψεις cooldown ανά μοντέλο με ρυθμιζόμενα `requestRetry` / `maxRetryIntervalSec`
-- Ασφαλής εξερχόμενη fetch: `src/shared/network/safeOutboundFetch.ts` — προστατευμένη fetch παρόχου/μοντέλου με φράγμα SSRF, αποκλεισμό ιδιωτικών URL, επανάληψη και χρονικό όριο
-- Φράγμα εξερχόμενων URL: `src/shared/network/outboundUrlGuard.ts` — έλεγχοι host σε URL παρόχων· το `src/shared/network/outboundUrlGuardPolicy.ts` επιλέγει τη λειτουργία από τα `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` και τους αντίστοιχους διακόπτες στον πίνακα ελέγχου (βλ. `docs/reference/ENVIRONMENT.md`)
+- Επανάληψη με επίγνωση cooldown: `src/sse/services/cooldownAwareRetry.ts` — επαναλήψεις cooldown ανά μοντέλο με διαμορφώσιμα `requestRetry` / `maxRetryIntervalSec`
+- Ασφαλής εξερχόμενη ανάκτηση: `src/shared/network/safeOutboundFetch.ts` — προστατευμένη ανάκτηση παρόχου/μοντέλου με φύλαξη SSRF, αποκλεισμό ιδιωτικών URL, επανάληψη και χρονικό όριο
+- Φύλαξη εξερχόμενων URL: `src/shared/network/outboundUrlGuard.ts` — έλεγχοι host στα URL παρόχων· το `src/shared/network/outboundUrlGuardPolicy.ts` επιλέγει τη λειτουργία από τα `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` και τους αντίστοιχους διακόπτες του πίνακα ελέγχου (δείτε `docs/reference/ENVIRONMENT.md`)
 - Προεπιλογές αιτημάτων παρόχου: `open-sse/services/providerRequestDefaults.ts` — προεπιλογές `maxTokens`, `temperature`, `thinkingBudgetTokens` σε επίπεδο παρόχου
-- Σταθερές παρόχου GLM: `open-sse/config/glmProvider.ts` — κοινά μοντέλα GLM, URL ποσοστώσεων, χρονικά όρια/προεπιλογές GLMT
+- Σταθερές παρόχου GLM: `open-sse/config/glmProvider.ts` — κοινόχρηστα μοντέλα GLM, URL ποσοστώσεων, χρονικά όρια/προεπιλογές GLMT
 - Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — σταθερές βασικού URL και διαδρομής ανακάλυψης
-- Σταθερές client Codex: `open-sse/config/codexClient.ts` — τιμές user-agent και client-version με έκδοση
-- Σπόρος ψευδωνύμων μοντέλων: `src/lib/modelAliasSeed.ts` — εισάγει 30+ ψευδώνυμα διαλέκτων cross-proxy κατά την εκκίνηση
+- Σταθερές πελάτη Codex: `open-sse/config/codexClient.ts` — τιμές user-agent και client-version με έκδοση
+- Αρχικοποίηση ψευδωνύμων μοντέλων: `src/lib/modelAliasSeed.ts` — αρχικοποιεί 30+ ψευδώνυμα διαλέκτων cross-proxy κατά την εκκίνηση
 
 Modules επιπέδου τομέα:
 
 - Κανόνες κόστους/προϋπολογισμοί: `src/domain/costRules.ts`
 - Πολιτική εναλλακτικής: `src/domain/fallbackPolicy.ts`
 - Δεσμευμένο συμβόλαιο επίλυσης συνδυασμών: `src/domain/comboResolver.ts`· η ζωντανή δρομολόγηση χρησιμοποιεί το `open-sse/services/combo.ts`
-- Πολιτική αποκλεισμού: `src/domain/lockoutPolicy.ts`
-- Δεσμευμένο συμβόλαιο αξιολόγησης πολιτικών: `src/domain/policyEngine.ts`· η διαδρομή αιτήματος επιβάλλει πολιτική κλειδιού API μέσω του `src/shared/utils/apiKeyPolicy.ts` και εξουσιοδότηση επιλυμένου στόχου μέσω του `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Πολιτική κλειδώματος: `src/domain/lockoutPolicy.ts`
+- Δεσμευμένο συμβόλαιο αξιολόγησης πολιτικής: `src/domain/policyEngine.ts`· η διαδρομή αιτήματος επιβάλλει πολιτική κλειδιού API μέσω του `src/shared/utils/apiKeyPolicy.ts` και εξουσιοδότηση επιλυμένου στόχου μέσω του `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Κατάλογος κωδικών σφαλμάτων: `src/shared/constants/errorCodes.ts`
-- Αναγνωριστικό αιτήματος: `src/shared/utils/requestId.ts`
-- Χρονικό όριο fetch: `src/shared/utils/fetchTimeout.ts`
+- ID αιτήματος: `src/shared/utils/requestId.ts`
+- Χρονικό όριο ανάκτησης: `src/shared/utils/fetchTimeout.ts`
 - Τηλεμετρία αιτημάτων: `src/shared/utils/requestTelemetry.ts`
 - Συμμόρφωση/έλεγχος: `src/lib/compliance/index.ts`
 - Εκτελεστής αξιολογήσεων: `src/lib/evals/evalRunner.ts`
-- Αποθήκευση κατάστασης τομέα: `src/lib/db/domainState.ts` — SQLite CRUD για αλυσίδες εναλλακτικής, προϋπολογισμούς, ιστορικό κόστους, κατάσταση αποκλεισμού, διακόπτες κυκλώματος
+- Διατήρηση κατάστασης τομέα: `src/lib/db/domainState.ts` — SQLite CRUD για αλυσίδες εναλλακτικών, προϋπολογισμούς, ιστορικό κόστους, κατάσταση κλειδώματος, διακόπτες κυκλώματος
 
-Modules παρόχων OAuth (27 μεμονωμένα αρχεία κάτω από `src/lib/oauth/providers/`):
+Modules παρόχων OAuth (27 μεμονωμένα αρχεία κάτω από το `src/lib/oauth/providers/`):
 
 - Ευρετήριο μητρώου: `src/lib/oauth/providers/index.ts`
 - Μεμονωμένοι πάροχοι: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Κοινά βοηθητικά: `codebuddyDeviceAuth.ts` (ροή συσκευής CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
-- Λεπτό περιτύλιγμα: `src/lib/oauth/providers.ts` — επανεξάγει από τα μεμονωμένα modules
+- Κοινόχρηστα βοηθήματα: `codebuddyDeviceAuth.ts` (ροή συσκευής CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
+- Λεπτό περίβλημα: `src/lib/oauth/providers.ts` — επανεξάγει από μεμονωμένα modules
 
 ## 5) Ενσωματωμένες Υπηρεσίες (v3.8.4)
 
@@ -359,13 +359,13 @@ Modules παρόχων OAuth (27 μεμονωμένα αρχεία κάτω απ
 
 ## Κύρια Υποσυστήματα (v3.8.0)
 
-### A. Μηχανή Auto Combo
+### A. Auto Combo Engine
 
 Το Auto Combo βαθμολογεί δυναμικά και επιλέγει στόχους δρομολόγησης κατά τη στιγμή του αιτήματος, αντί να βασίζεται σε έναν στατικό ορισμό combo. Τροφοδοτεί την οικογένεια προθεμάτων μοντέλων `auto/*`.
 
-- Σημείο εισόδου της μηχανής: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- Σημείο εισόδου μηχανής: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Σημείο εισόδου του live combo: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), το οποίο καλείται από το `src/sse/handlers/chat.ts`
+- Σημείο εισόδου live combo: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), καλείται από το `src/sse/handlers/chat.ts`
 - Πίνακας ελέγχου: `/dashboard/auto-combo`
 - Τηλεμετρία: πίνακας SQLite `auto_combo_decisions`
 
@@ -375,31 +375,31 @@ Modules παρόχων OAuth (27 μεμονωμένα αρχεία κάτω απ
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  το auto είναι η κεντρική προσθήκη στην v3.8.0· το `fusion` (fan-out σε panel + σύνθεση μέσω judge,
+  το auto είναι η κύρια νέα προσθήκη στην v3.8.0· το `fusion` (panel fan-out + judge synthesis,
   `open-sse/services/fusion.ts`) είναι νέο στην v3.8.36.
 - **Βαθμολόγηση 16 παραγόντων**: quota, health, inverse cost, inverse latency, task fit και
   δέκα ακόμη. Ο κανονικός πίνακας παραγόντων και των προεπιλεγμένων βαρών τους βρίσκεται στο
   [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — η επανάληψή του εδώ θα
-  του έδινε ένα δεύτερο σημείο όπου θα μπορούσε να απαρχαιωθεί.
-- Το **Virtual factory** υλοποιεί εφήμερα combos όταν δεν υπάρχει αντίστοιχο ονομασμένο combo,
-  αντλώντας υποψηφίους από υγιείς ενεργές συνδέσεις παρόχων.
+  δημιουργούσε ένα δεύτερο σημείο όπου θα μπορούσε να απαρχαιωθεί.
+- Το **Virtual factory** υλοποιεί εφήμερα combos όταν δεν υπάρχει αντίστοιχο ονομασμένο
+  combo, αντλώντας υποψηφίους από υγιείς ενεργές συνδέσεις παρόχων.
 - **Προθέματα auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — το καθένα υποστηρίζεται από ένα συντονισμένο προφίλ βαρών.
+  `auto/smart`, `auto/lkgp` — καθένα υποστηρίζεται από ένα συντονισμένο προφίλ βαρών.
 - **6 mode packs**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` και `chaos-mode` — προκαθορισμένες διαμορφώσεις βαρών που μπορούν να κληθούν
-  από τον πίνακα ελέγχου. (Να μη συγχέονται με τα προθέματα `auto/*` παραπάνω, τα οποία είναι
-  παραλλαγές κατά τη στιγμή του αιτήματος.)
+  `reliability-first` και `chaos-mode` — προκαθορισμένες διαμορφώσεις βαρών που μπορούν να
+  κληθούν από τον πίνακα ελέγχου. (Να μη συγχέονται με τα προθέματα `auto/*` παραπάνω,
+  τα οποία είναι παραλλαγές κατά τον χρόνο του αιτήματος.)
 
 Για πλήρη αλγοριθμική λεπτομέρεια (τύποι παραγόντων, συντονισμός βαρών), δείτε
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
 ### B. Cloud Agents
 
-Το Cloud Agents τυλίγει πλατφόρμες φιλοξενούμενων code agents τρίτων (Codex Cloud, Devin,
-Jules) πίσω από έναν ενιαίο κύκλο ζωής εργασιών με υποστήριξη βάσης δεδομένων. Όλα τα endpoints
-δημιουργίας/επιθεώρησης εργασιών απαιτούν έλεγχο ταυτότητας διαχείρισης.
+Το Cloud Agents τυλίγει πλατφόρμες φιλοξενούμενων code agent τρίτων (Codex Cloud, Devin,
+Jules) πίσω από έναν ενιαίο κύκλο ζωής εργασιών με υποστήριξη βάσης δεδομένων. Όλα τα
+endpoints δημιουργίας/επιθεώρησης εργασιών απαιτούν έλεγχο ταυτότητας διαχείρισης.
 
-- Ρίζα module: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
+- Ρίζα αρθρώματος: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
   `types.ts`, `db.ts`, συν υποκατάλογοι ανά agent κάτω από το `agents/`)
 - Υλοποιήσεις ανά agent: `agents/codex/`, `agents/devin/`, `agents/jules/`
 - Δημόσια endpoints: `/api/v1/agents/tasks/*` (list/create/get/cancel)
@@ -407,61 +407,61 @@ Jules) πίσω από έναν ενιαίο κύκλο ζωής εργασιώ�
 - Πίνακας ελέγχου: `/dashboard/cloud-agents`
 - Αποθήκευση: πίνακας `cloud_agent_tasks`
 
-Για provisioning ανά agent και λεπτομέρειες OAuth, δείτε
+Για λεπτομέρειες provisioning και OAuth ανά agent, δείτε
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
 ### C. Guardrails
 
-Το module guardrails είναι ένα ενδιάμεσο στρώμα (middleware) με δυνατότητα hot-reload που επιθωρεί αιτήματα
-και απαντήσεις για PII, prompt injection και μη ασφαλές περιεχόμενο vision. Οι παραβιάσεις
-βραχυκυκλώνουν το αίτημα με HTTP **503** συν έναν δομημένο κωδικό σφάλματος, επιτρέποντας
-στους downstream καλούντες να επαναλάβουν την κλήση ή να διακλαδώσουν.
+Το άρθρωμα guardrails είναι ένα στρώμα middleware με δυνατότητα hot reload που ελέγχει
+αιτήματα και αποκρίσεις για PII, prompt injection και μη ασφαλές περιεχόμενο όρασης. Οι
+παραβιάσεις βραχυκυκλώνουν το αίτημα με HTTP **503** συν έναν δομημένο κωδικό σφάλματος,
+επιτρέποντας στους downstream καλούντες να επαναλάβουν ή να διακλαδώσουν.
 
-- Ρίζα module: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
+- Ρίζα αρθρώματος: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Hot reload: το registry παρακολουθεί για αλλαγές διαμόρφωσης και ξαναχτίζει την αλυσίδα επί τόπου
-- Σημεία ενσωμάτωσης: είσοδος του chat handler, handler δημιουργίας εικόνων, response sanitizer
+- Hot reload: το registry παρακολουθεί για αλλαγές στη διαμόρφωση και αναδομεί την αλυσίδα επί τόπου
+- Σημεία σύνδεσης: είσοδος του chat handler, handler παραγωγής εικόνων, καθαριστής αποκρίσεων
 - Συμβόλαιο HTTP: οι παραβιάσεις εμφανίζονται ως `503` με `error.code = "GUARDRAIL_VIOLATION"`
 
-Για τη συγγραφή ruleset και τον συντονισμό κατωφλίων, δείτε
+Για τη συγγραφή συνόλων κανόνων και τη ρύθμιση κατωφλίων, δείτε
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Επίπεδο Domain
+### D. Στρώμα Domain
 
 Ο χώρος ονομάτων `src/domain/` περιέχει υπηρεσίες τομέα και δεσμευμένα συμβόλαια αξιολόγησης.
 Δεν αποτελεί ένα ενιαίο υποχρεωτικό σημείο εισόδου πολιτικής για κάθε αίτημα.
 
-Η ενεργή διαδρομή chat καλεί το `enforceApiKeyPolicy()` από το
+Η ενεργή διαδρομή chat καλεί την `enforceApiKeyPolicy()` από το
 `src/shared/utils/apiKeyPolicy.ts`· η εξουσιοδότηση των επιλυμένων μοντέλων και των μελών combo
-υλοποιείται στο `src/sse/handlers/chat/resolvedModelPolicy.ts`. Η self-hosted
-είσοδος στο `src/app/api/v1/chat/completions/route.ts` επιβάλλει επίσης πολιτική API-key πριν από
-την αποστολή. Η επίλυση combo εκτελείται μέσω του `open-sse/services/combo.ts`.
+υλοποιείται στο `src/sse/handlers/chat/resolvedModelPolicy.ts`. Η self-hosted είσοδος στο
+`src/app/api/v1/chat/completions/route.ts` επιβάλλει επίσης πολιτική API key πριν από την
+αποστολή. Η επίλυση combo εκτελείται μέσω του `open-sse/services/combo.ts`.
 
 Τα `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` και `src/lib/container.ts`
-παραμένουν δοκιμασμένα συμβόλαια, όχι η καλωδίωση εκείνης της διαδρομής αιτήματος. Το container καταχωρεί
-τη μηχανή πολιτικής, αλλά η επιθεωρημένη παραγωγική διαδρομή αιτήματος δεν την επιλύει.
-Η αλλαγή αυτών των συμβολαίων από μόνη της δεν αλλάζει τη live πολιτική chat ή τη δρομολόγηση combo·
-η σύνδεση ή η αφαίρεσή τους απαιτεί ξεχωριστή απόφαση σχεδιασμού.
+παραμένουν δοκιμασμένα συμβόλαια, όχι η καλωδίωση αυτής της διαδρομής αιτήματος. Το container
+καταχωρεί τον policy engine, αλλά η εξετασθείσα διαδρομή αιτήματος παραγωγής δεν τον επιλύει.
+Η αλλαγή αυτών των συμβολαίων από μόνη της δεν αλλάζει την ενεργή πολιτική chat ή τη
+δρομολόγηση combo· η σύνδεση ή η αφαίρεσή τους απαιτεί ξεχωριστή σχεδιαστική απόφαση.
 
-- Δεσμευμένη μηχανή πολιτικής: `src/domain/policyEngine.ts` — αξιολόγηση lockout → budget → fallback
+- Δεσμευμένος policy engine: `src/domain/policyEngine.ts` — αξιολόγηση lockout → budget → fallback
 - Κανόνες κόστους: `src/domain/costRules.ts`
 - Πολιτική fallback: `src/domain/fallbackPolicy.ts`
 - Πολιτική lockout: `src/domain/lockoutPolicy.ts`
 - Δρομολόγηση βάσει ετικετών: `src/domain/tagRouter.ts`
-- Δεσμευμένος επιλυτής combo: `src/domain/comboResolver.ts` — αυτόνομο συμβόλαιο επιλογής· η live δρομολόγηση combo υλοποιείται στο `open-sse/services/combo.ts`
+- Δεσμευμένος combo resolver: `src/domain/comboResolver.ts` — αυτόνομο συμβόλαιο επιλογής· η ενεργή δρομολόγηση combo υλοποιείται στο `open-sse/services/combo.ts`
 - Συνδετήρας κανόνων σύνδεσης/μοντέλου: `src/domain/connectionModelRules.ts`
 - Στιγμιότυπα διαθεσιμότητας μοντέλων: `src/domain/modelAvailability.ts`
-- Παρακολούθηση λήξης παρόχου: `src/domain/providerExpiration.ts`
-- Κρυφή μνήμη quota: `src/domain/quotaCache.ts`
+- Παρακολούθηση λήξης παρόχων: `src/domain/providerExpiration.ts`
+- Cache quota: `src/domain/quotaCache.ts`
 - Κατάσταση υποβάθμισης: `src/domain/degradation.ts`
 - Έλεγχος διαμόρφωσης: `src/domain/configAudit.ts`
 - Δημιουργός μεταδεδομένων απόκρισης OmniRoute: `src/domain/omnirouteResponseMeta.ts`
 - Υποσύστημα αξιολόγησης: `src/domain/assessment/` — περιοδικές εργασίες αξιολόγησης
 
-### E. Διοχέτευση Εξουσιοδότησης
+### E. Pipeline Εξουσιοδότησης
 
-Η διοχέτευση εξουσιοδότησης ταξινομεί κάθε εισερχόμενο αίτημα και εφαρμόζει την
-κατάλληλη αλυσίδα πολιτικής πριν από την αποστολή.
+Το pipeline εξουσιοδότησης ταξινομεί κάθε εισερχόμενο αίτημα και εφαρμόζει την κατάλληλη
+αλυσίδα πολιτικής πριν από την αποστολή.
 
 - Σημείο εισόδου pipeline: `src/server/authz/pipeline.ts`
 - Ταξινομητής αιτημάτων: `src/server/authz/classify.ts` — διακρίνει τις δημόσιες
@@ -469,59 +469,70 @@ Jules) πίσω από έναν ενιαίο κύκλο ζωής εργασιώ�
 - Κατάλογος δημόσιων διαδρομών: `src/shared/constants/publicApiRoutes.ts`
 - Πολιτικές: `src/server/authz/policies/` — συνθέσιμα κατηγορήματα
   (`requireApiKey`, `requireManagement`, `requireFreshAuth` κ.λπ.)
-- Βοηθητικά κεφαλίδων: `src/server/authz/headers.ts`
-- Βοηθητικό ισχυρισμών: `src/server/authz/assertAuth.ts`
+- Βοηθητικά εργαλεία κεφαλίδων: `src/server/authz/headers.ts`
+- Βοηθητική συνάρτηση επιβεβαίωσης: `src/server/authz/assertAuth.ts`
 - Πλαίσιο αιτήματος: `src/server/authz/context.ts`
 
-Οι δημόσιες έναντι των διαδρομών διαχείρισης αποτελούν ένα αυστηρό όριο: τα API agent/cooldown και οι μεταβολές παρόχων απαιτούν έλεγχο ταυτότητας διαχείρισης (HTTP 401 εάν λείπει).
+Οι δημόσιες έναντι των διαδρομών διαχείρισης αποτελούν αυστηρό όριο: τα API
+agent/cooldown και οι μεταβολές παρόχων απαιτούν έλεγχο ταυτότητας διαχείρισης
+(HTTP 401 εάν λείπει).
 
 Για τους πλήρεις κανόνες ταξινόμησης διαδρομών, δείτε
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
 ### F. FSM Ροής Εργασίας και Δρομολογητής με Επίγνωση Εργασιών
 
-Ένας δρομολογητής βασισμένος σε αυτόματο πεπερασμένων καταστάσεων, τοποθετημένος πάνω από την επιλογή combo, για την κατεύθυνση της κίνησης με βάση το ανιχνευμένο στάδιο της ροής εργασίας (σχεδιασμός, εκτέλεση, αναθεώρηση) και τη συνάφεια με εργασίες παρασκηνίου.
+Ένας δρομολογητής με βάση μηχανή πεπερασμένων καταστάσεων, τοποθετημένος πάνω
+από την επιλογή combo, για την κατεύθυνση της κίνησης με βάση το ανιχνευμένο
+στάδιο της ροής εργασίας (σχεδιασμός, εκτέλεση, αναθεώρηση) και τη συγγένεια
+εργασιών παρασκηνίου.
 
-- Workflow FSM: `open-sse/services/workflowFSM.ts`
+- FSM ροής εργασίας: `open-sse/services/workflowFSM.ts`
 - Δρομολογητής με επίγνωση εργασιών: `open-sse/services/taskAwareRouter.ts`
 - Ανιχνευτής εργασιών παρασκηνίου: `open-sse/services/backgroundTaskDetector.ts`
 - Ταξινομητής πρόθεσης: `open-sse/services/intentClassifier.ts`
 
-Οι μεταβάσεις του FSM τροφοδοτούν τη βαθμολόγηση του Auto Combo, με κλίση προς φθηνότερα μοντέλα για εργασίες παρασκηνίου/αυτοματισμού και προς ισχυρότερα μοντέλα για διαδραστικούς γύρους σχεδιασμού/αναθεώρησης.
+Οι μεταβάσεις του FSM τροφοδοτούν τη βαθμολόγηση του Auto Combo, με τάση προς
+φθηνότερα μοντέλα για εργασίες παρασκηνίου/αυτοματισμού και προς ισχυρότερα
+μοντέλα για διαδραστικούς γύρους σχεδιασμού/αναθεώρησης.
 
-### G. Ανθεκτικότητα ανά Πάροχο
+### G. Ανθεκτικότητα Ανά Πάροχο
 
-Αρκετοί πάροχοι περιλαμβάνουν ειδικές μονάδες ανθεκτικότητας και απόκρυψης που αξιοποιούν τα καθολικά επίπεδα διακόπτη κυκλώματος / αναμονής σύνδεσης / αποκλεισμού μοντέλου:
+Αρκετοί πάροχοι συνοδεύονται από ειδικές μονάδες ανθεκτικότητας και απόκρυψης
+που αξιοποιούν τα καθολικά επίπεδα circuit breaker / connection cooldown /
+model lockout:
 
 - Μηχανή Antigravity 429: `open-sse/services/antigravity429Engine.ts` (εναλλάσσει
-  ταυτότητα, καθαρίζει κεφαλίδες αποκρίσεων, οδηγεί την παρακολούθηση credits/έκδοσης μέσω των
-  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts`)
-- Πολιτική quota ModelScope: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (χειραψία καναλιού συμβατότητας): `open-sse/services/claudeCodeCCH.ts`,
-  συν τα `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+  ταυτότητα, καθαρίζει κεφαλίδες απόκρισης, οδηγεί την παρακολούθηση
+  credits/έκδοσης μέσω `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
+  `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts`)
+- Πολιτική ορίου ModelScope: `open-sse/services/modelscopePolicy.ts`
+- Claude Code CCH (Χειραψία Καναλιού Συμβατότητας): `open-sse/services/claudeCodeCCH.ts`,
+  συν `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Διαμόρφωση αποτυπώματος Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- Διαμόρφωση fingerprint Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Συσκότιση Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Για το πλήρες playbook απόκρυψης και λειτουργικές οδηγίες, δείτε
-`docs/security/STEALTH_GUIDE.md` (git· δεν μεταγλωττίζεται στο `/docs`).
+Για το πλήρες playbook απόκρυψης και καθοδήγηση λειτουργίας, δείτε
+`docs/security/STEALTH_GUIDE.md` (git· δεν περιλαμβάνεται στη μεταγλώττιση του `/docs`).
 
-### H. Webhooks, Κρυφή Μνήμη Συλλογισμού, Κρυφή Μνήμη Ανάγνωσης
+### H. Webhooks, Cache Συλλογισμού, Cache Ανάγνωσης
 
 - **Webhooks** — εξερχόμενη αποστολή για συμβάντα παρόχου/λογαριασμού/εργασίας.
-  - Αποστολέας: `src/lib/webhookDispatcher.ts`
+  - Διανομέας: `src/lib/webhookDispatcher.ts`
   - Αποθήκευση: πίνακας SQLite `webhooks` (μέσω `src/lib/db/webhooks.ts`)
   - Πίνακας ελέγχου: `/dashboard/webhooks` (συνδρομές, μυστικά, ιστορικό επαναλήψεων)
   - Για την ταξινομία συμβάντων και τη σημασιολογία επαναλήψεων, δείτε [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Κρυφή Μνήμη Συλλογισμού** — αναπαραγώγιμα μπλοκ συλλογισμού για παρόχους που εκπέμπουν
-  tokens σκέψης (Claude, GLMT κ.λπ.), ώστε διαδοχικοί γύροι να μπορούν να παραλείψουν την εκ νέου σκέψη.
-  - Επίπεδο ΒΔ: `src/lib/db/reasoningCache.ts`
+- **Cache Συλλογισμού** — επαναλήψιμα μπλοκ συλλογισμού για παρόχους που εκπέμπουν
+  token σκέψης (Claude, GLMT κ.λπ.), ώστε οι διαδοχικοί γύροι να μπορούν να
+  παρακάμπτουν την εκ νέου σκέψη.
+  - Επίπεδο βάσης δεδομένων: `src/lib/db/reasoningCache.ts`
   - Επίπεδο υπηρεσίας: `open-sse/services/reasoningCache.ts`
-  - Για τη σημασιολογία αναπαραγωγής, δείτε [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Κρυφή Μνήμη Ανάγνωσης** — βραχύβια κρυφή μνήμη αποκρίσεων με κλειδί υπογραφή, που χρησιμοποιείται
-  για τη συγχώνευση πανομοιότυπων επαναλήψεων από προβληματικά upstream SDK.
-  - Επίπεδο ΒΔ: `src/lib/db/readCache.ts`
+  - Για τη σημασιολογία επανάληψης, δείτε [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Cache Ανάγνωσης** — κρυφή μνήμη αποκρίσεων μικρής διάρκειας ζωής με κλειδί
+  βάσει υπογραφής, που χρησιμοποιείται για τη συγχώνευση πανομοιότυπων
+  επαναλήψεων από προβληματικά upstream SDK.
+  - Επίπεδο βάσης δεδομένων: `src/lib/db/readCache.ts`
   - Endpoint στατιστικών: `GET /api/cache/stats`, πίνακας ελέγχου στο `/dashboard/cache`
 
 ## 3) Επίπεδο Επιμονής (Persistence Layer)

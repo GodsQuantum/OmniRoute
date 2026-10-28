@@ -266,73 +266,73 @@ flowchart LR
 - වින්යාස bundle: `src/app/api/sync/bundle` (GET, සැකසුම්/සපයන්නන්/සංයෝජන/යතුරු පිළිබඳ ETag අනුවාදගත snapshot එකක්)
 - WebSocket: `src/app/api/v1/ws/route.ts` — OpenAI-අනුකූල WS clients සඳහා Upgrade handler එකක්
 
-## 2) SSE + පරිවර්තන මධ්යගත කොටස (Core)
+## 2) SSE + පරිවර්තන හරය
 
 ප්රධාන ගලායාමේ මොඩියුල:
 
-- පිවිසුම: `src/sse/handlers/chat.ts`
-- මධ්යගත සම්බන්ධීකරණය (orchestration): `open-sse/handlers/chatCore.ts`
-- Provider ක්රියාත්මක කිරීමේ ඇඩැප්ටර: `open-sse/executors/*`
-- ආකෘති හඳුනාගැනීම/provider වින්යාසය: `open-sse/services/provider.ts`
-- ආකෘති විග්රහය/නිරාකරණය: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- ගිණුම් fallback තර්කය: `open-sse/services/accountFallback.ts`
-- පරිවර්තන ලේඛනය (registry): `open-sse/translator/index.ts`
-- Stream පරිවර්තන: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- භාවිතය උපුටාගැනීම/සාමාන්යකරණය: `open-sse/utils/usageTracking.ts`
-- Think tag විග්රහකය: `open-sse/utils/thinkTagParser.ts`
-- Embedding හසුරුවන්නා: `open-sse/handlers/embeddings.ts`
-- Embedding provider ලේඛනය: `open-sse/config/embeddingRegistry.ts`
-- රූප උත්පාදන හසුරුවන්නා: `open-sse/handlers/imageGeneration.ts`
-- රූප provider ලේඛනය: `open-sse/config/imageRegistry.ts`
+- ඇතුළත් වීමේ ස්ථානය: `src/sse/handlers/chat.ts`
+- මධ්යම සම්බන්ධතා කළමනාකරණය: `open-sse/handlers/chatCore.ts`
+- සැපයුම්කරු ක්රියාත්මක කිරීමේ ඇඩැප්ටර: `open-sse/executors/*`
+- ආකෘති හඳුනාගැනීම/සැපයුම්කරු වින්යාසය: `open-sse/services/provider.ts`
+- ආකෘති විග්රහ කිරීම/විසඳීම: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- ගිණුම් පසුබැසීමේ තර්කය: `open-sse/services/accountFallback.ts`
+- පරිවර්තක ලියාපදිංචිය: `open-sse/translator/index.ts`
+- ප්රවාහ පරිවර්තන: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
+- භාවිත උපශේෂණය/සාමාන්යකරණය: `open-sse/utils/usageTracking.ts`
+- Think ටැග් විග්රහකය: `open-sse/utils/thinkTagParser.ts`
+- Embedding හසුරුවනය: `open-sse/handlers/embeddings.ts`
+- Embedding සැපයුම්කරු ලියාපදිංචිය: `open-sse/config/embeddingRegistry.ts`
+- පිංතූර උත්පාදන හසුරුවනය: `open-sse/handlers/imageGeneration.ts`
+- පිංතූර සැපයුම්කරු ලියාපදිංචිය: `open-sse/config/imageRegistry.ts`
 - ප්රතිචාර පිරිසිදු කිරීම: `open-sse/handlers/responseSanitizer.ts`
 - භූමිකා සාමාන්යකරණය: `open-sse/services/roleNormalizer.ts`
 
-සේවාවන් (ව්යාපාරික තර්කය):
+සේවා (ව්යාපාරික තර්කය):
 
 - ගිණුම් තේරීම/ලකුණු කිරීම: `open-sse/services/accountSelector.ts`
 - සන්දර්භ ජීවන චක්ර කළමනාකරණය: `open-sse/services/contextManager.ts`
-- IP පෙරහන බලාත්මක කිරීම: `open-sse/services/ipFilter.ts`
+- IP පෙරහන් බලාත්මක කිරීම: `open-sse/services/ipFilter.ts`
 - සැසි නිරීක්ෂණය: `open-sse/services/sessionManager.ts`
 - ඉල්ලීම් අනුපිටපත් ඉවත් කිරීම: `open-sse/services/signatureCache.ts`
-- System prompt එන්නත් කිරීම: `open-sse/services/systemPrompt.ts`
-- Thinking අයවැය කළමනාකරණය: `open-sse/services/thinkingBudget.ts`
-- Wildcard ආකෘති යොමුකිරීම: `open-sse/services/wildcardRouter.ts`
-- Rate limit කළමනාකරණය: `open-sse/services/rateLimitManager.ts`
-- Circuit breaker: `src/shared/utils/circuitBreaker.ts`
+- පද්ධති ප්රොම්ප්ට් එන්නත් කිරීම: `open-sse/services/systemPrompt.ts`
+- සිතීමේ අයවැය කළමනාකරණය: `open-sse/services/thinkingBudget.ts`
+- Wildcard ආකෘති මාර්ගගත කිරීම: `open-sse/services/wildcardRouter.ts`
+- අනුපාත සීමා කළමනාකරණය: `open-sse/services/rateLimitManager.ts`
+- පරipථ බිඳුම: `src/shared/utils/circuitBreaker.ts`
 - සන්දර්භ භාරදීම: `open-sse/services/contextHandoff.ts` — context-relay උපාය මාර්ගය සඳහා භාරදීමේ සාරාංශය උත්පාදනය සහ එන්නත් කිරීම
-- සංකෝචනය: `open-sse/services/compression/*` — provider පරිවර්තනයට පෙර ක්රියාශීලී සංකෝචනය;
-  Caveman නීති, RTK පෙරහන්, සංයුක්ත pipelines, සංකෝචන combos, සංඛ්යාලේඛන සහ වලංගුකරණය ඇතුළත් ය
-- Codex කෝටා ලබාගැනීම: `open-sse/services/codexQuotaFetcher.ts` — context-relay භාරදීමේ තීරණ සඳහා Codex කෝටාව ලබා ගනී
-- Cooldown-දැනුම්සහිත නැවත උත්සාහය: `src/sse/services/cooldownAwareRetry.ts` — වින්යාසගත කළ හැකි `requestRetry` / `maxRetryIntervalSec` සමඟ ආකෘතියකට වරක් cooldown නැවත උත්සාහ
-- ආරක්ෂිත පිටත fetch: `src/shared/network/safeOutboundFetch.ts` — SSRF ආරක්ෂාව, පුද්ගලික-URL අවහිර කිරීම, නැවත උත්සාහය සහ කාලසීමාව සහිත ආරක්ෂිත provider/ආකෘති fetch
-- පිටත URL ආරක්ෂාව: `src/shared/network/outboundUrlGuard.ts` — provider URL මත සත්කාරක පරීක්ෂා; `src/shared/network/outboundUrlGuardPolicy.ts` මඟින් `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` සහ ඒවායේ dashboard ටොගල් වලින් මාදිලිය තෝරයි (බලන්න `docs/reference/ENVIRONMENT.md`)
-- Provider ඉල්ලීම් පෙරනිමි: `open-sse/services/providerRequestDefaults.ts` — provider-මට්ටමින් `maxTokens`, `temperature`, `thinkingBudgetTokens` පෙරනිමි
-- GLM provider නියතයන්: `open-sse/config/glmProvider.ts` — බෙදාගත් GLM ආකෘති, කෝටා URL, GLMT timeout/පෙරනිමි
-- Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — පදනම් URL සහ සොයාගැනීමේ මාර්ග නියතයන්
-- Codex client නියතයන්: `open-sse/config/codexClient.ts` — අනුවාදගත user-agent සහ client-version අගයන්
-- ආකෘති alias බීජ: `src/lib/modelAliasSeed.ts` — ආරම්භයේදී හරස්-proxy උපභාෂා alias 30කට වැඩි ප්රමාණයක් බීජ කරයි
+- සම්පීඩනය: `open-sse/services/compression/*` — සැපයුම්කරු පරිවර්තනයට පෙර ක්රියාශීලී සම්පීඩනය;
+  Caveman නීති, RTK පෙරහන්, තට්ටුගත පයිප්පලයින, සම්පීඩන සංයෝජන, සංඛ්යාලේඛන සහ වලංගුකරණය ඇතුළත් වේ
+- Codex කෝටා ලබාගන්නා: `open-sse/services/codexQuotaFetcher.ts` — context-relay භාරදීමේ තීරණ සඳහා Codex කෝටා ලබා ගනී
+- Cooldown-දැනුම් සහිත නැවත උත්සාහය: `src/sse/services/cooldownAwareRetry.ts` — වින්යාස කළ හැකි `requestRetry` / `maxRetryIntervalSec` සමඟ ආකෘතියකට cooldown නැවත උත්සාහ
+- ආරක්ෂිත පිටත fetch: `src/shared/network/safeOutboundFetch.ts` — SSRF ආරක්ෂාව, පුද්ගලික-URL අවහිර කිරීම, නැවත උත්සාහය සහ කාලසීමාව සහිත ආරක්ෂිත සැපයුම්කරු/ආකෘති fetch
+- පිටත URL ආරක්ෂාව: `src/shared/network/outboundUrlGuard.ts` — සැපයුම්කරු URL මත host පරීක්ෂණ; `src/shared/network/outboundUrlGuardPolicy.ts` `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` සහ ඒවායේ උපකරණ පුවරු ටොගල් වලින් මාදිලිය තෝරයි (`docs/reference/ENVIRONMENT.md` බලන්න)
+- සැපයුම්කරු ඉල්ලීම් පෙරනිමි: `open-sse/services/providerRequestDefaults.ts` — සැපයුම්කරු-මට්ටමින් `maxTokens`, `temperature`, `thinkingBudgetTokens` පෙරනිමි
+- GLM සැපයුම්කරු නියත: `open-sse/config/glmProvider.ts` — හවුල් GLM ආකෘති, කෝටා URL, GLMT කාලසීමාව/පෙරනිමි
+- Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — මූලික URL සහ සොයාගැනීමේ මාවත නියත
+- Codex සේවාලාභී නියත: `open-sse/config/codexClient.ts` — අනුවාදගත user-agent සහ client-version අගයන්
+- ආකෘති අන්වර්ථ බීජ: `src/lib/modelAliasSeed.ts` — ආරම්භයේදී හරස්-ප්රොක්සි කථන විලාස අන්වර්ථ 30+ බීජ වනයි
 
-වසම් ස්ථරයේ මොඩියුල:
+ඩොමේන් ස්ථර මොඩියුල:
 
 - පිරිවැය නීති/අයවැය: `src/domain/costRules.ts`
-- Fallback ප්රතිපත්තිය: `src/domain/fallbackPolicy.ts`
-- වෙන් කළ combo-විසඳුම් ගිවිසුම: `src/domain/comboResolver.ts`; සජීවී යොමුකිරීම `open-sse/services/combo.ts` භාවිතා කරයි
+- පසුබැසීමේ ප්රතිපත්තිය: `src/domain/fallbackPolicy.ts`
+- වෙන් කළ combo-විසඳුම් ගිවිසුම: `src/domain/comboResolver.ts`; සජීවී මාර්ගගත කිරීම `open-sse/services/combo.ts` භාවිතා කරයි
 - අගුළුදැමීමේ ප්රතිපත්තිය: `src/domain/lockoutPolicy.ts`
-- වෙන් කළ ප්රතිපත්ති-ඇගයීමේ ගිවිසුම: `src/domain/policyEngine.ts`; ඉල්ලීම් මාර්ගය `src/shared/utils/apiKeyPolicy.ts` හරහා API-key ප්රතිපත්තිය සහ `src/sse/handlers/chat/resolvedModelPolicy.ts` හරහා විසඳූ-ඉලක්ක අවසරය බලාත්මක කරයි
+- වෙන් කළ ප්රතිපත්ති-ඇඟවුම් ගිවිසුම: `src/domain/policyEngine.ts`; ඉල්ලීම් මාර්ගය `src/shared/utils/apiKeyPolicy.ts` හරහා API-යතුරු ප්රතිපත්තිය සහ `src/sse/handlers/chat/resolvedModelPolicy.ts` හරහා විසඳාගත්-ඉලක්ක බලයලත්කරණය බලාත්මක කරයි
 - දෝෂ කේත නාමාවලිය: `src/shared/constants/errorCodes.ts`
 - ඉල්ලීම් ID: `src/shared/utils/requestId.ts`
 - Fetch කාලසීමාව: `src/shared/utils/fetchTimeout.ts`
-- ඉල්ලීම් ටෙලිමෙට්රි: `src/shared/utils/requestTelemetry.ts`
+- ඉල්ලීම් දුරස්ථ මිනුම්: `src/shared/utils/requestTelemetry.ts`
 - අනුකූලතාව/විගණනය: `src/lib/compliance/index.ts`
-- Eval ධාවකය: `src/lib/evals/evalRunner.ts`
-- වසම් තත්ත්ව ස්ථිරභාවය: `src/lib/db/domainState.ts` — fallback දාම, අයවැය, පිරිවැය ඉතිහාසය, අගුළුදැමීමේ තත්ත්වය, circuit breakers සඳහා SQLite CRUD
+- ඇඟවුම් ක්රියාත්මක කරන්නා: `src/lib/evals/evalRunner.ts`
+- ඩොමේන් තත්ත්ව නොනැසීම: `src/lib/db/domainState.ts` — පසුබැසීමේ දාම, අයවැය, පිරිවැය ඉතිහාසය, අගුළුදැමීමේ තත්ත්වය, පරipථ බිඳුම් සඳහා SQLite CRUD
 
-OAuth provider මොඩියුල (`src/lib/oauth/providers/` යටතේ තනි ගොනු 27ක්):
+OAuth සැපයුම්කරු මොඩියුල (`src/lib/oauth/providers/` යටතේ තනි ගොනු 27ක්):
 
-- ලේඛන සූචිය: `src/lib/oauth/providers/index.ts`
-- තනි provider: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- බෙදාගත් උපකාරක: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl උපාංග ගලායාම), `museCodeDeviceResponse.ts`
-- සිහින් ආවරකය: `src/lib/oauth/providers.ts` — තනි මොඩියුල වලින් නැවත-නිර්යාත කරයි
+- ලියාපදිංචි සූචිය: `src/lib/oauth/providers/index.ts`
+- තනි සැපයුම්කරුවන්: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
+- හවුල් උපකාරක: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl උපාංග ප්රවාහය), `museCodeDeviceResponse.ts`
+- සිහින් ආවරකය: `src/lib/oauth/providers.ts` — තනි මොඩියුල වලින් නැවත අපනයනය කරයි
 
 ## 5) කාවැද්දූ සේවා (v3.8.4)
 
@@ -362,178 +362,174 @@ OmniRoute හට දේශීයව ක්රියාත්මක වන, **ක
 
 ### A. Auto Combo එන්ජිම
 
-Auto Combo යනු ස්ථිර combo අර්ථදැක්වීමක් මත රඳා සිටීම වෙනුවට, ඉල්ලීමේ මොහොතේදීම routing ඉලක්ක ගතිකව ලකුණු කර තෝරා ගැනීමයි. එය `auto/*` model prefix පවුලට බලය සපයයි.
+Auto Combo, ස්ථාවර combo නිර්වචනයක් මත රඳා සිටීම වෙනුවට, ඉල්ලීමේ වේලාවේදීම රුටින් ඉලක්ක ගතිකව ලකුණු කර තෝරා ගනී. එය `auto/*` ආදර්ශ උපසර්ග පවුලට බලය ලබා දෙයි.
 
-- එන්ජිම් ප්රවේශය: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- එන්ජිමේ ඇතුළත් වීම: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- සජීවී combo ප්රවේශය: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), `src/sse/handlers/chat.ts` විසින් කැඳවනු ලැබේ
+- සජීවී combo ඇතුළත් වීම: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), `src/sse/handlers/chat.ts` මඟින් කැඳවනු ලැබේ
 - උපකරණ පුවරුව: `/dashboard/auto-combo`
-- දූරමිතික දත්ත: `auto_combo_decisions` SQLite වගුව
+- දුරස්ථ මිනුම් (Telemetry): `auto_combo_decisions` SQLite වගුව
 
 ප්රධාන හැකියාවන්:
 
-- **routing උපාය මාර්ග 20ක්** (priority, weighted, fill-first, round-robin, P2C, random,
+- **රුටින් උපාය 20ක්** (priority, weighted, fill-first, round-robin, P2C, random,
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto යනු v3.8.0 හි ප්රධානතම නව එකතුවයි; `fusion` (panel fan-out + judge සංශ්ලේෂණය,
-  `open-sse/services/fusion.ts`) v3.8.36 හි අලුත් වේ.
-- **සාධක-16 ලකුණු කිරීම**: quota, health, inverse cost, inverse latency, task fit සහ
-  තවත් දහයක්. සාධක සහ ඒවායේ පෙරනිමි බර පිළිබඳ නිල වගුව
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) හි ඇත — එය මෙහි නැවත සඳහන් කිරීම
-  එය යල්පැන යාමට දෙවන ස්ථානයක් ලබා දෙනු ඇත.
-- **Virtual factory** ගැළපෙන නම් කළ combo එකක් නොමැති විට තාවකාලික combos නිර්මාණය කරයි,
-  සෞඛ්ය සම්පන්න සක්රීය provider සම්බන්ධතාවලින් අපේක්ෂකයන් ලබා ගනී.
-- **Auto prefixes**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — එක් එකක් සුසර කළ බර පැතිකඩයකින් (weight profile) සහාය වේ.
-- **mode packs 6ක්**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` සහ `chaos-mode` — උපකරණ පුවරුවෙන් කැඳවිය හැකි කලින් සකසළ බර
-  වින්යාසයන්. (ඉහත `auto/*` prefixes සමඟ පටලවා නොගත යුතුය, ඒවා
-  ඉල්ලීමේ-වේලාවේ ප්රභේද වේ.)
+  auto යනු v3.8.0 හි ප්රධාන එකතුවයි; `fusion` (පැනල් fan-out + විනිශ්චයකාර සංශ්ලේෂණය,
+  `open-sse/services/fusion.ts`) v3.8.36 හි අලුත් එකකි.
+- **සාධක-16 ලකුණු කිරීම**: කෝටාව, සෞඛ්යය, ප්රතිලෝම පිරිවැය, ප්රතිලෝම ප්රමාදය, කාර්ය ගැලපීම සහ
+  තවත් සාධක දහයක්. සාධක සහ ඒවායේ පෙරනිමි බරවල නිල වගුව පවතින්නේ
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) හි ය — එය මෙහි නැවත සඳහන් කිරීම
+  එය යල්පැනීමට දෙවන ස්ථානයක් ලබා දෙනු ඇත.
+- **අථත්ය කර්මාණ්ඨ ශාලාව (Virtual factory)** ගැලපෙන නම් කළ combo එකක් නොමැති විට අස්ථායී
+  combo භෞතීකරණය කරයි, සෞඛ්ය සම්පන්න සක්රීය සැපයුම්කරු සම්බන්ධතාවලින් අපේක්ෂකයන් ලබා ගනී.
+- **Auto උපසර්ග**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — සෑම එකක්ම සුසර කළ බර පැතිකඩයක් මඟින් පිටුබලය ලබයි.
+- **මාදිලි පැකේජ 6ක්**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first` සහ `chaos-mode` — උපකරණ පුවරුවෙන් කැඳවිය හැකි පූර්ව-සැකසූ බර
+  වින්යාස. (ඉහත `auto/*` උපසර්ග සමඟ පටලවා නොගත යුතුය, ඒවා
+  ඉල්ලීමේ වේලාවේ ප්රභේද වේ.)
 
-සම්පූර්ණ ඇල්ගොරිතමික විස්තර (සාධක සූත්ර, බර සුසර කිරීම) සඳහා
-[`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) බලන්න.
+සම්පූර්ණ ඇල්ගොරිතම විස්තර (සාධක සූත්ර, බර සුසර කිරීම) සඳහා බලන්න
+[`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
 ### B. Cloud Agents
 
-Cloud Agents යනු තෙවන පාර්ශව සත්කාරක code-agent වේදිකා (Codex Cloud, Devin,
-Jules) ඒකාකාර DB-පදනම් වූ කාර්ය ජීවන චක්රයක් පිටුපස ඔතා තැබීමයි. සියලුම task
-නිර්මාණය/පරීක්ෂණ අන්තලක්ෂ්යයන්ට කළමනාකරණ සත්යාපනය අවශ්ය වේ.
+Cloud Agents, තෙවන පාර්ශව සත්කාරක කේත-නියෝජිත වේදිකා (Codex Cloud, Devin,
+Jules) ඒකාකාර DB-පිටුබලය ලත් කාර්ය ජීවන චක්රයක් පිටුපස ඔතා තබයි. සියලුම කාර්ය
+නිර්මාණය/පරීක්ෂණ අන්ත ලක්ෂ්යවලට කළමනාකරණ සත්යාපනය අවශ්ය වේ.
 
 - මොඩියුල මූලය: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, සහ `agents/` යටතේ agent-එක බැගින් උප නාමාවලි)
-- agent-එක බැගින් ක්රියාත්මක කිරීම්: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- පොදු අන්තලක්ෂ්යයන්: `/api/v1/agents/tasks/*` (list/create/get/cancel)
-- කළමනාකරණ අන්තලක්ෂ්යයන්: `/api/cloud/*` (provisioning, status, batch)
+  `types.ts`, `db.ts`, සහ `agents/` යටතේ එක් එක් නියෝජිතයා සඳහා උප නාමාවලි)
+- එක් එක් නියෝජිත ක්රියාත්මක කිරීම්: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- පොදු අන්ත ලක්ෂ්ය: `/api/v1/agents/tasks/*` (list/create/get/cancel)
+- කළමනාකරණ අන්ත ලක්ෂ්ය: `/api/cloud/*` (provisioning, status, batch)
 - උපකරණ පුවරුව: `/dashboard/cloud-agents`
 - ගබඩාව: `cloud_agent_tasks` වගුව
 
-agent-එක බැගින් provisioning සහ OAuth විශේෂාංග සඳහා
-[`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md) බලන්න.
+එක් එක් නියෝජිතයා සඳහා provisioning සහ OAuth විශේෂාංග සඳහා බලන්න
+[`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
 ### C. Guardrails
 
-guardrails මොඩියුලය යනු PII, prompt injection සහ අනාරක්ෂිත vision අන්තර්ගතය සඳහා ඉල්ලීම්
-සහ ප්රතිචාර පරීක්ෂා කරන hot-reloadable middleware ස්ථරයකි. උල්ලංඝනයන්
-HTTP **503** සහ ව්යුහගත දෝෂ කේතයක් සමඟ ඉල්ලීම කෙටිමං කරයි, එයින්
-පහළට ගලායන අමතන්නන්ට නැවත උත්සාහ කිරීමට හෝ ශාඛාගත වීමට ඉඩ සැලසේ.
+guardrails මොඩියුලය යනු PII, prompt එන්නත් කිරීම සහ අනාරක්ෂිත දෘශ්ය අන්තර්ගත සඳහා
+ඉල්ලීම් සහ ප්රතිචාර පරීක්ෂා කරන උණුසුම්-නැවත-පූරණය කළ හැකි මධ්යගත ස්ථරයකි. උල්ලංඝනයන්
+ඉල්ලීම HTTP **503** සහ ව්යුහාත්මක දෝෂ කේතයක් සමඟ කෙටි-පරipථ කරයි, එමඟින්
+පසුගාමී අමතන්නන්ට නැවත උත්සාහ කිරීමට හෝ ශාඛා කිරීමට ඉඩ සැලසේ.
 
 - මොඩියුල මූලය: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Hot reload: registry විසින් config වෙනස්කම් නිරීක්ෂණය කර දාමය ස්ථානයේම නැවත ගොඩනගයි
-- සම්බන්ධ කිරීමේ ස්ථාන: chat handler ප්රවේශය, image generation handler, response sanitizer
-- HTTP කොන්ත්රාත්තුව: උල්ලංඝනයන් `error.code = "GUARDRAIL_VIOLATION"` සමඟ `503` ලෙස මතු වේ
+- උණුසුම් නැවත පූරණය: ලේඛනය (registry) වින්යාස වෙනස්කම් නිරීක්ෂණය කර දාමය එතැනදීම නැවත ගොඩනගයි
+- සම්බන්ධ කිරීමේ ස්ථාන: කතාබහ හසුරුවන්නාගේ ඇතුළත් වීම, රූප උත්පාදන හසුරුවන්නා, ප්රතිචාර පිරිසිදුකරු
+- HTTP ගිවිසුම: උල්ලංඝනයන් `503` ලෙස `error.code = "GUARDRAIL_VIOLATION"` සමඟ මතුවේ
 
-ruleset සැකසීම සහ සීමා සුසර කිරීම සඳහා
-[`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md) බලන්න.
+නීතිරීති සමූහ සැකසීම සහ සීමා සුසර කිරීම සඳහා බලන්න
+[`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Domain ස්ථරය
+### D. ඩොමේන් ස්ථරය
 
-`src/domain/` namespace එකේ domain සේවා සහ වෙන් කර තිබෙන ඇගයීම් කොන්ත්රාත්තු අඩංගු වේ.
-එය සෑම ඉල්ලීමක් සඳහාම අනිවාර්ය policy ප්රවේශ ලක්ෂ්යයක් නොවේ.
+`src/domain/` namespace එකේ ඩොමේන් සේවා සහ වෙන්කළ ඇගයීමේ ගිවිසුම් අඩංගුය.
+එය සෑම ඉල්ලීමක් සඳහාම අනිවාර්ය ප්රතිපත්ති ඇතුළත් වීමේ ලක්ෂ්යයක් නොවේ.
 
-සජීවී chat මාර්ගය `src/shared/utils/apiKeyPolicy.ts` වෙතින්
-`enforceApiKeyPolicy()` කැඳවයි; විසඳළ models සහ combo සාමාජිකයින්ගේ අවසර දීම
-`src/sse/handlers/chat/resolvedModelPolicy.ts` හි ක්රියාත්මක වේ. `src/app/api/v1/chat/completions/route.ts`
-හි self-hosted ප්රවේශය ද dispatch කිරීමට පෙර API-key policy බලාත්මක කරයි. Combo
-විසඳීම `open-sse/services/combo.ts` හරහා සිදු වේ.
+සජීවී කතාබහ මාර්ගය `src/shared/utils/apiKeyPolicy.ts` වෙතින් `enforceApiKeyPolicy()`
+අමතයි; විසඳූ ආදර්ශ සහ combo සාමාජිකයින්ගේ අවසර ලබාදීම ක්රියාත්මක කර ඇත්තේ
+`src/sse/handlers/chat/resolvedModelPolicy.ts` හි ය. `src/app/api/v1/chat/completions/route.ts`
+හි ස්වයං-සත්කාරක ඇතුළත් වීම ද යැවීමට පෙර API-යතුරු ප්රතිපත්තිය බලාත්මක කරයි.
+Combo විසඳීම සිදුවන්නේ `open-sse/services/combo.ts` හරහා ය.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` සහ `src/lib/container.ts`
-යනු එම ඉල්ලීම් මාර්ගයේ wiring නොව, පරීක්ෂා කළ කොන්ත්රාත්තු ලෙස පවතී. container එක
-policy engine එක ලියාපදිංචි කරයි, නමුත් පරීක්ෂා කළ නිෂ්පාදන ඉල්ලීම් මාර්ගය එය resolve නොකරයි.
-එම කොන්ත්රාත්තු පමණක් වෙනස් කිරීමෙන් සජීවී chat policy හෝ combo routing වෙනස් නොවේ;
+පරීක්ෂා කළ ගිවිසුම් ලෙස පවතී, එම ඉල්ලීම් මාර්ගයේ වයරින් (wiring) ලෙස නොවේ. බහාලුම
+ප්රතිපත්ති එන්ජිම ලියාපදිංචි කරයි, නමුත් පරීක්ෂා කළ නිෂ්පාදන ඉල්ලීම් මාර්ගය එය විසඳන්නේ නැත.
+එම ගිවිසුම් පමණක් වෙනස් කිරීම සජීවී කතාබහ ප්රතිපත්තිය හෝ combo රුටින් වෙනස් නොකරයි;
 ඒවා සම්බන්ධ කිරීම හෝ ඉවත් කිරීම සඳහා වෙනම සැලසුම් තීරණයක් අවශ්ය වේ.
 
-- වෙන් කළ policy engine: `src/domain/policyEngine.ts` — lockout → budget → fallback ඇගයීම
+- වෙන්කළ ප්රතිපත්ති එන්ජිම: `src/domain/policyEngine.ts` — අගුළුදැමීම → අයවැය → fallback ඇගයීම
 - පිරිවැය නීති: `src/domain/costRules.ts`
-- Fallback policy: `src/domain/fallbackPolicy.ts`
-- Lockout policy: `src/domain/lockoutPolicy.ts`
-- Tag-පදනම් routing: `src/domain/tagRouter.ts`
-- වෙන් කළ combo resolver: `src/domain/comboResolver.ts` — ස්වාධීන තේරීමේ කොන්ත්රාත්තුව; සජීවී combo routing `open-sse/services/combo.ts` හි ක්රියාත්මක වේ
-- සම්බන්ධතා/model නීති ඒකාබද්ධ කරන්නා: `src/domain/connectionModelRules.ts`
-- Model ලබාගත හැකිභාවයේ ස්නැප්ෂොට්: `src/domain/modelAvailability.ts`
-- Provider කල් ඉකුත්වීම් නිරීක්ෂණය: `src/domain/providerExpiration.ts`
-- Quota cache: `src/domain/quotaCache.ts`
-- පිරිහීමේ තත්ත්වය: `src/domain/degradation.ts`
+- Fallback ප්රතිපත්තිය: `src/domain/fallbackPolicy.ts`
+- අගුළුදැමීමේ ප්රතිපත්තිය: `src/domain/lockoutPolicy.ts`
+- ටැග්-පාදක රුටින්: `src/domain/tagRouter.ts`
+- වෙන්කළ combo විසඳුම්කරු: `src/domain/comboResolver.ts` — ස්වාධීන තේරීම් ගිවිසුම; සජීවී combo රුටින් ක්රියාත්මක කර ඇත්තේ `open-sse/services/combo.ts` හි ය
+- සම්බන්ධතා/ආදර්ශ නීති ඒකාබද්ධකරු: `src/domain/connectionModelRules.ts`
+- ආදර්ශ ලබාගත හැකි බව ස්නැප්ෂොට්: `src/domain/modelAvailability.ts`
+- සැපයුම්කරු කල්ඉකුත්වීම් ලුහුබැඳීම: `src/domain/providerExpiration.ts`
+- කෝටා කෑෂ්: `src/domain/quotaCache.ts`
+- පිරිහීම් තත්ත්වය: `src/domain/degradation.ts`
 - වින්යාස විගණනය: `src/domain/configAudit.ts`
-- OmniRoute ප්රතිචාර මෙටාදත්ත සාදන්නා: `src/domain/omnirouteResponseMeta.ts`
-- Assessment උපපද්ධතිය: `src/domain/assessment/` — වාරික ඇගයීමේ කාර්යයන්
+- OmniRoute ප්රතිචාර මෙටාදත්ත ගොඩනගන්නා: `src/domain/omnirouteResponseMeta.ts`
+- ඇගයීම් උපපද්ධතිය: `src/domain/assessment/` — වරින් වර ඇගයීම් කාර්යයන්
 
-### E. අවසර දීමේ නල මාර්ගය
+### E. අවසර ලබාදීමේ නළමාර්ගය
 
-අවසර දීමේ නල මාර්ගය සෑම එන ඉල්ලීමක්ම වර්ගීකරණය කර, dispatch කිරීමට පෙර
-සුදුසු policy දාමය යොදයි.
+අවසර ලබාදීමේ නළමාර්ගය සෑම එන ඉල්ලීමක්ම වර්ගීකරණය කර, යැවීමට පෙර සුදුසු
+ප්රතිපත්ති දාමය යොදයි.
 
-- පයිප්ලයින ඇතුළත් වීම: `src/server/authz/pipeline.ts`
-- ඉල්ලීම් වර්ගීකරකය: `src/server/authz/classify.ts` — පොදු
-  අනුකූලතා මාර්ග කළමනාකරණ මාර්ගවලින් වෙන්කර හඳුනාගනී
+- පයිප්ලයින ඇතුළත් කිරීම: `src/server/authz/pipeline.ts`
+- ඉල්ලීම් වර්ගීකරකය: `src/server/authz/classify.ts` — පොදු අනුකූලතා මාර්ග
+  කළමනාකරණ මාර්ගවලින් වෙන්කර හඳුනාගනී
 - පොදු මාර්ග ලැයිස්තුව: `src/shared/constants/publicApiRoutes.ts`
-- ප්රතිපත්තීන්: `src/server/authz/policies/` — සංයෝජ්ය predicate
-  (`requireApiKey`, `requireManagement`, `requireFreshAuth`, ආදී)
-- ශීර්ෂක උපයෝගීතා: `src/server/authz/headers.ts`
-- Assertion සහායකය: `src/server/authz/assertAuth.ts`
+- ප්රතිපත්ති: `src/server/authz/policies/` — සංයුක්ත කළ හැකි predicate
+  (`requireApiKey`, `requireManagement`, `requireFreshAuth` ආදී)
+- ශීර්ෂක උපයෝගිතා: `src/server/authz/headers.ts`
+- Assertion සහායක: `src/server/authz/assertAuth.ts`
 - ඉල්ලීම් සන්දර්භය: `src/server/authz/context.ts`
 
-පොදු සහ කළමනාකරණ මාර්ග අතර දැඩි මායිමක් ඇත: agent/cooldown API සහ
-සපයන්නා mutations සඳහා කළමනාකරණ සත්යාපනය අවශ්ය වේ (නොමැති නම් HTTP 401).
+පොදු හා කළමනාකරණ මාර්ග අතර දැඩි මායිමක් ඇත: agent/cooldown API සහ
+සැපයුම්කරු වෙනස්කිරීම් සඳහා කළමනාකරණ සත්යාපනය අවශ්ය වේ (නොමැති නම් HTTP 401).
 
-සම්පූර්ණ මාර්ග වර්ගීකරණ නීති සඳහා, බලන්න
-[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
+සම්පූර්ණ මාර්ග වර්ගීකරණ නීති සඳහා
+[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md) බලන්න.
 
-### F. වැඩප්රවාහ FSM සහ කාර්ය-දැනුවත් රවුටරය
+### F. කාර්යප්රවාහ FSM සහ කර්තව්ය-දැනුවත් රවුටරය
 
-හඳුනාගත් වැඩප්රවාහ අදියර (සැලසුම්කරණය, ක්රියාත්මක කිරීම,
-සමාලෝචනය) සහ පසුබිම්-කාර්ය සමීපත්වය මත පදනම්ව ගමනාගමනය යොමු කිරීමට,
-සංයෝජන තේරීමට ඉහළින් ස්ථරගත කර ඇති සීමිත-තත්ත්ව-යන්ත්රයක් මගින්
-ධාවනය වන රවුටරයක්.
+combo තේරීමට ඉහළින් ස්ථරගත වූ, හඳුනාගත් කාර්යප්රවාහ අදියර (සැලසුම්කරණය, ක්රියාත්මක කිරීම,
+සමාලෝචනය) සහ පසුබිම්-කර්තව්ය සම්බන්ධතාවය මත පදනම්ව ගමනාගමනය යොමු කරන,
+සීමිත-තත්ත්ව-යන්ත්රයකින් ධාවනය වන රවුටරයකි.
 
-- වැඩප්රවාහ FSM: `open-sse/services/workflowFSM.ts`
-- කාර්ය-දැනුවත් රවුටරය: `open-sse/services/taskAwareRouter.ts`
-- පසුබිම් කාර්ය හඳුනාගැනීම්කරු: `open-sse/services/backgroundTaskDetector.ts`
+- කාර්යප්රවාහ FSM: `open-sse/services/workflowFSM.ts`
+- කර්තව්ය-දැනුවත් රවුටරය: `open-sse/services/taskAwareRouter.ts`
+- පසුබිම් කර්තව්ය අනාවරකය: `open-sse/services/backgroundTaskDetector.ts`
 - අභිප්රාය වර්ගීකරකය: `open-sse/services/intentClassifier.ts`
 
-FSM සංක්රාන්තීන් Auto Combo හි ලකුණු කිරීමට දායක වේ; පසුබිම්/ස්වයංක්රීයකරණ
-කාර්ය සඳහා ලාභදායී ආකෘති වෙතත්, අන්තර්ක්රියාකාරී සැලසුම්කරණ/සමාලෝචන
-වට සඳහා ශක්තිමත් ආකෘති වෙතත් නැඹුරු කරයි.
+FSM සංක්රමණ Auto Combo හි ලකුණුකරණයට ආදානය වන අතර, පසුබිම්/ස්වයංක්රීයකරණ
+කර්තව්ය සඳහා ලාභදායී ආකෘති කරටත්, අන්තර්ක්රියාකාරී සැලසුම්කරණ/සමාලෝචන
+වටවල සඳහා වඩා ශක්තිමත් ආකෘති කරටත් නැඹුරු කරයි.
 
-### G. සපයන්නා-විශේෂිත ඔරොත්තු දීම
+### G. සැපයුම්කරු-විශේෂිත ඔරොත්තු දීමේ හැකියාව
 
-සමහර සපයන්නන් ගෝලීය circuit breaker / සම්බන්ධතා cooldown / ආකෘති
-අගුළුදැමීමේ ස්ථර මත රැඳී සිටින කැපවූ ඔරොත්තු දීමේ සහ සැඟවීමේ
-මොඩියුල සපයයි:
+සමහර සැපයුම්කරුවන් ගෝලීය circuit breaker / connection cooldown / model lockout
+ස්ථර මත පටවා ක්රියාත්මක වන කැපවූ resilience සහ stealth මොඩියුල සමඟ පැමිණෙයි:
 
 - Antigravity 429 එන්ජිම: `open-sse/services/antigravity429Engine.ts` (අනන්යතාවය
-  භ්රමණය කරයි, ප්රතිචාර ශීර්ෂක ඉවත් කරයි, credits/අනුවාද ලුහුබැඳීම
-  මෙහෙයවයි — `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts` හරහා)
-- ModelScope කෝටා ප්රතිපත්තිය: `open-sse/services/modelscopePolicy.ts`
+  කරකවයි, ප්රතිචාර ශීර්ෂක ඉවත් කරයි,
+  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
+  `antigravityIdentity.ts`, `antigravityVersion.ts` හරහා credits/අනුවාද ලුහුබැඳීම මෙහෙයවයි)
+- ModelScope quota ප්රතිපත්තිය: `open-sse/services/modelscopePolicy.ts`
 - Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
-  සමඟ `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+  ඊට අමතරව `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Claude Code ඇඟිලි සලකුණ හැඩගැස්වීම: `open-sse/services/claudeCodeFingerprint.ts`
-- Claude Code අවපැහැදිලි කිරීම: `open-sse/services/claudeCodeObfuscation.ts`
+- Claude Code fingerprint හැඩගැසීම: `open-sse/services/claudeCodeFingerprint.ts`
+- Claude Code අපැහැදිලිකරණය: `open-sse/services/claudeCodeObfuscation.ts`
 
-සම්පූර්ණ සැඟවීමේ playbook සහ මෙහෙයුම් මාර්ගෝපදේශය සඳහා, බලන්න
-`docs/security/STEALTH_GUIDE.md` (git; `/docs` තුළට සම්පාදනය කර නොමැත).
+සම්පූර්ණ stealth ක්රීඩාපොත සහ මෙහෙයුම් මඟපෙන්වීම සඳහා
+`docs/security/STEALTH_GUIDE.md` බලන්න (git; `/docs` වෙත සම්පාදනය කර නොමැත).
 
-### H. Webhooks, Reasoning Cache, Read Cache
+### H. Webhooks, තර්කණ කැෂ්, කියවීම් කැෂ්
 
-- **Webhooks** — සපයන්නා/ගිණුම්/කාර්ය සිදුවීම් සඳහා පිටතට යැවීම.
-  - යැවීම් යන්ත්රය: `src/lib/webhookDispatcher.ts`
-  - ගබඩා කිරීම: `webhooks` SQLite වගුව (`src/lib/db/webhooks.ts` හරහා)
-  - උපකරණ පුවරුව: `/dashboard/webhooks` (දායකත්වයන්, රහස්, නැවත උත්සාහ ඉතිහාසය)
-  - සිදුවීම් වර්ගීකරණය සහ නැවත උත්සාහ අර්ථකථනය සඳහා, බලන්න [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Reasoning Cache** — thinking tokens නිකුත් කරන සපයන්නන් (Claude, GLMT ආදී)
-  සඳහා නැවත ධාවනය කළ හැකි තර්කණ කොටස්, එවිට එකිනෙකාට පසුව එන වටවල
-  නැවත සිතීම මඟහැරිය හැක.
-  - DB ස්තරය: `src/lib/db/reasoningCache.ts`
-  - සේවා ස්තරය: `open-sse/services/reasoningCache.ts`
-  - නැවත ධාවන අර්ථකථනය සඳහා, බලන්න [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Read Cache** — අත්සන මත යතුරුකර ඇති කෙටි ආයු කාලයක් ඇති ප්රතිචාර කැෂ් එකක්,
-  කැඩුණු upstream SDK වලින් එන සමාන නැවත උත්සාහයන් එකට එකතු කිරීමට
-  භාවිතා වේ.
-  - DB ස්තරය: `src/lib/db/readCache.ts`
-  - සංඛ්යාලේඛන endpoint: `GET /api/cache/stats`, උපකරණ පුවරුව `/dashboard/cache` හි
+- **Webhooks** — සැපයුම්කරු/ගිණුම/කර්තව්ය සිදුවීම් සඳහා පිටතට යැවීම.
+  - යැවුම්කරු: `src/lib/webhookDispatcher.ts`
+  - ගබඩාව: `webhooks` SQLite වගුව (`src/lib/db/webhooks.ts` හරහා)
+  - උපකරණ පුවරුව: `/dashboard/webhooks` (දායකත්ව, රහස්, නැවත උත්සාහ ඉතිහාසය)
+  - සිදුවීම් වර්ගීකරණය සහ නැවත උත්සාහ අර්ථනිරූපණය සඳහා [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md) බලන්න.
+- **තර්කණ කැෂ්** — චින්තන ටෝකන නිකුත් කරන සැපයුම්කරුවන් (Claude, GLMT ආදී)
+  සඳහා නැවත ධාවනය කළ හැකි තර්කණ කොටස්, එමඟින් අඛණ්ඩ වටවල නැවත චින්තනය මඟහරවා ගත හැක.
+  - DB ස්ථරය: `src/lib/db/reasoningCache.ts`
+  - සේවා ස්ථරය: `open-sse/services/reasoningCache.ts`
+  - නැවත ධාවන අර්ථනිරූපණය සඳහා [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md) බලන්න.
+- **කියවීම් කැෂ්** — අත්සන මත යතුරු කර ඇති කෙටි-ආයුෂක ප්රතිචාර කැෂ් එකක් වන අතර,
+  බිඳුණු upstream SDK වලින් එන සමාන නැවත උත්සාහ එකතු කිරීමට භාවිතා වේ.
+  - DB ස්ථරය: `src/lib/db/readCache.ts`
+  - සංඛ්යාලේඛන අන්තලක්ෂ්යය: `GET /api/cache/stats`, උපකරණ පුවරුව `/dashboard/cache` හි
 
 ## 3) ස්ථායීතා ස්තරය
 

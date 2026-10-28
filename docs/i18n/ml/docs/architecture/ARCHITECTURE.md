@@ -266,7 +266,7 @@ flowchart LR
 - കോൺഫിഗറേഷൻ ബണ്ടിൽ: `src/app/api/sync/bundle` (GET, ക്രമീകരണങ്ങൾ/പ്രൊവൈഡറുകൾ/കോംബോകൾ/കീകൾ എന്നിവയുടെ ETag-പതിപ്പിട്ട സ്നാപ്പ്ഷോട്ട്)
 - WebSocket: `src/app/api/v1/ws/route.ts` — OpenAI-അനുയോജ്യ WS ക്ലയന്റുകൾക്കായുള്ള Upgrade ഹാൻഡ്ലർ
 
-## 2) SSE + ട്രാൻസ്ലേഷൻ കോർ
+## 2) SSE + വിവർത്തന കോർ
 
 പ്രധാന ഫ്ലോ മൊഡ്യൂളുകൾ:
 
@@ -274,62 +274,62 @@ flowchart LR
 - കോർ ഓർക്കസ്ട്രേഷൻ: `open-sse/handlers/chatCore.ts`
 - പ്രൊവൈഡർ എക്സിക്യൂഷൻ അഡാപ്റ്ററുകൾ: `open-sse/executors/*`
 - ഫോർമാറ്റ് ഡിറ്റക്ഷൻ/പ്രൊവൈഡർ കോൺഫിഗ്: `open-sse/services/provider.ts`
-- മോഡൽ പാഴ്സ്/റിസോൾവ്: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- മോഡൽ പാർസ്/റിസോൾവ്: `src/sse/services/model.ts`, `open-sse/services/model.ts`
 - അക്കൗണ്ട് ഫോൾബാക്ക് ലോജിക്: `open-sse/services/accountFallback.ts`
-- ട്രാൻസ്ലേഷൻ റെജിസ്ട്രി: `open-sse/translator/index.ts`
+- വിവർത്തന രജിസ്ട്രി: `open-sse/translator/index.ts`
 - സ്ട്രീം ട്രാൻസ്ഫോർമേഷനുകൾ: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - യൂസേജ് എക്സ്ട്രാക്ഷൻ/നോർമലൈസേഷൻ: `open-sse/utils/usageTracking.ts`
-- തിങ്ക് ടാഗ് പാർസർ: `open-sse/utils/thinkTagParser.ts`
-- എംബെഡ്ഡിംഗ് ഹാൻഡ്ലർ: `open-sse/handlers/embeddings.ts`
-- എംബെഡ്ഡിംഗ് പ്രൊവൈഡർ റെജിസ്ട്രി: `open-sse/config/embeddingRegistry.ts`
+- Think ടാഗ് പാർസർ: `open-sse/utils/thinkTagParser.ts`
+- എംബെഡിംഗ് ഹാൻഡ്ലർ: `open-sse/handlers/embeddings.ts`
+- എംബെഡിംഗ് പ്രൊവൈഡർ രജിസ്ട്രി: `open-sse/config/embeddingRegistry.ts`
 - ഇമേജ് ജനറേഷൻ ഹാൻഡ്ലർ: `open-sse/handlers/imageGeneration.ts`
-- ഇമേജ് പ്രൊവൈഡർ റെജിസ്ട്രി: `open-sse/config/imageRegistry.ts`
+- ഇമേജ് പ്രൊവൈഡർ രജിസ്ട്രി: `open-sse/config/imageRegistry.ts`
 - റെസ്പോൺസ് സാനിറ്റൈസേഷൻ: `open-sse/handlers/responseSanitizer.ts`
 - റോൾ നോർമലൈസേഷൻ: `open-sse/services/roleNormalizer.ts`
 
-സർവീസുകൾ (ബിസിനസ് ലോജിക്):
+സർവീസുകൾ (ബിസിനസ്സ് ലോജിക്):
 
 - അക്കൗണ്ട് സെലക്ഷൻ/സ്കോറിംഗ്: `open-sse/services/accountSelector.ts`
 - കോൺടെക്സ്റ്റ് ലൈഫ്സൈക്കിൾ മാനേജ്മെന്റ്: `open-sse/services/contextManager.ts`
 - IP ഫിൽട്ടർ എൻഫോഴ്സ്മെന്റ്: `open-sse/services/ipFilter.ts`
 - സെഷൻ ട്രാക്കിംഗ്: `open-sse/services/sessionManager.ts`
-- റിക്വസ്റ്റ് ഡീഡ്യൂപ്ലിക്കേഷൻ: `open-sse/services/signatureCache.ts`
+- റിക്വസ്റ്റ് ഡീഡുപ്ലിക്കേഷൻ: `open-sse/services/signatureCache.ts`
 - സിസ്റ്റം പ്രോംപ്റ്റ് ഇൻജക്ഷൻ: `open-sse/services/systemPrompt.ts`
 - തിങ്കിംഗ് ബജറ്റ് മാനേജ്മെന്റ്: `open-sse/services/thinkingBudget.ts`
 - വൈൽഡ്കാർഡ് മോഡൽ റൂട്ടിംഗ്: `open-sse/services/wildcardRouter.ts`
 - റേറ്റ് ലിമിറ്റ് മാനേജ്മെന്റ്: `open-sse/services/rateLimitManager.ts`
 - സർക്യൂട്ട് ബ്രേക്കർ: `src/shared/utils/circuitBreaker.ts`
-- കോൺടെക്സ്റ്റ് ഹാൻഡ്ഓഫ്: `open-sse/services/contextHandoff.ts` — കോൺടെക്സ്റ്റ്-റിലേ സ്ട്രാറ്റജിക്കുള്ള ഹാൻഡ്ഓഫ് സമ്മറി ജനറേഷനും ഇൻജക്ഷനും
-- കംപ്രഷൻ: `open-sse/services/compression/*` — പ്രൊവൈഡർ ട്രാൻസ്ലേഷന് മുമ്പുള്ള പ്രോആക്ടീവ് കംപ്രഷൻ;
-  Caveman റൂൾസും RTK ഫിൽട്ടറുകളും സ്റ്റാക്ക്ഡ് പൈപ്പ്ലൈനുകളും കംപ്രഷൻ കോംബോകളും സ്റ്റാറ്റ്സും വാലിഡേഷനും ഉൾപ്പെടുന്നു
-- Codex ക്വാട്ട ഫെച്ചർ: `open-sse/services/codexQuotaFetcher.ts` — കോൺടെക്സ്റ്റ്-റിലേ ഹാൻഡ്ഓഫ് തീരുമാനങ്ങൾക്കായി Codex ക്വാട്ട ഫെച്ച് ചെയ്യുന്നു
-- കൂൾഡൗൺ-അവേർ റിട്രൈ: `src/sse/services/cooldownAwareRetry.ts` — കോൺഫിഗർ ചെയ്യാവുന്ന `requestRetry` / `maxRetryIntervalSec` ഉപയോഗിച്ച് മോഡൽ-തലത്തിലുള്ള കൂൾഡൗൺ റിട്രൈകൾ
-- സേഫ് ഔട്ട്ബൗണ്ട് ഫെച്ച്: `src/shared/network/safeOutboundFetch.ts` — SSRF ഗാർഡ്, പ്രൈവറ്റ്-URL ബ്ലോക്കിംഗ്, റിട്രൈ, ടൈംഔട്ട് എന്നിവയുള്ള ഗാർഡ് ചെയ്ത പ്രൊവൈഡർ/മോഡൽ ഫെച്ച്
-- ഔട്ട്ബൗണ്ട് URL ഗാർഡ്: `src/shared/network/outboundUrlGuard.ts` — പ്രൊവൈഡർ URL-കളിലെ ഹോസ്റ്റ് ചെക്കുകൾ; `src/shared/network/outboundUrlGuardPolicy.ts` `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` എന്നിവയിൽ നിന്നും അവയുടെ ഡാഷ്ബോർഡ് ടോഗിളുകളിൽ നിന്നും മോഡ് തിരഞ്ഞെടുക്കുന്നു (കാണുക `docs/reference/ENVIRONMENT.md`)
-- പ്രൊവൈഡർ റിക്വസ്റ്റ് ഡിഫോൾട്ടുകൾ: `open-sse/services/providerRequestDefaults.ts` — പ്രൊവൈഡർ-ലെവൽ `maxTokens`, `temperature`, `thinkingBudgetTokens` ഡിഫോൾട്ടുകൾ
-- GLM പ്രൊവൈഡർ കോൺസ്റ്റന്റുകൾ: `open-sse/config/glmProvider.ts` — പങ്കിട്ട GLM മോഡലുകൾ, ക്വാട്ട URL-കൾ, GLMT ടൈംഔട്ട്/ഡിഫോൾട്ടുകൾ
-- Antigravity അപ്സ്ട്രീം: `open-sse/config/antigravityUpstream.ts` — ബേസ് URL-ഉം ഡിസ്കവറി പാത്ത് കോൺസ്റ്റന്റുകളും
-- Codex ക്ലയന്റ് കോൺസ്റ്റന്റുകൾ: `open-sse/config/codexClient.ts` — വേർഷൻ ചെയ്ത യൂസർ-ഏജന്റും ക്ലയന്റ്-വേർഷൻ മൂല്യങ്ങളും
+- കോൺടെക്സ്റ്റ് ഹാൻഡ്ഓഫ്: `open-sse/services/contextHandoff.ts` — കോൺടെക്സ്റ്റ്-റിലേ സ്ട്രാറ്റജിക്കായുള്ള ഹാൻഡ്ഓഫ് സംഗ്രഹ ജനറേഷനും ഇൻജക്ഷനും
+- കംപ്രഷൻ: `open-sse/services/compression/*` — പ്രൊവൈഡർ വിവർത്തനത്തിന് മുമ്പുള്ള പ്രോആക്ടീവ് കംപ്രഷൻ;
+  Caveman റൂളുകൾ, RTK ഫിൽട്ടറുകൾ, സ്റ്റാക്ക് ചെയ്ത പൈപ്പ്ലൈനുകൾ, കംപ്രഷൻ കോംബോകൾ, സ്റ്റാറ്റുകൾ, വാലിഡേഷൻ എന്നിവ ഉൾപ്പെടുന്നു
+- Codex ക്വോട്ടാ ഫെച്ചർ: `open-sse/services/codexQuotaFetcher.ts` — കോൺടെക്സ്റ്റ്-റിലേ ഹാൻഡ്ഓഫ് തീരുമാനങ്ങൾക്കായി Codex ക്വോട്ടാ ഫെച് ചെയ്യുന്നു
+- കൂൾഡൗൺ-അവേർ റിട്രൈ: `src/sse/services/cooldownAwareRetry.ts` — കോൺഫിഗർ ചെയ്യാവുന്ന `requestRetry` / `maxRetryIntervalSec` ഉപയോഗിച്ച് ഓരോ മോഡലിനുമുള്ള കൂൾഡൗൺ റിട്രൈകൾ
+- സേഫ് ഔട്ട്ബൗണ്ട് ഫെച്ച്: `src/shared/network/safeOutboundFetch.ts` — SSRF ഗാർഡ്, പ്രൈവറ്റ്-URL ബ്ലോക്കിംഗ്, റിട്രൈ, ടൈംഔട്ട് എന്നിവയോടുകൂടിയ സംരക്ഷിത പ്രൊവൈഡർ/മോഡൽ ഫെച്ച്
+- ഔട്ട്ബൗണ്ട് URL ഗാർഡ്: `src/shared/network/outboundUrlGuard.ts` — പ്രൊവൈഡർ URL-കളിലെ ഹോസ്റ്റ് പരിശോധനകൾ; `src/shared/network/outboundUrlGuardPolicy.ts` `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` എന്നിവയിൽ നിന്നും അവയുടെ ഡാഷ്ബോർഡ് ടോഗിളുകളിൽ നിന്നും മോഡ് തിരഞ്ഞെടുക്കുന്നു (`docs/reference/ENVIRONMENT.md` കാണുക)
+- പ്രൊവൈഡർ റിക്വസ്റ്റ് ഡിഫോൾട്ടുകൾ: `open-sse/services/providerRequestDefaults.ts` — പ്രൊവൈഡർ-തല `maxTokens`, `temperature`, `thinkingBudgetTokens` ഡിഫോൾട്ടുകൾ
+- GLM പ്രൊവൈഡർ കോൺസ്റ്റന്റുകൾ: `open-sse/config/glmProvider.ts` — പങ്കിട്ട GLM മോഡലുകൾ, ക്വോട്ടാ URL-കൾ, GLMT ടൈംഔട്ട്/ഡിഫോൾട്ടുകൾ
+- Antigravity അപ്സ്ട്രീം: `open-sse/config/antigravityUpstream.ts` — ബേസ് URL, ഡിസ്കവറി പാത്ത് കോൺസ്റ്റന്റുകൾ
+- Codex ക്ലയന്റ് കോൺസ്റ്റന്റുകൾ: `open-sse/config/codexClient.ts` — വേർഷൻ ചെയ്ത യൂസർ-ഏജന്റ്, ക്ലയന്റ്-വേർഷൻ മൂല്യങ്ങൾ
 - മോഡൽ അലിയാസ് സീഡ്: `src/lib/modelAliasSeed.ts` — സ്റ്റാർട്ടപ്പിൽ 30+ ക്രോസ്-പ്രോക്സി ഡയലക്ട് അലിയാസുകൾ സീഡ് ചെയ്യുന്നു
 
-ഡൊമെയിൻ ലെയർ മൊഡ്യൂളുകൾ:
+ഡൊമെയ്ൻ ലെയർ മൊഡ്യൂളുകൾ:
 
-- കോസ്റ്റ് റൂൾസ്/ബജറ്റുകൾ: `src/domain/costRules.ts`
+- കോസ്റ്റ് റൂളുകൾ/ബജറ്റുകൾ: `src/domain/costRules.ts`
 - ഫോൾബാക്ക് പോളിസി: `src/domain/fallbackPolicy.ts`
-- റിസർവ്ഡ് കോംബോ-റെസല്യൂഷൻ കോൺട്രാക്റ്റ്: `src/domain/comboResolver.ts`; ലൈവ് റൂട്ടിംഗ് `open-sse/services/combo.ts` ഉപയോഗിക്കുന്നു
-- ലോക്കൗട്ട് പോളിസി: `src/domain/lockoutPolicy.ts`
-- റിസർവ്ഡ് പോളിസി-എവാല്യൂവേഷൻ കോൺട്രാക്റ്റ്: `src/domain/policyEngine.ts`; റിക്വസ്റ്റ് പാത്ത് `src/shared/utils/apiKeyPolicy.ts` വഴി API-കീ പോളിസിയും `src/sse/handlers/chat/resolvedModelPolicy.ts` വഴി റിസോൾവ്ഡ്-ടാർഗറ്റ് ഓതറൈസേഷനും എൻഫോഴ്സ് ചെയ്യുന്നു
+- റിസർവ് ചെയ്ത കോംബോ-റെസലൂഷൻ കോൺട്രാക്റ്റ്: `src/domain/comboResolver.ts`; ലൈവ് റൂട്ടിംഗ് `open-sse/services/combo.ts` ഉപയോഗിക്കുന്നു
+- ലോക്ക്ഔട്ട് പോളിസി: `src/domain/lockoutPolicy.ts`
+- റിസർവ് ചെയ്ത പോളിസി-മൂല്യനിർണ്ണയ കോൺട്രാക്റ്റ്: `src/domain/policyEngine.ts`; റിക്വസ്റ്റ് പാത്ത് `src/shared/utils/apiKeyPolicy.ts` വഴി API-കീ പോളിസിയും `src/sse/handlers/chat/resolvedModelPolicy.ts` വഴി റിസോൾവ് ചെയ്ത-ടാർഗറ്റ് അനുമതിയും നടപ്പാക്കുന്നു
 - എറർ കോഡുകളുടെ കാറ്റലോഗ്: `src/shared/constants/errorCodes.ts`
 - റിക്വസ്റ്റ് ID: `src/shared/utils/requestId.ts`
 - ഫെച്ച് ടൈംഔട്ട്: `src/shared/utils/fetchTimeout.ts`
 - റിക്വസ്റ്റ് ടെലിമെട്രി: `src/shared/utils/requestTelemetry.ts`
-- കോംപ്ലയൻസ്/ഓഡിറ്റ്: `src/lib/compliance/index.ts`
-- ഇവാൽ റണ്ണർ: `src/lib/evals/evalRunner.ts`
-- ഡൊമെയിൻ സ്റ്റേറ്റ് പേർസിസ്റ്റൻസ്: `src/lib/db/domainState.ts` — ഫോൾബാക്ക് ചെയിനുകൾ, ബജറ്റുകൾ, കോസ്റ്റ് ഹിസ്റ്ററി, ലോക്കൗട്ട് സ്റ്റേറ്റ്, സർക്യൂട്ട് ബ്രേക്കറുകൾ എന്നിവയ്ക്കുള്ള SQLite CRUD
+- കംപ്ലയൻസ്/ഓഡിറ്റ്: `src/lib/compliance/index.ts`
+- ഇവാൾ റണ്ണർ: `src/lib/evals/evalRunner.ts`
+- ഡൊമെയ്ൻ സ്റ്റേറ്റ് പെർസിസ്റ്റൻസ്: `src/lib/db/domainState.ts` — ഫോൾബാക്ക് ചെയിനുകൾ, ബജറ്റുകൾ, കോസ്റ്റ് ഹിസ്റ്ററി, ലോക്ക്ഔട്ട് സ്റ്റേറ്റ്, സർക്യൂട്ട് ബ്രേക്കറുകൾ എന്നിവയ്ക്കുള്ള SQLite CRUD
 
-OAuth പ്രൊവൈഡർ മൊഡ്യൂളുകൾ (`src/lib/oauth/providers/`-ൽ 27 വ്യക്തിഗത ഫയലുകൾ):
+OAuth പ്രൊവൈഡർ മൊഡ്യൂളുകൾ (`src/lib/oauth/providers/` എന്നതിന് കീഴിലെ 27 വ്യക്തിഗത ഫയലുകൾ):
 
-- റെജിസ്ട്രി ഇൻഡക്സ്: `src/lib/oauth/providers/index.ts`
+- രജിസ്ട്രി ഇൻഡക്സ്: `src/lib/oauth/providers/index.ts`
 - വ്യക്തിഗത പ്രൊവൈഡറുകൾ: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
 - പങ്കിട്ട ഹെൽപ്പറുകൾ: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl ഡിവൈസ് ഫ്ലോ), `museCodeDeviceResponse.ts`
 - തിൻ റാപ്പർ: `src/lib/oauth/providers.ts` — വ്യക്തിഗത മൊഡ്യൂളുകളിൽ നിന്ന് റീ-എക്സ്പോർട്ട് ചെയ്യുന്നു
@@ -355,17 +355,17 @@ OAuth പ്രൊവൈഡർ മൊഡ്യൂളുകൾ (`src/lib/oauth/pr
 
 വിശദമായ അവലോകനം: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-## പ്രധാന സബ്സിസ്റ്റങ്ങൾ (v3.8.0)
+## പ്രധാന ഉപസിസ്റ്റങ്ങൾ (v3.8.0)
 
 ### A. ഓട്ടോ കോംബോ എഞ്ചിൻ
 
-സ്റ്റാറ്റിക് കോംബോ നിർവചനത്തെ ആശ്രയിക്കുന്നതിന് പകരം, ഓട്ടോ കോംബോ അഭ്യർത്ഥന സമയത്ത്
-റൂട്ടിംഗ് ലക്ഷ്യങ്ങളെ ചലനാത്മകമായി സ്കോർ ചെയ്യുകയും തിരഞ്ഞെടുക്കുകയും ചെയ്യുന്നു. ഇത്
-`auto/*` മോഡൽ പ്രിഫിക്സ് കുടുംബത്തിനാണ് ശക്തി പകരുന്നത്.
+ഓട്ടോ കോംബോ, സ്റ്റാറ്റിക് കോംബോ നിർവ്വചനത്തെ ആശ്രയിക്കുന്നതിനുപകരം, അഭ്യർത്ഥന സമയത്ത്
+റൂട്ടിംഗ് ടാർഗറ്റുകൾ ഡൈനാമിക്കായി സ്കോർ ചെയ്യുകയും തിരഞ്ഞെടുക്കുകയും ചെയ്യുന്നു.
+ഇത് `auto/*` മോഡൽ പ്രിഫിക്സ് കുടുംബത്തിന് ശക്തി നൽകുന്നു.
 
 - എഞ്ചിൻ എൻട്രി: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- ലൈവ് കോംബോ എൻട്രി: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), `src/sse/handlers/chat.ts` ആണ് ഇതിനെ വിളിക്കുന്നത്
+- ലൈവ് കോംബോ എൻട്രി: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), `src/sse/handlers/chat.ts` വഴി വിളിക്കപ്പെടുന്നു
 - ഡാഷ്ബോർഡ്: `/dashboard/auto-combo`
 - ടെലിമെട്രി: `auto_combo_decisions` SQLite ടേബിൾ
 
@@ -375,173 +375,158 @@ OAuth പ്രൊവൈഡർ മൊഡ്യൂളുകൾ (`src/lib/oauth/pr
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  v3.8.0-ലെ ഏറ്റവും ശ്രദ്ധേയമായ പുതിയ ചേർക്കൽ auto ആണ്; `fusion` (പാനൽ ഫാൻ-ഔട്ട് + ജഡ്ജ്
+  auto എന്നത് v3.8.0-ലെ ശ്രദ്ധേയമായ പുതിയ ചേർക്കലാണ്; `fusion` (പാനൽ ഫാൻ-ഔട്ട് + ജഡ്ജ്
   സിന്തസിസ്, `open-sse/services/fusion.ts`) v3.8.36-ൽ പുതിയതാണ്.
-- **16-ഘടക സ്കോറിംഗ്**: ക്വോട്ട, ആരോഗ്യം, വിപരീത ചിലവ്, വിപരീത ലേറ്റൻസി, ടാസ്ക്
-  അനുയോജ്യത എന്നിവയും അതിനൊപ്പം പത്ത് എണ്ണം കൂടിയും. ഘടകങ്ങളുടെയും അവയുടെ ഡിഫോൾട്ട്
-  വെയ്റ്റുകളുടെയും പ്രാമാണിക ടേബിൾ
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md)-ൽ ആണ് — അത് ഇവിടെ
-  ആവർത്തിക്കുന്നത് കാലഹരണപ്പെടുന്നതിന് അതിന് ഒരു രണ്ടാം സ്ഥലം കൊടുക്കും.
-- **വിർച്വൽ ഫാക്ടറി** പൊരുത്തപ്പെടുന്ന പേരുള്ള കോംബോ ഇല്ലാത്തപ്പോൾ, ആരോഗ്യകരമായ സജീവ
-  പ്രൊവൈഡർ കണക്ഷനുകളിൽ നിന്ന് കാൻഡിഡേറ്റുകളെ എടുത്ത് താത്കാലിക കോംബോകൾ സൃഷ്ടിക്കുന്നു.
+- **16-ഘടക സ്കോറിംഗ്**: quota, health, inverse cost, inverse latency, task fit എന്നിവയും
+  കൂടാതെ പത്ത് എണ്ണവും. ഘടകങ്ങളുടെയും അവയുടെ ഡിഫോൾട്ട് വെയ്റ്റുകളുടെയും ഔദ്യോഗിക പട്ടിക
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md)-ൽ ആണ് — അത് ഇവിടെ വീണ്ടും
+  ആവർത്തിച്ചാൽ അതിന് കാലഹരണപ്പെടാനുള്ള രണ്ടാം സ്ഥലം ലഭിക്കും.
+- **വിർച്വൽ ഫാക്ടറി** അനുയോജ്യമായ നേംഡ് കോംബോ ഇല്ലാത്തപ്പോൾ എഫെമറൽ കോംബോകൾ
+  സൃഷ്ടിക്കുന്നു, ആരോഗ്യകരമായ സജീവ പ്രൊവൈഡർ കണക്ഷനുകളിൽ നിന്ന് കാൻഡിഡേറ്റുകളെ എടുത്തുകൊണ്ട്.
 - **ഓട്ടോ പ്രിഫിക്സുകൾ**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — ഓരോന്നും ട്യൂൺ ചെയ്ത വെയ്റ്റ് പ്രൊഫൈലിന് പിന്നിൽ
-  പ്രവർത്തിക്കുന്നു.
-- **6 മോഡ് പായ്ക്കുകൾ**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first`, `chaos-mode` — ഡാഷ്ബോർഡിൽ നിന്ന് വിളിക്കാവുന്ന പ്രീസെറ്റ് വെയ്റ്റ്
-  കോൺഫിഗറേഷനുകൾ. (മുകളിലെ `auto/*` പ്രിഫിക്സുകളുമായി ഇവയെ തെറ്റിദ്ധരിക്കരുത്; അവ
-  അഭ്യർത്ഥന-സമയ വേരിയന്റുകളാണ്.)
+  `auto/smart`, `auto/lkgp` — ഓരോന്നും ക്രമീകരിച്ച വെയ്റ്റ് പ്രൊഫൈൽ പിന്തുണയ്ക്കുന്നു.
+- **6 മോഡ് പാക്കുകൾ**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first`, `chaos-mode` എന്നിവ — ഡാഷ്ബോർഡിൽ നിന്ന് വിളിക്കാവുന്ന പ്രീസെറ്റ്
+  വെയ്റ്റ് കോൺഫിഗറേഷനുകൾ. (മുകളിലുള്ള `auto/*` പ്രിഫിക്സുകളുമായി ആശയക്കുഴപ്പം
+  ഉണ്ടാക്കരുത്, അവ അഭ്യർത്ഥന-സമയ വേരിയന്റുകളാണ്.)
 
-സമ്പൂർണ്ണ അൽഗോരിതം വിശദാംശങ്ങൾക്കായി (ഘടക ഫോർമുലകൾ, വെയ്റ്റ് ട്യൂണിംഗ്),
+പൂർണ്ണമായ അൽഗോരിതം വിശദാംശങ്ങൾക്കായി (ഘടക സൂത്രവാക്യങ്ങൾ, വെയ്റ്റ് ട്യൂണിംഗ്),
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) കാണുക.
 
 ### B. ക്ലൗഡ് ഏജന്റുകൾ
 
-ക്ലൗഡ് ഏജന്റുകൾ മൂന്നാം കക്ഷി ഹോസ്റ്റഡ് കോഡ്-ഏജന്റ് പ്ലാറ്റ്ഫോമുകളെ (Codex Cloud, Devin,
-Jules) ഏകീകൃത DB-അധിഷ്ഠിത ടാസ്ക് ലൈഫ്സൈക്കിളിന് പിന്നിൽ ഒതുക്കുന്നു. എല്ലാ ടാസ്ക്
-സൃഷ്ടി/പരിശോധന എൻഡ്പോയിന്റുകൾക്കും മാനേജ്മെന്റ് ഓതന്റിക്കേഷൻ ആവശ്യമാണ്.
+Cloud Agents, മൂന്നാം-കക്ഷി ഹോസ്റ്റഡ് കോഡ്-ഏജന്റ് പ്ലാറ്റ്ഫോമുകളെ (Codex Cloud, Devin,
+Jules) ഏകീകൃതമായ DB-അധിഷ്ഠിത ടാസ്ക് ലൈഫ്സൈക്കിളിന് പിന്നിൽ പൊതിയുന്നു. എല്ലാ ടാസ്ക്
+സൃഷ്ടിക്കൽ/പരിശോധന എൻഡ്പോയിന്റുകളും മാനേജ്മെന്റ് ഓതന്റിക്കേഷൻ ആവശ്യപ്പെടുന്നു.
 
 - മൊഡ്യൂൾ റൂട്ട്: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, കൂടാതെ `agents/`-ക്ക് കീഴിൽ ഓരോ ഏജന്റിനുമുള്ള സബ്ഡയറക്ടറികളും)
-- ഓരോ ഏജന്റിനുമുള്ള ഇംപ്ലിമെന്റേഷനുകൾ: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- പബ്ലിക് എൻഡ്പോയിന്റുകൾ: `/api/v1/agents/tasks/*` (ലിസ്റ്റ്/സൃഷ്ടിക്കൽ/ലഭ്യമാക്കൽ/റദ്ദാക്കൽ)
-- മാനേജ്മെന്റ് എൻഡ്പോയിന്റുകൾ: `/api/cloud/*` (പ്രൊവിഷനിംഗ്, സ്റ്റാറ്റസ്, ബാച്ച്)
+  `types.ts`, `db.ts`, കൂടാതെ `agents/`-ന് കീഴിൽ ഏജന്റ്-തിരിച്ചുള്ള സബ്ഡയറക്ടറികളും)
+- ഏജന്റ്-അനുസൃത ഇംപ്ലിമെന്റേഷനുകൾ: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- പബ്ലിക് എൻഡ്പോയിന്റുകൾ: `/api/v1/agents/tasks/*` (ലിസ്റ്റ്/സൃഷ്ടിക്കുക/നേടുക/റദ്ദാക്കുക)
+- മാനേജ്മെന്റ് എൻഡ്പോയിന്റുകൾ: `/api/cloud/*` (പ്രൊവിഷണിംഗ്, സ്റ്റാറ്റസ്, ബാച്ച്)
 - ഡാഷ്ബോർഡ്: `/dashboard/cloud-agents`
 - സ്റ്റോറേജ്: `cloud_agent_tasks` ടേബിൾ
 
-ഓരോ ഏജന്റിനുമുള്ള പ്രൊവിഷനിംഗ്, OAuth വിശദാംശങ്ങൾ എന്നിവയ്ക്കായി
+ഏജന്റ്-അനുസൃത പ്രൊവിഷണിംഗിനും OAuth വിശദാംശങ്ങൾക്കും,
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md) കാണുക.
 
-### C. ഗാർഡ്റെയിലുകൾ
+### C. ഗാർഡ്റെയിൽസ്
 
-ഗാർഡ്റെയിൽ മൊഡ്യൂൾ ഒരു ഹോട്ട്-റീലോഡ് ചെയ്യാവുന്ന മിഡിൽവെയർ ലെയറാണ്; അത് അഭ്യർത്ഥനകളിലും
-പ്രതികരണങ്ങളിലും PII, പ്രോംപ്റ്റ് ഇൻജക്ഷൻ, സുരക്ഷിതമല്ലാത്ത വിഷൻ ഉള്ളടക്കം എന്നിവ
-പരിശോധിക്കുന്നു. ലംഘനങ്ങൾ അഭ്യർത്ഥനയെ HTTP **503** കൂടാതെ ഒരു ഘടനാപരമായ എറർ കോഡും
-നൽകി ഷോർട്ട്-സർക്യൂട്ട് ചെയ്യുന്നു, ഇതുവഴി ഡൗൺസ്ട്രീം കോളർക്ക് വീണ്ടും ശ്രമിക്കാനോ
-മറ്റൊരു ശാഖയിലേക്ക് പോകാനോ കഴിയും.
+ഗാർഡ്റെയിൽസ് മൊഡ്യൂൾ, PII, പ്രോംപ്റ്റ് ഇൻജക്ഷൻ, അസുരക്ഷിത വിഷൻ ഉള്ളടക്കം എന്നിവയ്ക്കായി
+അഭ്യർത്ഥനകളും പ്രതികരണങ്ങളും പരിശോധിക്കുന്ന ഒരു ഹോട്ട്-റീലോഡബിൾ മിഡിൽവെയർ ലെയറാണ്.
+ലംഘനങ്ങൾ HTTP **503** എന്നതിനോടൊപ്പം ഘടനാപരമായ ഒരു എറർ കോഡ് ചേർത്ത് അഭ്യർത്ഥനയെ
+ഷോർട്ട്-സർക്യൂട്ട് ചെയ്യുന്നു, ഇത് ഡൗൺസ്ട്രീം കോളറുകൾക്ക് വീണ്ടും ശ്രമിക്കാനോ ബ്രാഞ്ച്
+ചെയ്യാനോ അനുവദിക്കുന്നു.
 
 - മൊഡ്യൂൾ റൂട്ട്: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- ഹോട്ട് റീലോഡ്: റെജിസ്ട്രി കോൺഫിഗ് മാറ്റങ്ങൾ നിരീക്ഷിക്കുകയും ചെയിൻ അതേ സ്ഥലത്ത്
-  പുനർനിർമ്മിക്കുകയും ചെയ്യുന്നു
+- ഹോട്ട് റീലോഡ്: റജിസ്ട്രി കോൺഫിഗ് മാറ്റങ്ങൾ നിരീക്ഷിച്ച് ചെയിൻ അതേ സ്ഥലത്ത് പുനർനിർമ്മിക്കുന്നു
 - വയർ-ഇൻ പോയിന്റുകൾ: ചാറ്റ് ഹാൻഡ്ലർ എൻട്രി, ഇമേജ് ജനറേഷൻ ഹാൻഡ്ലർ, റെസ്പോൺസ് സാനിറ്റൈസർ
-- HTTP കരാർ: ലംഘനങ്ങൾ `error.code = "GUARDRAIL_VIOLATION"` എന്നതിനൊപ്പം `503` ആയി
-  പ്രത്യക്ഷപ്പെടുന്നു
+- HTTP കരാർ: ലംഘനങ്ങൾ `error.code = "GUARDRAIL_VIOLATION"` എന്നതിനോടെ `503` ആയി പ്രത്യക്ഷപ്പെടുന്നു
 
-റൂൾസെറ്റ് രചനയ്ക്കും ത്രെഷോൾഡ് ട്യൂണിംഗിനും വേണ്ടി
+റൂൾസെറ്റ് രചനയ്ക്കും ത്രെഷോൾഡ് ട്യൂണിംഗിനും,
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md) കാണുക.
 
 ### D. ഡൊമെയ്ൻ ലെയർ
 
-`src/domain/` നേംസ്പേസിൽ ഡൊമെയ്ൻ സേവനങ്ങളും റിസർവ് ചെയ്ത ഇവാല്യുവേഷൻ കരാറുകളും
-അടങ്ങിയിരിക്കുന്നു. ഇത് ഓരോ അഭ്യർത്ഥനയ്ക്കും ബാധകമായ ഒരു നിർബന്ധിത പോളിസി എൻട്രി
+`src/domain/` നെയിംസ്പേസിൽ ഡൊമെയ്ൻ സേവനങ്ങളും റിസർവ്ഡ് ഇവാലുവേഷൻ കരാറുകളും
+അടങ്ങിയിരിക്കുന്നു. ഇത് എല്ലാ അഭ്യർത്ഥനയ്ക്കും നിർബന്ധിതമായ ഒരു പോളിസി എൻട്രി
 പോയിന്റ് അല്ല.
 
-ലൈവ് ചാറ്റ് പാത `src/shared/utils/apiKeyPolicy.ts`-ൽ നിന്ന് `enforceApiKeyPolicy()`-നെ
-വിളിക്കുന്നു; റിസോൾവ് ചെയ്ത മോഡലുകളുടെയും കോംബോ അംഗങ്ങളുടെയും അധികാരനിർണ്ണയം
+ലൈവ് ചാറ്റ് പാത്ത് `src/shared/utils/apiKeyPolicy.ts`-ൽ നിന്ന് `enforceApiKeyPolicy()`
+വിളിക്കുന്നു; പരിഹരിച്ച മോഡലുകളുടെയും കോംബോ അംഗങ്ങളുടെയും ഓതറൈസേഷൻ
 `src/sse/handlers/chat/resolvedModelPolicy.ts`-ൽ നടപ്പിലാക്കിയിരിക്കുന്നു.
-`src/app/api/v1/chat/completions/route.ts`-ലുള്ള സെൽഫ്-ഹോസ്റ്റഡ് എൻട്രിയും ഡിസ്പാച്ചിന്
-മുമ്പ് API-കീ പോളിസി നടപ്പിലാക്കുന്നു. കോംബോ റെസല്യൂഷൻ `open-sse/services/combo.ts`
-വഴിയാണ് പ്രവർത്തിക്കുന്നത്.
+`src/app/api/v1/chat/completions/route.ts`-ലെ സെൽഫ്-ഹോസ്റ്റഡ് എൻട്രിയും ഡിസ്പാച്ചിന്
+മുമ്പ് API-കീ പോളിസി നടപ്പിലാക്കുന്നു. കോംബോ റെസലൂഷൻ `open-sse/services/combo.ts`
+വഴി പ്രവർത്തിക്കുന്നു.
 
-`src/domain/policyEngine.ts`, `src/domain/comboResolver.ts`, `src/lib/container.ts` എന്നിവ
-പരീക്ഷിക്കപ്പെട്ട കരാറുകളായി തുടരുന്നു, അവ ആ അഭ്യർത്ഥന പാതയുടെ വയറിംഗ് അല്ല. കണ്ടെയ്നർ
-പോളിസി എഞ്ചിൻ രജിസ്റ്റർ ചെയ്യുന്നു, പക്ഷേ പരിശോധിച്ച പ്രൊഡക്ഷൻ അഭ്യർത്ഥന പാത അതിനെ
-റിസോൾവ് ചെയ്യുന്നില്ല. ആ കരാറുകൾ മാത്രം മാറ്റുന്നത് ലൈവ് ചാറ്റ് പോളിസിയോ കോംബോ റൂട്ടിംഗോ
-മാറ്റുന്നില്ല; അവയെ ബന്ധിപ്പിക്കുന്നതിനോ നീക്കം ചെയ്യുന്നതിനോ പ്രത്യേക രൂപകൽപ്പനാ തീരുമാനം
-ആവശ്യമാണ്.
+`src/domain/policyEngine.ts`, `src/domain/comboResolver.ts`, `src/lib/container.ts`
+എന്നിവ ആ അഭ്യർത്ഥന പാത്തയുടെ വയറിംഗ് അല്ല, പരീക്ഷിക്കപ്പെട്ട കരാറുകളായി തുടരുന്നു.
+കണ്ടെയ്നർ പോളിസി എഞ്ചിൻ രജിസ്റ്റർ ചെയ്യുന്നു, എന്നാൽ പരിശോധിച്ച പ്രൊഡക്ഷൻ അഭ്യർത്ഥന
+പാത്ത അത് പരിഹരിക്കുന്നില്ല. ആ കരാറുകൾ മാത്രം മാറ്റുന്നത് ലൈവ് ചാറ്റ് പോളിസിയെയോ കോംബോ
+റൂട്ടിംഗിനെയോ മാറ്റുന്നില്ല; അവയെ ബന്ധിപ്പിക്കുന്നതിനോ നീക്കം ചെയ്യുന്നതിനോ പ്രത്യേക
+രൂപകൽപ്പനാ തീരുമാനം ആവശ്യമാണ്.
 
-- റിസർവ് ചെയ്ത പോളിസി എഞ്ചിൻ: `src/domain/policyEngine.ts` — ലോക്ക്ഔട്ട് → ബജറ്റ് → ഫോൾബാക്ക് ഇവാല്യുവേഷൻ
+- റിസർവ്ഡ് പോളിസി എഞ്ചിൻ: `src/domain/policyEngine.ts` — ലോക്ക്ഔട്ട് → ബജറ്റ് → ഫോൾബാക്ക് ഇവാലുവേഷൻ
 - കോസ്റ്റ് റൂളുകൾ: `src/domain/costRules.ts`
 - ഫോൾബാക്ക് പോളിസി: `src/domain/fallbackPolicy.ts`
 - ലോക്ക്ഔട്ട് പോളിസി: `src/domain/lockoutPolicy.ts`
 - ടാഗ്-അധിഷ്ഠിത റൂട്ടിംഗ്: `src/domain/tagRouter.ts`
-- റിസർവ് ചെയ്ത കോംബോ റിസോൾവർ: `src/domain/comboResolver.ts` — സ്വതന്ത്ര സെലക്ഷൻ കരാർ; ലൈവ് കോംബോ റൂട്ടിംഗ് `open-sse/services/combo.ts`-ൽ നടപ്പിലാക്കിയിരിക്കുന്നു
+- റിസർവ്ഡ് കോംബോ റിസോൾവർ: `src/domain/comboResolver.ts` — സ്റ്റാൻഡ്എലോൺ സെലക്ഷൻ കരാർ; ലൈവ് കോംബോ റൂട്ടിംഗ് `open-sse/services/combo.ts`-ൽ നടപ്പിലാക്കിയിരിക്കുന്നു
 - കണക്ഷൻ/മോഡൽ റൂൾ ജോയിനർ: `src/domain/connectionModelRules.ts`
-- മോഡൽ ലഭ്യതാ സ്നാപ്ഷോട്ടുകൾ: `src/domain/modelAvailability.ts`
-- പ്രൊവൈഡർ കാലഹരണ ട്രാക്കിംഗ്: `src/domain/providerExpiration.ts`
+- മോഡൽ ലഭ്യത സ്നാപ്ഷോട്ടുകൾ: `src/domain/modelAvailability.ts`
+- പ്രൊവൈഡർ കാലാവധി ട്രാക്കിംഗ്: `src/domain/providerExpiration.ts`
 - ക്വോട്ട കാഷെ: `src/domain/quotaCache.ts`
 - ഡിഗ്രഡേഷൻ സ്റ്റേറ്റ്: `src/domain/degradation.ts`
 - കോൺഫിഗറേഷൻ ഓഡിറ്റ്: `src/domain/configAudit.ts`
 - OmniRoute റെസ്പോൺസ് മെറ്റാഡാറ്റ ബിൽഡർ: `src/domain/omnirouteResponseMeta.ts`
-- അസസ്മെന്റ് സബ്സിസ്റ്റം: `src/domain/assessment/` — ആവർത്തിക ഇവാല്യുവേഷൻ ജോബുകൾ
+- അസസ്മെന്റ് ഉപസിസ്റ്റം: `src/domain/assessment/` — ആവൃത്തിക ഇവാലുവേഷൻ ജോബുകൾ
 
-### E. അധികാരനിർണ്ണയ പൈപ്പ്ലൈൻ
+### E. ഓതറൈസേഷൻ പൈപ്പ്ലൈൻ
 
-അധികാരനിർണ്ണയ പൈപ്പ്ലൈൻ ഓരോ വരുന്ന അഭ്യർത്ഥനയെയും തരംതിരിക്കുകയും ഡിസ്പാച്ചിന് മുമ്പ്
-അനുയോജ്യമായ പോളിസി ചെയിൻ പ്രയോഗിക്കുകയും ചെയ്യുന്നു.
+ഓതറൈസേഷൻ പൈപ്പ്ലൈൻ ഓരോ ഇൻകമിംഗ് അഭ്യർത്ഥനയെയും തരംതിരിച്ച് ഡിസ്പാച്ചിന് മുമ്പ്
+അനുയോജ്യമായ പോളിസി ചെയിൻ പ്രയോഗിക്കുന്നു.
 
 - പൈപ്പ്ലൈൻ എൻട്രി: `src/server/authz/pipeline.ts`
-- റിക്വസ്റ്റ് ക്ലാസിഫയർ: `src/server/authz/classify.ts` — പബ്ലിക്
-  കംപാറ്റിബിലിറ്റി റൂട്ടുകളെ മാനേജ്മെൻ്റ് റൂട്ടുകളിൽ നിന്ന് വേർതിരിക്കുന്നു
-- പബ്ലിക് റൂട്ട് ഇൻവെൻ്ററി: `src/shared/constants/publicApiRoutes.ts`
-- പോളിസികൾ: `src/server/authz/policies/` — കംപോസബിൾ പ്രെഡിക്കേറ്റുകൾ
+- റിക്വസ്റ്റ് ക്ലാസിഫയർ: `src/server/authz/classify.ts` — പൊതു അനുയോജ്യതാ റൂട്ടുകളെ മാനേജ്മെന്റ് റൂട്ടുകളിൽ നിന്ന് വേർതിരിക്കുന്നു
+- പൊതു റൂട്ട് ഇൻവെന്ററി: `src/shared/constants/publicApiRoutes.ts`
+- പോളിസികൾ: `src/server/authz/policies/` — കോമ്പോസബിൾ പ്രെഡിക്കേറ്റുകൾ
   (`requireApiKey`, `requireManagement`, `requireFreshAuth` മുതലായവ)
 - ഹെഡർ യൂട്ടിലിറ്റികൾ: `src/server/authz/headers.ts`
 - അസർഷൻ ഹെൽപ്പർ: `src/server/authz/assertAuth.ts`
 - റിക്വസ്റ്റ് കോൺടെക്സ്റ്റ്: `src/server/authz/context.ts`
 
-പബ്ലിക് റൂട്ടുകളും മാനേജ്മെൻ്റ് റൂട്ടുകളും തമ്മിലുള്ളത് ഒരു കർശനമായ അതിർത്തിയാണ്:
-agent/cooldown API-കൾക്കും പ്രൊവൈഡർ മ്യൂട്ടേഷനുകൾക്കും മാനേജ്മെൻ്റ് ഓത്ത്
-ആവശ്യമാണ് (ഇല്ലെങ്കിൽ HTTP 401).
+പൊതു റൂട്ടുകളും മാനേജ്മെന്റ് റൂട്ടുകളും തമ്മിൽ കർശനമായ അതിർത്തിയുണ്ട്: agent/cooldown API-കൾക്കും പ്രൊവൈഡർ മ്യൂട്ടേഷനുകൾക്കും മാനേജ്മെന്റ് ഓഥ് ആവശ്യമാണ് (ഇല്ലെങ്കിൽ HTTP 401).
 
-റൂട്ട് ക്ലാസിഫിക്കേഷൻ നിയമങ്ങളുടെ പൂർണ്ണ രൂപത്തിനായി
+പൂർണ്ണമായ റൂട്ട് ക്ലാസിഫിക്കേഷൻ നിയമങ്ങൾക്കായി
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md) കാണുക.
 
-### F. വർക്ക്ഫ്ലോ FSM-ഉം ടാസ്ക്-അവേർ റൂട്ടറും
+### F. വർക്ക്ഫ്ലോ FSM-യും ടാസ്ക്-അവേർ റൂട്ടറും
 
-തിരിച്ചറിഞ്ഞ വർക്ക്ഫ്ലോ സ്റ്റേജ് (പ്ലാനിംഗ്, എക്സിക്യൂഷൻ, റിവ്യൂ), ബാക്ക്ഗ്രൗണ്ട്-ടാസ്ക്
-അഫിനിറ്റി എന്നിവയെ അടിസ്ഥാനമാക്കി ട്രാഫിക് നയിക്കുന്നതിന് കോംബോ സെലക്ഷന് മുകളിൽ
-ലേയർ ചെയ്ത ഒരു ഫിനൈറ്റ്-സ്റ്റേറ്റ്-മഷീൻ ഡ്രൈവൻ റൂട്ടർ.
+കോംബോ സെലക്ഷനു മുകളിൽ ലെയർ ചെയ്തിരിക്കുന്ന ഫിനൈറ്റ്-സ്റ്റേറ്റ്-മെഷീൻ ഡ്രൈവൻ റൂട്ടർ; കണ്ടെത്തിയ വർക്ക്ഫ്ലോ ഘട്ടം (പ്ലാനിംഗ്, എക്സിക്യൂഷൻ, റിവ്യൂ), ബാക്ക്ഗ്രൗണ്ട്-ടാസ്ക് അഫിനിറ്റി എന്നിവയെ അടിസ്ഥാനമാക്കി ട്രാഫിക് നയിക്കുന്നു.
 
 - വർക്ക്ഫ്ലോ FSM: `open-sse/services/workflowFSM.ts`
 - ടാസ്ക്-അവേർ റൂട്ടർ: `open-sse/services/taskAwareRouter.ts`
 - ബാക്ക്ഗ്രൗണ്ട് ടാസ്ക് ഡിറ്റക്ടർ: `open-sse/services/backgroundTaskDetector.ts`
-- ഇൻ്റൻ്റ് ക്ലാസിഫയർ: `open-sse/services/intentClassifier.ts`
+- ഇന്റന്റ് ക്ലാസിഫയർ: `open-sse/services/intentClassifier.ts`
 
-FSM ട്രാൻസിഷനുകൾ Auto Combo-യുടെ സ്കോറിംഗിലേക്ക് ഫീഡ് ചെയ്യപ്പെടുന്നു,
-ബാക്ക്ഗ്രൗണ്ട്/ഓട്ടോമേഷൻ ടാസ്കുകൾക്ക് ചെലവ് കുറഞ്ഞ മോഡലുകളിലേക്കും ഇൻ്ററാക്ടീവ്
-പ്ലാനിംഗ്/റിവ്യൂ ടേണുകൾക്ക് ശക്തമായ മോഡലുകളിലേക്കും ബയസ് ചെയ്യുന്നു.
+FSM ട്രാൻസിഷനുകൾ Auto Combo-യുടെ സ്കോറിംഗിലേക്ക് ഫീഡ് ചെയ്യപ്പെടുന്നു; ബാക്ക്ഗ്രൗണ്ട്/ഓട്ടോമേഷൻ ടാസ്കുകൾക്ക് ചിലവ് കുറഞ്ഞ മോഡലുകളിലേക്കും ഇന്ററാക്ടീവ് പ്ലാനിംഗ്/റിവ്യൂ ടേണുകൾക്ക് ശക്തമായ മോഡലുകളിലേക്കും ബയസ് ചെയ്യുന്നു.
 
 ### G. പ്രൊവൈഡർ-നിർദ്ദിഷ്ട റെസിലിയൻസ്
 
-ഗ്ലോബൽ സർക്യൂട്ട് ബ്രേക്കർ / കണക്ഷൻ കൂൾഡൗൺ / മോഡൽ ലോക്ക്ഔട്ട് ലേയറുകളിൽ
-ആശ്രയിച്ച് പ്രവർത്തിക്കുന്ന dedicated റെസിലിയൻസ്, സ്റ്റെൽത്ത് മൊഡ്യൂളുകൾ
-നിരവധി പ്രൊവൈഡർമാർ നൽകുന്നു:
+നിരവധി പ്രൊവൈഡറുകൾ ഗ്ലോബൽ സർക്യൂട്ട് ബ്രേക്കർ / കണക്ഷൻ കൂൾഡൗൺ / മോഡൽ ലോക്ക്ഔട്ട് ലെയറുകളെ ആശ്രയിച്ച് പ്രവർത്തിക്കുന്ന പ്രത്യേക റെസിലിയൻസ്, സ്റ്റെൽത്ത് മൊഡ്യൂളുകൾ നൽകുന്നു:
 
-- Antigravity 429 എഞ്ചിൻ: `open-sse/services/antigravity429Engine.ts` (ഐഡൻ്റിറ്റി
-  റോട്ടേറ്റ് ചെയ്യുന്നു, റെസ്പോൺസ് ഹെഡറുകൾ സ്ക്രബ് ചെയ്യുന്നു,
+- Antigravity 429 എഞ്ചിൻ: `open-sse/services/antigravity429Engine.ts` (ഐഡന്റിറ്റി റൊട്ടേറ്റ് ചെയ്യുന്നു, റെസ്പോൺസ് ഹെഡറുകൾ സ്ക്രബ് ചെയ്യുന്നു,
   `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts` എന്നിവ വഴി
-  ക്രെഡിറ്റ്/വേർഷൻ ട്രാക്കിംഗ് നയിക്കുന്നു)
+  `antigravityIdentity.ts`, `antigravityVersion.ts` വഴി ക്രെഡിറ്റ്സ്/വേർഷൻ
+  ട്രാക്കിംഗ് നടത്തുന്നു)
 - ModelScope ക്വോട്ട പോളിസി: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (കമ്പാറ്റിബിലിറ്റി ചാനൽ ഹാൻഡ്ഷേക്ക്): `open-sse/services/claudeCodeCCH.ts`,
+- Claude Code CCH (കോമ്പാറ്റിബിലിറ്റി ചാനൽ ഹാൻഡ്ഷേക്ക്): `open-sse/services/claudeCodeCCH.ts`,
   കൂടാതെ `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Claude Code ഫിംഗർപ്രിൻ്റ് ഷേപ്പിംഗ്: `open-sse/services/claudeCodeFingerprint.ts`
-- Claude Code ഒഫസ്ക്കേഷൻ: `open-sse/services/claudeCodeObfuscation.ts`
+- Claude Code ഫിംഗർപ്രിന്റ് ഷേപ്പിംഗ്: `open-sse/services/claudeCodeFingerprint.ts`
+- Claude Code ഒബ്ഫസ്കേഷൻ: `open-sse/services/claudeCodeObfuscation.ts`
 
-പൂർണ്ണ സ്റ്റെൽത്ത് പ്ലേബുക്കിനും പ്രവർത്തന മാർഗ്ഗനിർദ്ദേശത്തിനും
+പൂർണ്ണമായ സ്റ്റെൽത്ത് പ്ലേബുക്കും പ്രവർത്തന മാർഗ്ഗനിർദ്ദേശവും കാണാൻ
 `docs/security/STEALTH_GUIDE.md` കാണുക (git; `/docs`-ലേക്ക് കംപൈൽ ചെയ്തിട്ടില്ല).
 
-### H. വെബ്ഹുക്കുകൾ, റീസണിംഗ് ക്യാഷ്, റീഡ് ക്യാഷ്
+### H. വെബ്ഹുക്കുകൾ, റീസണിംഗ് കാഷെ, റീഡ് കാഷെ
 
-- **വെബ്ഹുക്കുകൾ** — പ്രൊവൈഡർ/അക്കൗണ്ട്/ടാസ്ക് ഇവൻ്റുകൾക്കുള്ള ഔട്ട്ബൗണ്ട് ഡിസ്പാച്ച്.
+- **വെബ്ഹുക്കുകൾ** — പ്രൊവൈഡർ/അക്കൗണ്ട്/ടാസ്ക് ഇവന്റുകൾക്കുള്ള ഔട്ട്ബൗണ്ട് ഡിസ്പാച്ച്.
   - ഡിസ്പാച്ചർ: `src/lib/webhookDispatcher.ts`
   - സ്റ്റോറേജ്: `webhooks` SQLite ടേബിൾ (`src/lib/db/webhooks.ts` വഴി)
   - ഡാഷ്ബോർഡ്: `/dashboard/webhooks` (സബ്സ്ക്രിപ്ഷനുകൾ, സീക്രട്ടുകൾ, റിട്രൈ ചരിത്രം)
-  - ഇവൻ്റ് ടാക്സോണമിയുടെയും റിട്രൈ സെമാൻ്റിക്സിന്റെയും വിശദാംശങ്ങൾക്കായി [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md) കാണുക.
-- **റീസണിംഗ് ക്യാഷ്** — തിംകിംഗ് ടോക്കണുകൾ പുറത്തുവിടുന്ന പ്രൊവൈഡർമാർക്കായി
-  (Claude, GLMT മുതലായവ) തുടർച്ചയായ ടേണുകൾക്ക് വീണ്ടും ചിന്തിക്കുന്നത്
-  ഒഴിവാക്കാൻ കഴിയുന്ന റീപ്ലേ ചെയ്യാവുന്ന റീസണിംഗ് ബ്ലോക്കുകൾ.
-  - DB ലേയർ: `src/lib/db/reasoningCache.ts`
-  - സർവീസ് ലേയർ: `open-sse/services/reasoningCache.ts`
-  - റീപ്ലേ സെമാൻ്റിക്സിനായി [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md) കാണുക.
-- **റീഡ് ക്യാഷ്** — സിഗ്നേച്ചർ അടിസ്ഥാനമാക്കി കീ ചെയ്ത, തകരാറിലായ അപ്സ്ട്രീം
-  SDK-കളിൽ നിന്നുള്ള സമാനമായ റിട്രൈകളെ കൊളാപ്സ് ചെയ്യാൻ ഉപയോഗിക്കുന്ന
-  ഹ്രസ്വജീവിത റെസ്പോൺസ് ക്യാഷ്.
-  - DB ലേയർ: `src/lib/db/readCache.ts`
-  - സ്റ്റാറ്റ്സ് എൻഡ്പോയിൻ്റ്: `GET /api/cache/stats`, ഡാഷ്ബോർഡ് `/dashboard/cache`-ൽ
+  - ഇവന്റ് ടാക്സോണമിയും റിട്രൈ സിമാന്റിക്സും അറിയാൻ [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md) കാണുക.
+- **റീസണിംഗ് കാഷെ** — തിംക്കിംഗ് ടോക്കണുകൾ പുറത്തുവിടുന്ന പ്രൊവൈഡറുകൾക്കുള്ള
+  (Claude, GLMT മുതലായവ) റീപ്ലേ ചെയ്യാവുന്ന റീസണിംഗ് ബ്ലോക്കുകൾ; ഇതുവഴി തുടർച്ചയായ
+  ടേണുകൾ വീണ്ടും ചിന്തിക്കുന്നത് ഒഴിവാക്കാം.
+  - DB ലെയർ: `src/lib/db/reasoningCache.ts`
+  - സർവീസ് ലെയർ: `open-sse/services/reasoningCache.ts`
+  - റീപ്ലേ സിമാന്റിക്സിനായി [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md) കാണുക.
+- **റീഡ് കാഷെ** — സിഗ്നേച്ചർ അടിസ്ഥാനമാക്കിയുള്ള ഹ്രസ്വജീവിത റെസ്പോൺസ് കാഷെ;
+  തകരാറിലായ അപ്സ്ട്രീം SDK-കളിൽ നിന്നുള്ള സമാനമായ റിട്രൈകൾ കൂട്ടിചേർക്കാൻ ഉപയോഗിക്കുന്നു.
+  - DB ലെയർ: `src/lib/db/readCache.ts`
+  - സ്റ്റാറ്റ്സ് എൻഡ്പോയിന്റ്: `GET /api/cache/stats`, ഡാഷ്ബോർഡ് `/dashboard/cache`-ൽ
 
 ## 3) പെർസിസ്റ്റൻസ് ലെയർ
 

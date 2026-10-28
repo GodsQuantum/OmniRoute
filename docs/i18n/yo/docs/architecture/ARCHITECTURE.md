@@ -265,72 +265,73 @@ flowchart LR
 - Àkójọpọ̀ ìṣètò: `src/app/api/sync/bundle` (GET, àwòrán ìpamọ́ àwọn ààtò/olùpèsè/combo/kọ́kọ́rọ́ tí ETag ń ṣàkóso ẹ̀yà rẹ̀)
 - WebSocket: `src/app/api/v1/ws/route.ts` — olùṣàkóso Upgrade fún àwọn client WS tó bá OpenAI mu
 
-## 2) SSE + Aárín Ìtumọ̀
+## 2) SSE + Ọ̀pá Ìtumọ̀
 
-Àwọn mójùlù ìṣàn pàtàkì:
+Àwọn modulu ìṣàn pàtàkì:
 
-- Ọ̀nà ìwọlé: `src/sse/handlers/chat.ts`
-- Ìṣètò-ìdarí aárín: `open-sse/handlers/chatCore.ts`
-- Àwọn asàtúnṣe ìmúṣe olupèsè: `open-sse/executors/*`
-- Ìmọ̀rírí ìrísí/ìṣètò olupèsè: `open-sse/services/provider.ts`
-- Ìtúpalẹ̀/ìyanju awoṣe: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- Ọgbón ìdáàbòbò àkántì: `open-sse/services/accountFallback.ts`
+- Ìbáwọlé: `src/sse/handlers/chat.ts`
+- Ìṣètò ọ̀pá: `open-sse/handlers/chatCore.ts`
+- Àwọn olùyípadà ìmúṣe olupèsè: `open-sse/executors/*`
+- Ìmọ̀rírí ọ̀nà/ìṣètò olupèsè: `open-sse/services/provider.ts`
+- Ìtúpalẹ̀/ìyanjú awoṣe: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Ọgbón ìdápadà àkántì: `open-sse/services/accountFallback.ts`
 - Ìforúkọsílẹ̀ ìtumọ̀: `open-sse/translator/index.ts`
 - Àwọn ìyípadà ìṣàn: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- Ìyọkúrò/ìdéédéé lílò: `open-sse/utils/usageTracking.ts`
-- Olùtúpalẹ̀ àmì ronu: `open-sse/utils/thinkTagParser.ts`
-- Olùṣàkóso ìtẹ̀sínú: `open-sse/handlers/embeddings.ts`
-- Ìforúkọsílẹ̀ olupèsè ìtẹ̀sínú: `open-sse/config/embeddingRegistry.ts`
-- Olùṣàkóso ìṣẹ̀dá àwòrán: `open-sse/handlers/imageGeneration.ts`
+- Ìyọkúrò/ìdédé ìlò lọ́nà: `open-sse/utils/usageTracking.ts`
+- Olùtúpalẹ̀ tag ìrònú: `open-sse/utils/thinkTagParser.ts`
+- Olùkáwó embedding: `open-sse/handlers/embeddings.ts`
+- Ìforúkọsílẹ̀ olupèsè embedding: `open-sse/config/embeddingRegistry.ts`
+- Olùkáwó ìṣẹ̀dá àwòrán: `open-sse/handlers/imageGeneration.ts`
 - Ìforúkọsílẹ̀ olupèsè àwòrán: `open-sse/config/imageRegistry.ts`
-- Ìwẹ̀mọ́ ìdáhùn: `open-sse/handlers/responseSanitizer.ts`
-- Ìdéédéé ipa: `open-sse/services/roleNormalizer.ts`
+- Ìmú ìdáhùn dáradára: `open-sse/handlers/responseSanitizer.ts`
+- Ìdédé ipa lọ́nà: `open-sse/services/roleNormalizer.ts`
 
-Àwọn iṣẹ́ (ọgbón òwò):
+Àwọn iṣẹ́ (ọgbón iṣòwò):
 
-- Ìyàn/ìkó àkántì: `open-sse/services/accountSelector.ts`
-- Ìṣàkóso ìgbé-ayé àyíká: `open-sse/services/contextManager.ts`
-- Ìfipá mú àlèmù IP ṣiṣẹ́: `open-sse/services/ipFilter.ts`
-- Ìtọpa ìjoko: `open-sse/services/sessionManager.ts`
-- Ìyọ àfàtì ìbéèrè kúrò: `open-sse/services/signatureCache.ts`
-- Ìfisínú ìtọ́nà eto: `open-sse/services/systemPrompt.ts`
-- Ìṣàkóso ètò-owó ronu: `open-sse/services/thinkingBudget.ts`
-- Ìtọ́sọ́nà awoṣe àìpàtọ́ (wildcard): `open-sse/services/wildcardRouter.ts`
-- Ìṣàkóso ààlà oṣùwọ̀n: `open-sse/services/rateLimitManager.ts`
-- Ìdáwọ̀ ẹ̀rọ: `src/shared/utils/circuitBreaker.ts`
-- Ìrànrán àyíká: `open-sse/services/contextHandoff.ts` — ìṣẹ̀dá àti ìfisínú kíkúlẹ̀ ìrànrán fún ọgbón ìyípò-àyíká
-- Ìtẹ̀rọ̀: `open-sse/services/compression/*` — ìtẹ̀rọ̀ ìtẹ́lórun ṣáájú ìtumọ̀ olupèsè; ó ní àwọn òfin Caveman, àwọn àlèmù RTK, àwọn ọ̀nà-ìṣàn àrílẹ́sí, àwọn àpapọ̀ ìtẹ̀rọ̀, àwọn státìsítìkì, àti ìfìdájú
-- Olùmúwá àkọ́ọ̀le Codex: `open-sse/services/codexQuotaFetcher.ts` — ó ń mú àkọ́ọ̀le Codex wá fún àwọn ìpinnu ìrànrán ìyípò-àyíká
-- Ìgbìyànjú tó-mọ̀nì-túrọ̀tùtù: `src/sse/services/cooldownAwareRetry.ts` — àwọn ìgbìyànjú ìtúrọ̀tùtù lójú awoṣe kọ̀ọ̀kan pẹ̀lú `requestRetry` / `maxRetryIntervalSec` tí a lè ṣètò
-- Ìmúwá ìtìjú ààbò: `src/shared/network/safeOutboundFetch.ts` — ìmúwá olupèsè/awoṣe tí a dáàbò bo pẹ̀lú ààbò SSRF, ìdíwọ́ URL àṣírí, ìgbìyànjú, àti àkókò-ìparí
-- Olùṣọ́ URL ìtìjú: `src/shared/network/outboundUrlGuard.ts` — àyẹ̀wò agbàléjò lórí àwọn URL olupèsè; `src/shared/network/outboundUrlGuardPolicy.ts` ń yan ipò n láti inú `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, àti àwọn ìtánijì pátápátà wọn (rí `docs/reference/ENVIRONMENT.md`)
-- Àwọn àtòpìntì ìbéèrè olupèsè: `open-sse/services/providerRequestDefaults.ts` — àwọn àtòpìntì `maxTokens`, `temperature`, `thinkingBudgetTokens` lójú olupèsè
-- Àwọn tàbàtàbá olupèsè GLM: `open-sse/config/glmProvider.ts` — àwọn awoṣe GLM àpapọ̀, àwọn URL àkọ́ọ̀le, àkókò-ìparí/àtòpìntì GLMT
-- Òdò-òkè Antigravity: `open-sse/config/antigravityUpstream.ts` — àwọn tàbàtàbá URL ìpìlẹ̀ àti ọ̀nà àwárí
-- Àwọn tàbàtàbá oníbàárà Codex: `open-sse/config/codexClient.ts` — àwọn iye aṣojú-onílò àti ẹ̀yà-oníbàárà tí a kéyìn
-- Ìrúgìn orúkọ-ìkejì awoṣe: `src/lib/modelAliasSeed.ts` — ó ń gbìn àwọn orúkọ-ìkejì èdè-ọ̀nà kọjá-proxy 30+ ní ìbẹ̀rẹ̀
+- Ìyàn àkántì/ìdíwọ́n: `open-sse/services/accountSelector.ts`
+- Ìṣàkóso ìgbésí ayé àyíká: `open-sse/services/contextManager.ts`
+- Ìfipá mú àléló IP ṣiṣẹ́: `open-sse/services/ipFilter.ts`
+- Ìtọpasẹ̀ ìjoko: `open-sse/services/sessionManager.ts`
+- Ìyọ àfikún ìbéèrè kúrò: `open-sse/services/signatureCache.ts`
+- Ìṣìnú ìkìlọ̀ ètò: `open-sse/services/systemPrompt.ts`
+- Ìṣàkóso òwò ìrònú: `open-sse/services/thinkingBudget.ts`
+- Ìtọ́sọ́nà awoṣe wildcard: `open-sse/services/wildcardRouter.ts`
+- Ìṣàkóso ààlà ìyara: `open-sse/services/rateLimitManager.ts`
+- Olùdá circuit dúró: `src/shared/utils/circuitBreaker.ts`
+- Ìfí àyíká ránṣẹ́: `open-sse/services/contextHandoff.ts` — ìṣẹ̀dá àkópọ̀ ìfíránṣẹ́ àti ìṣìnú fún ọgbón context-relay
+- Ìdínkù: `open-sse/services/compression/*` — ìdínkù ìtẹ́lọ́rùn ṣáájú ìtumọ̀ olupèsè;
+  ó ní àwọn òfin Caveman, àwọn àléló RTK, àwọn pipeline tí a kó lé ara wọn, àwọn combo ìdínkù, àwọn státìstíkì, àti ìfìdájẹ́mulè nínú rẹ̀
+- Olùmúwá oye Codex: `open-sse/services/codexQuotaFetcher.ts` — ó ń mú oye Codex wá fún àwọn ìpinnu ìfíránṣẹ́ context-relay
+- Àtúnṣe tó mọ̀ nípa ìtútù: `src/sse/services/cooldownAwareRetry.ts` — àwọn àtúnṣe ìtútù fún awoṣe kọ̀ọ̀kan pẹ̀lú `requestRetry` / `maxRetryIntervalSec` tí a lè ṣe àtòwọ́dá
+- Ìmúwá ìta láìléwu: `src/shared/network/safeOutboundFetch.ts` — ìmúwá olupèsè/awoṣe tó ní ààbò pẹ̀lú ààbò SSRF, dídí àwọn URL àṣírí, àtúnṣe, àti àkókò parí
+- Olùdáàbòbò URL ìta: `src/shared/network/outboundUrlGuard.ts` — àwọn àyẹ̀wò agbalejo lórí àwọn URL olupèsè; `src/shared/network/outboundUrlGuardPolicy.ts` ń yan ìwọ̀n náà láti inú `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, àti àwọn yíyípadà dashboard wọn (kí wo `docs/reference/ENVIRONMENT.md`)
+- Àwọn ìbátì ìbéèrè olupèsè: `open-sse/services/providerRequestDefaults.ts` — àwọn ìbátì `maxTokens`, `temperature`, `thinkingBudgetTokens` lójú ìpele olupèsè
+- Àwọn ọ̀ọ̀sì olupèsè GLM: `open-sse/config/glmProvider.ts` — àwọn awoṣe GLM àjọpìn, àwọn URL oye, àkókò parí/àwọn ìbátì GLMT
+- Orísun òkè Antigravity: `open-sse/config/antigravityUpstream.ts` — àwọn ọ̀ọ̀sì URL ìpìlẹ̀ àti ọ̀nà ìṣàkúwárì
+- Àwọn ọ̀ọ̀sì oníbàárá Codex: `open-sse/config/codexClient.ts` — àwọn iye user-agent oní ẹ̀yà àti ẹ̀yà oníbàárá
+- Ìrúgìn orúkọ-ìran awoṣe: `src/lib/modelAliasSeed.ts` — ó ń gbìn àwọn orúkọ-ìran èdè-òyìnrìn 30+ kàkiri àwọn proxy nígbà ìbẹ̀rẹ̀
 
-Àwọn mójùlù ìpele ilà:
+Àwọn modulu ìpele agbègbè:
 
-- Àwọn òfin iye-owó/ètò-owó: `src/domain/costRules.ts`
-- Ìlànà ìdáàbòbò: `src/domain/fallbackPolicy.ts`
-- Àdéhùn ìyanju-àpapọ̀ tí a pamọ́: `src/domain/comboResolver.ts`; ìtọ́sọ́nà lòó ń lo `open-sse/services/combo.ts`
-- Ìlànà ìdíwọ̀lé: `src/domain/lockoutPolicy.ts`
-- Àdéhùn ìdájọ́-ìlànà tí a pamọ́: `src/domain/policyEngine.ts`; ọ̀nà ìbéèrè ń fipá mú ìlànà kóko-API ṣiṣẹ́ nípasẹ̀ `src/shared/utils/apiKeyPolicy.ts` àti àṣẹ àfòjúsùn-tí-a-yanjú nípasẹ̀ `src/sse/handlers/chat/resolvedModelPolicy.ts`
-- Ìkàtàlọ́gì àwọn kóòdù àṣìṣe: `src/shared/constants/errorCodes.ts`
+- Àwọn òfin ìyówó/àwọn òwò: `src/domain/costRules.ts`
+- Ìlànà ìdápadà: `src/domain/fallbackPolicy.ts`
+- Àdéhùn ìyanjú combo tí a fi pamọ́: `src/domain/comboResolver.ts`; ìtọ́sọ́nà láàyò ń lo `open-sse/services/combo.ts`
+- Ìlànà ìtiipa: `src/domain/lockoutPolicy.ts`
+- Àdéhùn ìdíwọ́n ìlànà tí a fi pamọ́: `src/domain/policyEngine.ts`; ọ̀nà ìbéèrè ń fipá mú ìlànà kóògùn-API ṣiṣẹ́ nípasẹ̀ `src/shared/utils/apiKeyPolicy.ts` àti àṣẹ afojúsi tí a ti yanjú nípasẹ̀ `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Àkójọ àwọn kóòdù aṣìṣe: `src/shared/constants/errorCodes.ts`
 - ID ìbéèrè: `src/shared/utils/requestId.ts`
-- Àkókò-ìparí ìmúwá: `src/shared/utils/fetchTimeout.ts`
-- Ìwíwọ̀n-ìtẹ̀le ìbéèrè: `src/shared/utils/requestTelemetry.ts`
-- Ìtẹ̀lé-òfin/àyẹ̀wò: `src/lib/compliance/index.ts`
+- Àkókò parí ìmúwá: `src/shared/utils/fetchTimeout.ts`
+- Ìwíwọ́n ìbéèrè láti ìhín: `src/shared/utils/requestTelemetry.ts`
+- Ìtẹ̀lé òfin/àyẹ̀wò: `src/lib/compliance/index.ts`
 - Olùṣe àyẹ̀wò: `src/lib/evals/evalRunner.ts`
-- Ìpamọ́ títí ipò ilà: `src/lib/db/domainState.ts` — SQLite CRUD fún àwọn ẹ̀wọ̀n ìdáàbòbò, àwọn ètò-owó, ìtàn iye-owó, ipò ìdíwọ̀lé, àwọn ìdáwọ̀ ẹ̀rọ
+- Ìtóju ipò agbègbè: `src/lib/db/domainState.ts` — SQLite CRUD fún àwọn pq ìdápadà, àwọn òwò, ìtàn ìyówó, ipò ìtiipa, àwọn olùdá circuit dúró
 
-Àwọn mójùlù olupèsè OAuth (àwọn fáìlì ẹyọ 27 lábẹ́ `src/lib/oauth/providers/`):
+Àwọn modulu olupèsè OAuth (àwọn fáìlì 27 ló ṣọ́tọ̀ lábẹ́ `src/lib/oauth/providers/`):
 
-- Àtòpinpin ìforúkọsílẹ̀: `src/lib/oauth/providers/index.ts`
-- Àwọn olupèsè ẹyọ: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Àwọn olùrànlọ́wọ́ àpapọ̀: `codebuddyDeviceAuth.ts` (ìṣàn ẹ̀rọ CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
-- Ìwòsí fínfín: `src/lib/oauth/providers.ts` — ó ń tún ẹ̀sìn jáde láti inú àwọn mójùlù ẹyọ
+- Àtòkasi ìforúkọsílẹ̀: `src/lib/oauth/providers/index.ts`
+- Àwọn olupèsè ló ṣọ́tọ̀: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
+- Àwọn olùrànlọ́wọ́ àjọpìn: `codebuddyDeviceAuth.ts` (ìṣàn ẹ̀rọ CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
+- Wrapper fínnífínní: `src/lib/oauth/providers.ts` — ó ń tún gbé wọn jáde láti àwọn modulu ló ṣọ́tọ̀
 
 ## 5) Àwọn Iṣẹ́ Tí A Fi Sínú Ètò (v3.8.4)
 
@@ -354,179 +355,179 @@ OmniRoute lè fi àwọn ìlànà iṣẹ́ irinṣẹ́ AI tí ń ṣiṣẹ́ 
 
 Àlàyé jinlẹ̀: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-## Àwọn Ẹ̀yà-Ètò Pàtàkì (v3.8.0)
+## Àwọn Ètò-Abẹ́ẹ̀rẹ̀ Pàtàkì (v3.8.0)
 
-### A. Auto Combo Engine
+### A. Ẹ̀rọ Auto Combo
 
-Auto Combo ń fún àwọn target ìtọ́sọ́nà ní kòkòrò ó sì ń yan wọ́n nígbà tí ìbéèrè bá dé, dípò kí ó gbárá lórí ìtumọ̀ combo kan ṣoṣo tó dúró. Ó jẹ́ agbára ẹbí prefix awoṣe `auto/*`.
+Auto Combo ń fún àwọn àfojúsùn ìtọ́nisọ̀nà ní ẹ̀sẹ̀ lọ́nà aláyípadà, ó sì ń yàn wọ́n ní àkókò ìbéèrè, dípò gbígbé lórí ìtumọ̀ combo tó dúró ṣinṣin. Ó ń ṣe agbára ẹbátà ìbẹ̀rù àwoṣe `auto/*`.
 
-- Ìwọ̀lẹ̀ engine: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- Ìwọlé ẹ̀rọ: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Ìwọ̀lẹ̀ combo láfíwàá: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), tí `src/sse/handlers/chat.ts` ń pe
-- Dashboard: `/dashboard/auto-combo`
-- Telemetry: tábìlì SQLite `auto_combo_decisions`
+- Ìwọlé combo aláàyè: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), tí `src/sse/handlers/chat.ts` ń pe
+- Dáàṣíbòòdù: `/dashboard/auto-combo`
+- Telemetry (ìwíwọ̀n latókèèrè): tábìlì SQLite `auto_combo_decisions`
 
 Àwọn agbára pàtàkì:
 
-- **Àwọn ìlànà ìtọ́sọ́nà 20** (priority, weighted, fill-first, round-robin, P2C, random,
+- **Àwọn ìlànà ìtọ́nisọ̀nà mọ́gún (20)** (priority, weighted, fill-first, round-robin, P2C, random,
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto ni àfikún akọrín tó ṣe pàtàkì nínú v3.8.0; `fusion` (ìtúpalẹ̀ panel + ìkópọ̀ ìdájọ́,
-  `open-sse/services/fusion.ts`) jẹ́ tuntun nínú v3.8.36.
-- **Ìdá kòkòrò pẹ̀lú okunfa 16**: quota, health, inverse cost, inverse latency, task fit àti
-  mẹ́ẹ̀wàá mìíràn. Taabùlì onítojú àwọn okunfa àti àwọn iwuwo àtọ́pàwọ̀ wọn wà nínú
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — títún sọ ọ́ níbí yìí yóò
-  fún un ní ibi kejì láti di àtijọ́.
-- **Virtual factory** ń ṣẹ̀dá àwọn combo gbéléṣe nígbà tí kò sí combo tó ní orúkọ
-  tó bá a mu, tí ó ń mu àwọn olùdíje jáde láti inú àwọn asopọ̀ olupèsè tó nílárààyè tí ó sì ń ṣiṣẹ́.
-- **Àwọn prefix auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — ọ̀kọ̀ọ̀kan wọn ní àtìlẹ́yìn profaili iwuwo tó ti ṣe ètòtọ́.
-- **Àwọn mode pack 6**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` àti `chaos-mode` — àwọn ìtòlẹ́sẹ̀ẹsẹ̀ iwuwo àtẹ́lẹ̀ ṣètò tí a lè pe láti
-  inú dashboard. (Kí a má ṣe dàpọ̀ rẹ̀ pẹ̀lú àwọn prefix `auto/*` lókè, tí wọ́n
-  jẹ́ àwọn variant nígbà ìbéèrè.)
+  auto ni àfikún tó gbajúmọ̀ ní v3.8.0; `fusion` (ìtànra panel + àpèjọ ìdájọ́,
+  `open-sse/services/fusion.ts`) jẹ́ tuntun ní v3.8.36.
+- **Ìkóópọ̀ òǹkà mẹ́rìndínlógún (16)**: ìpín, ìlera, ìdíkejì owó, ìdíkejì ìlòlò, ìbámu iṣẹ́ àti
+  mẹ́ẹ̀wà míì. Tábìlì òfìn àwọn òǹkà àti àwọn iwuwo àtìbẹ̀rẹ̀ wọn wà nínú
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — títún sọ ọ́ níbí yóò
+  fún un ní ibi kejì láti máa di àtijọ́.
+- **Ilé-iṣẹ́ fọ́nṛọ́lò (virtual factory)** ń dá àwọn combo kúlẹ̀kúlẹ̀ sílẹ̀ nígbà tí kò sí combo
+  orúkọ tó bá a mu, ó ń gba àwọn olùdíje láti inú àwọn ìsopọ̀ olùpèsè aláàyè tó ní ìlera.
+- **Àwọn ìbẹ̀rù auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
+  `auto/smart`, `auto/lkgp` — ọ̀kọ̀ọ̀kan wọn ní ìbábá ìprofaílì iwuwo tí a ti túnṣe.
+- **Àwọn àkópọ̀ ìpò mẹ́fà**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first` àti `chaos-mode` — àwọn ìṣètò iwuwo tó ti ṣetan tí a lè pe láti inú
+  dáàṣíbòòdù. (Má ṣe dà wọ́n pọ̀ mọ́ àwọn ìbẹ̀rù `auto/*` lókè, tí wọ́n jẹ́
+  àwọn ìyàtọ̀ àkókò-ìbéèrè.)
 
-Fún kíkún àlàyé algorithmic (àwọn fọ́ọ̀mùlà okunfa, ètòtọ́ iwuwo), wo
+Fún kíkun àlàyé ìlànà-ìṣirò (àwọn àgbékalẹ̀ òǹkà, ìtúnṣe iwuwo), wo
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. Cloud Agents
+### B. Àwọn Aṣojú Sánmọ̀ (Cloud Agents)
 
-Cloud Agents dì àwọn pẹlẹbù code-agent ẹni kẹta tó gbé agbálá ayélujára (Codex Cloud, Devin,
-Jules) sẹ́yìn ìgbésì-ìṣẹ̀ task kan ṣoṣo tó ní àtìlẹ́yìn DB. Gbogbo àwọn endpoint ìṣẹ̀dá/àyẹ̀wò
-task nílò ìfàṣẹsí ìṣàkóso.
+Cloud Agents fi àwọn pẹpẹ ẹ̀rọ-àkóòdù alejò ti ẹni-kẹta (Codex Cloud, Devin,
+Jules) bọ́ sí ẹ̀yìn ìgbésí-ayé iṣẹ́-àmúṣe kan ṣóko tí ìkànnì-ìsọfúnni (DB) ṣe àtilẹyin. Gbogbo
+àwọn òpin ìdásílẹ̀/àyẹ̀wò iṣẹ́-àmúṣe nílò ìfàṣẹ̀sílẹ̀ ìṣàkóso.
 
-- Ìpìlẹ̀ module: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, àti àwọn subfolder agent-kọ̀ọ̀kan lábẹ́ `agents/`)
-- Àwọn ìmúṣe agent-kọ̀ọ̀kan: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Àwọn endpoint gbangba: `/api/v1/agents/tasks/*` (list/create/get/cancel)
-- Àwọn endpoint ìṣàkóso: `/api/cloud/*` (provisioning, status, batch)
-- Dashboard: `/dashboard/cloud-agents`
-- Ìkàpa: tábìlì `cloud_agent_tasks`
+- Gbòngbo module: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
+  `types.ts`, `db.ts`, àti àwọn abẹ́ẹ̀rẹ̀-àpò kọ̀ọ̀kan-aṣojú lábẹ́ `agents/`)
+- Àwọn ìmúṣe kọ̀ọ̀kan-aṣojú: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Àwọn òpin gbangba: `/api/v1/agents/tasks/*` (àkójọ/ìdásílẹ̀/ìgba/ìfagilé)
+- Àwọn òpin ìṣàkóso: `/api/cloud/*` (ìpèsè, ipo, ìṣe-lójọpọ̀)
+- Dáàṣíbòòdù: `/dashboard/cloud-agents`
+- Ìpamọ́: tábìlì `cloud_agent_tasks`
 
-Fún provisioning agent-kọ̀ọ̀kan àti kúlẹ̀kúlẹ̀ OAuth, wo
+Fún ìpèsè kọ̀ọ̀kan-aṣojú àti kúlẹ̀kúlẹ̀ OAuth, wo
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. Guardrails
+### C. Guardrails (Àwọn Ògùdù-Ààbò)
 
-Module guardrails jẹ́ ìpele middleware tí a lè ṣe hot-reload sí tí ó ń ṣàyẹ̀wò àwọn ìbéèrè
-àti ìdáhùn fún PII, prompt injection, àti àkóónú vision tí kò dáàbò. Àwọn ìrúfìn
-ń gé ìbéèrè náà kúlẹ̀ lẹ́sẹ̀kẹsẹ̀ pẹ̀lú HTTP **503** àti kóòdù aṣìṣe tó ní ìṣètò, èyí tó fún
-àwọn olùpè ìsàlẹ̀ láyè láti tún gbìyànjú tàbí yà ọ̀nà.
+Module guardrails jẹ́ ipele middleware tí a lè tún gbe wọlé lógbón, tí ó ń ṣàyẹ̀wò àwọn ìbéèrè
+àti ìdáhùn fún PII, ìfunwọle ìkìlọ̀ (prompt injection), àti àkóónú òwòran tí kò ṣèé gbà. Àwọn
+ìrúfin ń dá ìbéèrè náà dúró lẹ́sẹ̀kẹsẹ̀ pẹ̀lú HTTP **503** àti kóòdù àṣìṣe tó ní ìlànà,
+èyí tó jẹ́ kí àwọn agbẹnpe ìsàlẹ̀ lè tún gbìyànjú tàbí ya ọnà mìíràn.
 
-- Ìpìlẹ̀ module: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
+- Gbòngbo module: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Hot reload: registry ń ṣọ́ fún àwọn àyípadà ìtòlẹ́sẹ̀ẹsẹ̀ ó sì ń tún ẹ̀wọ̀n náà kọ níbi tí ó wà
-- Àwọn ibi asopọ̀: ìwọ̀lẹ̀ olùgbéjàìṣẹ́ ìfòrọ̀wárá, olùgbéjàìṣẹ́ ìṣẹ̀dá àwòrán, olùgbóòtó ìdáhùn
-- Ìmájáde HTTP: àwọn ìrúfìn ń fara han gẹ́gẹ́ bí `503` pẹ̀lú `error.code = "GUARDRAIL_VIOLATION"`
+- Ìtúngbewọlé lógbón: registry ń ṣọ́ àwọn àyípadà ìṣètò, ó sì ń tún ẹ̀wọ̀n náà kọ́ níbòmírò
+- Àwọn ojú ìsopọ̀: ìwọlé olùṣe ìfòrọ̀wárọ̀, olùṣe ìṣẹ̀dá àwòrán, olùmọ́ ìdáhùn
+- Àdéhùn HTTP: àwọn ìrúfin ń fara han gẹ́gẹ́ bí `503` pẹ̀lú `error.code = "GUARDRAIL_VIOLATION"`
 
-Fún kíkọ àwọn òfin ìṣàkóso àti ètòtọ́ ààlà ìkẹ̀sì, wo
+Fún ìkọ àkójọ-òfin àti ìtúnṣe ìdíwọ́, wo
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Domain Layer
+### D. Ipele Àgbègbè
 
-Namespace `src/domain/` ní àwọn iṣẹ́ domain àti àwọn ìmájáde àyẹ̀wò tí a fi pamọ́ nínú rẹ̀.
-Kì í ṣe ojú-ìwọ̀lẹ̀ ìlànà dandan kan ṣoṣo fún gbogbo ìbéèrè.
+Orúkọ-àyè `src/domain/` ní àwọn iṣẹ́ àgbègbè àti àwọn àdéhùn àyẹ̀wò tí a pamọ́ sílẹ̀.
+Kì í ṣe ojú-ìwọlé ètò dandan kan ṣoṣo fún gbogbo ìbéèrè.
 
-Ọ̀nà ìfòrọ̀wárá láfíwàá ń pe `enforceApiKeyPolicy()` láti inú
-`src/shared/utils/apiKeyPolicy.ts`; a ṣe ìfàṣẹsí àwọn awoṣe tí a ti yan ojú àti àwọn ọmọ ẹgbẹ́ combo
-nínú `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ìwọ̀lẹ̀ self-hosted
-nínú `src/app/api/v1/chat/completions/route.ts` tún ń fi ìlànà API-key múlẹ̀ ṣáájú
-ìránṣẹ́. Ìyan ojú combo ń lọ nípasẹ̀ `open-sse/services/combo.ts`.
+Ọ̀nà ìfòrọ̀wárọ̀ aláàyè ń pe `enforceApiKeyPolicy()` láti
+`src/shared/utils/apiKeyPolicy.ts`; a ṣe ìfúnàṣẹ àwọn àwoṣe tí a yàn àti àwọn ọmọ ẹgbẹ́
+combo nínú `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ìwọlé aládàániṣe
+nínú `src/app/api/v1/chat/completions/route.ts` tún ń fi ètò kókó-API jinlẹ̀ ṣáájú
+ìránṣẹ́. Ìyàn combo ń lọ nípasẹ̀ `open-sse/services/combo.ts`.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` àti `src/lib/container.ts`
-ṣì jẹ́ àwọn ìmájáde tí a ti dán wọn wò, kì í ṣe asopọ̀ ọ̀nà ìbéèrè yẹn. Container forúkọsílẹ̀
-policy engine, ṣùgbọ́n ọ̀nà ìbéèrè production tí a ṣàyẹ̀wò kò yan án ojú.
-Yíyí àwọn ìmájáde wọ̀nyí nìkan padà kò yí ìlànà ìfòrọ̀wárá láfíwàá tàbí ìtọ́sọ́nà combo padà;
-asopọ̀ wọn tàbí yíyọ wọn kúrò nílò ìpinnu àpẹẹrẹ tó yàtọ̀.
+ṣì jẹ́ àwọn àdéhùn tí a dán wò, kì í ṣe ìsopọ̀ ọnà ìbéèrè yẹn. Apoti náà forúkọsilẹ̀
+ẹ̀rọ ètò náà, ṣùgbọ́n ọnà ìbéèrè iṣelọpọ̀ tí a ṣàyẹ̀wò kò yan án. Yíyí àwọn àdéhùn yẹn
+ṣọ́ṣọ́ padà kò yí ètò ìfòrọ̀wárọ̀ aláàyè tàbí ìtọ́nisọ̀nà combo padà; síso wọ́n pọ̀ tàbí
+yíyọ wọ́n kúrò nílò ìpinnu àpẹẹrẹ lóòtọ̀.
 
-- Policy engine tí a fi pamọ́: `src/domain/policyEngine.ts` — ìdíwọ́ → ìnáwó → àyẹ̀wò fallback
-- Àwọn òfin ìnáwó: `src/domain/costRules.ts`
-- Ìlànà fallback: `src/domain/fallbackPolicy.ts`
-- Ìlànà ìdíwọ́: `src/domain/lockoutPolicy.ts`
-- Ìtọ́sọ́nà tó dá lórí tag: `src/domain/tagRouter.ts`
-- Olùyànjú combo tí a fi pamọ́: `src/domain/comboResolver.ts` — ìmájáde yíyan tó dúró fúnra rẹ̀; a ṣe ìtọ́sọ́nà combo láfíwàá nínú `open-sse/services/combo.ts`
-- Olùdarapọ̀ òfin asopọ̀/awoṣe: `src/domain/connectionModelRules.ts`
-- Àwọn snapshot wíwà awoṣe: `src/domain/modelAvailability.ts`
-- Ìtẹ̀lé ìpin àkókò olupèsè: `src/domain/providerExpiration.ts`
-- Cache quota: `src/domain/quotaCache.ts`
-- Ipò ìdínkù: `src/domain/degradation.ts`
-- Àyẹ̀wò ìtòlẹ́sẹ̀ẹsẹ̀: `src/domain/configAudit.ts`
+- Ẹ̀rọ ètò tí a pamọ́: `src/domain/policyEngine.ts` — ìtiṣípa → ìnáwó → àyẹ̀wò ìdápadà
+- Àwọn òfin owó: `src/domain/costRules.ts`
+- Ètò ìdápadà: `src/domain/fallbackPolicy.ts`
+- Ètò ìtiṣípa: `src/domain/lockoutPolicy.ts`
+- Ìtọ́nisọ̀nà tó dá lórí àmì: `src/domain/tagRouter.ts`
+- Olùyàn combo tí a pamọ́: `src/domain/comboResolver.ts` — àdéhùn àṣàyàn lóòtọ̀; a ṣe ìtọ́nisọ̀nà combo aláàyè nínú `open-sse/services/combo.ts`
+- Olùdàpọ̀ òfin ìsopọ̀/àwoṣe: `src/domain/connectionModelRules.ts`
+- Àwọn àwòrán-ìgbà ìwàláàyè àwoṣe: `src/domain/modelAvailability.ts`
+- Ìtọpasẹ̀ ìparí-àkókò olùpèsè: `src/domain/providerExpiration.ts`
+- Káàsì ìpín: `src/domain/quotaCache.ts`
+- Ìpò ìdínkù: `src/domain/degradation.ts`
+- Àyẹ̀wò ìṣètò: `src/domain/configAudit.ts`
 - Olùkọ́ metadata ìdáhùn OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Ẹ̀yà-ètò assessment: `src/domain/assessment/` — àwọn iṣẹ́ àyẹ̀wò ìgbàdígbà
+- Ètò-abẹ́ẹ̀rẹ̀ àyẹ̀wò: `src/domain/assessment/` — àwọn iṣẹ́ àyẹ̀wò àkókò-de-àkókò
 
-### E. Authorization Pipeline
+### E. Ìṣàn Ìfúnàṣẹ
 
-Pipeline ìfàṣẹsí ń ṣe ìpínsí ẹ̀yà fún gbogbo ìbéèrè tó ń wọlé ó sì ń lo
-ẹ̀wọ̀n ìlànà tó yẹ ṣáájú ìránṣẹ́.
+Ìṣàn ìfúnàṣẹ ń ṣe ìpín-ẹ̀ka gbogbo ìbéèrè tó ń wọlé, ó sì ń lo ẹ̀wọ̀n ètò
+tó bá a mu ṣáájú ìránṣẹ́.
 
-- Ẹnubodè pipeline: `src/server/authz/pipeline.ts`
-- Olùpín ẹ̀yà ìbéèrè: `src/server/authz/classify.ts` — ó ń ṣe ìyàtọ̀ láàrin àwọn ọ̀nà
-  ìbáṣepọ̀ gbangba àti àwọn ọ̀nà ìṣàkóso
-- Àkójọpọ̀ ọ̀nà gbangba: `src/shared/constants/publicApiRoutes.ts`
-- Àwọn ìlànà: `src/server/authz/policies/` — àwọn ẹ̀kọ́ ìdájọ́ tí a lè darapọ̀ mọ́ ara wọn
+- Ìbáwọlé pipeline: `src/server/authz/pipeline.ts`
+- Olùpínwá ìbéèrè: `src/server/authz/classify.ts` — ó yà àwọn ọ̀nà àbáṣepọ̀
+  ìsọfúnni kúrò nínú àwọn ọ̀nà ìṣàkóso
+- Àkójọ àkópamọ́ àwọn ọ̀nà ìsọfúnni: `src/shared/constants/publicApiRoutes.ts`
+- Àwọn ìlànà: `src/server/authz/policies/` — àwọn predicate tí a lè ṣàkópọ̀
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, abbl.)
-- Àwọn ohun èlò àkòrí: `src/server/authz/headers.ts`
-- Òlùrànlọ́wọ́ ìdánimọ̀: `src/server/authz/assertAuth.ts`
+- Àwọn ohun-èlò àkòrí: `src/server/authz/headers.ts`
+- Olùrànlọ́wọ́ ìfìdájọ́: `src/server/authz/assertAuth.ts`
 - Àyíká ìbéèrè: `src/server/authz/context.ts`
 
-Aala líle ni ààrin ọ̀nà gbangba àti ọ̀nà ìṣàkóso: àwọn API agent/cooldown àti
-àwọn ìyípadà olùpèsè nílò ìfàṣẹsí ìṣàkóso (HTTP 401 tí ó bá ò sí).
+Àwọn ọ̀nà ìsọfúnni àti ìṣàkóso jẹ́ ààlà líle: àwọn API agent/cooldown àti
+àwọn ìyípadà olùpèsè nílò ìfàṣẹsí ìṣàkóso (HTTP 401 tí kò bá sí).
 
-Fún gbogbo àwọn òfin ìpínlẹ̀ ọ̀nà, wo
+Fún àwọn òfin ìpínwá ọ̀nà kíkún, wo
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. FSM Ìṣàn-iṣẹ́ àti Olùdarí-ọ̀nà Onímọ̀-iṣẹ́
+### F. FSM Ìṣàn-Iṣẹ́ àti Olùdarí-Ọ̀nà Tó Mọ̀ Nípa Iṣẹ́
 
-Olùdarí-ọ̀nà tí ẹ̀rọ̀ ìpìnlẹ̀ àlàáfín (FSM) ń darí, tí ó gbé kalẹ̀ lórí àṣàyàn combo
-láti darí ìrìnàjò lórí ìpele ìṣàn-iṣẹ́ tí a ṣàwárí (ètò ìmọ̀, ìmúṣẹ,
-àtúnyẹ̀wò) àti ìsúnmọ́ni pẹ̀lú iṣẹ́ ẹ̀yìn.
+Olùdarí ọ̀nà kan tí ẹ̀rọ ìpò tó pé (finite-state machine) ń darí, tí a gbé
+kalẹ̀ lórí ìyàn combo láti darí ìrìnàjò gẹ́gẹ́ bí ìpele ìṣàn-iṣẹ́ tí a rí
+(ìgbèkalẹ̀, ìmúṣe, àtúnyẹ̀wò) àti ìjọba iṣẹ́ abẹ́lẹ̀ ṣe rí.
 
 - FSM ìṣàn-iṣẹ́: `open-sse/services/workflowFSM.ts`
-- Olùdarí-ọ̀nà onímọ̀-iṣẹ́: `open-sse/services/taskAwareRouter.ts`
-- Olùṣàwárí iṣẹ́ ẹ̀yìn: `open-sse/services/backgroundTaskDetector.ts`
-- Olùpín ẹ̀yà èròjà: `open-sse/services/intentClassifier.ts`
+- Olùdarí ọ̀nà tó mọ̀ nípa iṣẹ́: `open-sse/services/taskAwareRouter.ts`
+- Ẹrọ ìwárí iṣẹ́ abẹ́lẹ̀: `open-sse/services/backgroundTaskDetector.ts`
+- Olùpínwá ète: `open-sse/services/intentClassifier.ts`
 
-Àwọn ìyípadà FSM ń tọ̀ọ́ sí ìkópasí Auto Combo, ó ń fẹ́rẹ̀ sí àwọn mọ́dẹ́lì tó rú lọ́wọ́
-fún àwọn iṣẹ́ ẹ̀yìn/àdáṣe àti sí àwọn mọ́dẹ́lì tó lágbára jù lọ fún àwọn ìgbà
-ète ìmọ̀/àtúnyẹ̀wò àjọṣepọ̀.
+Àwọn ìyípadà FSM ń wọlé sínú ìkóṣiré Auto Combo, tí wọ́n ń yá sí àwọn àpẹẹrẹ
+tó rùn díẹ̀ fún àwọn iṣẹ́ abẹ́lẹ̀/àdáṣe àti sí àwọn àpẹẹrẹ tó lágbára jù fún
+àwọn ìgbà ìgbèkalẹ̀/àtúnyẹ̀wò alájọṣepọ̀.
 
-### G. Ìfaradà Tó Ṣe Pàtò sí Olùpèsè
+### G. Ìfaradà Tó Ṣe Pàtó Fún Olùpèsè
 
-Ọ̀pọ̀ àwọn olùpèsè ní àwọn ẹ̀yà ìfaradà àti ìpamọ́ tó ṣe pàtò tí wọ́n ń gun lórí
-àwọn ìpele circuit breaker / ìtùnú ìsopọ̀ / ìtìjú mọ́dẹ́lì gbogbo àgbáyé:
+Ọ̀pọ̀ àwọn olùpèsè ń pèsè àwọn ẹ̀yà ìfaradà àti ìfarasín pàtó tí wọ́n ń gùn
+lórí àwọn ìpele circuit breaker / ìtútù ìsopọ̀ / ìdíwọ́ àpẹẹrẹ gbogbogbòò:
 
-- Ẹ́rọ̀ Antigravity 429: `open-sse/services/antigravity429Engine.ts` (ó ń yí
-  ìdánimọ̀ padà, ó ń gbọ́ọ́gbẹ́ àwọn àkòrí ìdáhùn, ó ń darí ìtẹ̀lé ìgbésẹ̀/ẹ̀yà nípasẹ̀
-  `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts`)
-- Ètò ìwọ̀n àlàáfín ModelScope: `open-sse/services/modelscopePolicy.ts`
-- CCH Claude Code (Ìfáwọ̀mú Ọ̀nà Ìbáṣepọ̀): `open-sse/services/claudeCodeCCH.ts`,
-  àti pẹ̀lú `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+- Ẹ̀rọ Antigravity 429: `open-sse/services/antigravity429Engine.ts` (ó ń yí
+  ìdánimọ̀ padà, ó ń nu àwọn àkòrí ìdáhùn kúrò, ó ń darí ìtọpa
+  kírèdìtì/ẹ̀yà nípasẹ̀ `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
+  `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts`)
+- Ìlànà ààlà ìlò ModelScope: `open-sse/services/modelscopePolicy.ts`
+- Claude Code CCH (Ìfọwọ́sowọ́pọ̀ Ọ̀nà Àbáṣepọ̀): `open-sse/services/claudeCodeCCH.ts`,
+  àti `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Ìdíwọ́ ìjá-ọwọ́ Claude Code sí ipò: `open-sse/services/claudeCodeFingerprint.ts`
-- Ìbòjú Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
+- Ìdíwọ́ ìtẹ̀-ọwọ́ Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- Ìṣòwòmímọ̀ Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Fún gbogbo ìwé-ìlànà ìpamọ́ àti ìtọ́sọ́nà iṣẹ́-òṣìṣẹ́, wo
-`docs/security/STEALTH_GUIDE.md` (git; a kò kó ọ́ sí inú `/docs`).
+Fún ìwé-ìlànà ìfarasín kíkún àti ìtọ́sọ́nà iṣẹ́, wo
+`docs/security/STEALTH_GUIDE.md` (git; a kò kọ́ ọ́ sínú `/docs`).
 
-### H. Webhooks, Ìpamọ́ Ìròyìn, Ìpamọ́ Ìkà
+### H. Àwọn Webhook, Ìpamọ́ Ìròyìn, Ìpamọ́ Ìkàwé
 
-- **Webhooks** — ìfiranṣẹ́ síta fún àwọn ìṣẹ̀lẹ̀ olùpèsè/àkáǹtì/iṣẹ́.
-  - Olùfiranṣẹ́: `src/lib/webhookDispatcher.ts`
+- **Àwọn Webhook** — ìránṣẹ́ òde fún àwọn ìṣẹ̀lẹ̀ olùpèsè/àkáùntì/iṣẹ́.
+  - Olùránṣẹ́: `src/lib/webhookDispatcher.ts`
   - Ìpamọ́: tábìlì SQLite `webhooks` (nípasẹ̀ `src/lib/db/webhooks.ts`)
-  - Pátápátá ìṣàkóso: `/dashboard/webhooks` (àwọn ìforúkọsílẹ̀, àwọn aṣírí, ìtàn ìgbìyànjú)
-  - Fún ìpínlẹ̀ ìṣẹ̀lẹ̀ àti ìtumọ̀ ìgbìyànjú, wo [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Ìpamọ́ Ìròyìn** — àwọn bólọ́ọ̀kù ìròyìn tó lè ṣe àtúnsíṣe fún àwọn olùpèsè tí wọ́n ń
-  ṣe ìtàn àwọn tóòkìn ìrònú (Claude, GLMT, abbl.) kí àwọn ìgbà tó tẹ̀le ara wọn lè fò
-  ronú lẹ́ẹ̀kejì.
+  - Pátákó ìṣàkóso: `/dashboard/webhooks` (àwọn ìforúkọsílẹ̀, àwọn aṣírí, ìtàn ìgbìyànjú lẹ́ẹ̀kejì)
+  - Fún ìpínwá ìṣẹ̀lẹ̀ àti ìtumọ̀ ìgbìyànjú lẹ́ẹ̀kejì, wo [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Ìpamọ́ Ìròyìn** — àwọn bulọọku ìròyìn tí a lè tún ṣe fún àwọn olùpèsè
+  tí wọ́n ń mú àwọn tọ́kìnì ìrònú jáde (Claude, GLMT, abbl.) kí àwọn ìgbà
+  tó tẹ̀le lè fò ìtún-rònú kọja.
   - Ìpele DB: `src/lib/db/reasoningCache.ts`
   - Ìpele iṣẹ́: `open-sse/services/reasoningCache.ts`
-  - Fún ìtumọ̀ àtúnsíṣe, wo [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Ìpamọ́ Ìkà** — ìpamọ́ ìdáhùn kúkúrú láyé tí a fi ìforúkọsílẹ̀ ṣe kọ́kọ́rọ́ rẹ̀, tí wọ́n sì ń
-  lò ó láti so àwọn ìgbìyànjú tó jọra pọ̀ láti ọ̀dọ̀ àwọn SDK upstream tó bàjẹ́.
+  - Fún ìtumọ̀ àtúnṣe, wo [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Ìpamọ́ Ìkàwé** — ìpamọ́ ìdáhùn àìpẹ́ tí a kọ́ lórí ìfọwọ́sí, tí a sì ń lo
+  láti dín àwọn ìgbìyànjú tó jọra kù nínú àwọn SDK òkè tó bàjẹ́.
   - Ìpele DB: `src/lib/db/readCache.ts`
-  - Òpin ìṣirò: `GET /api/cache/stats`, pátápátá ìṣàkóso ní `/dashboard/cache`
+  - Òpin ìkóṣiré: `GET /api/cache/stats`, pátákó ìṣàkóso ní `/dashboard/cache`
 
 ## 3) Ìpele Ìtọ́jú Dátà
 

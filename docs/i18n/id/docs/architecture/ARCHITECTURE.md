@@ -266,26 +266,26 @@ Domain manajemen:
 - Bundel konfigurasi: `src/app/api/sync/bundle` (GET, snapshot pengaturan/penyedia/kombinasi/kunci yang diberi versi dengan ETag)
 - WebSocket: `src/app/api/v1/ws/route.ts` — handler Upgrade untuk klien WS yang kompatibel dengan OpenAI
 
-## 2) SSE + Inti Terjemahan
+## 2) SSE + Inti Translasi
 
 Modul alur utama:
 
-- Titik masuk: `src/sse/handlers/chat.ts`
+- Entri: `src/sse/handlers/chat.ts`
 - Orkestrasi inti: `open-sse/handlers/chatCore.ts`
 - Adaptor eksekusi provider: `open-sse/executors/*`
 - Deteksi format/konfigurasi provider: `open-sse/services/provider.ts`
-- Parse/resolve model: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Parse/resolusi model: `src/sse/services/model.ts`, `open-sse/services/model.ts`
 - Logika fallback akun: `open-sse/services/accountFallback.ts`
-- Registri terjemahan: `open-sse/translator/index.ts`
+- Registry translasi: `open-sse/translator/index.ts`
 - Transformasi stream: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - Ekstraksi/normalisasi penggunaan: `open-sse/utils/usageTracking.ts`
 - Parser tag think: `open-sse/utils/thinkTagParser.ts`
 - Handler embedding: `open-sse/handlers/embeddings.ts`
-- Registri provider embedding: `open-sse/config/embeddingRegistry.ts`
-- Handler pembuatan gambar: `open-sse/handlers/imageGeneration.ts`
-- Registri provider gambar: `open-sse/config/imageRegistry.ts`
-- Sanitasi respons: `open-sse/handlers/responseSanitizer.ts`
-- Normalisasi peran: `open-sse/services/roleNormalizer.ts`
+- Registry provider embedding: `open-sse/config/embeddingRegistry.ts`
+- Handler generasi gambar: `open-sse/handlers/imageGeneration.ts`
+- Registry provider gambar: `open-sse/config/imageRegistry.ts`
+- Sanitisasi respons: `open-sse/handlers/responseSanitizer.ts`
+- Normalisasi role: `open-sse/services/roleNormalizer.ts`
 
 Layanan (logika bisnis):
 
@@ -294,21 +294,21 @@ Layanan (logika bisnis):
 - Penegakan filter IP: `open-sse/services/ipFilter.ts`
 - Pelacakan sesi: `open-sse/services/sessionManager.ts`
 - Deduplikasi permintaan: `open-sse/services/signatureCache.ts`
-- Injeksi prompt sistem: `open-sse/services/systemPrompt.ts`
+- Injeksi system prompt: `open-sse/services/systemPrompt.ts`
 - Manajemen anggaran thinking: `open-sse/services/thinkingBudget.ts`
 - Routing model wildcard: `open-sse/services/wildcardRouter.ts`
 - Manajemen rate limit: `open-sse/services/rateLimitManager.ts`
 - Circuit breaker: `src/shared/utils/circuitBreaker.ts`
 - Handoff konteks: `open-sse/services/contextHandoff.ts` — pembuatan dan injeksi ringkasan handoff untuk strategi context-relay
-- Kompresi: `open-sse/services/compression/*` — kompresi proaktif sebelum terjemahan provider;
-  mencakup aturan Caveman, filter RTK, pipeline bertingkat, kombo kompresi, statistik, dan validasi
+- Kompresi: `open-sse/services/compression/*` — kompresi proaktif sebelum translasi provider;
+  mencakup aturan Caveman, filter RTK, pipeline bertingkat, kombinasi kompresi, statistik, dan validasi
 - Pengambil kuota Codex: `open-sse/services/codexQuotaFetcher.ts` — mengambil kuota Codex untuk keputusan handoff context-relay
 - Retry sadar cooldown: `src/sse/services/cooldownAwareRetry.ts` — retry cooldown per model dengan `requestRetry` / `maxRetryIntervalSec` yang dapat dikonfigurasi
-- Fetch keluar yang aman: `src/shared/network/safeOutboundFetch.ts` — fetch provider/model terjaga dengan perlindungan SSRF, pemblokiran URL privat, retry, dan timeout
-- Pelindung URL keluar: `src/shared/network/outboundUrlGuard.ts` — pemeriksaan host pada URL provider; `src/shared/network/outboundUrlGuardPolicy.ts` memilih mode dari `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, dan toggle dashboard-nya (lihat `docs/reference/ENVIRONMENT.md`)
+- Fetch keluar yang aman: `src/shared/network/safeOutboundFetch.ts` — fetch provider/model yang dilindungi dengan penjaga SSRF, pemblokiran URL privat, retry, dan timeout
+- Penjaga URL keluar: `src/shared/network/outboundUrlGuard.ts` — pemeriksaan host pada URL provider; `src/shared/network/outboundUrlGuardPolicy.ts` memilih mode dari `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, dan toggle dashboard-nya (lihat `docs/reference/ENVIRONMENT.md`)
 - Default permintaan provider: `open-sse/services/providerRequestDefaults.ts` — default `maxTokens`, `temperature`, `thinkingBudgetTokens` tingkat provider
 - Konstanta provider GLM: `open-sse/config/glmProvider.ts` — model GLM bersama, URL kuota, timeout/default GLMT
-- Upstream Antigravity: `open-sse/config/antigravityUpstream.ts` — konstanta base URL dan path discovery
+- Upstream Antigravity: `open-sse/config/antigravityUpstream.ts` — konstanta base URL dan jalur discovery
 - Konstanta klien Codex: `open-sse/config/codexClient.ts` — nilai user-agent dan client-version berversi
 - Seed alias model: `src/lib/modelAliasSeed.ts` — mengisi 30+ alias dialek lintas-proxy saat startup
 
@@ -316,9 +316,9 @@ Modul lapisan domain:
 
 - Aturan biaya/anggaran: `src/domain/costRules.ts`
 - Kebijakan fallback: `src/domain/fallbackPolicy.ts`
-- Kontrak resolusi kombo yang dicadangkan: `src/domain/comboResolver.ts`; routing langsung menggunakan `open-sse/services/combo.ts`
+- Kontrak resolusi combo yang direservasi: `src/domain/comboResolver.ts`; routing langsung menggunakan `open-sse/services/combo.ts`
 - Kebijakan lockout: `src/domain/lockoutPolicy.ts`
-- Kontrak evaluasi kebijakan yang dicadangkan: `src/domain/policyEngine.ts`; jalur permintaan menegakkan kebijakan API-key melalui `src/shared/utils/apiKeyPolicy.ts` dan otorisasi target yang teresolusi melalui `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Kontrak evaluasi kebijakan yang direservasi: `src/domain/policyEngine.ts`; jalur permintaan menegakkan kebijakan API-key melalui `src/shared/utils/apiKeyPolicy.ts` dan otorisasi target yang diresolusi melalui `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Katalog kode error: `src/shared/constants/errorCodes.ts`
 - Request ID: `src/shared/utils/requestId.ts`
 - Timeout fetch: `src/shared/utils/fetchTimeout.ts`
@@ -329,10 +329,10 @@ Modul lapisan domain:
 
 Modul provider OAuth (27 file individual di bawah `src/lib/oauth/providers/`):
 
-- Indeks registri: `src/lib/oauth/providers/index.ts`
+- Indeks registry: `src/lib/oauth/providers/index.ts`
 - Provider individual: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
 - Helper bersama: `codebuddyDeviceAuth.ts` (alur perangkat CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
-- Wrapper tipis: `src/lib/oauth/providers.ts` — re-export dari modul individual
+- Wrapper tipis: `src/lib/oauth/providers.ts` — re-ekspor dari modul individual
 
 ## 5) Layanan Tertanam (v3.8.4)
 
@@ -359,16 +359,15 @@ Pembahasan mendalam: `docs/frameworks/EMBEDDED-SERVICES.md`
 
 ## Subsistem Utama (v3.8.0)
 
-### A. Auto Combo Engine
+### A. Engine Auto Combo
 
-Auto Combo secara dinamis memberi skor dan memilih target routing pada waktu permintaan,
-alih-alih bergantung pada definisi combo statis. Fitur ini menggerakkan keluarga prefiks
-model `auto/*`.
+Auto Combo menilai dan memilih target routing secara dinamis pada waktu permintaan, alih-alih
+mengandalkan definisi combo statis. Fitur ini menggerakkan keluarga prefiks model `auto/*`.
 
 - Entri engine: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
 - Entri combo live: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), dipanggil oleh `src/sse/handlers/chat.ts`
-- Dashboard: `/dashboard/auto-combo`
+- Dasbor: `/dashboard/auto-combo`
 - Telemetri: tabel SQLite `auto_combo_decisions`
 
 Kemampuan utama:
@@ -377,53 +376,52 @@ Kemampuan utama:
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto adalah tambahan unggulan di v3.8.0; `fusion` (panel fan-out + sintesis judge,
+  auto adalah tambahan unggulan di v3.8.0; `fusion` (fan-out panel + sintesis judge,
   `open-sse/services/fusion.ts`) baru di v3.8.36.
-- **Penskoran 16 faktor**: kuota, kesehatan, biaya invers, latensi invers, kesesuaian
-  tugas, dan sepuluh lainnya. Tabel kanonik faktor beserta bobot default-nya ada di
+- **Penilaian 16 faktor**: kuota, kesehatan, biaya invers, latensi invers, kesesuaian tugas,
+  dan sepuluh lainnya. Tabel kanonik faktor-faktor beserta bobot defaultnya berada di
   [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — mengulanginya di sini akan
   memberinya tempat kedua untuk menjadi usang.
-- **Virtual factory** mewujudkan combo ephemeral ketika tidak ada combo bernama yang
-  cocok, dengan mengambil kandidat dari koneksi provider aktif yang sehat.
+- **Virtual factory** mewujudkan combo sementara (ephemeral) ketika tidak ada combo bernama
+  yang cocok, dengan mengambil kandidat dari koneksi provider aktif yang sehat.
 - **Prefiks auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
   `auto/smart`, `auto/lkgp` — masing-masing didukung oleh profil bobot yang telah disetel.
 - **6 mode pack**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` dan `chaos-mode` — konfigurasi bobot preset yang dapat dipanggil
-  dari dashboard. (Jangan tertukar dengan prefiks `auto/*` di atas, yang merupakan
-  varian waktu-permintaan.)
+  `reliability-first` dan `chaos-mode` — konfigurasi bobot preset yang dapat dipanggil dari
+  dasbor. (Jangan disamakan dengan prefiks `auto/*` di atas, yang merupakan
+  varian waktu permintaan.)
 
 Untuk detail algoritmik lengkap (rumus faktor, penyetelan bobot), lihat
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
 ### B. Cloud Agents
 
-Cloud Agents membungkus platform code-agent pihak ketiga yang dihosting (Codex Cloud,
-Devin, Jules) di balik siklus hidup tugas seragam yang didukung DB. Semua endpoint
-pembuatan/inspeksi tugas memerlukan autentikasi manajemen.
+Cloud Agents membungkus platform code-agent hosted pihak ketiga (Codex Cloud, Devin,
+Jules) di balik siklus hidup tugas seragam yang didukung DB. Semua endpoint pembuatan/inspeksi
+tugas memerlukan autentikasi manajemen.
 
-- Akar modul: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, ditambah subdirektori per-agen di bawah `agents/`)
-- Implementasi per-agen: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Root modul: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
+  `types.ts`, `db.ts`, plus subdirektori per agen di bawah `agents/`)
+- Implementasi per agen: `agents/codex/`, `agents/devin/`, `agents/jules/`
 - Endpoint publik: `/api/v1/agents/tasks/*` (list/create/get/cancel)
 - Endpoint manajemen: `/api/cloud/*` (provisioning, status, batch)
-- Dashboard: `/dashboard/cloud-agents`
+- Dasbor: `/dashboard/cloud-agents`
 - Penyimpanan: tabel `cloud_agent_tasks`
 
-Untuk provisioning per-agen dan detail OAuth, lihat
+Untuk spesifikasi provisioning per agen dan OAuth, lihat
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
 ### C. Guardrails
 
-Modul guardrails adalah lapisan middleware yang dapat dimuat ulang saat berjalan
-(hot-reload) yang memeriksa permintaan dan respons terhadap PII, prompt injection, dan
-konten visi yang tidak aman. Pelanggaran memutus permintaan dengan HTTP **503**
-ditambah kode error terstruktur, memungkinkan pemanggil downstream untuk mencoba ulang
-atau bercabang.
+Modul guardrails adalah lapisan middleware yang dapat di-hot-reload dan memeriksa permintaan
+serta respons terhadap PII, prompt injection, dan konten vision yang tidak aman. Pelanggaran
+memutus permintaan dengan HTTP **503** plus kode error terstruktur, memungkinkan
+pemanggil downstream untuk mencoba ulang atau bercabang.
 
-- Akar modul: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
+- Root modul: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Hot reload: registry mengawasi perubahan konfigurasi dan membangun ulang rantai di tempat
-- Titik wire-in: entri handler chat, handler pembuatan gambar, pembersih respons
+- Hot reload: registry mengawasi perubahan konfigurasi dan membangun ulang chain di tempat
+- Titik wire-in: entri handler chat, handler pembuatan gambar, sanitizer respons
 - Kontrak HTTP: pelanggaran muncul sebagai `503` dengan `error.code = "GUARDRAIL_VIOLATION"`
 
 Untuk penulisan ruleset dan penyetelan ambang batas, lihat
@@ -431,27 +429,27 @@ Untuk penulisan ruleset dan penyetelan ambang batas, lihat
 
 ### D. Lapisan Domain
 
-Namespace `src/domain/` berisi layanan domain dan kontrak evaluasi yang dicadangkan.
+Namespace `src/domain/` berisi layanan domain dan kontrak evaluasi yang direservasi.
 Ini bukan satu titik masuk kebijakan wajib untuk setiap permintaan.
 
 Jalur chat live memanggil `enforceApiKeyPolicy()` dari
 `src/shared/utils/apiKeyPolicy.ts`; otorisasi model yang diresolusi dan anggota combo
 diimplementasikan di `src/sse/handlers/chat/resolvedModelPolicy.ts`. Entri self-hosted
-di `src/app/api/v1/chat/completions/route.ts` juga menegakkan kebijakan API key sebelum
+di `src/app/api/v1/chat/completions/route.ts` juga menegakkan kebijakan API-key sebelum
 dispatch. Resolusi combo berjalan melalui `open-sse/services/combo.ts`.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` dan `src/lib/container.ts`
-tetap merupakan kontrak yang teruji, bukan wiring jalur permintaan tersebut. Container
-mendaftarkan policy engine, tetapi jalur permintaan produksi yang diperiksa tidak
-me-resolve-nya. Mengubah kontrak-kontrak itu saja tidak mengubah kebijakan chat live
-atau routing combo; menghubungkan atau menghapusnya memerlukan keputusan desain terpisah.
+tetap menjadi kontrak yang teruji, bukan wiring dari jalur permintaan tersebut. Container
+mendaftarkan policy engine, tetapi jalur permintaan produksi yang diperiksa tidak me-resolve-nya.
+Mengubah kontrak-kontrak tersebut saja tidak mengubah kebijakan chat live atau routing combo;
+menghubungkan atau menghapusnya memerlukan keputusan desain terpisah.
 
-- Policy engine cadangan: `src/domain/policyEngine.ts` — evaluasi lockout → budget → fallback
+- Policy engine yang direservasi: `src/domain/policyEngine.ts` — evaluasi lockout → budget → fallback
 - Aturan biaya: `src/domain/costRules.ts`
 - Kebijakan fallback: `src/domain/fallbackPolicy.ts`
 - Kebijakan lockout: `src/domain/lockoutPolicy.ts`
 - Routing berbasis tag: `src/domain/tagRouter.ts`
-- Resolver combo cadangan: `src/domain/comboResolver.ts` — kontrak seleksi mandiri; routing combo live diimplementasikan di `open-sse/services/combo.ts`
+- Combo resolver yang direservasi: `src/domain/comboResolver.ts` — kontrak pemilihan mandiri; routing combo live diimplementasikan di `open-sse/services/combo.ts`
 - Penggabung aturan koneksi/model: `src/domain/connectionModelRules.ts`
 - Snapshot ketersediaan model: `src/domain/modelAvailability.ts`
 - Pelacakan kedaluwarsa provider: `src/domain/providerExpiration.ts`
@@ -459,18 +457,18 @@ atau routing combo; menghubungkan atau menghapusnya memerlukan keputusan desain 
 - Status degradasi: `src/domain/degradation.ts`
 - Audit konfigurasi: `src/domain/configAudit.ts`
 - Pembangun metadata respons OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Subsistem penilaian: `src/domain/assessment/` — tugas evaluasi berkala
+- Subsistem assessment: `src/domain/assessment/` — tugas evaluasi berkala
 
 ### E. Pipeline Otorisasi
 
-Pipeline otorisasi mengklasifikasikan setiap permintaan masuk dan menerapkan rantai
-kebijakan yang sesuai sebelum dispatch.
+Pipeline otorisasi mengklasifikasikan setiap permintaan masuk dan menerapkan
+rantai kebijakan yang sesuai sebelum dispatch.
 
 - Entri pipeline: `src/server/authz/pipeline.ts`
-- Klasifier permintaan: `src/server/authz/classify.ts` — membedakan rute
+- Pengklasifikasi permintaan: `src/server/authz/classify.ts` — membedakan rute
   kompatibilitas publik dari rute manajemen
 - Inventaris rute publik: `src/shared/constants/publicApiRoutes.ts`
-- Kebijakan: `src/server/authz/policies/` — predikat yang dapat dikomposisikan
+- Kebijakan: `src/server/authz/policies/` — predikat yang dapat disusun
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, dll.)
 - Utilitas header: `src/server/authz/headers.ts`
 - Helper asersi: `src/server/authz/assertAuth.ts`
@@ -479,59 +477,60 @@ kebijakan yang sesuai sebelum dispatch.
 Rute publik vs manajemen adalah batas tegas: API agent/cooldown dan
 mutasi penyedia memerlukan autentikasi manajemen (HTTP 401 jika tidak ada).
 
-Untuk aturan klasifikasi rute selengkapnya, lihat
+Untuk aturan klasifikasi rute lengkap, lihat
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. FSM Alur Kerja dan Router Peka Tugas
+### F. FSM Alur Kerja dan Router Sadar-Tugas
 
-Router yang digerakkan finite-state-machine, dilapiskan di atas pemilihan combo untuk mengarahkan
-lalu lintas berdasarkan tahap alur kerja yang terdeteksi (perencanaan, eksekusi,
-peninjauan) dan afinitas tugas latar belakang.
+Router yang digerakkan finite-state-machine yang dilapiskan di atas pemilihan kombo
+untuk mengarahkan lalu lintas berdasarkan tahap alur kerja yang terdeteksi
+(perencanaan, eksekusi, peninjauan) dan afinitas tugas latar belakang.
 
 - FSM alur kerja: `open-sse/services/workflowFSM.ts`
-- Router peka tugas: `open-sse/services/taskAwareRouter.ts`
+- Router sadar-tugas: `open-sse/services/taskAwareRouter.ts`
 - Detektor tugas latar belakang: `open-sse/services/backgroundTaskDetector.ts`
-- Klasifier intent: `open-sse/services/intentClassifier.ts`
+- Pengklasifikasi maksud: `open-sse/services/intentClassifier.ts`
 
-Transisi FSM dimasukkan ke dalam penskorian Auto Combo, memberi bias ke model yang lebih murah
+Transisi FSM mengalir ke penilaian Auto Combo, membiaskan ke model yang lebih murah
 untuk tugas latar belakang/otomatisasi dan ke model yang lebih kuat untuk giliran
 perencanaan/peninjauan interaktif.
 
 ### G. Ketahanan Spesifik Penyedia
 
-Beberapa penyedia dilengkapi modul ketahanan dan stealth khusus yang menumpang di atas
-lapisan circuit breaker / cooldown koneksi / lockout model global:
+Beberapa penyedia dilengkapi modul ketahanan dan siluman khusus yang menumpang pada
+lapisan circuit breaker global / cooldown koneksi / penguncian model:
 
-- Mesin Antigravity 429: `open-sse/services/antigravity429Engine.ts` (merotasi
-  identitas, membersihkan header respons, mengelola pelacakan kredit/versi melalui
+- Mesin Antigravity 429: `open-sse/services/antigravity429Engine.ts` (memutar
+  identitas, membersihkan header respons, menggerakkan pelacakan kredit/versi melalui
   `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
   `antigravityIdentity.ts`, `antigravityVersion.ts`)
 - Kebijakan kuota ModelScope: `open-sse/services/modelscopePolicy.ts`
 - Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
-  ditambah `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+  plus `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
 - Pembentukan fingerprint Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Obfuskasi Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Untuk playbook stealth lengkap dan panduan operasional, lihat
+Untuk playbook siluman lengkap dan panduan operasional, lihat
 `docs/security/STEALTH_GUIDE.md` (git; tidak dikompilasi ke dalam `/docs`).
 
-### H. Webhooks, Reasoning Cache, Read Cache
+### H. Webhooks, Cache Penalaran, Cache Baca
 
-- **Webhooks** — pengiriman keluar untuk event penyedia/akun/tugas.
+- **Webhooks** — pengiriman keluar untuk peristiwa penyedia/akun/tugas.
   - Dispatcher: `src/lib/webhookDispatcher.ts`
-  - Penyimpanan: tabel SQLite `webhooks` (melalui `src/lib/db/webhooks.ts`)
-  - Dashboard: `/dashboard/webhooks` (langganan, secret, riwayat percobaan ulang)
-  - Untuk taksonomi event dan semantik percobaan ulang, lihat [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Reasoning Cache** — blok reasoning yang dapat diputar ulang untuk penyedia yang
-  mengeluarkan token thinking (Claude, GLMT, dll.) sehingga giliran berurutan dapat melewati reasoning ulang.
+  - Penyimpanan: tabel SQLite `webhooks` (via `src/lib/db/webhooks.ts`)
+  - Dasbor: `/dashboard/webhooks` (langganan, secret, riwayat percobaan ulang)
+  - Untuk taksonomi peristiwa dan semantik percobaan ulang, lihat [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Cache Penalaran** — blok penalaran yang dapat diputar ulang untuk penyedia yang
+  memancarkan token berpikir (Claude, GLMT, dll.) sehingga giliran berurutan dapat
+  melewati pemikiran ulang.
   - Lapisan DB: `src/lib/db/reasoningCache.ts`
   - Lapisan layanan: `open-sse/services/reasoningCache.ts`
   - Untuk semantik pemutaran ulang, lihat [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Read Cache** — cache respons berumur pendek dengan kunci signature yang digunakan
-  untuk menggabungkan percobaan ulang identik dari SDK upstream yang bermasalah.
+- **Cache Baca** — cache respons berumur pendek yang dikunci berdasarkan tanda tangan
+  dan digunakan untuk menggabungkan percobaan ulang identik dari SDK upstream yang rusak.
   - Lapisan DB: `src/lib/db/readCache.ts`
-  - Endpoint statistik: `GET /api/cache/stats`, dashboard di `/dashboard/cache`
+  - Endpoint statistik: `GET /api/cache/stats`, dasbor di `/dashboard/cache`
 
 ## 3) Lapisan Persistensi
 

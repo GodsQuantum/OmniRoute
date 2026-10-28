@@ -266,7 +266,7 @@ Dominios de administración:
 - Paquete de configuración: `src/app/api/sync/bundle` (GET, instantánea de configuración/proveedores/combinaciones/claves versionada mediante ETag)
 - WebSocket: `src/app/api/v1/ws/route.ts` — controlador de actualización para clientes WS compatibles con OpenAI
 
-## 2) SSE + Núcleo de Traducción
+## 2) SSE + Núcleo de traducción
 
 Módulos del flujo principal:
 
@@ -296,21 +296,21 @@ Servicios (lógica de negocio):
 - Deduplicación de solicitudes: `open-sse/services/signatureCache.ts`
 - Inyección de system prompt: `open-sse/services/systemPrompt.ts`
 - Gestión del presupuesto de thinking: `open-sse/services/thinkingBudget.ts`
-- Enrutamiento de modelos con comodines: `open-sse/services/wildcardRouter.ts`
+- Enrutamiento de modelos con comodín: `open-sse/services/wildcardRouter.ts`
 - Gestión de límites de velocidad: `open-sse/services/rateLimitManager.ts`
-- Disyuntor (circuit breaker): `src/shared/utils/circuitBreaker.ts`
-- Traspaso de contexto: `open-sse/services/contextHandoff.ts` — generación e inyección de resúmenes de traspaso para la estrategia context-relay
+- Circuit breaker: `src/shared/utils/circuitBreaker.ts`
+- Handoff de contexto: `open-sse/services/contextHandoff.ts` — generación e inyección de resúmenes de handoff para la estrategia context-relay
 - Compresión: `open-sse/services/compression/*` — compresión proactiva antes de la traducción del proveedor;
   incluye reglas Caveman, filtros RTK, pipelines apilados, combos de compresión, estadísticas y validación
-- Obtenedor de cuota de Codex: `open-sse/services/codexQuotaFetcher.ts` — obtiene la cuota de Codex para las decisiones de traspaso de context-relay
-- Reintento consciente de cooldown: `src/sse/services/cooldownAwareRetry.ts` — reintentos de cooldown por modelo con `requestRetry` / `maxRetryIntervalSec` configurables
-- Fetch saliente seguro: `src/shared/network/safeOutboundFetch.ts` — fetch protegido de proveedor/modelo con guarda SSRF, bloqueo de URL privadas, reintento y timeout
-- Guarda de URL salientes: `src/shared/network/outboundUrlGuard.ts` — comprobaciones de host en las URL de proveedores; `src/shared/network/outboundUrlGuardPolicy.ts` elige el modo a partir de `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` y sus conmutadores del panel (ver `docs/reference/ENVIRONMENT.md`)
-- Valores predeterminados de solicitud de proveedor: `open-sse/services/providerRequestDefaults.ts` — valores predeterminados de `maxTokens`, `temperature`, `thinkingBudgetTokens` a nivel de proveedor
-- Constantes del proveedor GLM: `open-sse/config/glmProvider.ts` — modelos GLM compartidos, URL de cuota, timeout/valores predeterminados de GLMT
-- Upstream de Antigravity: `open-sse/config/antigravityUpstream.ts` — URL base y constantes de ruta de descubrimiento
-- Constantes del cliente Codex: `open-sse/config/codexClient.ts` — valores versionados de user-agent y client-version
-- Semilla de alias de modelos: `src/lib/modelAliasSeed.ts` — siembra más de 30 alias de dialectos entre proxys al inicio
+- Obtenedor de cuota de Codex: `open-sse/services/codexQuotaFetcher.ts` — obtiene la cuota de Codex para decisiones de handoff en context-relay
+- Reintento consciente del cooldown: `src/sse/services/cooldownAwareRetry.ts` — reintentos de cooldown por modelo con `requestRetry` / `maxRetryIntervalSec` configurables
+- Fetch saliente seguro: `src/shared/network/safeOutboundFetch.ts` — fetch protegido de proveedores/modelos con protección SSRF, bloqueo de URLs privadas, reintento y timeout
+- Guardia de URLs salientes: `src/shared/network/outboundUrlGuard.ts` — comprobaciones de host en las URLs de proveedores; `src/shared/network/outboundUrlGuardPolicy.ts` selecciona el modo a partir de `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` y sus interruptores del dashboard (ver `docs/reference/ENVIRONMENT.md`)
+- Valores predeterminados de solicitudes de proveedor: `open-sse/services/providerRequestDefaults.ts` — valores predeterminados a nivel de proveedor para `maxTokens`, `temperature`, `thinkingBudgetTokens`
+- Constantes del proveedor GLM: `open-sse/config/glmProvider.ts` — modelos GLM compartidos, URLs de cuota, timeout/valores predeterminados de GLMT
+- Upstream de Antigravity: `open-sse/config/antigravityUpstream.ts` — constantes de URL base y ruta de descubrimiento
+- Constantes del cliente Codex: `open-sse/config/codexClient.ts` — valores versionados de user-agent y versión del cliente
+- Semilla de alias de modelos: `src/lib/modelAliasSeed.ts` — siembra más de 30 alias de dialectos entre proxies al inicio
 
 Módulos de la capa de dominio:
 
@@ -318,14 +318,14 @@ Módulos de la capa de dominio:
 - Política de fallback: `src/domain/fallbackPolicy.ts`
 - Contrato reservado de resolución de combos: `src/domain/comboResolver.ts`; el enrutamiento en vivo usa `open-sse/services/combo.ts`
 - Política de bloqueo: `src/domain/lockoutPolicy.ts`
-- Contrato reservado de evaluación de políticas: `src/domain/policyEngine.ts`; la ruta de solicitud aplica la política de claves API a través de `src/shared/utils/apiKeyPolicy.ts` y la autorización de destino resuelto a través de `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Contrato reservado de evaluación de políticas: `src/domain/policyEngine.ts`; la ruta de solicitudes aplica la política de claves API a través de `src/shared/utils/apiKeyPolicy.ts` y la autorización de destino resuelto a través de `src/sse/handlers/chat/resolvedModelPolicy.ts`
 - Catálogo de códigos de error: `src/shared/constants/errorCodes.ts`
 - ID de solicitud: `src/shared/utils/requestId.ts`
 - Timeout de fetch: `src/shared/utils/fetchTimeout.ts`
 - Telemetría de solicitudes: `src/shared/utils/requestTelemetry.ts`
 - Cumplimiento/auditoría: `src/lib/compliance/index.ts`
 - Ejecutor de evaluaciones: `src/lib/evals/evalRunner.ts`
-- Persistencia del estado de dominio: `src/lib/db/domainState.ts` — CRUD de SQLite para cadenas de fallback, presupuestos, historial de costos, estado de bloqueo, disyuntores
+- Persistencia del estado de dominio: `src/lib/db/domainState.ts` — CRUD en SQLite para cadenas de fallback, presupuestos, historial de costos, estado de bloqueo, circuit breakers
 
 Módulos de proveedores OAuth (27 archivos individuales bajo `src/lib/oauth/providers/`):
 
@@ -359,13 +359,14 @@ Análisis detallado: `docs/frameworks/EMBEDDED-SERVICES.md`
 
 ## Subsistemas principales (v3.8.0)
 
-### A. Motor Auto Combo
+### A. Motor de Auto Combo
 
-Auto Combo puntúa y selecciona dinámicamente los destinos de enrutamiento en el momento de la solicitud, en lugar de depender de una definición de combo estática. Da soporte a la familia de prefijos de modelo `auto/*`.
+Auto Combo puntúa y selecciona dinámicamente los destinos de enrutamiento en el momento de la solicitud, en lugar de
+depender de una definición de combo estática. Impulsa la familia de prefijos de modelo `auto/*`.
 
 - Entrada del motor: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- Entrada del combo en vivo: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), llamado por `src/sse/handlers/chat.ts`
+- Entrada de combo en vivo: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), invocada por `src/sse/handlers/chat.ts`
 - Panel: `/dashboard/auto-combo`
 - Telemetría: tabla SQLite `auto_combo_decisions`
 
@@ -375,32 +376,32 @@ Capacidades clave:
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto es la incorporación destacada en v3.8.0; `fusion` (fan-out al panel + síntesis del juez,
-  `open-sse/services/fusion.ts`) es nuevo en v3.8.36.
+  auto es la incorporación destacada en v3.8.0; `fusion` (fan-out a panel + síntesis por juez,
+  `open-sse/services/fusion.ts`) es nueva en v3.8.36.
 - **Puntuación de 16 factores**: cuota, salud, costo inverso, latencia inversa, idoneidad para la tarea y
   diez más. La tabla canónica de factores y sus pesos predeterminados se encuentra en
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md); repetirla aquí le daría
-  un segundo lugar donde quedar desactualizada.
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — repetirla aquí crearía
+  un segundo lugar donde podría quedar desactualizada.
 - **La fábrica virtual** materializa combos efímeros cuando no existe ningún combo nombrado
-  que coincida, tomando candidatos de las conexiones de proveedores activas y saludables.
+  que coincida, obteniendo candidatos de conexiones de proveedores activas y saludables.
 - **Prefijos auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
   `auto/smart`, `auto/lkgp` — cada uno respaldado por un perfil de pesos ajustado.
-- **6 paquetes de modos**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+- **6 paquetes de modo**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
   `reliability-first` y `chaos-mode` — configuraciones de pesos preestablecidas invocables desde
-  el panel. (No deben confundirse con los prefijos `auto/*` anteriores, que son
+  el panel. (No confundir con los prefijos `auto/*` anteriores, que son
   variantes en tiempo de solicitud.)
 
-Para obtener todos los detalles algorítmicos (fórmulas de factores, ajuste de pesos), consulte
+Para conocer el detalle algorítmico completo (fórmulas de los factores, ajuste de pesos), consulte
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
 ### B. Cloud Agents
 
 Cloud Agents envuelve plataformas de agentes de código alojadas por terceros (Codex Cloud, Devin,
-Jules) detrás de un ciclo de vida de tareas uniforme respaldado por base de datos. Todos los
-endpoints de creación/inspección de tareas requieren autenticación de gestión.
+Jules) tras un ciclo de vida de tareas uniforme respaldado por base de datos. Todos los endpoints
+de creación/inspección de tareas requieren autenticación de gestión.
 
 - Raíz del módulo: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, además de subdirectorios por agente bajo `agents/`)
+  `types.ts`, `db.ts`, más subdirectorios por agente bajo `agents/`)
 - Implementaciones por agente: `agents/codex/`, `agents/devin/`, `agents/jules/`
 - Endpoints públicos: `/api/v1/agents/tasks/*` (listar/crear/obtener/cancelar)
 - Endpoints de gestión: `/api/cloud/*` (aprovisionamiento, estado, lote)
@@ -412,16 +413,16 @@ Para el aprovisionamiento por agente y los detalles específicos de OAuth, consu
 
 ### C. Guardrails
 
-El módulo de guardrails es una capa de middleware recargable en caliente que inspecciona las solicitudes
+El módulo de guardrails es una capa de middleware con recarga en caliente que inspecciona solicitudes
 y respuestas en busca de PII, inyección de prompts y contenido visual inseguro. Las violaciones
 cortocircuitan la solicitud con HTTP **503** más un código de error estructurado, lo que permite
 a los llamantes posteriores reintentar o bifurcar.
 
 - Raíz del módulo: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Recarga en caliente: el registro vigila los cambios de configuración y reconstruye la cadena en el mismo lugar
-- Puntos de conexión: entrada del manejador de chat, manejador de generación de imágenes, sanitizador de respuestas
-- Contrato HTTP: las violaciones se presentan como `503` con `error.code = "GUARDRAIL_VIOLATION"`
+- Recarga en caliente: el registro vigila los cambios de configuración y reconstruye la cadena in situ
+- Puntos de integración: entrada del manejador de chat, manejador de generación de imágenes, sanitizador de respuestas
+- Contrato HTTP: las violaciones se manifiestan como `503` con `error.code = "GUARDRAIL_VIOLATION"`
 
 Para la creación de conjuntos de reglas y el ajuste de umbrales, consulte
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
@@ -432,16 +433,16 @@ El espacio de nombres `src/domain/` contiene servicios de dominio y contratos de
 No es un único punto de entrada de políticas obligatorio para cada solicitud.
 
 La ruta de chat en vivo llama a `enforceApiKeyPolicy()` desde
-`src/shared/utils/apiKeyPolicy.ts`; la autorización de los modelos resueltos y los miembros del combo
+`src/shared/utils/apiKeyPolicy.ts`; la autorización de modelos resueltos y miembros de combo
 se implementa en `src/sse/handlers/chat/resolvedModelPolicy.ts`. La entrada autoalojada
-en `src/app/api/v1/chat/completions/route.ts` también aplica la política de claves API antes
+en `src/app/api/v1/chat/completions/route.ts` también aplica la política de claves de API antes
 del despacho. La resolución de combos se ejecuta a través de `open-sse/services/combo.ts`.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` y `src/lib/container.ts`
 siguen siendo contratos probados, no el cableado de esa ruta de solicitud. El contenedor registra
 el motor de políticas, pero la ruta de solicitud de producción inspeccionada no lo resuelve.
-Cambiar esos contratos por sí solo no cambia la política del chat en vivo ni el enrutamiento de combos;
-conectarlos o eliminarlos requiere una decisión de diseño aparte.
+Cambiar esos contratos por sí solo no altera la política del chat en vivo ni el enrutamiento de combos;
+conectarlos o eliminarlos requiere una decisión de diseño independiente.
 
 - Motor de políticas reservado: `src/domain/policyEngine.ts` — evaluación de bloqueo → presupuesto → fallback
 - Reglas de costo: `src/domain/costRules.ts`
@@ -452,7 +453,7 @@ conectarlos o eliminarlos requiere una decisión de diseño aparte.
 - Unificador de reglas de conexión/modelo: `src/domain/connectionModelRules.ts`
 - Instantáneas de disponibilidad de modelos: `src/domain/modelAvailability.ts`
 - Seguimiento de expiración de proveedores: `src/domain/providerExpiration.ts`
-- Caché de cuota: `src/domain/quotaCache.ts`
+- Caché de cuotas: `src/domain/quotaCache.ts`
 - Estado de degradación: `src/domain/degradation.ts`
 - Auditoría de configuración: `src/domain/configAudit.ts`
 - Constructor de metadatos de respuesta de OmniRoute: `src/domain/omnirouteResponseMeta.ts`
@@ -461,76 +462,75 @@ conectarlos o eliminarlos requiere una decisión de diseño aparte.
 ### E. Pipeline de autorización
 
 El pipeline de autorización clasifica cada solicitud entrante y aplica la
-cadena de políticas apropiada antes del despacho.
+cadena de políticas adecuada antes del despacho.
 
-- Entrada del pipeline: `src/server/authz/pipeline.ts`
-- Clasificador de solicitudes: `src/server/authz/classify.ts` — distingue las rutas
+- Punto de entrada del pipeline: `src/server/authz/pipeline.ts`
+- Clasificador de peticiones: `src/server/authz/classify.ts` — distingue las rutas
   públicas de compatibilidad de las rutas de gestión
 - Inventario de rutas públicas: `src/shared/constants/publicApiRoutes.ts`
 - Políticas: `src/server/authz/policies/` — predicados componibles
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, etc.)
 - Utilidades de cabeceras: `src/server/authz/headers.ts`
 - Auxiliar de aserciones: `src/server/authz/assertAuth.ts`
-- Contexto de solicitud: `src/server/authz/context.ts`
+- Contexto de la petición: `src/server/authz/context.ts`
 
-Las rutas públicas frente a las de gestión constituyen un límite estricto: las API de
+Las rutas públicas frente a las de gestión son un límite estricto: las APIs de
 agente/cooldown y las mutaciones de proveedores requieren autenticación de gestión
 (HTTP 401 si falta).
 
-Para consultar las reglas completas de clasificación de rutas, véase
+Para conocer las reglas completas de clasificación de rutas, consulta
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. FSM de flujo de trabajo y enrutador sensible a tareas
+### F. FSM de flujo de trabajo y enrutador consciente de tareas
 
-Un enrutador dirigido por una máquina de estados finitos, superpuesto a la selección
-de combos, para dirigir el tráfico según la etapa del flujo de trabajo detectada
-(planificación, ejecución, revisión) y la afinidad con tareas en segundo plano.
+Un enrutador basado en una máquina de estados finitos, situado por encima de la
+selección de combos, para dirigir el tráfico según la etapa del flujo de trabajo
+detectada (planificación, ejecución, revisión) y la afinidad con tareas en segundo
+plano.
 
 - FSM de flujo de trabajo: `open-sse/services/workflowFSM.ts`
-- Enrutador sensible a tareas: `open-sse/services/taskAwareRouter.ts`
+- Enrutador consciente de tareas: `open-sse/services/taskAwareRouter.ts`
 - Detector de tareas en segundo plano: `open-sse/services/backgroundTaskDetector.ts`
 - Clasificador de intenciones: `open-sse/services/intentClassifier.ts`
 
 Las transiciones de la FSM alimentan la puntuación de Auto Combo, sesgando hacia
-modelos más baratos para tareas en segundo plano/automatización y hacia modelos más
-potentes para turnos interactivos de planificación/revisión.
+modelos más baratos para tareas de segundo plano/automatización y hacia modelos
+más potentes para turnos interactivos de planificación/revisión.
 
-### G. Resiliencia específica del proveedor
+### G. Resiliencia específica por proveedor
 
 Varios proveedores incluyen módulos dedicados de resiliencia y sigilo que se apoyan
-en las capas globales de disyuntor (circuit breaker) / enfriamiento de conexiones /
-bloqueo de modelos:
+en las capas globales de circuit breaker / cooldown de conexión / bloqueo de modelos:
 
-- Motor 429 de Antigravity: `open-sse/services/antigravity429Engine.ts` (rota la
+- Motor Antigravity 429: `open-sse/services/antigravity429Engine.ts` (rota la
   identidad, limpia las cabeceras de respuesta, gestiona el seguimiento de
   créditos/versión mediante `antigravityCredits.ts`, `antigravityHeaderScrub.ts`,
   `antigravityHeaders.ts`, `antigravityIdentity.ts`, `antigravityVersion.ts`)
-- Política de cuota de ModelScope: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (protocolo de enlace del canal de compatibilidad): `open-sse/services/claudeCodeCCH.ts`,
+- Política de cuotas de ModelScope: `open-sse/services/modelscopePolicy.ts`
+- Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
   además de `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Moldeado de huella digital de Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
+- Modelado de huella digital de Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Ofuscación de Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Para la guía completa de sigilo y orientación operativa, véase
+Para la guía completa de sigilo y orientación operativa, consulta
 `docs/security/STEALTH_GUIDE.md` (git; no compilado en `/docs`).
 
 ### H. Webhooks, caché de razonamiento, caché de lectura
 
-- **Webhooks** — envío saliente de eventos de proveedor/cuenta/tarea.
+- **Webhooks** — envío saliente de eventos de proveedores/cuentas/tareas.
   - Despachador: `src/lib/webhookDispatcher.ts`
   - Almacenamiento: tabla SQLite `webhooks` (a través de `src/lib/db/webhooks.ts`)
   - Panel: `/dashboard/webhooks` (suscripciones, secretos, historial de reintentos)
-  - Para la taxonomía de eventos y la semántica de reintentos, véase [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Caché de razonamiento** — bloques de razonamiento reproducibles para proveedores
+  - Para la taxonomía de eventos y la semántica de reintentos, consulta [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Caché de razonamiento** — bloques de razonamiento reutilizables para proveedores
   que emiten tokens de pensamiento (Claude, GLMT, etc.), de modo que los turnos
   consecutivos puedan omitir el re-razonamiento.
   - Capa de BD: `src/lib/db/reasoningCache.ts`
   - Capa de servicio: `open-sse/services/reasoningCache.ts`
-  - Para la semántica de reproducción, véase [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Caché de lectura** — caché de respuestas de corta duración indexada por firma,
-  utilizada para colapsar reintentos idénticos procedentes de SDK ascendentes
-  defectuosos.
+  - Para la semántica de reproducción, consulta [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Caché de lectura** — caché de respuestas de corta duración, indexada por firma,
+  utilizada para colapsar reintentos idénticos procedentes de SDKs upstream defectuosos.
   - Capa de BD: `src/lib/db/readCache.ts`
   - Endpoint de estadísticas: `GET /api/cache/stats`, panel en `/dashboard/cache`
 

@@ -271,73 +271,73 @@ flowchart LR
 - 設定套件：`src/app/api/sync/bundle`（GET，設定/提供者/組合/金鑰的 ETag 版本化快照）
 - WebSocket：`src/app/api/v1/ws/route.ts` — OpenAI 相容 WS 客戶端的升級處理器
 
-## 2) SSE + 翻譯核心
+## 2) SSE + 轉譯核心
 
-主要流程模組：
+主要流程模組:
 
-- 入口：`src/sse/handlers/chat.ts`
-- 核心協調：`open-sse/handlers/chatCore.ts`
-- 提供者執行適配器：`open-sse/executors/*`
-- 格式偵測／提供者設定：`open-sse/services/provider.ts`
-- 模型剖析／解析：`src/sse/services/model.ts`、`open-sse/services/model.ts`
-- 帳號備援邏輯：`open-sse/services/accountFallback.ts`
-- 翻譯註冊表：`open-sse/translator/index.ts`
-- 串流轉換：`open-sse/utils/stream.ts`、`open-sse/utils/streamHandler.ts`
-- 用量擷取／正規化：`open-sse/utils/usageTracking.ts`
-- Think 標籤剖析器：`open-sse/utils/thinkTagParser.ts`
-- 嵌入處理器：`open-sse/handlers/embeddings.ts`
-- 嵌入提供者註冊表：`open-sse/config/embeddingRegistry.ts`
-- 圖像生成處理器：`open-sse/handlers/imageGeneration.ts`
-- 圖像提供者註冊表：`open-sse/config/imageRegistry.ts`
-- 回應淨化：`open-sse/handlers/responseSanitizer.ts`
-- 角色正規化：`open-sse/services/roleNormalizer.ts`
+- 入口: `src/sse/handlers/chat.ts`
+- 核心編排: `open-sse/handlers/chatCore.ts`
+- Provider 執行適配器: `open-sse/executors/*`
+- 格式偵測/provider 設定: `open-sse/services/provider.ts`
+- 模型解析/resolve: `src/sse/services/model.ts`、`open-sse/services/model.ts`
+- 帳號 fallback 邏輯: `open-sse/services/accountFallback.ts`
+- 轉譯註冊表: `open-sse/translator/index.ts`
+- 串流轉換: `open-sse/utils/stream.ts`、`open-sse/utils/streamHandler.ts`
+- 用量擷取/正規化: `open-sse/utils/usageTracking.ts`
+- Think 標籤解析器: `open-sse/utils/thinkTagParser.ts`
+- Embedding 處理器: `open-sse/handlers/embeddings.ts`
+- Embedding provider 註冊表: `open-sse/config/embeddingRegistry.ts`
+- 圖像生成處理器: `open-sse/handlers/imageGeneration.ts`
+- 圖像 provider 註冊表: `open-sse/config/imageRegistry.ts`
+- 回應淨化: `open-sse/handlers/responseSanitizer.ts`
+- 角色正規化: `open-sse/services/roleNormalizer.ts`
 
-服務（業務邏輯）：
+服務層(業務邏輯):
 
-- 帳號選擇／評分：`open-sse/services/accountSelector.ts`
-- 上下文生命週期管理：`open-sse/services/contextManager.ts`
-- IP 過濾強制執行：`open-sse/services/ipFilter.ts`
-- 工作階段追蹤：`open-sse/services/sessionManager.ts`
-- 請求去重複：`open-sse/services/signatureCache.ts`
-- 系統提示注入：`open-sse/services/systemPrompt.ts`
-- 思考預算管理：`open-sse/services/thinkingBudget.ts`
-- 萬用字元模型路由：`open-sse/services/wildcardRouter.ts`
-- 速率限制管理：`open-sse/services/rateLimitManager.ts`
-- 斷路器：`src/shared/utils/circuitBreaker.ts`
-- 上下文交接：`open-sse/services/contextHandoff.ts` — 用於 context-relay 策略的交接摘要生成與注入
-- 壓縮：`open-sse/services/compression/*` — 在提供者翻譯前的主動壓縮；
+- 帳號選擇/評分: `open-sse/services/accountSelector.ts`
+- 上下文生命週期管理: `open-sse/services/contextManager.ts`
+- IP 過濾強制執行: `open-sse/services/ipFilter.ts`
+- 工作階段追蹤: `open-sse/services/sessionManager.ts`
+- 請求去重: `open-sse/services/signatureCache.ts`
+- 系統提示注入: `open-sse/services/systemPrompt.ts`
+- Thinking 預算管理: `open-sse/services/thinkingBudget.ts`
+- 萬用字元模型路由: `open-sse/services/wildcardRouter.ts`
+- 速率限制管理: `open-sse/services/rateLimitManager.ts`
+- 熔斷器: `src/shared/utils/circuitBreaker.ts`
+- 上下文交接: `open-sse/services/contextHandoff.ts` — 為 context-relay 策略產生與注入交接摘要
+- 壓縮: `open-sse/services/compression/*` — 在 provider 轉譯前的主動式壓縮;
   包含 Caveman 規則、RTK 過濾器、堆疊管線、壓縮組合、統計與驗證
-- Codex 配額擷取器：`open-sse/services/codexQuotaFetcher.ts` — 擷取 Codex 配額以用於 context-relay 交接決策
-- 冷卻感知重試：`src/sse/services/cooldownAwareRetry.ts` — 具可設定 `requestRetry` / `maxRetryIntervalSec` 的每模型冷卻重試
-- 安全對外擷取：`src/shared/network/safeOutboundFetch.ts` — 具 SSRF 防護、私有 URL 阻擋、重試與逾時的受保護提供者／模型擷取
-- 對外 URL 防護：`src/shared/network/outboundUrlGuard.ts` — 對提供者 URL 的主機檢查；`src/shared/network/outboundUrlGuardPolicy.ts` 從 `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`、`OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` 及其儀表板切換開關選擇模式（見 `docs/reference/ENVIRONMENT.md`）
-- 提供者請求預設值：`open-sse/services/providerRequestDefaults.ts` — 提供者層級的 `maxTokens`、`temperature`、`thinkingBudgetTokens` 預設值
-- GLM 提供者常數：`open-sse/config/glmProvider.ts` — 共用的 GLM 模型、配額 URL、GLMT 逾時／預設值
-- Antigravity 上游：`open-sse/config/antigravityUpstream.ts` — 基礎 URL 與探索路徑常數
-- Codex 用戶端常數：`open-sse/config/codexClient.ts` — 帶版本的使用者代理與用戶端版本值
-- 模型別名種子：`src/lib/modelAliasSeed.ts` — 啟動時植入 30+ 個跨代理方言別名
+- Codex 配額擷取器: `open-sse/services/codexQuotaFetcher.ts` — 擷取 Codex 配額以用於 context-relay 交接決策
+- 感知冷卻的重試: `src/sse/services/cooldownAwareRetry.ts` — 針對個別模型的冷卻重試,可透過 `requestRetry` / `maxRetryIntervalSec` 設定
+- 安全的對外 fetch: `src/shared/network/safeOutboundFetch.ts` — 具防護的 provider/模型 fetch,包含 SSRF 防護、私有 URL 阻擋、重試與逾時
+- 對外 URL 防護: `src/shared/network/outboundUrlGuard.ts` — 對 provider URL 進行主機檢查;`src/shared/network/outboundUrlGuardPolicy.ts` 依據 `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`、`OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` 及其儀表板開關選擇模式(見 `docs/reference/ENVIRONMENT.md`)
+- Provider 請求預設值: `open-sse/services/providerRequestDefaults.ts` — provider 層級的 `maxTokens`、`temperature`、`thinkingBudgetTokens` 預設值
+- GLM provider 常數: `open-sse/config/glmProvider.ts` — 共用的 GLM 模型、配額 URL、GLMT 逾時/預設值
+- Antigravity 上游: `open-sse/config/antigravityUpstream.ts` — 基礎 URL 與探索路徑常數
+- Codex 用戶端常數: `open-sse/config/codexClient.ts` — 帶版本的 user-agent 與 client-version 數值
+- 模型別名種子: `src/lib/modelAliasSeed.ts` — 啟動時植入 30+ 個跨代理方言別名
 
-領域層模組：
+領域層模組:
 
-- 成本規則／預算：`src/domain/costRules.ts`
-- 備援政策：`src/domain/fallbackPolicy.ts`
-- 保留的組合解析契約：`src/domain/comboResolver.ts`；線上路由使用 `open-sse/services/combo.ts`
-- 鎖定政策：`src/domain/lockoutPolicy.ts`
-- 保留的政策評估契約：`src/domain/policyEngine.ts`；請求路徑透過 `src/shared/utils/apiKeyPolicy.ts` 強制執行 API 金鑰政策，並透過 `src/sse/handlers/chat/resolvedModelPolicy.ts` 強制執行已解析目標授權
-- 錯誤代碼目錄：`src/shared/constants/errorCodes.ts`
-- 請求 ID：`src/shared/utils/requestId.ts`
-- 擷取逾時：`src/shared/utils/fetchTimeout.ts`
-- 請求遙測：`src/shared/utils/requestTelemetry.ts`
-- 合規／稽核：`src/lib/compliance/index.ts`
-- 評估執行器：`src/lib/evals/evalRunner.ts`
-- 領域狀態持久化：`src/lib/db/domainState.ts` — 用於備援鏈、預算、成本歷史、鎖定狀態、斷路器的 SQLite CRUD
+- 成本規則/預算: `src/domain/costRules.ts`
+- Fallback 政策: `src/domain/fallbackPolicy.ts`
+- 保留的組合解析契約: `src/domain/comboResolver.ts`;實際路由使用 `open-sse/services/combo.ts`
+- 鎖定政策: `src/domain/lockoutPolicy.ts`
+- 保留的政策評估契約: `src/domain/policyEngine.ts`;請求路徑透過 `src/shared/utils/apiKeyPolicy.ts` 強制執行 API 金鑰政策,並透過 `src/sse/handlers/chat/resolvedModelPolicy.ts` 進行解析目標授權
+- 錯誤代碼目錄: `src/shared/constants/errorCodes.ts`
+- 請求 ID: `src/shared/utils/requestId.ts`
+- Fetch 逾時: `src/shared/utils/fetchTimeout.ts`
+- 請求遙測: `src/shared/utils/requestTelemetry.ts`
+- 合規/稽核: `src/lib/compliance/index.ts`
+- 評估執行器: `src/lib/evals/evalRunner.ts`
+- 領域狀態持久化: `src/lib/db/domainState.ts` — fallback 鏈、預算、成本歷史、鎖定狀態、熔斷器的 SQLite CRUD
 
-OAuth 提供者模組（`src/lib/oauth/providers/` 下的 27 個獨立檔案）：
+OAuth provider 模組(`src/lib/oauth/providers/` 下的 27 個獨立檔案):
 
-- 註冊表索引：`src/lib/oauth/providers/index.ts`
-- 個別提供者：`agy.ts`、`antigravity.ts`、`claude.ts`、`cline.ts`、`codebuddy-cn.ts`、`codebuddy-intl.ts`、`codex.ts`、`cursor.ts`、`devin-desktop.ts`、`ghe-copilot.ts`、`github.ts`、`gitlab-duo.ts`、`grok-cli-oauth.ts`、`grok-cli.ts`、`kilocode.ts`、`kimi-coding.ts`、`kiro.ts`、`muse-code.ts`、`openference.ts`、`qoder.ts`、`trae.ts`、`workbuddy.ts`、`xai-oauth.ts`、`zed-hosted.ts`、`zed.ts`
-- 共用輔助程式：`codebuddyDeviceAuth.ts`（CodeBuddy CN/intl 裝置流程）、`museCodeDeviceResponse.ts`
-- 薄型包裝：`src/lib/oauth/providers.ts` — 從個別模組重新匯出
+- 註冊表索引: `src/lib/oauth/providers/index.ts`
+- 各別 provider: `agy.ts`、`antigravity.ts`、`claude.ts`、`cline.ts`、`codebuddy-cn.ts`、`codebuddy-intl.ts`、`codex.ts`、`cursor.ts`、`devin-desktop.ts`、`ghe-copilot.ts`、`github.ts`、`gitlab-duo.ts`、`grok-cli-oauth.ts`、`grok-cli.ts`、`kilocode.ts`、`kimi-coding.ts`、`kiro.ts`、`muse-code.ts`、`openference.ts`、`qoder.ts`、`trae.ts`、`workbuddy.ts`、`xai-oauth.ts`、`zed-hosted.ts`、`zed.ts`
+- 共用輔助工具: `codebuddyDeviceAuth.ts`(CodeBuddy CN/國際版裝置流程)、`museCodeDeviceResponse.ts`
+- 薄封裝層: `src/lib/oauth/providers.ts` — 從各獨立模組重新匯出
 
 ## 5) 嵌入式服務（v3.8.4）
 
@@ -360,149 +360,138 @@ OmniRoute 可以安裝、監督並路由至本地運行的 AI 工具程序，
 
 深入探討：`docs/frameworks/EMBEDDED-SERVICES.md`
 
-## 主要子系統（v3.8.0）
+## 主要子系統 (v3.8.0)
 
 ### A. Auto Combo 引擎
 
 Auto Combo 會在請求時動態評分並挑選路由目標，而非依賴靜態的 combo 定義。它驅動 `auto/*` 模型前綴家族。
 
 - 引擎入口：`open-sse/services/autoCombo/`（`autoComboEngine.ts`、`scoringEngine.ts`、`virtualFactory.ts`、`modePacks.ts`）
-- 即時 combo 入口：`open-sse/services/combo.ts`（`handleComboChat`、`resolveComboTargets`），由 `src/sse/handlers/chat.ts` 呼叫
+- 線上 combo 入口：`open-sse/services/combo.ts`（`handleComboChat`、`resolveComboTargets`），由 `src/sse/handlers/chat.ts` 呼叫
 - 儀表板：`/dashboard/auto-combo`
 - 遙測：`auto_combo_decisions` SQLite 資料表
 
 主要功能：
 
-- **20 種路由策略**（priority、weighted、fill-first、round-robin、P2C、random、least-used、cost-optimized、reset-aware、reset-window、headroom、quota-weighted、strict-random、**auto**、lkgp、context-optimized、cache-optimized、context-relay、**fusion**、pipeline）——
-  auto 是 v3.8.0 的主打新功能；`fusion`（panel fan-out + judge 合成，`open-sse/services/fusion.ts`）則是 v3.8.36 的新功能。
-- **16 因子評分**：配額、健康度、成本倒數、延遲倒數、任務適配度，以及其他十項因子。因子及其預設權重的權威表格位於
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) —— 在此重述只會讓它多一個可能過時的地方。
-- **虛擬工廠**：當沒有相符的具名 combo 時，會動態建立臨時 combo，候選對象取自健康且使用中的 provider 連線。
+- **20 種路由策略**（priority、weighted、fill-first、round-robin、P2C、random、least-used、cost-optimized、reset-aware、reset-window、headroom、quota-weighted、strict-random、**auto**、lkgp、context-optimized、cache-optimized、context-relay、**fusion**、pipeline)—
+  auto 是 v3.8.0 的主打新增功能；`fusion`（評審團扇出 + 評審合成，`open-sse/services/fusion.ts`）是 v3.8.36 的新功能。
+- **16 因子評分**：配額、健康度、成本倒數、延遲倒數、任務適配度，以及另外十項因子。因子與其預設權重的權威表格位於
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — 在此重述只會讓它多一個會過時的地方。
+- **虛擬工廠**會在沒有相符的具名 combo 時即時生成臨時 combo，候選對象取自健康且啟用中的提供者連線。
 - **Auto 前綴**：`auto/coding`、`auto/cheap`、`auto/fast`、`auto/offline`、
-  `auto/smart`、`auto/lkgp` —— 各自背後都有調校過的權重設定檔。
+  `auto/smart`、`auto/lkgp` — 各自由一組調校過的權重設定檔支援。
 - **6 種模式包**：`ship-fast`、`cost-saver`、`quality-first`、`offline-friendly`、
-  `reliability-first` 與 `chaos-mode` —— 可從儀表板呼叫的預設權重組態。（請勿與上方的 `auto/*` 前綴混淆，那些是請求時的變體。）
+  `reliability-first` 與 `chaos-mode` — 可從儀表板呼叫的預設權重配置。（請勿與上方的 `auto/*` 前綴混淆，後者是請求時的變體。）
 
-如需完整的演算法細節（因子公式、權重調校），請參閱
+完整的演算法細節（因子公式、權重調校），請參閱
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md)。
 
 ### B. Cloud Agents
 
-Cloud Agents 將第三方託管的程式碼代理平台（Codex Cloud、Devin、Jules）包裝在統一的、以資料庫為後盾的任務生命週期之後。所有任務建立／檢視端點都需要管理驗證。
+Cloud Agents 將第三方託管的程式碼代理平台（Codex Cloud、Devin、Jules）封裝在統一的、以資料庫為後端的任務生命週期之內。所有任務建立／檢視端點都需要管理驗證。
 
 - 模組根目錄：`src/lib/cloudAgent/`（`baseAgent.ts`、`registry.ts`、`api.ts`、
   `types.ts`、`db.ts`，以及 `agents/` 下的各代理子目錄）
 - 各代理實作：`agents/codex/`、`agents/devin/`、`agents/jules/`
-- 公開端點：`/api/v1/agents/tasks/*`（列出／建立／取得／取消）
+- 公開端點：`/api/v1/agents/tasks/*`（list/create/get/cancel）
 - 管理端點：`/api/cloud/*`（佈建、狀態、批次）
 - 儀表板：`/dashboard/cloud-agents`
 - 儲存：`cloud_agent_tasks` 資料表
 
-如需各代理的佈建與 OAuth 細節，請參閱
+各代理的佈建與 OAuth 細節，請參閱
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md)。
 
 ### C. Guardrails
 
-Guardrails 模組是一個可熱重載的中介軟體層，會檢查請求與回應中的 PII、提示注入（prompt injection）以及不安全的視覺內容。違規時會讓請求短路，回傳 HTTP **503** 加上結構化的錯誤代碼，讓下游呼叫端可以重試或分支處理。
+Guardrails 模組是一個可熱重載的中介軟體層，會檢查請求與回應中的 PII、提示注入（prompt injection）以及不安全的視覺內容。違規時會以 HTTP **503** 加上結構化錯誤碼讓請求短路，使下游呼叫端得以重試或分支處理。
 
 - 模組根目錄：`src/lib/guardrails/`（`base.ts`、`registry.ts`、`piiMasker.ts`、
   `promptInjection.ts`、`visionBridge.ts`、`visionBridgeHelpers.ts`）
-- 熱重載：registry 會監聽組態變更，並就地重建處理鏈
-- 接入點：chat 處理器入口、圖像生成處理器、回應淨化器
-- HTTP 合約：違規會以 `503` 加上 `error.code = "GUARDRAIL_VIOLATION"` 呈現
+- 熱重載：registry 會監控設定變更，並就地重建防護鏈
+- 接入點：聊天 handler 入口、圖像生成 handler、回應淨化器
+- HTTP 契約：違規會以 `503` 呈現，並帶有 `error.code = "GUARDRAIL_VIOLATION"`
 
-如需規則集撰寫與閾值調校，請參閱
+規則集撰寫與閾值調校，請參閱
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md)。
 
 ### D. 領域層
 
-`src/domain/` 命名空間包含領域服務與保留的評估合約。它並非每個請求都必須經過的單一政策入口點。
+`src/domain/` 命名空間包含領域服務與保留的評估契約。它並非每個請求都必經的單一政策入口。
 
-即時 chat 路徑會呼叫來自 `src/shared/utils/apiKeyPolicy.ts` 的 `enforceApiKeyPolicy()`；已解析模型與 combo 成員的授權則實作於 `src/sse/handlers/chat/resolvedModelPolicy.ts`。位於 `src/app/api/v1/chat/completions/route.ts` 的自架入口也會在分派前強制執行 API 金鑰政策。Combo 解析透過 `open-sse/services/combo.ts` 執行。
+線上聊天路徑會呼叫來自
+`src/shared/utils/apiKeyPolicy.ts` 的 `enforceApiKeyPolicy()`；已解析模型與 combo 成員的授權實作於 `src/sse/handlers/chat/resolvedModelPolicy.ts`。`src/app/api/v1/chat/completions/route.ts` 中的自架入口也會在分派前強制執行 API 金鑰政策。Combo 解析經由 `open-sse/services/combo.ts` 執行。
 
-`src/domain/policyEngine.ts`、`src/domain/comboResolver.ts` 與 `src/lib/container.ts` 仍然是經過測試的合約，而非該請求路徑的實際接線。容器雖註冊了政策引擎，但經查驗的生產請求路徑並不會解析它。僅變更這些合約並不會改變即時 chat 政策或 combo 路由；要接上或移除它們，需要另一項獨立的設計決策。
+`src/domain/policyEngine.ts`、`src/domain/comboResolver.ts` 與 `src/lib/container.ts`
+仍是經過測試的契約，而非該請求路徑的接線。容器雖註冊了政策引擎，但經檢視的生產請求路徑並不會解析它。僅變更這些契約並不會改變線上的聊天政策或 combo 路由；要接上或移除它們，需要另行做出設計決策。
 
-- 保留的政策引擎：`src/domain/policyEngine.ts` —— 鎖定 → 預算 → 後備 的評估
+- 保留的政策引擎：`src/domain/policyEngine.ts` — 鎖定 → 預算 → 備援評估
 - 成本規則：`src/domain/costRules.ts`
-- 後備政策：`src/domain/fallbackPolicy.ts`
+- 備援政策：`src/domain/fallbackPolicy.ts`
 - 鎖定政策：`src/domain/lockoutPolicy.ts`
 - 標籤式路由：`src/domain/tagRouter.ts`
-- 保留的 combo 解析器：`src/domain/comboResolver.ts` —— 獨立的選擇合約；即時 combo 路由實作於 `open-sse/services/combo.ts`
-- 連線／模型規則聯結器：`src/domain/connectionModelRules.ts`
+- 保留的 combo 解析器：`src/domain/comboResolver.ts` — 獨立的選擇契約；線上 combo 路由實作於 `open-sse/services/combo.ts`
+- 連線／模型規則結合器：`src/domain/connectionModelRules.ts`
 - 模型可用性快照：`src/domain/modelAvailability.ts`
-- Provider 到期追蹤：`src/domain/providerExpiration.ts`
+- 提供者到期追蹤：`src/domain/providerExpiration.ts`
 - 配額快取：`src/domain/quotaCache.ts`
 - 降級狀態：`src/domain/degradation.ts`
-- 組態稽核：`src/domain/configAudit.ts`
+- 設定稽核：`src/domain/configAudit.ts`
 - OmniRoute 回應元資料建構器：`src/domain/omnirouteResponseMeta.ts`
-- 評估子系統：`src/domain/assessment/` —— 定期評估作業
+- 評估子系統：`src/domain/assessment/` — 定期評估作業
 
 ### E. 授權管線
 
 授權管線會分類每個傳入的請求，並在分派前套用適當的政策鏈。
 
 - 管線入口：`src/server/authz/pipeline.ts`
-- 請求分類器：`src/server/authz/classify.ts` — 區分公開
-  相容路由與管理路由
+- 請求分類器：`src/server/authz/classify.ts` — 區分公開相容路由與管理路由
 - 公開路由清單：`src/shared/constants/publicApiRoutes.ts`
-- 策略：`src/server/authz/policies/` — 可組合的斷言條件
-  （`requireApiKey`、`requireManagement`、`requireFreshAuth` 等）
+- 策略：`src/server/authz/policies/` — 可組合的斷言（`requireApiKey`、`requireManagement`、`requireFreshAuth` 等）
 - 標頭工具：`src/server/authz/headers.ts`
 - 斷言輔助函式：`src/server/authz/assertAuth.ts`
 - 請求上下文：`src/server/authz/context.ts`
 
-公開路由與管理路由之間是硬性邊界：agent/cooldown API 與
-provider 變更操作皆需要管理驗證（缺少時回傳 HTTP 401）。
+公開路由與管理路由之間是硬性邊界：agent/cooldown API 與 provider 變更操作需要管理驗證（若缺少則回傳 HTTP 401）。
 
 完整的路由分類規則請參閱
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md)。
 
 ### F. 工作流程 FSM 與任務感知路由器
 
-建立在組合選擇（combo selection）之上的有限狀態機驅動路由器，根據偵測到的工作流程階段
-（規劃、執行、審查）與背景任務親和性來導引流量。
+一個以有限狀態機驅動的路由器，位於組合選擇層之上，根據偵測到的工作流程階段（規劃、執行、審查）與背景任務親和性來導引流量。
 
 - 工作流程 FSM：`open-sse/services/workflowFSM.ts`
 - 任務感知路由器：`open-sse/services/taskAwareRouter.ts`
 - 背景任務偵測器：`open-sse/services/backgroundTaskDetector.ts`
 - 意圖分類器：`open-sse/services/intentClassifier.ts`
 
-FSM 的狀態轉移會回饋至 Auto Combo 的評分機制，針對背景／自動化任務
-偏向選用較便宜的模型，針對互動式規劃／審查回合則偏向較強的模型。
+FSM 的狀態轉換會輸入 Auto Combo 的評分機制，針對背景/自動化任務偏向選用較便宜的模型，針對互動式規劃/審查回合則偏向較強的模型。
 
-### G. Provider 專屬的韌性機制
+### G. 提供者專屬韌性
 
-數個 provider 附帶專屬的韌性與隱蔽（stealth）模組，這些模組依附於
-全域熔斷器／連線冷卻／模型鎖定等層級之上運作：
+數個提供者附帶專屬的韌性與隱蔽模組，這些模組依附於全域熔斷器/連線冷卻/模型鎖定層之上運作：
 
-- Antigravity 429 引擎：`open-sse/services/antigravity429Engine.ts`（輪換
-  身分、清除回應標頭，並透過 `antigravityCredits.ts`、`antigravityHeaderScrub.ts`、`antigravityHeaders.ts`、
-  `antigravityIdentity.ts`、`antigravityVersion.ts`
-  驅動點數／版本追蹤）
+- Antigravity 429 引擎：`open-sse/services/antigravity429Engine.ts`（輪換身分、清除回應標頭、透過 `antigravityCredits.ts`、`antigravityHeaderScrub.ts`、`antigravityHeaders.ts`、`antigravityIdentity.ts`、`antigravityVersion.ts` 驅動額度/版本追蹤）
 - ModelScope 配額策略：`open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH（相容通道交握）：`open-sse/services/claudeCodeCCH.ts`，
-  以及 `claudeCodeCompatible.ts`、`claudeCodeConstraints.ts`、`claudeCodeExtraRemap.ts`、
-  `claudeCodeToolRemapper.ts`
-- Claude Code 指紋塑形：`open-sse/services/claudeCodeFingerprint.ts`
-- Claude Code 混淆處理：`open-sse/services/claudeCodeObfuscation.ts`
+- Claude Code CCH（相容通道交握）：`open-sse/services/claudeCodeCCH.ts`，以及 `claudeCodeCompatible.ts`、`claudeCodeConstraints.ts`、`claudeCodeExtraRemap.ts`、`claudeCodeToolRemapper.ts`
+- Claude Code 指紋塑造：`open-sse/services/claudeCodeFingerprint.ts`
+- Claude Code 混淆：`open-sse/services/claudeCodeObfuscation.ts`
 
 完整的隱蔽操作手冊與營運指引請參閱
-`docs/security/STEALTH_GUIDE.md`（位於 git；未編譯進 `/docs`）。
+`docs/security/STEALTH_GUIDE.md`（git；未編譯進 `/docs`）。
 
-### H. Webhook、推理快取、讀取快取
+### H. Webhooks、推理快取、讀取快取
 
-- **Webhook** — 針對 provider／帳號／任務事件的外送派送。
-  - 派送器：`src/lib/webhookDispatcher.ts`
+- **Webhooks** — 用於提供者/帳號/任務事件的外送派發。
+  - 派發器：`src/lib/webhookDispatcher.ts`
   - 儲存：`webhooks` SQLite 資料表（經由 `src/lib/db/webhooks.ts`）
   - 儀表板：`/dashboard/webhooks`（訂閱、密鑰、重試歷史）
   - 事件分類與重試語義請參閱 [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md)。
-- **推理快取** — 為會輸出思考 token 的 provider（Claude、GLMT 等）
-  提供可重播的推理區塊，使連續回合可跳過重新思考。
+- **推理快取** — 為會產生思考 token 的提供者（Claude、GLMT 等）提供可重放的推理區塊，讓連續回合可以跳過重新思考。
   - 資料庫層：`src/lib/db/reasoningCache.ts`
   - 服務層：`open-sse/services/reasoningCache.ts`
-  - 重播語義請參閱 [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md)。
-- **讀取快取** — 以簽章為鍵值的短期回應快取，用於
-  合併來自有問題的上游 SDK 所發出的相同重試請求。
+  - 重放語義請參閱 [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md)。
+- **讀取快取** — 以簽章為鍵的短期回應快取，用於合併來自有問題的上游 SDK 所發出的相同重試請求。
   - 資料庫層：`src/lib/db/readCache.ts`
   - 統計端點：`GET /api/cache/stats`，儀表板位於 `/dashboard/cache`
 

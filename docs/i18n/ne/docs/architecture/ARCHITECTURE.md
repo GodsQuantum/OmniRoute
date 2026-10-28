@@ -273,67 +273,67 @@ flowchart LR
 
 - प्रवेश बिन्दु: `src/sse/handlers/chat.ts`
 - कोर अर्केस्ट्रेसन: `open-sse/handlers/chatCore.ts`
-- प्रोभाइडर एक्जिक्युसन एडाप्टरहरू: `open-sse/executors/*`
-- ढाँचा पहिचान/प्रोभाइडर कन्फिगरेसन: `open-sse/services/provider.ts`
-- मोडेल पार्स/रिजल्भ: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- खाता फलब्याक लजिक: `open-sse/services/accountFallback.ts`
+- प्रोभाइडर कार्यान्वयन एडाप्टरहरू: `open-sse/executors/*`
+- ढाँचा पत्ता लगाउने/प्रोभाइडर कन्फिग: `open-sse/services/provider.ts`
+- मोडेल पार्स/रिजोल्भ: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- खाता फलब्याक तर्क: `open-sse/services/accountFallback.ts`
 - अनुवाद रजिस्ट्री: `open-sse/translator/index.ts`
 - स्ट्रिम रूपान्तरणहरू: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- प्रयोग निकासी/सामान्यीकरण: `open-sse/utils/usageTracking.ts`
+- प्रयोग निकालना/सामान्यीकरण: `open-sse/utils/usageTracking.ts`
 - Think ट्याग पार्सर: `open-sse/utils/thinkTagParser.ts`
 - एम्बेडिङ ह्यान्डलर: `open-sse/handlers/embeddings.ts`
 - एम्बेडिङ प्रोभाइडर रजिस्ट्री: `open-sse/config/embeddingRegistry.ts`
-- छवि उत्पन्न ह्यान्डलर: `open-sse/handlers/imageGeneration.ts`
+- छवि निर्माण ह्यान्डलर: `open-sse/handlers/imageGeneration.ts`
 - छवि प्रोभाइडर रजिस्ट्री: `open-sse/config/imageRegistry.ts`
 - प्रतिक्रिया स्यानिटाइजेसन: `open-sse/handlers/responseSanitizer.ts`
 - भूमिका सामान्यीकरण: `open-sse/services/roleNormalizer.ts`
 
-सेवाहरू (व्यापारिक लजिक):
+सेवाहरू (व्यावसायिक तर्क):
 
 - खाता चयन/स्कोरिङ: `open-sse/services/accountSelector.ts`
 - सन्दर्भ जीवनचक्र व्यवस्थापन: `open-sse/services/contextManager.ts`
 - IP फिल्टर कार्यान्वयन: `open-sse/services/ipFilter.ts`
 - सत्र ट्र्याकिङ: `open-sse/services/sessionManager.ts`
-- अनुरोध डुप्लिकेसन: `open-sse/services/signatureCache.ts`
+- अनुरोध डुप्लिकेसन हटाउने: `open-sse/services/signatureCache.ts`
 - सिस्टम प्रम्प्ट इन्जेक्सन: `open-sse/services/systemPrompt.ts`
-- Thinking बजेट व्यवस्थापन: `open-sse/services/thinkingBudget.ts`
+- सोचाइ बजेट व्यवस्थापन: `open-sse/services/thinkingBudget.ts`
 - वाइल्डकार्ड मोडेल रूटिङ: `open-sse/services/wildcardRouter.ts`
-- रेट लिमिट व्यवस्थापन: `open-sse/services/rateLimitManager.ts`
+- दर सीमा व्यवस्थापन: `open-sse/services/rateLimitManager.ts`
 - सर्किट ब्रेकर: `src/shared/utils/circuitBreaker.ts`
-- सन्दर्भ ह्यान्डअफ: `open-sse/services/contextHandoff.ts` — context-relay रणनीतिका लागि ह्यान्डअफ सारांश उत्पन्न र इन्जेक्सन
-- कम्प्रेसन: `open-sse/services/compression/*` — प्रोभाइडर अनुवाद अघि सक्रिय कम्प्रेसन;
-  यसमा Caveman नियमहरू, RTK फिल्टरहरू, स्ट्याक गरिएका पाइपलाइनहरू, कम्प्रेसन कम्बोहरू, तथ्याङ्क, र प्रमाणीकरण समावेश छ
+- सन्दर्भ ह्यान्डअफ: `open-sse/services/contextHandoff.ts` — context-relay रणनीतिका लागि ह्यान्डअफ सारांश निर्माण र इन्जेक्सन
+- कम्प्रेसन: `open-sse/services/compression/*` — प्रोभाइडर अनुवादअघि पूर्वसक्रिय कम्प्रेसन;
+  Caveman नियमहरू, RTK फिल्टरहरू, स्ट्याक गरिएका पाइपलाइनहरू, कम्प्रेसन कम्बोहरू, तथ्याङ्क र प्रमाणीकरण समावेश छ
 - Codex कोटा फेचर: `open-sse/services/codexQuotaFetcher.ts` — context-relay ह्यान्डअफ निर्णयहरूका लागि Codex कोटा ल्याउँछ
-- कुलडाउन-सचेत पुनः प्रयास: `src/sse/services/cooldownAwareRetry.ts` — कन्फिगर गर्न मिल्ने `requestRetry` / `maxRetryIntervalSec` सहित प्रति-मोडेल कुलडाउन पुनः प्रयासहरू
-- सुरक्षित आउटबाउन्ड फेच: `src/shared/network/safeOutboundFetch.ts` — SSRF सुरक्षा, निजी-URL अवरोध, पुनः प्रयास, र टाइमआउट सहित सुरक्षित प्रोभाइडर/मोडेल फेच
-- आउटबाउन्ड URL सुरक्षा: `src/shared/network/outboundUrlGuard.ts` — प्रोभाइडर URL हरूमा होस्ट जाँचहरू; `src/shared/network/outboundUrlGuardPolicy.ts` ले `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, र तिनीहरूका ड्यासबोर्ड टगलहरूबाट मोड छान्छ (हेर्नुहोस् `docs/reference/ENVIRONMENT.md`)
+- कुलडाउन-सजग पुनः प्रयास: `src/sse/services/cooldownAwareRetry.ts` — कन्फिग गर्न मिल्ने `requestRetry` / `maxRetryIntervalSec` सहित प्रति-मोडेल कुलडाउन पुनः प्रयासहरू
+- सुरक्षित आउटबाउन्ड फेच: `src/shared/network/safeOutboundFetch.ts` — SSRF गार्ड, निजी-URL अवरोध, पुनः प्रयास र टाइमआउट सहित संरक्षित प्रोभाइडर/मोडेल फेच
+- आउटबाउन्ड URL गार्ड: `src/shared/network/outboundUrlGuard.ts` — प्रोभाइडर URL हरूमा होस्ट जाँचहरू; `src/shared/network/outboundUrlGuardPolicy.ts` ले `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` र तिनीहरूका ड्यासबोर्ड टगलहरूबाट मोड छान्छ (हेर्नुहोस् `docs/reference/ENVIRONMENT.md`)
 - प्रोभाइडर अनुरोध पूर्वनिर्धारितहरू: `open-sse/services/providerRequestDefaults.ts` — प्रोभाइडर-स्तरीय `maxTokens`, `temperature`, `thinkingBudgetTokens` पूर्वनिर्धारितहरू
 - GLM प्रोभाइडर स्थिरांकहरू: `open-sse/config/glmProvider.ts` — साझा GLM मोडेलहरू, कोटा URL हरू, GLMT टाइमआउट/पूर्वनिर्धारितहरू
 - Antigravity अपस्ट्रिम: `open-sse/config/antigravityUpstream.ts` — आधार URL र डिस्कभरी पथ स्थिरांकहरू
-- Codex क्लायन्ट स्थिरांकहरू: `open-sse/config/codexClient.ts` — संस्करणयुक्त user-agent र क्लायन्ट-संस्करण मानहरू
-- मोडेल एलियास सिड: `src/lib/modelAliasSeed.ts` — सुरुवातमा 30+ क्रस-प्रोक्सी डाइलेक्ट एलियासहरू सिड गर्छ
+- Codex क्लाइन्ट स्थिरांकहरू: `open-sse/config/codexClient.ts` — संस्करणयुक्त user-agent र client-version मानहरू
+- मोडेल एलियास सिड: `src/lib/modelAliasSeed.ts` — सुरुआतमा 30+ क्रस-प्रक्सी डायलेक्ट एलियासहरू सिड गर्छ
 
 डोमेन तह मोड्युलहरू:
 
 - लागत नियमहरू/बजेटहरू: `src/domain/costRules.ts`
 - फलब्याक नीति: `src/domain/fallbackPolicy.ts`
-- सुरक्षित कम्बो-रिजोल्युसन सम्झौता: `src/domain/comboResolver.ts`; लाइभ रूटिङले `open-sse/services/combo.ts` प्रयोग गर्छ
+- आरक्षित कम्बो-रिजोल्युसन सम्झौता: `src/domain/comboResolver.ts`; लाइभ रूटिङले `open-sse/services/combo.ts` प्रयोग गर्छ
 - लकआउट नीति: `src/domain/lockoutPolicy.ts`
-- सुरक्षित नीति-मूल्याङ्कन सम्झौता: `src/domain/policyEngine.ts`; अनुरोध मार्गले `src/shared/utils/apiKeyPolicy.ts` मार्फत API-key नीति र `src/sse/handlers/chat/resolvedModelPolicy.ts` मार्फत रिजल्भ गरिएको-लक्ष्य अधिकारीकरण लागू गर्छ
-- त्रुटि कोडहरू सूची: `src/shared/constants/errorCodes.ts`
+- आरक्षित नीति-मूल्याङ्कन सम्झौता: `src/domain/policyEngine.ts`; अनुरोध मार्गले `src/shared/utils/apiKeyPolicy.ts` मार्फत API-key नीति र `src/sse/handlers/chat/resolvedModelPolicy.ts` मार्फत resolved-target अधिकार कार्यान्वयन गर्छ
+- त्रुटि कोडहरूको सूची: `src/shared/constants/errorCodes.ts`
 - अनुरोध ID: `src/shared/utils/requestId.ts`
 - फेच टाइमआउट: `src/shared/utils/fetchTimeout.ts`
-- अनुरोध टेलिमेट्री: `src/shared/utils/requestTelemetry.ts`
+- अनुरोध टेलीमेट्री: `src/shared/utils/requestTelemetry.ts`
 - अनुपालन/अडिट: `src/lib/compliance/index.ts`
-- इभ्याल रनर: `src/lib/evals/evalRunner.ts`
+- मूल्याङ्कन रनर: `src/lib/evals/evalRunner.ts`
 - डोमेन स्थिति निरन्तरता: `src/lib/db/domainState.ts` — फलब्याक चेनहरू, बजेटहरू, लागत इतिहास, लकआउट स्थिति, सर्किट ब्रेकरहरूका लागि SQLite CRUD
 
 OAuth प्रोभाइडर मोड्युलहरू (`src/lib/oauth/providers/` अन्तर्गत 27 व्यक्तिगत फाइलहरू):
 
-- रजिस्ट्री इन्डेक्स: `src/lib/oauth/providers/index.ts`
+- रजिस्ट्री सूचकांक: `src/lib/oauth/providers/index.ts`
 - व्यक्तिगत प्रोभाइडरहरू: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
 - साझा सहायकहरू: `codebuddyDeviceAuth.ts` (CodeBuddy CN/intl डिभाइस फ्लो), `museCodeDeviceResponse.ts`
-- पातलो र्यापर: `src/lib/oauth/providers.ts` — व्यक्तिगत मोड्युलहरूबाट पुनः-निर्यात गर्छ
+- पातलो र्यापर: `src/lib/oauth/providers.ts` — व्यक्तिगत मोड्युलहरूबाट पुनः निर्यात गर्छ
 
 ## 5) एम्बेडेड सेवाहरू (v3.8.4)
 
@@ -358,15 +358,16 @@ OmniRoute ले स्थानीय रूपमा चलिरहेका 
 
 विस्तृत अध्ययन: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-## प्रमुख उपप्रणालीहरू (v3.8.0)
+## मुख्य उपप्रणालीहरू (v3.8.0)
 
 ### A. Auto Combo इन्जिन
 
-Auto Combo ले स्थिर combo परिभाषामा भर नपरी अनुरोधको समयमै रूटिङ लक्ष्यहरूलाई गतिशील रूपमा स्कोर गर्छ र छान्छ। यसले `auto/*` मोडेल प्रिफिक्स परिवारलाई सञ्चालन गर्छ।
+Auto Combo ले स्थिर कम्बो परिभाषामा भर नपरी अनुरोधको समयमै रूटिङ लक्ष्यहरूलाई
+गतिशील रूपमा स्कोर गर्छ र छान्छ। यसले `auto/*` मोडेल प्रिफिक्स परिवारलाई सञ्चालन दिन्छ।
 
-- इन्जिन प्रविष्टि: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- इन्जिन प्रवेश बिन्दु: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
-- लाइभ combo प्रविष्टि: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), जसलाई `src/sse/handlers/chat.ts` ले कल गर्छ
+- लाइभ कम्बो प्रवेश बिन्दु: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), `src/sse/handlers/chat.ts` द्वारा कल गरिन्छ
 - ड्यासबोर्ड: `/dashboard/auto-combo`
 - टेलिमेट्री: `auto_combo_decisions` SQLite तालिका
 
@@ -376,160 +377,159 @@ Auto Combo ले स्थिर combo परिभाषामा भर न�
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto भनेको v3.8.0 को मुख्य थप हो; `fusion` (प्यानल फ्यान-आउट + निर्णायक संश्लेषण,
+  auto v3.8.0 को प्रमुख नयाँ थप हो; `fusion` (प्यानल फ्यान-आउट + जज सिन्थेसिस,
   `open-sse/services/fusion.ts`) v3.8.36 मा नयाँ हो।
-- **१६-कारक स्कोरिङ**: कोटा, स्वास्थ्य, उल्टो लागत, उल्टो विलम्बता, कार्य-उपयुक्तता र
-  अन्य थप दस। कारकहरू र तिनका पूर्वनिर्धारित तौलहरूको आधिकारिक तालिका
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) मा रहेको छ — यहाँ फेरि दोहोर्याउँदा
-  यसलाई पुरानो हुने दोस्रो ठाउँ सिर्जना हुनेछ।
-- **भर्चुअल फ्याक्टरी** ले कुनै मिल्दो नामित combo नभएको बेला स्वस्थ सक्रिय प्रदायक
-  जडानहरूबाट उम्मेदवारहरू लिई अस्थायी combo हरू रूपान्तरित गर्छ।
+- **१६-कारक स्कोरिङ**: कोटा, स्वास्थ्य, उल्टो लागत, उल्टो विलम्बता, कार्य उपयुक्तता र
+  थप दस। कारकहरू र तिनका पूर्वनिर्धारित तौलहरूको प्रामाणिक तालिका
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) मा छ — यहाँ दोहोर्याउँदा
+  यसलाई पुरानो हुन सक्ने दोस्रो ठाउँ दिइन्छ।
+- **भर्चुअल फ्याक्टरी** ले मिल्ने नामित कम्बो नभएको बेला अस्थायी कम्बोहरू साकार रूप दिन्छ,
+  उम्मेदवारहरू स्वस्थ सक्रिय प्रोभाइडर जडानहरूबाट लिन्छ।
 - **Auto प्रिफिक्सहरू**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — प्रत्येक ट्युन गरिएको तौल प्रोफाइलले समर्थित।
+  `auto/smart`, `auto/lkgp` — प्रत्येक ट्युन गरिएको तौल प्रोफाइलद्वारा समर्थित।
 - **६ मोड प्याकहरू**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` र `chaos-mode` — ड्यासबोर्डबाट कल गर्न मिल्ने पूर्वनिर्धारित
-  तौल कन्फिगरेसनहरू। (माथिका `auto/*` प्रिफिक्सहरूसँग भ्रमित नहुनुहोस्, जुन
-  अनुरोध-समयका भेरिएन्टहरू हुन्।)
+  `reliability-first` र `chaos-mode` — ड्यासबोर्डबाट कल गर्न मिल्ने पूर्वनिर्धारित तौल
+  कन्फिगरेसनहरू। (माथिका `auto/*` प्रिफिक्सहरूसँग भ्रमित नहुनुहोस्, ती अनुरोध-समयका
+  भेरिएन्टहरू हुन्।)
 
-पूर्ण एल्गोरिदमिक विवरण (कारक सूत्रहरू, तौल ट्युनिङ) का लागि
+पूर्ण एल्गोरिदम विवरण (कारक सूत्रहरू, तौल ट्युनिङ) का लागि
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) हेर्नुहोस्।
 
-### B. Cloud एजेन्टहरू
+### B. Cloud Agents
 
-Cloud Agents ले तेस्रो-पक्षीय होस्टेड कोड-एजेन्ट प्लेटफर्महरूलाई (Codex Cloud, Devin,
-Jules) एकरूप DB-समर्थित कार्य जीवनचक्रको पछाडि समेट्छ। सबै कार्य सिर्जना/निरीक्षण
-एन्डपोइन्टहरूका लागि व्यवस्थापन प्रमाणीकरण अनिवार्य छ।
+Cloud Agents ले तेस्रो-पक्षद्वारा होस्ट गरिएका कोड-एजेन्ट प्लेटफर्महरू (Codex Cloud, Devin,
+Jules) लाई एकसमान DB-समर्थित कार्य जीवनचक्रको पछाडि लपेट्छ। सबै कार्य सिर्जना/निरीक्षण
+एन्डपोइन्टहरूमा व्यवस्थापन प्रमाणीकरण आवश्यक हुन्छ।
 
 - मोड्युल रूट: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, साथै `agents/` अन्तर्गतका प्रति-एजेन्ट उप-डाइरेक्टरीहरू)
+  `types.ts`, `db.ts`, साथै `agents/` मुनिका प्रति-एजेन्ट उपडाइरेक्टरीहरू)
 - प्रति-एजेन्ट कार्यान्वयनहरू: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- सार्वजनिक एन्डपोइन्टहरू: `/api/v1/agents/tasks/*` (list/create/get/cancel)
-- व्यवस्थापन एन्डपोइन्टहरू: `/api/cloud/*` (provisioning, status, batch)
+- सार्वजनिक एन्डपोइन्टहरू: `/api/v1/agents/tasks/*` (सूची/सिर्जना/प्राप्त/रद्द)
+- व्यवस्थापन एन्डपोइन्टहरू: `/api/cloud/*` (प्रोभिजनिङ, स्थिति, ब्याच)
 - ड्यासबोर्ड: `/dashboard/cloud-agents`
 - भण्डारण: `cloud_agent_tasks` तालिका
 
-प्रति-एजेन्ट प्रोभिजनिङ र OAuth सम्बन्धी विवरणहरूका लागि
+प्रति-एजेन्ट प्रोभिजनिङ र OAuth विशिष्टताहरूका लागि
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md) हेर्नुहोस्।
 
-### C. गार्डरेल्स
+### C. Guardrails
 
-गार्डरेल्स मोड्युल अनुरोध र प्रतिक्रियाहरूमा PII, प्रम्प्ट इन्जेक्सन र असुरक्षित
-भिजन सामग्री जाँच्ने हट-रिलोड योग्य मिडलवेयर तह हो। उल्लंघनहरूले अनुरोधलाई
-HTTP **503** र संरचित त्रुटि कोडसहित सर्ट-सर्किट गर्छन्, जसले डाउनस्ट्रिम
-कलरहरूलाई पुनः प्रयास वा शाखा गर्न दिन्छ।
+Guardrails मोड्युल एक हट-रिलोडयोग्य मिडलवेयर तह हो, जसले अनुरोध र प्रतिक्रियाहरूमा
+PII, प्रम्प्ट इन्जेक्सन र असुरक्षित भिजन सामग्रीको निरीक्षण गर्छ। उल्लंघनहरूले
+HTTP **503** र संरचित त्रुटि कोडसहित अनुरोधलाई सर्ट-सर्किट गर्छन्, जसले
+डाउनस्ट्रिम कलरहरूलाई पुनः प्रयास वा शाखा गर्न अनुमति दिन्छ।
 
 - मोड्युल रूट: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- हट रिलोड: रजिस्ट्रीले कन्फिग परिवर्तनहरूको निगरानी गर्छ र शृङ्खलालाई त्यहीँ ठाउँमा पुनः निर्माण गर्छ
-- जडान बिन्दुहरू: च्याट ह्यान्डलर प्रविष्टि, छवि निर्माण ह्यान्डलर, प्रतिक्रिया स्यानिटाइजर
-- HTTP अनुबन्ध: उल्लंघनहरू `error.code = "GUARDRAIL_VIOLATION"` सहित `503` को रूपमा देखिन्छन्
+- हट रिलोड: रजिस्ट्रीले कन्फिग परिवर्तनहरूको निगरानी गर्छ र चेनलाई त्यहीँ ठाउँमा पुनर्निर्माण गर्छ
+- जडान बिन्दुहरू: च्याट ह्यान्डलर प्रवेश, छवि जेनेरेसन ह्यान्डलर, प्रतिक्रिया स्यानिटाइजर
+- HTTP अनुबन्ध: उल्लंघनहरू `error.code = "GUARDRAIL_VIOLATION"` सहित `503` का रूपमा देखिन्छन्
 
 नियमसेट लेखन र थ्रेसहोल्ड ट्युनिङका लागि
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md) हेर्नुहोस्।
 
 ### D. डोमेन तह
 
-`src/domain/` नेमस्पेसमा डोमेन सेवाहरू र आरक्षित मूल्याङ्कन अनुबन्धहरू समावेश छन्।
-यो हरेक अनुरोधका लागि एउटै अनिवार्य नीति प्रवेश बिन्दु होइन।
+`src/domain/` नेमस्पेसमा डोमेन सेवाहरू र आरक्षित मूल्याङ्कन अनुबन्धहरू रहेका छन्।
+यो प्रत्येक अनुरोधका लागि एउटा अनिवार्य नीति प्रवेश बिन्दु होइन।
 
-लाइभ च्याट मार्गले `src/shared/utils/apiKeyPolicy.ts` बाट `enforceApiKeyPolicy()`
-कल गर्छ; समाधान भएका मोडेलहरू र combo सदस्यहरूको प्राधिकरण
+लाइभ च्याट मार्गले `src/shared/utils/apiKeyPolicy.ts` बाट `enforceApiKeyPolicy()` कल गर्छ;
+रिजल्भ गरिएका मोडेलहरू र कम्बो सदस्यहरूको अधिकारीकरण
 `src/sse/handlers/chat/resolvedModelPolicy.ts` मा कार्यान्वयन गरिएको छ।
-`src/app/api/v1/chat/completions/route.ts` मा रहेको सेल्फ-होस्टेड प्रविष्टिले पनि
-डिस्प्याच अघि API-कुञ्जी नीति लागू गर्छ। Combo समाधान `open-sse/services/combo.ts` मार्फत सञ्चालन हुन्छ।
+`src/app/api/v1/chat/completions/route.ts` मा रहेको सेल्फ-होस्टेड प्रवेश बिन्दुले पनि
+डिस्प्याचअघि API-key नीति लागू गर्छ। कम्बो रिजोल्युसन `open-sse/services/combo.ts` मार्फत चल्छ।
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` र `src/lib/container.ts`
-परीक्षण गरिएका अनुबन्धहरू हुन्, त्यो अनुरोध मार्गको वायरिङ भने होइनन्। कन्टेनरले
-नीति इन्जिन दर्ता गर्छ, तर निरीक्षण गरिएको उत्पादन अनुरोध मार्गले यसलाई समाधान गर्दैन।
-ती अनुबन्धहरू मात्र परिवर्तन गर्नाले लाइभ च्याट नीति वा combo रूटिङ परिवर्तन हुँदैन;
-तिनीहरूलाई जोड्ने वा हटाउने कुराले अलग डिजाइन निर्णय माग्छ।
+परीक्षण गरिएका अनुबन्धहरू हुन्, त्यो अनुरोध मार्गको वायरिङ होइनन्। कन्टेनरले
+नीति इन्जिन दर्ता गर्छ, तर निरीक्षण गरिएको उत्पादन अनुरोध मार्गले यसलाई रिजल्भ गर्दैन।
+ती अनुबन्धहरू मात्र बदल्दा लाइभ च्याट नीति वा कम्बो रूटिङ बदलिँदैन;
+तिनीहरूलाई जडान गर्न वा हटाउन छुट्टै डिजाइन निर्णय आवश्यक हुन्छ।
 
 - आरक्षित नीति इन्जिन: `src/domain/policyEngine.ts` — लकआउट → बजेट → फलब्याक मूल्याङ्कन
 - लागत नियमहरू: `src/domain/costRules.ts`
 - फलब्याक नीति: `src/domain/fallbackPolicy.ts`
 - लकआउट नीति: `src/domain/lockoutPolicy.ts`
 - ट्याग-आधारित रूटिङ: `src/domain/tagRouter.ts`
-- आरक्षित combo समाधानकर्ता: `src/domain/comboResolver.ts` — स्वतन्त्र चयन अनुबन्ध; लाइभ combo रूटिङ `open-sse/services/combo.ts` मा कार्यान्वयन गरिएको छ
+- आरक्षित कम्बो रिजल्भर: `src/domain/comboResolver.ts` — स्वतन्त्र छनोट अनुबन्ध; लाइभ कम्बो रूटिङ `open-sse/services/combo.ts` मा कार्यान्वयन गरिएको छ
 - जडान/मोडेल नियम जोड्ने: `src/domain/connectionModelRules.ts`
 - मोडेल उपलब्धता स्न्यापसटहरू: `src/domain/modelAvailability.ts`
-- प्रदायक समाप्ति ट्र्याकिङ: `src/domain/providerExpiration.ts`
+- प्रोभाइडर म्याद समाप्ति ट्र्याकिङ: `src/domain/providerExpiration.ts`
 - कोटा क्यास: `src/domain/quotaCache.ts`
-- अवनति अवस्था: `src/domain/degradation.ts`
-- कन्फिगरेसन लेखापरीक्षण: `src/domain/configAudit.ts`
+- अवनति स्थिति: `src/domain/degradation.ts`
+- कन्फिगरेसन अडिट: `src/domain/configAudit.ts`
 - OmniRoute प्रतिक्रिया मेटाडेटा निर्माता: `src/domain/omnirouteResponseMeta.ts`
-- मूल्याङ्कन उपप्रणाली: `src/domain/assessment/` — आवधिक मूल्याङ्कन कार्यहरू
+- मूल्याङ्कन उपप्रणाली: `src/domain/assessment/` — आवधिक मूल्याङ्कन जबहरू
 
-### E. प्राधिकरण पाइपलाइन
+### E. अधिकारीकरण पाइपलाइन
 
-प्राधिकरण पाइपलाइनले हरेक आगमन अनुरोधलाई वर्गीकृत गर्छ र डिस्प्याच गर्नुअघि
-उपयुक्त नीति शृङ्खला लागू गर्छ।
+अधिकारीकरण पाइपलाइनले प्रत्येक आगामी अनुरोध वर्गीकृत गर्छ र डिस्प्याचअघि
+उपयुक्त नीति चेन लागू गर्छ।
 
 - पाइपलाइन प्रवेश बिन्दु: `src/server/authz/pipeline.ts`
 - अनुरोध वर्गीकरणकर्ता: `src/server/authz/classify.ts` — सार्वजनिक
-  अनुकूलता रुटहरू र व्यवस्थापन रुटहरूबीच छुट्याउँछ
+  अनुकूलता रुटहरू र व्यवस्थापन रुटहरूलाई छुट्याउँछ
 - सार्वजनिक रुट सूची: `src/shared/constants/publicApiRoutes.ts`
-- नीतिहरू: `src/server/authz/policies/` — संयोज्य प्रिडिकेटहरू
+- नीतिहरू: `src/server/authz/policies/` — संयोजनयोग्य प्रेडिकेटहरू
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, आदि)
 - हेडर उपयोगिताहरू: `src/server/authz/headers.ts`
 - एसर्सन सहायक: `src/server/authz/assertAuth.ts`
 - अनुरोध सन्दर्भ: `src/server/authz/context.ts`
 
-सार्वजनिक बनाम व्यवस्थापन रुटहरू एक कठोर सीमा हुन्: agent/cooldown API हरू र
-प्रोभाइडर परिमार्जनहरूलाई व्यवस्थापन प्रमाणीकरण आवश्यक छ (छैन भने HTTP 401)।
+सार्वजनिक र व्यवस्थापन रुटहरू कडा सीमा हुन्: agent/cooldown API हरू र
+प्रोभाइडर म्युटेसनहरूलाई व्यवस्थापन प्रमाणीकरण आवश्यक हुन्छ (उपलब्ध नभए HTTP 401)।
 
-पूर्ण रुट वर्गीकरण नियमहरूको लागि,
-[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md) हेर्नुहोस्।
+पूरा रुट वर्गीकरण नियमहरूको लागि, हेर्नुहोस्
+[`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md)।
 
-### F. वर्कफ्लो FSM र टास्क-सचेत राउटर
+### F. वर्कफ्लो FSM र टास्क-अवेयर राउटर
 
-कम्बो छनोटमाथि तहबद्ध गरिएको फाइनाइट-स्टेट-मेसिन संचालित राउटर, जसले पत्ता लागेको
-वर्कफ्लो चरण (योजना, कार्यान्वयन, समीक्षा) र ब्याकग्राउन्ड-टास्क आत्मीयताको
-आधारमा ट्राफिक निर्देशन गर्छ।
+कम्बो चयनमाथि तहबद्ध रहेको फाइनाइट-स्टेट-मेसिन संचालित राउटर, जसले
+पत्ता लगाइएको वर्कफ्लो चरण (योजना, कार्यान्वयन,
+समीक्षा) र ब्याकग्राउन्ड-टास्क सम्बन्धितताका आधारमा ट्राफिक निर्देशित गर्छ।
 
 - वर्कफ्लो FSM: `open-sse/services/workflowFSM.ts`
-- टास्क-सचेत राउटर: `open-sse/services/taskAwareRouter.ts`
-- ब्याकग्राउन्ड टास्क पत्ता लगाउने: `open-sse/services/backgroundTaskDetector.ts`
-- आशय वर्गीकरणकर्ता: `open-sse/services/intentClassifier.ts`
+- टास्क-अवेयर राउटर: `open-sse/services/taskAwareRouter.ts`
+- ब्याकग्राउन्ड टास्क डिटेक्टर: `open-sse/services/backgroundTaskDetector.ts`
+- इन्टेन्ट क्लासिफायर: `open-sse/services/intentClassifier.ts`
 
-FSM ट्रान्जिसनहरू Auto Combo को स्कोरिङमा जान्छन्, जसले ब्याकग्राउन्ड/स्वचालन
-टास्कहरूका लागि सस्ता मोडेलहरूतर्फ र अन्तरक्रियात्मक योजना/समीक्षा टर्नहरूका लागि
-बलिया मोडेलहरूतर्फ झुकाव दिन्छ।
+FSM ट्रान्जिसनहरू Auto Combo को स्कोरिङमा जान्छन्, जसले ब्याकग्राउन्ड/अटोमेसन
+कार्यहरूका लागि सस्ता मोडेलहरूतर्फ र अन्तरक्रियात्मक योजना/समीक्षा
+टर्नहरूका लागि बलिया मोडेलहरूतर्फ झुकाव दिन्छ।
 
-### G. प्रोभाइडर-विशिष्ट लचिलोपन
+### G. प्रोभाइडर-विशिष्ट रिजिलियन्स
 
-धेरै प्रोभाइडरहरूले समर्पित लचिलोपन र स्टेल्थ मोड्युलहरू उपलब्ध गराउँछन् जुन
-ग्लोबल सर्किट ब्रेकर / कनेक्सन कूलडाउन / मोडेल लकआउट तहहरूमा आधारित हुन्छन्:
+केही प्रोभाइडरहरूले समर्पित रिजिलियन्स र स्टेल्थ मोड्युलहरू उपलब्ध गराउँछन्,
+जुन ग्लोबल सर्किट ब्रेकर / कनेक्सन कुलडाउन / मोडेल लकआउट तहहरूमाथि
+आधारित हुन्छन्:
 
-- Antigravity 429 इन्जिन: `open-sse/services/antigravity429Engine.ts` (परिचय
-  घुमाउँछ, प्रतिक्रिया हेडरहरू सफा गर्छ,
+- Antigravity 429 इन्जिन: `open-sse/services/antigravity429Engine.ts` (पहिचान
+  घुमाउँछ, रेस्पोन्स हेडरहरू सफा गर्छ, क्रेडिट/भर्सन ट्र्याकिङ चलाउँछ
   `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
-  `antigravityIdentity.ts`, `antigravityVersion.ts` मार्फत क्रेडिट/संस्करण
-  ट्र्याकिङ चलाउँछ)
+  `antigravityIdentity.ts`, `antigravityVersion.ts` मार्फत)
 - ModelScope कोटा नीति: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (अनुकूलता च्यानल ह्यान्डसेक): `open-sse/services/claudeCodeCCH.ts`,
+- Claude Code CCH (कम्प्याटिबिलिटी च्यानल ह्यान्डसेक): `open-sse/services/claudeCodeCCH.ts`,
   साथै `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
-- Claude Code फिंगरप्रिन्ट आकारण: `open-sse/services/claudeCodeFingerprint.ts`
-- Claude Code अब्स्क्युसेसन: `open-sse/services/claudeCodeObfuscation.ts`
+- Claude Code फिङ्गरप्रिन्ट शेपिङ: `open-sse/services/claudeCodeFingerprint.ts`
+- Claude Code अबफस्केसन: `open-sse/services/claudeCodeObfuscation.ts`
 
-पूर्ण स्टेल्थ प्लेबुक र सञ्चालन मार्गदर्शनको लागि,
-`docs/security/STEALTH_GUIDE.md` हेर्नुहोस् (git; `/docs` मा कम्पाइल गरिएको छैन)।
+पूरा स्टेल्थ प्लेबुक र सञ्चालन मार्गदर्शनको लागि, हेर्नुहोस्
+`docs/security/STEALTH_GUIDE.md` (git; `/docs` मा कम्पाइल गरिएको छैन)।
 
 ### H. वेबहुकहरू, रिजनिङ क्यास, रिड क्यास
 
-- **वेबहुकहरू** — प्रोभाइडर/खाता/टास्क घटनाहरूको लागि आउटबाउन्ड डिस्प्याच।
+- **वेबहुकहरू** — प्रोभाइडर/खाता/टास्क इभेन्टहरूको लागि आउटबाउन्ड डिस्प्याच।
   - डिस्प्याचर: `src/lib/webhookDispatcher.ts`
   - भण्डारण: `webhooks` SQLite तालिका (`src/lib/db/webhooks.ts` मार्फत)
-  - ड्यासबोर्ड: `/dashboard/webhooks` (सदस्यताहरू, सीक्रेटहरू, पुनः प्रयास इतिहास)
-  - घटना वर्गीकरण र पुनः प्रयास सेमान्टिक्सको लागि, [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md) हेर्नुहोस्।
-- **रिजनिङ क्यास** — थिंकिङ टोकनहरू उत्सर्जन गर्ने प्रोभाइडरहरूका लागि
-  पुनः प्ले गर्न मिल्ने रिजनिङ ब्लकहरू (Claude, GLMT, आदि) जसले गर्दा लगातारका
-  टर्नहरूले पुनः सोचाइ छोड्न सक्छन्।
+  - ड्यासबोर्ड: `/dashboard/webhooks` (सदस्यताहरू, गोप्यहरू, पुनः प्रयास इतिहास)
+  - इभेन्ट वर्गीकरण र पुनः प्रयास सेमान्टिक्सको लागि, हेर्नुहोस् [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md)।
+- **रिजनिङ क्यास** — थिङ्किङ टोकनहरू उत्सर्जन गर्ने प्रोभाइडरहरू (Claude, GLMT, आदि) का लागि
+  पुनः प्लेयोग्य रिजनिङ ब्लकहरू, जसले क्रमागत टर्नहरूले पुनः सोचाइ छोड्न सकून्।
   - DB तह: `src/lib/db/reasoningCache.ts`
   - सेवा तह: `open-sse/services/reasoningCache.ts`
-  - रिप्ले सेमान्टिक्सको लागि, [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md) हेर्नुहोस्।
-- **रिड क्यास** — सिग्नेचरद्वारा कुञ्जीकृत छोटो-अवधिको प्रतिक्रिया क्यास, जसको
-  प्रयोग बिग्रिएका अपस्ट्रिम SDK हरूबाट आउने उस्तै पुनः प्रयासहरूलाई गाभ्न गरिन्छ।
+  - पुनः प्ले सेमान्टिक्सको लागि, हेर्नुहोस् [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md)।
+- **रिड क्यास** — हस्ताक्षरद्वारा कुञ्जीबद्ध छोटो-अवधिको रेस्पोन्स क्यास, जुन
+  बिग्रिएका अपस्ट्रिम SDK हरूबाट आउने समान पुनः प्रयासहरूलाई समेट्न प्रयोग गरिन्छ।
   - DB तह: `src/lib/db/readCache.ts`
   - तथ्याङ्क एन्डपोइन्ट: `GET /api/cache/stats`, ड्यासबोर्ड `/dashboard/cache` मा
 

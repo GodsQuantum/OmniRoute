@@ -265,72 +265,73 @@ Ngalaba nlekọta:
 - Ngwugwu nhazi: `src/app/api/sync/bundle` (GET, snapshot nke ntọala/ndị na-enye ọrụ/ngwakọta/igodo nke ETag kewara dịka ụdị)
 - WebSocket: `src/app/api/v1/ws/route.ts` — onye njikwa Upgrade maka ndị ahịa WS dakọtara na OpenAI
 
-## 2) SSE + Isi Ntụgharị Asụsụ
+## 2) SSE + Ọkpụrụkpụ Nsụgharị
 
-Modyul ebubu isi:
+Modul ọwa isi:
 
-- Mbido: `src/sse/handlers/chat.ts`
-- Nhazi isi: `open-sse/handlers/chatCore.ts`
-- Ndị adapter arụmọrụ onye na-enye ọrụ: `open-sse/executors/*`
-- Nchọpụta format/nhazi onye na-enye ọrụ: `open-sse/services/provider.ts`
-- Nkewa/nkedozi model: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- Lojik fallback akaụntụ: `open-sse/services/accountFallback.ts`
-- Ndebanye ntụgharị asụsụ: `open-sse/translator/index.ts`
-- Mgbanwe ọwa: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
-- Mwepụ/nhazi ojiji: `open-sse/utils/usageTracking.ts`
-- Ọgụgụ nkewa tag think: `open-sse/utils/thinkTagParser.ts`
+- Ọnụ mbata: `src/sse/handlers/chat.ts`
+- Nhazi ọkpụrụkpụ: `open-sse/handlers/chatCore.ts`
+- Adapter ọrụ ndị na-enye ọrụ: `open-sse/executors/*`
+- Nchọpụta usoro/ntọala ndị na-enye ọrụ: `open-sse/services/provider.ts`
+- Nyocha/Idozi model: `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- Lojik nkwado akaụntụ: `open-sse/services/accountFallback.ts`
+- Ndebanye nsụgharị: `open-sse/translator/index.ts`
+- Mgbanwe stream: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
+- Nmwepụ/Nhazi ojiji: `open-sse/utils/usageTracking.ts`
+- Ihe nkọwa tag think: `open-sse/utils/thinkTagParser.ts`
 - Onye njikwa embedding: `open-sse/handlers/embeddings.ts`
-- Ndebanye onye na-enye embedding: `open-sse/config/embeddingRegistry.ts`
-- Onye njikwa mmepụta onyonyo: `open-sse/handlers/imageGeneration.ts`
-- Ndebanye onye na-enye onyonyo: `open-sse/config/imageRegistry.ts`
+- Ndebanye ndị na-enye embedding: `open-sse/config/embeddingRegistry.ts`
+- Onye njikwa ịmepụta onyonyo: `open-sse/handlers/imageGeneration.ts`
+- Ndebanye ndị na-enye onyonyo: `open-sse/config/imageRegistry.ts`
 - Nhicha nzaghachi: `open-sse/handlers/responseSanitizer.ts`
-- Nhazi ọrụ: `open-sse/services/roleNormalizer.ts`
+- Nhazi role: `open-sse/services/roleNormalizer.ts`
 
-Ọrụ (lojik azụmahịa):
+Ọrụ (lojik azụmaahịa):
 
-- Nhọrọ/inwego akaụntụ: `open-sse/services/accountSelector.ts`
-- Nlekọta okirikiri ndụ ọnọdụ: `open-sse/services/contextManager.ts`
-- Nmejuputa nzacha IP: `open-sse/services/ipFilter.ts`
-- Nsochi oge: `open-sse/services/sessionManager.ts`
-- Nwegpụ nkwakọrịta arịrị: `open-sse/services/signatureCache.ts`
-- Ntinye prompt usoro: `open-sse/services/systemPrompt.ts`
-- Nlekọta mmefu echiche: `open-sse/services/thinkingBudget.ts`
-- Nduzi model wildcard: `open-sse/services/wildcardRouter.ts`
-- Nlekọta oke ọnụego: `open-sse/services/rateLimitManager.ts`
-- Ihe nkwụsị ọwa: `src/shared/utils/circuitBreaker.ts`
-- Nnyefe ọnọdụ: `open-sse/services/contextHandoff.ts` — mmepụta nchịkọta nnyefe na ntinye maka atụmatụ context-relay
-- Mkpakọ: `open-sse/services/compression/*` — mkpakọ n'ihu tupu ntụgharị asụsụ onye na-enye ọrụ; gụnyere iwu Caveman, nzacha RTK, pipelines e kwuru n'otu n'elu otu, ngwakọta mkpakọ, ọnụọgụ, na nkwenye
-- Ọnweta quota Codex: `open-sse/services/codexQuotaFetcher.ts` — na-eweta quota Codex maka mkpebi nnyefe context-relay
-- Nkwaghari maara oge jụrụ: `src/sse/services/cooldownAwareRetry.ts` — nkwaghari oge jụrụ kwa model nke a na-enwe ike ịhazi site na `requestRetry` / `maxRetryIntervalSec`
-- Inweta ọpụpụ echekwara: `src/shared/network/safeOutboundFetch.ts` — inweta onye na-enye ọrụ/model e nchedo nke nwere nchekwa SSRF, mgbochi URL nkeonwe, nkwaghari, na oge nkwụsị
-- Nchekwa URL ọpụpụ: `src/shared/network/outboundUrlGuard.ts` — nyocha host na URL ndị onye na-enye ọrụ; `src/shared/network/outboundUrlGuardPolicy.ts` na-ahọrọ mode site na `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, na ntụgharị dashboard ha (lee `docs/reference/ENVIRONMENT.md`)
-- Ihe ndabere arịrị onye na-enye ọrụ: `open-sse/services/providerRequestDefaults.ts` — ihe ndabere `maxTokens`, `temperature`, `thinkingBudgetTokens` nke ọkwa onye na-enye ọrụ
-- Ihe nkịtị onye na-enye GLM: `open-sse/config/glmProvider.ts` — model GLM e kesara n'otu, URL quota, oge nkwụsị/ihe ndabere GLMT
-- Upstream Antigravity: `open-sse/config/antigravityUpstream.ts` — URL isi na ihe nkịtị ụzọ nchọpụta
-- Ihe nkịtị client Codex: `open-sse/config/codexClient.ts` — ụkpụrụ user-agent na client-version nwere nsonaazụ
-- Mkpụrụ alias model: `src/lib/modelAliasSeed.ts` — na-akụ mkpụrụ alias dialect cross-proxy karịrị 30 na mmalite
+- Nhọrọ/Ngụkọta akaụntụ: `open-sse/services/accountSelector.ts`
+- Njikwa okirikiri ndụ context: `open-sse/services/contextManager.ts`
+- Ịmanye nzacha IP: `open-sse/services/ipFilter.ts`
+- Nsochi session: `open-sse/services/sessionManager.ts`
+- Mwepụ nkọpụta arịrị: `open-sse/services/signatureCache.ts`
+- Ntinye prompt sistemụ: `open-sse/services/systemPrompt.ts`
+- Njikwa ego echiche: `open-sse/services/thinkingBudget.ts`
+- Ịkpụzi ụzọ wildcard model: `open-sse/services/wildcardRouter.ts`
+- Njikwa ókè ọnụego: `open-sse/services/rateLimitManager.ts`
+- Circuit breaker: `src/shared/utils/circuitBreaker.ts`
+- Nnyefe context: `open-sse/services/contextHandoff.ts` — ịmepụta na ntinye nchịkọta nnyefe maka atụmatụ context-relay
+- Mgbakọ: `open-sse/services/compression/*` — mgbakọ nke a na-eme tupu nsụgharị ndị na-enye ọrụ;
+  gụnyere iwu Caveman, nzacha RTK, pipeline e tụkwasịrị, combo mgbakọ, ọnụọgụ, na nkwenye
+- Ihe na-eweta quota Codex: `open-sse/services/codexQuotaFetcher.ts` — na-eweta quota Codex maka mkpebi nnyefe context-relay
+- Ịgbalị ọzọ nke maara cooldown: `src/sse/services/cooldownAwareRetry.ts` — ịgbalị ọzọ cooldown maka model ọ bụla nwere `requestRetry` / `maxRetryIntervalSec` nke a haziri
+- Inweta ọpụpụ nchebe: `src/shared/network/safeOutboundFetch.ts` — inweta ndị na-enye ọrụ/model nke echekwara site na nche SSRF, igbochi URL nzuzo, ịgbalị ọzọ, na oge ọgwụgwụ
+- Nche URL ọpụpụ: `src/shared/network/outboundUrlGuard.ts` — nyocha host na URL ndị na-enye ọrụ; `src/shared/network/outboundUrlGuardPolicy.ts` na-ahọrọ ọnọdụ site na `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS`, na mgbanye ha na dashboard (lee `docs/reference/ENVIRONMENT.md`)
+- Ndabara arịrị ndị na-enye ọrụ: `open-sse/services/providerRequestDefaults.ts` — ndabara `maxTokens`, `temperature`, `thinkingBudgetTokens` na ọkwa ndị na-enye ọrụ
+- Ihe mgbanweghị ndị na-enye GLM: `open-sse/config/glmProvider.ts` — model GLM ekeresị, URL quota, oge ọgwụgwụ/ndabara GLMT
+- Upstream Antigravity: `open-sse/config/antigravityUpstream.ts` — ihe mgbanweghị URL isi na ụzọ nchọpụta
+- Ihe mgbanweghị client Codex: `open-sse/config/codexClient.ts` — ụkpụrụ user-agent na client-version nwere nọmba ụdị
+- Mkpụrụ aha ọzọ model: `src/lib/modelAliasSeed.ts` — na-akụ aha ọzọ dialect cross-proxy karịa 30 na mmalite
 
-Modyul oyi domain:
+Modul ọkwa domain:
 
-- Iwu/mmefu ọnụahịa: `src/domain/costRules.ts`
-- Atụmatụ fallback: `src/domain/fallbackPolicy.ts`
-- Nkwekọrịta nkedozi combo e debere: `src/domain/comboResolver.ts`; nduzi dị ndụ na-eji `open-sse/services/combo.ts`
-- Atụmatụ mkpochi: `src/domain/lockoutPolicy.ts`
-- Nkwekọrịta ntule atụmatụ e debere: `src/domain/policyEngine.ts`; ụzọ arịrị na-emejuputa atụmatụ API-key site na `src/shared/utils/apiKeyPolicy.ts` na nkwenye e kpebirị site na `src/sse/handlers/chat/resolvedModelPolicy.ts`
-- Ndekọ koodu njehie: `src/shared/constants/errorCodes.ts`
+- Iwu ọnụego/mmefu: `src/domain/costRules.ts`
+- Amụma nkwado: `src/domain/fallbackPolicy.ts`
+- Nkwekọrịta idozi combo e chebeere: `src/domain/comboResolver.ts`; ịkpụzi ụzọ dị ndụ na-eji `open-sse/services/combo.ts`
+- Amụma mkpochi: `src/domain/lockoutPolicy.ts`
+- Nkwekọrịta ntụle amụma e chebeere: `src/domain/policyEngine.ts`; ụzọ arịrị na-amanye amụma API-key site na `src/shared/utils/apiKeyPolicy.ts` na ikike ebumnuche edoziri site na `src/sse/handlers/chat/resolvedModelPolicy.ts`
+- Ndepụta koodu njehie: `src/shared/constants/errorCodes.ts`
 - ID arịrị: `src/shared/utils/requestId.ts`
-- Oge nkwụsị inweta: `src/shared/utils/fetchTimeout.ts`
+- Oge ọgwụgwụ inweta: `src/shared/utils/fetchTimeout.ts`
 - Telemetry arịrị: `src/shared/utils/requestTelemetry.ts`
-- Nrubata/nchịkwa: `src/lib/compliance/index.ts`
-- Ọgba ọsọ ntule: `src/lib/evals/evalRunner.ts`
-- Nchekwa ọnọdụ domain: `src/lib/db/domainState.ts` — SQLite CRUD maka yinye fallback, mmefu, akụkọ ọnụahịa, ọnọdụ mkpochi, ndị nkwụsị ọwa
+- Ịrubi isi/Nyocha: `src/lib/compliance/index.ts`
+- Onye na-agba ọsọ eval: `src/lib/evals/evalRunner.ts`
+- Nchekwa ọnọdụ domain: `src/lib/db/domainState.ts` — SQLite CRUD maka ụdọ nkwado, mmefu, akụkọ ọnụego, ọnọdụ mkpochi, circuit breaker
 
-Modyul onye na-enye OAuth (faịlụ 27 nkeonwe n'okpuru `src/lib/oauth/providers/`):
+Modul ndị na-enye OAuth (faịlụ nkeonwe 27 dị n'okpuru `src/lib/oauth/providers/`):
 
-- Nhazi ndebanye: `src/lib/oauth/providers/index.ts`
+- Index ndebanye: `src/lib/oauth/providers/index.ts`
 - Ndị na-enye nkeonwe: `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
-- Ndị enyemaka e kesara n'otu: `codebuddyDeviceAuth.ts` (ọwa ngwaọrụ CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
-- Mkpọkọta dị mkpa: `src/lib/oauth/providers.ts` — na-ebupụ ọzọ site na modyul nkeonwe
+- Ndị enyemaka ekeresị: `codebuddyDeviceAuth.ts` (ọwa ngwaọrụ CodeBuddy CN/intl), `museCodeDeviceResponse.ts`
+- Ihe mkpọtara dị fechaa: `src/lib/oauth/providers.ts` — na-ebupụta ọzọ site na modul nkeonwe ndị ahụ
 
 ## 5) Ọrụ Ndị Agbakwunyere (v3.8.4)
 
@@ -355,178 +356,180 @@ nke a na-akpọ **ọrụ ndị agbakwunyere**. E tinyere ise: 9Router, CLIProxy
 
 Nkọwa miri emi: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-## Isi Ngalaba Sistemụ (v3.8.0)
+## Isi Ngalaba Usoro (v3.8.0)
 
-### A. Auto Combo Engine
+### A. Injinia Auto Combo
 
-Auto Combo na-agụ akara ma na-ahọrọ ebe ntuzi ụzọ lekwasịrị anya n'oge arịrịọ ọ bụla, kama ịdabere na nkọwa combo kwụsie ike. Ọ bụ ya na-akwalite ezinụlọ prefix model `auto/*`.
+Auto Combo na-enye akara ma na-ahọrọ ebumnuche nhazi n'oge arịrịọ ka ọ na-aga n'ihu, kama ịdabere na nkọwa combo kwụsie ike. Ọ bụ isi ike nke ezinụlọ prefix ụdị `auto/*`.
 
-- Ọnụ ụzọ engine: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
+- Ọnụ ụzọ injinia: `open-sse/services/autoCombo/` (`autoComboEngine.ts`,
   `scoringEngine.ts`, `virtualFactory.ts`, `modePacks.ts`)
 - Ọnụ ụzọ combo dị ndụ: `open-sse/services/combo.ts` (`handleComboChat`, `resolveComboTargets`), nke `src/sse/handlers/chat.ts` na-akpọ
 - Dashboard: `/dashboard/auto-combo`
-- Telemetry: tebulu SQLite `auto_combo_decisions`
+- Telemetry: tebụl SQLite `auto_combo_decisions`
 
-Ike ndị bụ isi:
+Ike ndị dị mkpa:
 
-- **20 usoro ntuzi ụzọ** (priority, weighted, fill-first, round-robin, P2C, random,
+- **20 atụmatụ nhazi** (priority, weighted, fill-first, round-robin, P2C, random,
   least-used, cost-optimized, reset-aware, reset-window, headroom, quota-weighted,
   strict-random, **auto**, lkgp, context-optimized, cache-optimized, context-relay, **fusion**,
   pipeline) —
-  auto bụ mgbakwụnye kacha pụta ìhè na v3.8.0; `fusion` (mgbasa panel + nchịkọta site n'aka onye ikpe,
-  `open-sse/services/fusion.ts`) bụ ihe ọhụrụ na v3.8.36.
-- **Ịgụ akara ihe 16**: quota, health, inverse cost, inverse latency, task fit na
-  ihe iri ndị ọzọ. Tebulu a nabatara nke ihe ndị ahụ na arọ ndabara ha nọ na
-  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — ịkọwa ya ọzọ ebe a ga-enye
-  ya ebe nke abụọ ebe ọ ga-esị gara ochie.
-- **Ụlọ ọrụ mebere (virtual factory)** na-emepụta combo nwa oge mgbe ọ nweghị combo
-  nwere aha dabara ya, na-eweta ndị a ga-ahọrọ site na njikọ provider dị ndụ nke dị mma.
+  auto bụ mgbakwunye isi na v3.8.0; `fusion` (mgbasa ozi nye panel + nchịkọta ikpe onye ọka,
+  `open-sse/services/fusion.ts`) bụ ohuru na v3.8.36.
+- **Nrụgo ihe 16**: quota, ahụike, ọnụ ahịa tụgharịrị, nkwụsịtụ tụgharịrị, ịdabara ọrụ na
+  ihe iri ndị ọzọ. Tebụl izizi nke ihe ndị ahụ na arọ ha ndabere bi na
+  [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md) — ịkọwa ya ọzọ ebe a ga-enye ya
+  ebe nke abụọ ebe ọ ga-agharịa.
+- **Ọrụ mebere (Virtual factory)** na-emepụta combo nke dị n'obere oge mgbe combo aha
+  enwetara kwekọrọ adịghị, na-eweta ndị ga-eso site na njikọ ndị na-enye dị mma ma
+  na-arụ ọrụ.
 - **Prefix Auto**: `auto/coding`, `auto/cheap`, `auto/fast`, `auto/offline`,
-  `auto/smart`, `auto/lkgp` — nke ọ bụla n'ime ha nwere profaịlụ arọ a haziri nke ọma n'azụ ya.
-- **6 ngwugwu ọnọdụ**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
-  `reliability-first` na `chaos-mode` — nhazi arọ e debeere tupu oge eruo nke a nwere ike
-  ịkpọ site na dashboard. (Ekwesịghị ịjikọ ha na prefix `auto/*` dị n'elu, nke bụ
-  ụdị nke a na-akpọtụrụ n'oge arịrịọ.)
+  `auto/smart`, `auto/lkgp` — nke ọ bụla nwere profaịlụ arọ a haziri nke ọma
+  na-akwado ya.
+- **Mode packs 6**: `ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`,
+  `reliability-first` na `chaos-mode` — nhazi arọ e debeere nke a nwere ike ịkpọ site na
+  dashboard. (A gaghị ejiko ha ọnụ na prefix `auto/*` dị n'elu, nke bụ ụdị nke
+  oge arịrịọ.)
 
-Maka nkọwa algorithm zuru ezu (usoro ngụ ihe ndị ahụ, ịhazi arọ), lee
+Maka nkọwa algorithm zuru ezu (usoro ihe, nhazi arọ), lee
 [`docs/routing/AUTO-COMBO.md`](../routing/AUTO-COMBO.md).
 
-### B. Cloud Agents
+### B. Ndị Nnọchi Cloud
 
-Cloud Agents na-akpọchịkọta nyiwe code-agent ndị ọzọ na-achịkwa (Codex Cloud, Devin,
-Jules) n'azụ otu usoro ndụ ọrụ nke DB na-akwado. Njedebe ọ bụla nke ịmepụta/ịlele
-ọrụ chọrọ nyocha nchịkwa.
+Ndị Nnọchi Cloud na-ejikọta usoro nnọchi koodu nke ndị ọzọ na-akwado (Codex Cloud, Devin,
+Jules) n'azụ otu ụdọ ndụ ọrụ nke DB na-akwado nke hà n'otu. Ọnụ ụzọ njedebe niile maka
+ịmepụta/nlele ọrụ chọrọ nkwenye njirimara nlekọta.
 
 - Mgbọrọgwụ modul: `src/lib/cloudAgent/` (`baseAgent.ts`, `registry.ts`, `api.ts`,
-  `types.ts`, `db.ts`, gbakwụnyere ndekọ nke agent ọ bụla n'okpuru `agents/`)
-- Mmejuputa nke agent ọ bụla: `agents/codex/`, `agents/devin/`, `agents/jules/`
-- Njedebe ọha: `/api/v1/agents/tasks/*` (list/create/get/cancel)
-- Njedebe nchịkwa: `/api/cloud/*` (provisioning, status, batch)
+  `types.ts`, `db.ts`, gbakwunyere ndekọ obodo nke nnọchi ọ bụla n'okpuru `agents/`)
+- Nhazi nke nnọchi ọ bụla: `agents/codex/`, `agents/devin/`, `agents/jules/`
+- Ọnụ ụzọ njedebe ọha: `/api/v1/agents/tasks/*` (list/create/get/cancel)
+- Ọnụ ụzọ njedebe nlekọta: `/api/cloud/*` (provisioning, status, batch)
 - Dashboard: `/dashboard/cloud-agents`
-- Nchekwa: tebulu `cloud_agent_tasks`
+- Nchekwa: tebụl `cloud_agent_tasks`
 
-Maka provisioning nke agent ọ bụla na nkọwa OAuth pụrụ iche, lee
+Maka nkwadebe nke nnọchi ọ bụla na nkọwa OAuth, lee
 [`docs/frameworks/CLOUD_AGENT.md`](../frameworks/CLOUD_AGENT.md).
 
-### C. Guardrails
+### C. Ihe Mgbochi
 
-Modul guardrails bụ akwa middleware nke a nwere ike ibugharị ọzọ na-ekpo ọkụ (hot-reloadable),
-nke na-enyocha arịrịọ na nzaghachi maka PII, prompt injection, na ọdịnaya ọhụrụ
-na-adịghị nchebe. Nkwạrịyụ ọ bụla na-akwụsị arịrịọ ozigbo site na HTTP **503** gbakwụnyere
-koodu njehie e haziri nke ọma, na-enye ndị na-akpọ n'ihu ohere ịnwa ọzọ ma ọ bụ gaa n'ụzọ ọzọ.
+Modul ihe mgbochi bụ oyiwa middleware nke a nwere ike ibudata ọzọ na-ekpo ọkụ nke
+na-enyocha arịrịọ na nzaghachi maka PII, ntinye nkwa (prompt injection), na ọdịnaya anya
+na-adịghị nchebe. Mmebi na-ebelata arịrịọ ahụ ngwa ngwa site na HTTP **503** tinyere koodu
+njehie haziri nke ọma, na-enye ndị na-akpọ n'ala ohere ịnwale ọzọ ma ọ bụ ịkwasa.
 
 - Mgbọrọgwụ modul: `src/lib/guardrails/` (`base.ts`, `registry.ts`, `piiMasker.ts`,
   `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`)
-- Hot reload: registry na-ele anya mgbanwe nhazi ma na-ewulite yinye ahụ ọzọ n'otu ebe ahụ
-- Ebe njikọ: ọnụ ụzọ nke onye na-edozi arịrịọ chat, onye na-edozi ọmepụta ihe oyiyi, onye na-asachapụ nzaghachi
-- Nkwekọrịta HTTP: nkwạrịyụ na-apụta ìhè dị ka `503` nwere `error.code = "GUARDRAIL_VIOLATION"`
+- Ibudata ọzọ na-ekpo ọkụ: ndekọ na-eleba anya mgbanwe nhazi ma na-ewugharị agbụ ahụ n'ebe ahụ
+- Ebe njikọ: ọnụ ụzọ onye njikwa chat, onye njikwa ịmepụta ihe oyiyi, onye na-ehicha nzaghachi
+- Nkwekọrịta HTTP: mmebi na-apụta dị ka `503` na `error.code = "GUARDRAIL_VIOLATION"`
 
-Maka ide usoro iwu na ịhazi ókè, lee
+Maka ịde iwu na nhazi ọkwa, lee
 [`docs/security/GUARDRAILS.md`](../security/GUARDRAILS.md).
 
-### D. Otu Domain
+### D. Oyiwa Domain
 
-Otu aha `src/domain/` nwere ọrụ domain na nkwekọrịta ntule e debeere.
-Ọ bụghị otu ọnụ ụzọ iwu a na-amanye arịrịọ ọ bụla ịgafe.
+Ngalaba aha `src/domain/` nwere ọrụ domain na nkwekọrịta nchọpụta e debeere.
+Ọ bụghị otu ọnụ ụzọ amụma a chọrọ n'ike maka arịrịọ ọ bụla.
 
 Ụzọ chat dị ndụ na-akpọ `enforceApiKeyPolicy()` site na
-`src/shared/utils/apiKeyPolicy.ts`; e haziri nkwenye nke model e dochapụtara na ndị otu combo
-n'ime `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ọnụ ụzọ self-hosted
-dị na `src/app/api/v1/chat/completions/route.ts` na-amanye iwu API-key tupu izipu arịrịọ.
-Nchoputa combo na-agafe site na `open-sse/services/combo.ts`.
+`src/shared/utils/apiKeyPolicy.ts`; e mere nkwenye nke ụdị edochapụtara na ndị otu combo
+na `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ọnụ ụzọ nke ebe nrụọrụ weebụ nke onwe na
+`src/app/api/v1/chat/completions/route.ts` na-amanye amụma igodo API tupu
+iziga. Nchọpụta combo na-aga site na `open-sse/services/combo.ts`.
 
 `src/domain/policyEngine.ts`, `src/domain/comboResolver.ts` na `src/lib/container.ts`
-ka na-anọgide dị ka nkwekọrịta e nwanyere, ọ bụghị eriri njikọ nke ụzọ arịrịọ ahụ.
-Container na-edebanye engine iwu ahụ, ma ụzọ arịrịọ mmepụta a nyochaghị anaghị edozi ya.
-Ịgbanwe nanị nkwekọrịta ndị ahụ agaghị agbanwe iwu chat dị ndụ ma ọ bụ ntuzi ụzọ combo;
+ka dị ka nkwekọrịta a nwalechara, ọ bụghị okirikiri nke ụzọ arịrịọ ahụ. Ngwongwo
+na-edebanye injinia amụma, ma ụzọ arịrịọ mmepụta a nyochachara anaghị edochapụ ya.
+Ịgbanwe nkwekọrịta ndị ahụ naanị agaghị agbanwe amụma chat dị ndụ ma ọ bụ nhazi combo;
 ijiko ha ma ọ bụ iwepụ ha chọrọ mkpebi imewe dị iche.
 
-- Engine iwu e debeere: `src/domain/policyEngine.ts` — ntule lockout → budget → fallback
+- Injinia amụma e debeere: `src/domain/policyEngine.ts` — nchọpụta mgbochi → mmefu ego → nkwado ọzọ
 - Iwu ọnụ ahịa: `src/domain/costRules.ts`
-- Iwu fallback: `src/domain/fallbackPolicy.ts`
-- Iwu lockout: `src/domain/lockoutPolicy.ts`
-- Ntuzi ụzọ site na tag: `src/domain/tagRouter.ts`
-- Onye na-edozi combo e debeere: `src/domain/comboResolver.ts` — nkwekọrịta nhọrọ kwụrụ onwe ya; ntuzi ụzọ combo dị ndụ ka a haziri n'ime `open-sse/services/combo.ts`
-- Onye na-ejikọ iwu njikọ/model: `src/domain/connectionModelRules.ts`
-- Nseta ọnọdụ ịdịnọ model: `src/domain/modelAvailability.ts`
-- Nlekota oge provider na-agwụ: `src/domain/providerExpiration.ts`
+- Amụma nkwado ọzọ: `src/domain/fallbackPolicy.ts`
+- Amụma mgbochi: `src/domain/lockoutPolicy.ts`
+- Nhazi dabere na mkpado: `src/domain/tagRouter.ts`
+- Onye nchọpụta combo e debeere: `src/domain/comboResolver.ts` — nkwekọrịta nhọrọ nkwụ ọtọ; nhazi combo dị ndụ e mebere na `open-sse/services/combo.ts`
+- Onye na-ejikọ iwu njikọ/ụdị: `src/domain/connectionModelRules.ts`
+- Nseta ihuenyo nke ịdị n'otu ụdị: `src/domain/modelAvailability.ts`
+- Nsochi ịgwụ oge ndị na-enye: `src/domain/providerExpiration.ts`
 - Cache quota: `src/domain/quotaCache.ts`
 - Ọnọdụ mbelata: `src/domain/degradation.ts`
 - Nyocha nhazi: `src/domain/configAudit.ts`
-- Onye na-arụ metadata nzaghachi OmniRoute: `src/domain/omnirouteResponseMeta.ts`
-- Ngalaba ntule: `src/domain/assessment/` — ọrụ ntule kwa oge
+- Onye na-ewu metadata nzaghachi OmniRoute: `src/domain/omnirouteResponseMeta.ts`
+- Ngalaba nchọpụta: `src/domain/assessment/` — ọrụ nchọpụta oge
 
-### E. Pipeline Nkwenye Ikike
+### E. Ọwa Nkwenye
 
-Pipeline nkwenye ikike na-ekewa arịrịọ ọ bụla na-abata ma na-etinye
-yinye iwu kwesịrị ekwesị tupu izipu ya.
+Ọwa nkwenye na-ekewa arịrịọ ọ bụla na-abata ma na-etinye agbụ amụma kwesịrị ekwesị
+tupu iziga.
 
 - Ọnụ ụzọ pipeline: `src/server/authz/pipeline.ts`
-- Onye nkewa arịrịọ: `src/server/authz/classify.ts` — na-ekewa ụzọ
-  mmekọrịta ọha na ụzọ ijikwa
+- Ihe nkewa arịrịọ: `src/server/authz/classify.ts` — na-ekewa ụzọ ndị dabara
+  na ọha na ụzọ njikwa
 - Ndepụta ụzọ ọha: `src/shared/constants/publicApiRoutes.ts`
-- Iwu: `src/server/authz/policies/` — predicates enwere ike ijikọtara
+- Iwu ndị: `src/server/authz/policies/` — predicates ndị a na-arụkọ ọrụ
   (`requireApiKey`, `requireManagement`, `requireFreshAuth`, wdg.)
 - Ngwá ọrụ header: `src/server/authz/headers.ts`
-- Ngwá ọrụ nkwenye: `src/server/authz/assertAuth.ts`
+- Nkwado assertion: `src/server/authz/assertAuth.ts`
 - Ọnọdụ arịrịọ: `src/server/authz/context.ts`
 
-Ụzọ ọha na ụzọ ijikwa bụ ókè siri ike: API agent/cooldown na mgbanwe
-provider chọrọ njirimara ijikwa (HTTP 401 ọ bụrụ na ọ dịghị).
+Ụzọ ọha megide nke njikwa bụ ókè siri ike: API agent/cooldown na
+mgbanwe provider chọrọ nkwenye njikwa (HTTP 401 ọ bụrụ na ọ dịghị).
 
-Maka iwu nhazi ụzọ zuru ezu, lee
+Maka iwu niile gbasara nkewa ụzọ, lee
 [`docs/architecture/AUTHZ_GUIDE.md`](./AUTHZ_GUIDE.md).
 
-### F. Workflow FSM na Router nke maara ọrụ
+### F. Workflow FSM na Task-Aware Router
 
-Router nke finite-state-machine na-akwalite nke e tinyere n'elu nhọrọ combo iji
-duzi okirikiri dabere na ọkwa workflow achọpụtara (nhazi, ọrụ,
+Router nke finite-state-machine na-achịkwa, nke e tinyere n'elu nhọrọ combo iji
+duzie okporo ụzọ dabere na ọkwa workflow achọpụtara (atụmatụ, ịrụ ọrụ,
 nyocha) na mmasị ọrụ ndabere.
 
 - Workflow FSM: `open-sse/services/workflowFSM.ts`
-- Router nke maara ọrụ: `open-sse/services/taskAwareRouter.ts`
-- Onye nchọpụta ọrụ ndabere: `open-sse/services/backgroundTaskDetector.ts`
-- Onye nkewa ebumnuche: `open-sse/services/intentClassifier.ts`
+- Task-aware router: `open-sse/services/taskAwareRouter.ts`
+- Ihe achọpụta ọrụ ndabere: `open-sse/services/backgroundTaskDetector.ts`
+- Ihe nkewa ebumnuche: `open-sse/services/intentClassifier.ts`
 
-Mgbanwe FSM na-abanye na ịgụta Auto Combo, na-akpọtụrụ na ụdị dị ọnụ ala
-maka ọrụ ndabere/akpaghị aka na ụdị siri ike maka tọn
-nhazi/nyocha mmekọrịta.
+Mgbanwe FSM na-abanye na nnyocha Auto Combo, na-akpali akpali n'ụdị dị ọnụ ala
+maka ọrụ ndabere/akpaghasị na n'ụdị siri ike maka ntụgharị ndị
+atụmatụ/nyocha mmekọrịta.
 
-### G. Ịlanarị pụrụiche Provider
+### G. Ịdịgide kpọmkwem maka Provider
 
-Ọtụtụ providers na-ebufe modul ịlanarị na nzuzo pụrụiche nke na-adabere na
-ogo circuit breaker zuru ụwa ọnụ / connection cooldown / model lockout:
+Ụfọdụ provider na-ebu modul ịdịgide na nzuzo pụrụ iche nke na-adabere n'elu
+akwa circuit breaker / cooldown njikọ / mgbochi ụdị zuru ụwa:
 
 - Injin Antigravity 429: `open-sse/services/antigravity429Engine.ts` (na-atụgharị
-  njirimara, na-ehicha response headers, na-akwalite ịsochi credits/version site na
+  njirimara, na-ekpochapụ header nzaghachi, na-akwalite nsochi credits/version site na
   `antigravityCredits.ts`, `antigravityHeaderScrub.ts`, `antigravityHeaders.ts`,
   `antigravityIdentity.ts`, `antigravityVersion.ts`)
 - Iwu quota ModelScope: `open-sse/services/modelscopePolicy.ts`
-- Claude Code CCH (Nnabata ọwa mmekọrịta): `open-sse/services/claudeCodeCCH.ts`,
-  tinyere `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
+- Claude Code CCH (Compatibility Channel Handshake): `open-sse/services/claudeCodeCCH.ts`,
+  gbakwunyere `claudeCodeCompatible.ts`, `claudeCodeConstraints.ts`, `claudeCodeExtraRemap.ts`,
   `claudeCodeToolRemapper.ts`
 - Ịkpụzi fingerprint Claude Code: `open-sse/services/claudeCodeFingerprint.ts`
 - Nzuzo Claude Code: `open-sse/services/claudeCodeObfuscation.ts`
 
-Maka akwụkwọ nzuzo zuru ezu na ntuziaka ọrụ, lee
-`docs/security/STEALTH_GUIDE.md` (git; agụnyeghị ya na `/docs`).
+Maka akwụkwọ nzuzo zuru oke na nduzi ọrụ, lee
+`docs/security/STEALTH_GUIDE.md` (git; enwetaghị ya n'ime `/docs`).
 
 ### H. Webhooks, Reasoning Cache, Read Cache
 
-- **Webhooks** — ịziga ọzí maka ihe omume provider/account/ọrụ.
-  - Onye ọziga: `src/lib/webhookDispatcher.ts`
-  - Nchekwa: tebụl `webhooks` SQLite (site na `src/lib/db/webhooks.ts`)
-  - Dashboard: `/dashboard/webhooks` (ndebanye aha, ihe nzuzo, akụkọ ịnwale ọzọ)
-  - Maka nhazi ihe omume na nkọwa ịnwale ọzọ, lee [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
-- **Reasoning Cache** — blocks reasoning enwere ike ịkpọgharịa maka providers na-emepụta
-  tokens echiche (Claude, GLMT, wdg.) ka tọn ndị na-esote wee gafe iche echiche ọzọ.
-  - Ogo DB: `src/lib/db/reasoningCache.ts`
-  - Ogo ọrụ: `open-sse/services/reasoningCache.ts`
-  - Maka nkọwa ịkpọgharịa, lee [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
-- **Read Cache** — cache nzaghachi dị mkpirikpi nke e ji signature dị ka igodo ma
-  jiri ya belata ịnwale ọzọ yiri otu sitere na upstream SDKs mebiri emebi.
-  - Ogo DB: `src/lib/db/readCache.ts`
-  - Stats endpoint: `GET /api/cache/stats`, dashboard na `/dashboard/cache`
+- **Webhooks** — nzipụ n'èzí maka ihe omume provider/akaụntụ/ọrụ.
+  - Onye nkesa: `src/lib/webhookDispatcher.ts`
+  - Ebe nchekwa: tebụl SQLite `webhooks` (site na `src/lib/db/webhooks.ts`)
+  - Dashboard: `/dashboard/webhooks` (ndebanye, nzuzo, akụkọ ịgbalị ọzọ)
+  - Maka taxonomy ihe omume na nkọwa ịgbalị ọzọ, lee [`docs/frameworks/WEBHOOKS.md`](../frameworks/WEBHOOKS.md).
+- **Reasoning Cache** — ngalaba ezi uche nke a nwere ike igba ọzọ maka provider ndị na-emepụta
+  token echiche (Claude, GLMT, wdg.) ka ntụgharị ndị sochirinụ nwee ike ịwụla ịtụgharị echiche ọzọ.
+  - Akwa DB: `src/lib/db/reasoningCache.ts`
+  - Akwa ọrụ: `open-sse/services/reasoningCache.ts`
+  - Maka nkọwa ịgba ọzọ, lee [`docs/routing/REASONING_REPLAY.md`](../routing/REASONING_REPLAY.md).
+- **Read Cache** — cache nzaghachi nke na-adịru nwa oge nke a na-edobe n'akara aka ma jiri ya
+  belata ịgbalị ọzọ yiri ibe ya site na SDK ndị mebiri emebi.
+  - Akwa DB: `src/lib/db/readCache.ts`
+  - Ọnụ ụzọ ọnụ ọgụgụ: `GET /api/cache/stats`, dashboard na `/dashboard/cache`
 
 ## 3) Oyi akwa Nchekwa Na-adịgide Adịgide
 
