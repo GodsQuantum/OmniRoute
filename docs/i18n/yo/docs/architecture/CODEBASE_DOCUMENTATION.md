@@ -71,49 +71,49 @@ OmniRoute/
 
 ---
 
-## 3. `src/` — Àplíkéṣọnì Next.js
+## 3. `src/` — Ìṣàmúlò Next.js
 
 ```
 src/
-├── app/                  Àwọn ojú-ìwé App Router + àwọn ọ̀nà API
-├── lib/                  Àwọn láìbrárì pàtàkì (DB, auth, OAuth, skills, memory, …)
-├── domain/               Ìpele agbègbè mímọ́ (policy, fallback, cost, lockout, …)
-├── server/               Àwọn modulu ti server nìkan (authz, cors, auth)
-├── shared/               Àwọn irúfẹ́, ògbóni, ìfìdájọ́múlò, àdéhùn, ohun-èlò (tó dáa láàrin ààlà)
-├── mitm/                 Àwọn olùrànlọ́wọ́ proxy man-in-the-middle fún ìdápọ̀ CLI
-├── models/               Metadata àwoṣe ìbílẹ̀ / ìlorúkọmìíràn
+├── app/                  Àwọn ojú-ìwé App Router + àwọn ipa API
+├── lib/                  Àwọn ẹ̀kọ́ ìpìlẹ̀ pàtàkì (DB, auth, OAuth, skills, memory, …)
+├── domain/               Apá domain mímọ́ (policy, fallback, cost, lockout, …)
+├── server/               Àwọn mọ́dùìlì ojú-ìpèsè nìkan (authz, cors, auth)
+├── shared/               Àwọn irú, àwọn àìdá, ìfọwọ́sí, àwọn àdéhùn, àwọn ohun èlò (ààbò kọjá ààlà)
+├── mitm/                 Àwọn olùrànwọ́ aṣojú man-in-the-middle fún ìsopọ̀ CLI
+├── models/               Metadata mọ́dẹ́lì àdúgbò / ṣíṣe àlìásì
 ├── sse/                  Àwọn olùṣàkóso SSE àtijọ́ tí wọ́n ṣì wà lábẹ́ src/ (kì í ṣe open-sse/)
-├── store/                Àwọn ibi ìtọ́jú ipò ẹ̀gbẹ́ alábààmúlò
-├── middleware/           Àwọn ohun-èlò middleware ìpele ọ̀nà (kì í ṣe middleware gbogbogbo Next.js)
-├── scripts/              Àwọn ìkọ̀wé inú-igi tí kóòdù app lè kó wọlé
-├── types/                Àwọn irúfẹ́ TS àyíká àti àpínpín
-├── i18n/                 Àwọn àkópọ̀ èdè-ìbílẹ̀
-├── instrumentation.ts    Hook instrumentation Next.js
+├── store/                Àwọn ibi ìpamọ́ ipò ní ẹ̀gbẹ́ olùmúlò
+├── middleware/           Àwọn ohun èlò middleware ti ìpele ipa (kì í ṣe middleware àgbáyé Next.js)
+├── scripts/              Àwọn script inú igi kóòdù tí kóòdù app lè ṣe àgbéwọlé
+├── types/                Àwọn irú TS àyíká àti tí a pín
+├── i18n/                 Àwọn àkópọ̀ èdè
+├── instrumentation.ts    Ìkọ̀ instrumentation ti Next.js
 ├── instrumentation-node.ts
-└── proxy.ts              Olùrànlọ́wọ́ bootstrap proxy ìpele-òkè
+└── proxy.ts              Olùrànwọ́ ìbẹ̀rẹ̀ proxy ti ìpele gíga jùlọ
 ```
 
 ### 3.1 `src/app/` — App Router
 
-App Router ń fi UI dashboard àti HTTP API gbangba/ìṣàkóso han.
-**Kò sí middleware gbogbogbo** — ìdíwọ́ ni wọ́n ń ṣe ní ọ̀nà-kọ̀ọ̀kan.
+App Router ń fi ojú-ìwé dashboard àti API HTTP ti gbogbo ènìyàn/ìṣàkóso hàn.
+**Kò sí middleware àgbáyé** — a ń ṣe ìdábọ̀ fún ipa kọ̀ọ̀kan.
 
-Àwọn apá ìpele-òkè lábẹ́ `src/app/`:
+Àwọn ẹ̀ka ti ìpele gíga jùlọ lábẹ́ `src/app/`:
 
-| Ọ̀nà                                                                           | Ète                                               |
-| ----------------------------------------------------------------------------- | ------------------------------------------------- |
-| `api/`                                                                        | Gbogbo àwọn ọ̀nà HTTP API (wo ìtúpalẹ̀ rẹ̀ ní isàlẹ̀) |
-| `a2a/`                                                                        | Ópin A2A JSON-RPC 2.0 (`POST /a2a`)               |
-| `.well-known/agent.json/`                                                     | Ìwé ìṣàwárí A2A Agent Card                        |
-| `(dashboard)/`                                                                | UI dashboard (ẹgbẹ́ ọ̀nà, kò sí àṣáájú-ọ̀nà URL)     |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Àwọn ìṣàn ìfàṣẹsí                                 |
-| `landing/`                                                                    | Ojú-ìwé ìpolówó/ìbùdó                             |
-| `docs/`                                                                       | Olùfihàn àwọn ìwé API tí a fi sínú                |
-| `status/`, `maintenance/`, `offline/`                                         | Àwọn ojú-ìwé ìṣiṣẹ́                                |
-| `privacy/`, `terms/`                                                          | Àwọn ojú-ìwé òfin                                 |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Àwọn ojú-ìwé àṣìṣe dídúró                         |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Àwọn ààlà àṣìṣe/ìgbéwọ̀lé framework                |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Shell gbìtì                                       |
+| Ọ̀nà                                                                           | Ète                                           |
+| ----------------------------------------------------------------------------- | --------------------------------------------- |
+| `api/`                                                                        | Gbogbo àwọn ọ̀nà API HTTP (wo ìpínyà nísàlẹ̀)   |
+| `a2a/`                                                                        | Ojú-ìparí A2A JSON-RPC 2.0 (`POST /a2a`)      |
+| `.well-known/agent.json/`                                                     | Ìwé ìwárí Káàdì Aṣojú A2A                     |
+| `(dashboard)/`                                                                | Ojú-ìwé dashboard (ẹgbẹ́ ọ̀nà, kò sí ìpilẹ̀ URL) |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Àwọn ìṣàn ìjẹ́rìí                              |
+| `landing/`                                                                    | Ojú-ìwé marketing/ìbẹ̀rẹ̀                       |
+| `docs/`                                                                       | Olùwò ìwé API tí ó wà nínú                    |
+| `status/`, `maintenance/`, `offline/`                                         | Àwọn ojú-ìwé ìṣiṣẹ́                            |
+| `privacy/`, `terms/`                                                          | Àwọn ojú-ìwé òfin                             |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Àwọn ojú-ìwé àṣìṣe tí ó dúró                  |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Àwọn ààlà àṣìṣe/ìgbéwọlé ti framework         |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Shell ìpilẹ̀                                   |
 
 #### 3.1.1 `src/app/(dashboard)/dashboard/` — Àwọn ojú-ìwé UI
 
@@ -121,10 +121,10 @@ App Router ń fi UI dashboard àti HTTP API gbangba/ìṣàkóso han.
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`, pẹ̀lú `page.tsx` gbìtì, `HomePageClient.tsx`,
+`translator`, `usage`, `webhooks`, pẹ̀lú `page.tsx` ìpilẹ̀, `HomePageClient.tsx`,
 `BootstrapBanner.tsx`.
 
-#### 3.1.2 `src/app/api/` — Àwọn ẹgbẹ́ API ìpele-òkè
+#### 3.1.2 `src/app/api/` — Àwọn ẹgbẹ́ API ti ìpele gíga jùlọ
 
 ```
 src/app/api/
@@ -177,49 +177,49 @@ src/app/api/
 ├── token-health/
 ├── translator/
 ├── tunnels/
-├── services/   Ìṣàkóso iṣẹ́ tí a fi sínú (9router, cliproxy) — LOCAL_ONLY
+├── services/   Ìṣàkóso iṣẹ́ tí ó wà nínú (9router, cliproxy) — LOCAL_ONLY
 ├── upstream-proxy/
 ├── usage/
-├── v1/         API gbangba tó bá OpenAI mu
-├── v1beta/     Ìbáṣepọ̀ onírú Gemini
+├── v1/         API ti gbogbo ènìyàn tí ó bá OpenAI mu
+├── v1beta/     Ìbámu irú Gemini
 ├── version-manager/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — Ìṣàkóso àwọn Iṣẹ́ tí a Fi Sínú
+#### 3.1.2a `src/app/api/services/` — Ìṣàkóso Àwọn Iṣẹ́ tí ó wà nínú
 
-Àwọn ọ̀nà fún ìfisọ́rọ̀, ìbẹ̀rẹ̀, ìdáwọ́dúró, àti ṣíṣe àyẹ̀wò 9Router àti CLIProxyAPI.
-A ti pín gbogbo àwọn ọ̀nà náà sí **LOCAL_ONLY** (loopback nìkan, òfin líle #17) nítorí pé wọ́n
-lè pe `npm install` àti bẹ̀rẹ̀ àwọn ìlànà ọmọ.
+Àwọn ọ̀nà fún gbígbé wọlé, bíbẹ̀rẹ̀, dídúró, àti mímójútó 9Router àti CLIProxyAPI.
+Gbogbo àwọn ọ̀nà ni a pín sí **LOCAL_ONLY** (loopback nìkan, òfin líle #17) nítorí pé
+wọ́n lè pe `npm install` àti bímọ àwọn ìlànà ọmọ.
 
 ```
 src/app/api/services/
 ├── 9router/
-│   ├── _lib.ts             getOrInitSupervisor() ohun-ìrànlọ́wọ́
+│   ├── _lib.ts             olùrànlọ́wọ́ getOrInitSupervisor()
 │   ├── install/route.ts    POST — npm install nípasẹ̀ execFile
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
 │   ├── update/route.ts     POST — npm install ẹ̀yà tuntun
-│   ├── rotate-key/route.ts POST — ṣẹ̀dá koko API tuntun + tún bẹ̀rẹ̀
-│   ├── status/route.ts     GET  — lọ́wọ́lọ́wọ́ + ipò DB + metadata ẹ̀yà
-│   └── auto-start/route.ts POST — yí àsìá auto_start padà
+│   ├── rotate-key/route.ts POST — ṣe kọ́kọ́rọ́ API tuntun + restart
+│   ├── status/route.ts     GET  — ipò lọ́wọ́lọ́wọ́ + DB + metadata ẹ̀yà
+│   └── auto-start/route.ts POST — yí ìpamọ́ auto_start
 ├── cliproxy/
-│   ├── _lib.ts             getOrInitSupervisor() ohun-ìrànlọ́wọ́
+│   ├── _lib.ts             olùrànlọ́wọ́ getOrInitSupervisor()
 │   ├── install/route.ts    POST — npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
 │   ├── update/route.ts     POST — npm install ẹ̀yà tuntun
-│   ├── status/route.ts     GET  — lọ́wọ́lọ́wọ́ + ipò DB + metadata ẹ̀yà
-│   └── auto-start/route.ts POST — yí àsìá auto_start padà
+│   ├── status/route.ts     GET  — ipò lọ́wọ́lọ́wọ́ + DB + metadata ẹ̀yà
+│   └── auto-start/route.ts POST — yí ìpamọ́ auto_start
 └── [name]/
-    └── logs/route.ts       GET  — ìparí log SSE (tí gbogbo àwọn iṣẹ́ ń pín)
+    └── logs/route.ts       GET  — ìparí log SSE (gbogbo service ń pín)
 ```
 
-UI dashboard tó dógba:
-`src/app/(dashboard)/dashboard/providers/services/` — ojú-ìwé táàbù méjì (CLIProxyAPI + 9Router).
-Aṣojú ẹ̀yìn (reverse proxy) fún UI tí a fi sínú 9Router:
+UI dashboard tó bá a mu:
+`src/app/(dashboard)/dashboard/providers/services/` — ojú-ìwé tab méjì (CLIProxyAPI + 9Router).
+Reverse proxy fún UI tí a fi sínú 9Router:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
 Ìwádìí jinlẹ̀: `docs/frameworks/EMBEDDED-SERVICES.md`
@@ -228,91 +228,93 @@ Aṣojú ẹ̀yìn (reverse proxy) fún UI tí a fi sínú 9Router:
 
 ```
 v1/
-├── accounts/[id]/                       ìwádìí àkáǹtì
-├── agents/tasks/[id]/, agents/tasks/    àwọn endpoint iṣẹ́ irú A2A
-├── api/                                 àwọn ohun-ìrànlọ́wọ́ API inú-iṣẹ́ tí a ṣílẹ̀ lábẹ́ v1/api
+├── accounts/[id]/                       wíwá account
+├── agents/tasks/[id]/, agents/tasks/    àwọn endpoint iṣẹ́-ṣíṣe oníwọ̀n A2A
+├── api/                                 àwọn olùrànlọ́wọ́ API inú tí a fi hàn lábẹ́ v1/api
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
-├── chat/completions/                    Chat Completions (endpoint pàtàkì náà)
-├── completions/                         ìkikún ọ̀rọ̀ àtijọ́
+├── chat/completions/                    Chat Completions (endpoint pàtàkì)
+├── completions/                         completions ọ̀rọ̀ ẹ̀rọ ìgbà àtijọ́
 ├── embeddings/                          Embeddings
 ├── files/[id]/, files/                  Files API
-├── _helpers/                            àwọn ohun-ìrànlọ́wọ́ route ajọ̀pín (kò sí URL gbangba)
-├── images/{edits, generations}/         ìṣẹ̀dá àwòrán + àtúnṣe
-├── issues/                              àwọn endpoint ohun-ìrànlọ́wọ́ ìpínlẹ̀
-├── management/{proxies}/                àwọn route agbègbè ìṣàkóso nínú v1
-├── messages/{count_tokens}/             ìbámu messages ọ̀nà Anthropic
-├── models/                              àkójọ àwọn model (`route.ts`, `catalog.ts`)
-├── moderations/                         ìṣàkóso
-├── music/                               ìṣẹ̀dá orin
+├── _helpers/                            àwọn olùrànlọ́wọ́ route tí a pín (kò sí URL gbangba)
+├── images/{edits, generations}/         Ìdá àwòrán + àtúnṣe
+├── issues/                              àwọn endpoint olùrànlọ́wọ́ triage
+├── management/{proxies}/                àwọn route ìṣàkóso inú v1
+├── messages/{count_tokens}/             ìbámu àwọn ìfiránṣẹ́ ọ̀nà Anthropic
+├── models/                              àkójọ model (`route.ts`, `catalog.ts`)
+├── moderations/                         Moderation
+├── music/                               Ìdá orin
 ├── providers/[provider]/                àwọn iṣẹ́ fún olùpèsè kọ̀ọ̀kan
-├── quotas/{check}                       àwọn ìdánwò quota
-├── registered-keys/                     ìṣàkóso koko tí a forúkọsilẹ̀
-├── rerank/                              àtúntò ipò
-├── responses/[...path]/                 OpenAI Responses API (gbígbà gbogbo-ohun)
-├── search/                              ìwádìí ayélujára
-├── videos/                              ìṣẹ̀dá fídíò
-├── ws/                                  afárá WebSocket
-└── route.ts                             olùṣe àtọ́ka
+├── quotas/{check}                       àyẹ̀wò quota
+├── registered-keys/                     ìṣàkóso kọ́kọ́rọ́ tí a forúkọsílẹ̀
+├── rerank/                              Àtúntò ipò
+├── responses/[...path]/                 OpenAI Responses API (gba gbogbo)
+├── search/                              Wíwá lórí wẹ́ẹ̀bù
+├── videos/                              Ìdá fídíò
+├── ws/                                  Afárá WebSocket
+└── route.ts                             Olùṣàkóso index
 ```
 
-Gbogbo fáìlì route ń tẹ̀lé ìlànà kannáá:
+Gbogbo fáìlì route ń tẹ̀lé àpẹẹrẹ kanna:
 
 ```
-Route → CORS preflight → ìfàṣẹsí ara Zod → ìfìdí-múlò àṣàyàn
-      → ìmúlò ètò koko API → ìfí-ọwọ́-lẹ́ olùṣe (open-sse)
+Route → Ìṣàyẹ̀wò ṣáájú CORS → Ìjẹ́rìí ara Zod → auth àṣàyàn
+      → Ìmúṣẹ́ ìlànà kọ́kọ́rọ́ API → ìfúnniṣẹ́ handler (open-sse)
 ```
 
-`v1beta/` ni ojú ìbámu ọ̀nà Gemini (ohun-ìdí tẹ̀pẹ̀lẹ̀ kan tí ó ń yí i padà sí ọ̀nà iṣẹ́ `open-sse/handlers/` kannáá).
+`v1beta/` ni ojú-ìbámu ọ̀nà Gemini (wrapper tinrin tó ń túmọ̀ sí pipeline
+`open-sse/handlers/` kanna).
 
-### 3.2 `src/lib/` — Àwọn ìkàwé pàtàkì
+### 3.2 `src/lib/` — Àwọn ẹ̀ka-ìkàwé kókó
 
-Máa kó data, sync, OAuth, skill, memory, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ wá nípasẹ̀ àwọn module wọ̀nyí ní gbogbo ìgbà. Tábìlì náà ṣàkópọ̀ àwọn àkópọ̀-fáìlì gidi àti àwọn fáìlì ipò-òkè tó ṣe pàtàkì.
+Máa gbé data, sync, OAuth, skill, memory, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ wọlé nígbà gbogbo nípasẹ̀ àwọn
+module wọ̀nyí. Tábìlì náà ń ṣe àkójọpọ̀ àwọn directory gangan àti àwọn fáìlì pàtàkì tó wà ní ìpele gíga.
 
-| Modulu            | Iṣẹ́ rẹ̀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | Olùpín ilana A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (ọgbọ́n mẹ́fà: ìtúpalẹ̀ owó, ìròyìn ilera, ìṣàwárí olùpèsè, ìṣàkóso quota, ìtọ́sọ́nà ọlọ́gbọ́n, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `api/`            | Àwọn olùrànlọ́wọ́ API abẹ́lé: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `auth/`           | `managementPassword.ts` (ìtúnṣètò ọ̀rọ̀-ìbánisọ̀rọ̀ / hashing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `batches/`        | Iṣẹ́ OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `catalog/`        | Ìmúbáṣepọ̀ àkàtàlọ́ọ̀ OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `cloudAgent/`     | Ìforúkọsílẹ̀ àgẹ́ńtì àwọ̀ sánmọ̀: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `combos/`         | Àwọn olùrànlọ́wọ́ ìyànju àdarapọ̀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `compliance/`     | Àyẹ̀wò + àyẹ̀wò olùpèsè: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `config/`         | Eré ìsopọ̀ ìtòlẹ́sẹ̀ẹ́sẹ̀ àkókò ṣíṣe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `db/`             | Àwọn modulu agbègbè SQLite (wo §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `display/`        | Àwọn olùrànlọ́wọ́ UI/àfihàn tí àwọn ìdáhùn API ń lò                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `embeddings/`     | Ìforúkọsílẹ̀ iṣẹ́ embeddings                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `env/`            | Ìgbéwọlé env + ìwádìí-inú                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `evals/`          | Àkókò ṣíṣe eval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `jobs/`           | Àwọn iṣẹ́ ẹ̀yìn-ìwòràn (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `memory/`         | Ìrántí tó pẹ́: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `oauth/`          | Àwọn modulu olùpèsè OAuth/gbigbe wọlé (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, àti `services/`, `utils/`, àti `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                |
-| `plugins/`        | Olùgbéjáde plugin (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `providerModels/` | Ìgbésí ayé àwọn awoṣe tí wọ́n ń ṣàkóso: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `providers/`      | Àwọn olùrànlọ́wọ́ olùpèsè: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `resilience/`     | `settings.ts` — àwọn ètò fún circuit breaker, cooldown, lockout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `runtime/`        | Àwárí àwọn ẹ̀yà runtime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `services/`       | Ìlànà àwọn iṣẹ́ tí a fi sínú: `ServiceSupervisor.ts` (olùṣàkóso child-process gbogbogbo pẹ̀lú ìtìpadé iṣẹ́, ring buffer, olùṣàyẹ̀wò ìlera), `bootstrap.ts` (ìforúkọsílẹ̀ ipele-ilànà àti ìbẹ̀rẹ̀ fúnra rẹ̀), `registry.ts` (máàpù ohun èlò → olùṣàkóso), `apiKey.ts` (ibùdó kóko AES-256-GCM), `modelSync.ts` (ìmùbáṣepọ̀ awoṣe àkókò-àkókò), `ringBuffer.ts` (buffer àkọsílẹ̀ rọ́bọ́tó 5 MB), `healthCheck.ts` (ìwádìí ìlera HTTP), `types.ts`, `embedWsProxy.ts` (proxy WebSocket), `installers/{ninerouter,cliproxy}.ts`. Wo `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                                            |
-| `agentSkills/`    | Kàtálógì Agent Skills + olùṣẹ̀dá: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → kọ sílẹ̀ `skills/{id}/SKILL.md`), `openapiParser.ts` (yọ àwọn REST endpoints kúrò nínú àlàyé OpenAPI), `cliRegistryParser.ts` (yọ àwọn subcommands CLI kúrò nínú bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Àwọn REST routes (`/api/agent-skills/*`), àwọn ohun èlò MCP (`omniroute_agent_skills_*`), àti A2A skill `list-capabilities` ni ó ń lo ó. Wo [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
-| `skills/`         | Ìlànà Skill: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, pẹ̀lú `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `spend/`          | `batchWriter.ts` (bọ́ọ́fà ìkọ̀wé-sẹ́yìn)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `sync/`           | `bundle.ts`, `tokens.ts` (Ìmúṣiṣẹ́pọ̀ Cloud)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `system/`         | Àwọn olùrànlọ́wọ́ ìpele-ẹ̀rọ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `translator/`     | Ìsopọ̀ onítumọ̀ ìpele-òkè (ó ránṣẹ́ sí inú `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `usage/`          | Ìṣirò lílò: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `versionManager/` | Ìmúdójúìwọ̀n fúnraarẹ̀ + ìfilọlẹ̀ ẹ̀yà                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `ws/`             | Àfárá WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `zed-oauth/`      | Ìṣàn OAuth ti olùtúnṣe Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Mọ́dùlù            | Ìdí                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a2a/`            | Sáfà ìlànà A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (àwọn ọgbọ́n iṣẹ́ mẹ́fà: ìtúpalẹ̀ iye owó, ìròyìn ìlera, ìwárí olùpèsè, ìṣàkóso ààlà iye, ìpín ọ̀nà tó lọ́gbọ́n, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `api/`            | Àwọn olùrànlọ́wọ́ API inú: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `auth/`           | `managementPassword.ts` (àtúntò ọ̀rọ̀ ìpamọ́ / ṣíṣe háṣì)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `batches/`        | Iṣẹ́ API Batches OpenAI (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `catalog/`        | Ìmúdọ́gba kátálọ́gì OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `cloudAgent/`     | Forúkọsilẹ́ aṣojú kọ̀m̀pútà àwólá: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `combos/`         | Àwọn ohun ìrànwọ́ fún yíyanjú àkópọ̀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `compliance/`     | Ìwádìí + ìwádìí olùpèsè: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `config/`         | Ohun ìsopọ̀ ìṣètò àsìkò ìṣiṣẹ́                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `db/`             | Àwọn mọ́dúlù ìpínlàndilẹ̀ SQLite (wo §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `display/`        | Àwọn ohun ìrànwọ́ UI/ìfihàn tí àwọn ìdáhùn API ń lò                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `embeddings/`     | Forúkọsilẹ́ iṣẹ́ ìfisínú                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `env/`            | Ìgbéwọlé env + àyẹ̀wò inú                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `evals/`          | Àkókò ìṣiṣẹ́ àyẹ̀wò                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `jobs/`           | Àwọn iṣẹ́ ẹ̀yìn (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `memory/`         | Ìrántí àìparẹ́: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `oauth/`          | Àwọn mọ́dùùlì olùpèsè OAuth/import (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, pẹ̀lú `services/`, `utils/`, àti `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                             |
+| `plugins/`        | Olùgbéwọlé àfikún (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `providerModels/` | Ìgbà-ìgbésí àwòṣe tí a ń ṣàkóso: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `providers/`      | Àwọn olùrànlọ́wọ́ olùpèsè: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `resilience/`     | `settings.ts` — àwọn ìtòlẹ́sẹẹsẹ fún circuit breaker, cooldown, àti lockout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `runtime/`        | Ìṣàwárí àwọn ẹ̀yà ìgbà ìṣiṣẹ́                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `services/`       | Ìlàna àwọn iṣẹ́ àdììtẹ̀ (embedded): `ServiceSupervisor.ts` (alábòjútó ìlànà ọmọ-ìlànà gbogbogbò pẹ̀lú ìtìì ìṣiṣẹ́, ring buffer, olùyẹ̀wò ìlera), `bootstrap.ts` (ìforúkọsílẹ̀ ní ìpele ìlànà àti ìbẹ̀rẹ̀ aládàáṣiṣẹ́), `registry.ts` (àwòrán ìsopọ̀ irinṣẹ́ → alábòjútó), `apiKey.ts` (ibùdó kọ́kọ́rọ́ AES-256-GCM), `modelSync.ts` (ìsopọ̀ àwòṣe lẹ́ẹ̀kọ̀ọ̀kan), `ringBuffer.ts` (ring buffer àkọsílẹ̀ 5 MB), `healthCheck.ts` (ìwádìí ìlera HTTP), `types.ts`, `embedWsProxy.ts` (aṣojú WebSocket), `installers/{ninerouter,cliproxy}.ts`. Wo `docs/frameworks/EMBEDDED-SERVICES.md`                                                                                                                              |
+| `agentSkills/`    | Àkójọpọ̀ àti olùdá Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → ń kọ `skills/{id}/SKILL.md`), `openapiParser.ts` (ń yọ àwọn ojú-ipẹ̀kún REST kúrò nínú ìwé OpenAPI), `cliRegistryParser.ts` (ń yọ àwọn ìpàṣẹ-abẹ́lẹ̀ CLI kúrò nínú bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Àwọn ipa-ọ̀nà REST (`/api/agent-skills/*`), àwọn irinṣẹ́ MCP (`omniroute_agent_skills_*`), àti ọ̀nà A2A `list-capabilities` ló ń lò ó. Wo [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | Ìlàna ọ̀nà-ìṣe: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, àti `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `spend/`          | `batchWriter.ts` (búfà ìkọsílẹ̀-lẹ́yìn)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `sync/`           | `bundle.ts`, `tokens.ts` (Ìṣàkópọ̀ Cloud)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `system/`         | Àwọn olùrànlọ́wọ́ ìpele ẹ̀rọ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `translator/`     | Ìsopọ̀ onítumọ̀ ìpele gíga (ó ń darí sí `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `usage/`          | Ìṣirò ìlò: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `versionManager/` | Ìmúdójúìwọ̀n aládàáṣe + àkọsílẹ̀ ẹ̀yà                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ws/`             | Afárá WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `zed-oauth/`      | Ìṣàn OAuth olóòtú Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
-Àwọn fáìlì ìpele-òkè nínú `src/lib/`:
+Àwọn fáìlì ìpele gíga nínú `src/lib/`:
 
-- A ti yọ fáìlì barrel `localDb.ts` àtijọ́ kúrò — àwọn amùlò máa ń gbe àwọn modúlì `src/lib/db/*` pàtó wọlé ní tààrà.
+- A ti yọ `localDb.ts` barrel àtijọ́ kúrò — àwọn olùlò ń gba àwọn module `src/lib/db/*` pàtàkì wọlé tààrà.
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -326,14 +328,14 @@ Máa kó data, sync, OAuth, skill, memory, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ wá
 
 #### 3.2.1 `src/lib/db/`
 
-Ìbùdó dátà SQLite ẹyọ-kan-ṣoṣo (`getDbInstance()` nínú `core.ts`, journaling WAL).
-**Má ṣe kọ SQL rárá (raw) nínú àwọn route tàbí handler** — nípasẹ̀ àwọn modúlì wọ̀nyí ni kí gbogbo rẹ̀ ṣe lọ.
+Dátábéèsì SQLite kan ṣoṣo (`getDbInstance()` nínú `core.ts`, WAL journaling).
+**Má ṣe kọ SQL àìsàn nínú àwọn route tàbí handler rárá** — gba inú àwọn module wọ̀nyí kọjá.
 
-![Àkótán sókìmù ibùdó dátà (àwọn tábìlì pàtàkì tí a yan)](../diagrams/exported/db-schema-overview.svg)
+![Àkópọ̀ ètò dátábéèsì (àwọn tábìlì pàtàkì tí a yàn)](../diagrams/exported/db-schema-overview.svg)
 
 > Orísun: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-Àwọn modúlì àgbègbè (ọ̀kọ̀ọ̀kan wọ́n ní tábìlì kan tàbí ọ̀pọ̀): `apiKeys.ts`, `backup.ts`,
+Àwọn module ẹ̀ka-ìpín (ọ̀kọ̀ọ̀kan wọn ni tábìlì kan tàbí jù bẹ́ẹ̀ lọ): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -347,9 +349,10 @@ Máa kó data, sync, OAuth, skill, memory, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ wá
 `syncTokens.ts`, `tierConfig.ts`, `upstreamProxy.ts`, `versionManager.ts`,
 `webhooks.ts`.
 
-`migrations/` ní àwọn fáìlì `.sql` mẹ́ẹ̀ẹ́dọ́gọ́fà mẹ́jọ (168) tó ní ẹ̀yà dídí (idempotent, transactional), `migrationRunner.ts` sì ni yóò ṣe wọ́n nígbà ìbẹ̀rù ẹ̀rọ (boot).
+`migrations/` ní àwọn fáìlì `.sql` 168 tí a ṣe ẹ̀yà (idempotent, transactional), a sì ń ṣiṣẹ́ wọn
+nípasẹ̀ `migrationRunner.ts` nígbà ìbẹ̀rẹ̀.
 
-Àwọn tábìlì tí a dá káàkiri àwọn migration náà (123 lapapọ̀):
+Àwọn tábìlì tí a ṣẹ̀dá káàkiri àwọn migration (123 lápapọ̀):
 
 `a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
 `combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
@@ -365,64 +368,68 @@ Máa kó data, sync, OAuth, skill, memory, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ wá
 `routing_decisions`, `semantic_cache`, `session_account_affinity`,
 `skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
 `tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (àti àwọn tábìlì virtual FTS5 fún ìwádìí ìrántí).
+`webhooks` (pẹ̀lú àwọn tábìlì virtual FTS5 fún wíwá ìrántí).
 
-### 3.3 `src/domain/` — Ìpele àgbègbè
+### 3.3 `src/domain/` — Ẹ̀ka-ìpín
 
-Àwọn iṣẹ́ àgbègbè àti àwọn àdéhùn ìṣirò. Ọ̀nà ìbéèrè tó ń ṣiṣẹ́ (live) ń pe àwọn modúlì kan; àwọn yòókù ṣì dúró gẹ́gẹ́ bí àdéhùn olómììnira. Má ṣe ro pé gbogbo directory yìí kò ní I/O rárá, tàbí pé yíyí padà sí modúlì kọ̀ọ̀kan ní ipa lórí ìtọ́sọ́ná (routing) production.
+Àwọn iṣẹ́ ẹ̀ka-ìpín àti àwọn ìwé àdéhùn ìgbéléwọ̀n. Àwọn module kan ni ipa ọ̀nà ìbéèrè aláàyè ń pè; àwọn mìíràn ṣì wà gẹ́gẹ́ bí ìwé àdéhùn olómìnira. Má ṣe rò pé gbogbo àpòpọ̀ yìí kò ní I/O tàbí pé yíyí gbogbo module yóò nípa lórí ìpàsẹ̀ production.
 
-Àwọn ojú-ìlànà (policy surfaces) tó ń ṣiṣẹ́ ni `src/shared/utils/apiKeyPolicy.ts` àti `src/sse/handlers/chat/resolvedModelPolicy.ts`. Ìṣàkóso combo tó ń ṣiṣẹ́ àti ìyanjú àfojúsùn (target resolution) ń lo `open-sse/services/combo.ts`. Àwọn àdéhùn `policyEngine.ts` àti `comboResolver.ts` tí a ti dán wọ́ wò, pẹ̀lú `src/lib/container.ts`, kì í ṣe ìsopọ̀ (wiring) ọ̀nà ìbéèrè ìfìránṣẹ́ (chat) tí a ṣàyẹ̀wò. Ya wọ́n sọ́tọ̀ kúrò lọ́dọ̀ àwọn ojú-ìlànà tó ń ṣiṣẹ́ yẹn nígbà tí o bá ń gbèjà yíyí padà ìtọ́sọ́ná.
+Àwọn ojú-ọ̀nà ìlànà aláàyè ni `src/shared/utils/apiKeyPolicy.ts` àti
+`src/sse/handlers/chat/resolvedModelPolicy.ts`. Ìmúṣẹ́ combo aláàyè àti yíyan ibi-àfojúsùn ń lo
+`open-sse/services/combo.ts`. Àwọn ìwé àdéhùn `policyEngine.ts` àti `comboResolver.ts` tí a ti dán wò,
+papọ̀ pẹ̀lú `src/lib/container.ts`, kì í ṣe ìsopọ̀ ọ̀nà ìbéèrè chat tí a ṣàyẹ̀wò. Jẹ́ kí wọ́n yàtọ̀
+sí àwọn ojú-ọ̀nà ẹ̀rọ wọ̀nyí nígbà tí ẹ ń gbèrò ìyípadà ìpàsẹ̀ kan.
 
-| Fáìlì                                      | Iṣẹ́ rẹ̀                                            |
-| ------------------------------------------ | ------------------------------------------------- |
-| `policyEngine.ts`                          | Àdéhùn ìṣirò-ìlànà tí a pamọ́ sílẹ̀                 |
-| `fallbackPolicy.ts`                        | Ìgi ìpinnu àtẹ̀yìnwáyé (fallback)                  |
-| `costRules.ts`                             | Àwọn òfin ìṣirò owó-orí                           |
-| `lockoutPolicy.ts`                         | Àwọn ìpinnu ìṣètìpa (lockout) àpẹẹrẹ              |
-| `tagRouter.ts`                             | Ìtọ́sọ́nà tó dá lórí àmì-ẹ̀yọ (tag)                  |
-| `comboResolver.ts`                         | Àdéhùn ìyàn-combo tí a pamọ́ sílẹ̀                  |
-| `connectionModelRules.ts`                  | Àwọn àlẹmọ̀ àpẹẹrẹ fún ìsopọ̀ kọ̀ọ̀kan                |
-| `modelAvailability.ts`                     | Ìṣàyẹ̀wò lílàílọ́wọ́ àpẹẹrẹ (availability)           |
-| `degradation.ts`                           | Àwọn ìyípadà sí ìpò dínkù (degraded)              |
-| `providerExpiration.ts`                    | Ìtọ́ka àkántì/kọ́kọ́rọ́ tó ti parí ọjọ́-ìlò            |
-| `quotaCache.ts`                            | Àwọn ìpinnu ẹ̀yà-pin (quota) tí a pamọ́ nínú cache  |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Àwọn ohun-èlò ìrànlọ́wọ́ fún ìrísí ìdáhùn           |
-| `configAudit.ts`                           | Ìṣàyẹ̀wò (audit) yíyí padà ìtòlẹ́sẹ̀ẹsẹ̀              |
-| `assessment/`                              | Ìṣirò àpẹẹrẹ (gẹ́gẹ́ bí RFC ṣe sọ, a ṣe apá kan rẹ̀) |
-| `types.ts`                                 | Àwọn irú (types) àgbègbè àpapọ̀                    |
+| Fáìlì                                      | Ète                                             |
+| ------------------------------------------ | ----------------------------------------------- |
+| `policyEngine.ts`                          | Ìwé àdéhùn ìgbéléwọ̀n ìlànà tí a ti pamọ́         |
+| `fallbackPolicy.ts`                        | Igi ìpinnu àfẹ̀yìntì                             |
+| `costRules.ts`                             | Àwọn òfin ìṣirò ìnáwó                           |
+| `lockoutPolicy.ts`                         | Àwọn ìpinnu títì pa àwòṣe mó                    |
+| `tagRouter.ts`                             | Ìpàsẹ̀ tí ó dá lórí àmì                          |
+| `comboResolver.ts`                         | Ìwé àdéhùn yíyan combo tí a ti pamọ́             |
+| `connectionModelRules.ts`                  | Àwọn àlẹ̀mọ́ àwòṣe fún ìsopọ̀ kọ̀ọ̀kan               |
+| `modelAvailability.ts`                     | Ìṣàyẹ̀wò wíwà àwòṣe                              |
+| `degradation.ts`                           | Àwọn ìyípadà ipò-ìdínkù                         |
+| `providerExpiration.ts`                    | Wíwá àkọsílẹ̀/kọ́kọ́ró tí ó ti parí                |
+| `quotaCache.ts`                            | Àwọn ìpinnu ìpín tí a ti fi pamọ́                |
+| `responses.ts`, `omnirouteResponseMeta.ts` | Àwọn olùrànlọ́wọ́ fọ́ọ̀mù ìdáhùn                    |
+| `configAudit.ts`                           | Ayẹ̀wò ìyípadà ìṣètò                             |
+| `assessment/`                              | Ìgbéléwọ̀n àwòṣe (ní ìbámu pẹ̀lú RFC, apá kan ṣe) |
+| `types.ts`                                 | Àwọn irúfẹ́ ẹ̀ka-ìpín tí a pín                    |
 
-### 3.4 `src/server/` — Ti server nìkan
+### 3.4 `src/server/` — Fún server nìkan
 
-Kò ṣe é ṣe láti gbe e wọlé láti inú àwọn component oníbàárà (client).
+A kò lè gbà á wọlé láti inú àwọn àpòpọ̀ client.
 
 ```
 server/
 ├── auth/loginGuard.ts
 ├── authz/
-│   ├── classify.ts        Ó ń pín routes sí àwọn gbangba (public) àti ìṣàkóso (management)
-│   ├── assertAuth.ts      Ohun èlò ìrànlọ́wọ́ assertion
+│   ├── classify.ts        Ń pín àwọn ọ̀nà gẹ́gẹ́ bí gbangba tàbí ìṣàkóso
+│   ├── assertAuth.ts      Olùrànlọ́wọ́ ìjẹ́rìí
 │   ├── context.ts         Àyíká authz fún ìbéèrè kọ̀ọ̀kan
 │   ├── headers.ts
-│   ├── pipeline.ts        Pipeline authz
-│   ├── policies/          Àwọn ìlànà pàtó (concrete)
+│   ├── pipeline.ts        Pípípì authz
+│   ├── policies/          Àwọn ìlànà pàtó
 │   └── types.ts
-└── cors/origins.ts        Àtòjọ àwọn orísun CORS tí a gba àyè
+└── cors/origins.ts        Àkójọ orísun CORS tí a gbà
 ```
 
-### 3.5 `src/shared/` — Ó léè pín láìsí ewu
+### 3.5 `src/shared/` — A lè pín láìléwu
 
-A pín í sí àwọn abá-ilana (subdirectories) tí kọ̀ọ̀kan ní iṣẹ́ pàtó tirẹ̀:
+Pín sí àwọn àpamọ́-ìwé abẹ́ pàtó:
 
-- `constants/` — `providers.ts` (kàtálógù àwọn olúpèsè tí Zod ṣe ìfìdájú rẹ̀), `models.ts`,
+- `constants/` — `providers.ts` (kátálọ́gù olùpèsè tí Zod ti ṣàyẹ̀wò), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (àtòjọ àwọn tí a dí lọ́wọ́), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (àkójọ àwọn tí a kò gbà), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
-- `validation/` — `schemas.ts` (àwọn schemas Zod tó tó ~80), `compressionConfigSchemas.ts`,
+- `validation/` — `schemas.ts` (~80 schema Zod), `compressionConfigSchemas.ts`,
   `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
-- `contracts/` — àwọn ìlànà API gbangba tí a rán lọ sí npm.
+- `contracts/` — àwọn àdéhùn API gbangba tí a ń fi ránṣẹ́ sí npm.
 - `types/` — àwọn irú TS tí a pín.
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
@@ -431,16 +438,15 @@ A pín í sí àwọn abá-ilana (subdirectories) tí kọ̀ọ̀kan ní iṣẹ
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, pẹ̀lú àwọn hooks/àpilẹ̀kọ dashboard tí ó wà lábẹ́ `services/`, `network/`,
+  `a11yAudit.ts`, pẹ̀lú àwọn hook/component dashboard lábẹ́ `services/`, `network/`,
   `middleware/`, `schemas/`, `hooks/`, `components/`.
-- `components/` — API àwọn àpilẹ̀kọ dashboard (`index.tsx` barrel: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …). Àwọn primitives náà jẹ́ àwọn adapters lórí
-  kit tí a fipamọ́ sínú iṣẹ́ náà (`packages/ui-kit`, tí a ń gbé wọlé nípasẹ̀ abá-ọ̀nà
-  àpilẹ̀kọ bíi `@omniroute/ui-kit/button`), nítorí náà àwọn screens ń pa àwọn imports
-  wọn mọ́ nígbà tí markup náà jẹ́ ti kit. Shell náà ni `layouts/DashboardLayout.tsx` →
-  `layouts/DashboardShell.tsx` (`SidebarProvider`/`SidebarInset` ti kit) pẹ̀lú `Sidebar.tsx`
-  àti `Header.tsx`; àwọn icons ń lọ nípasẹ̀ `Icon.tsx` àti `constants/iconMap.ts`. Wo
-  `docs/architecture/DESIGN_SYSTEM.md`.
+- `components/` — API àwọn component dashboard (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …). Àwọn primitive jẹ́ àwọn adapter lórí
+  kit tí a ti vendor (`packages/ui-kit`, tí a ń gbé wọlé nípasẹ̀ subpath component bíi
+  `@omniroute/ui-kit/button`), kí àwọn ojú-ìbòjú lè pa àwọn import wọn mọ́ nígbà tí
+  markup jẹ́ ti kit. Shell ni `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (kit `SidebarProvider`/`SidebarInset`) pẹ̀lú `Sidebar.tsx` àti `Header.tsx`; àwọn icon ń gba
+  `Icon.tsx` àti `constants/iconMap.ts` kọjá. Wo `docs/architecture/DESIGN_SYSTEM.md`.
 
 ---
 
@@ -700,45 +706,45 @@ A ṣètò rẹ̀ sínú àwọn fódà kéékèèké mẹ́fà gẹ́gẹ́ bí
 
 ---
 
-## 9. Ìlànà Ìbéèrè (Àkótán)
+## 9. Ìlà Ìbéèrè (Àkópọ̀)
 
-![Ìlànà ìbéèrè (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
+![Ìlà ìbéèrè (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
 > Orísun: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Ìbéèrè oníbàárà
+Ìbéèrè ọ̀dà
   → /v1/chat/completions (route.ts)
      Àyẹ̀wò preflight CORS
-     Ìfìdájọ́ Zod (chatCompletionsSchema nínú shared/validation/schemas.ts)
-     Ìfàṣẹsì (extractApiKey + isValidApiKey TÀBÍ requireManagementAuth)
-     Ìgbanilaaye ọ̀nà (src/server/authz/pipeline.ts)
-     Ìlànà kóòdù API (src/shared/utils/apiKeyPolicy.ts; a mú un lẹ́sẹ̀ lórí ọ̀nà tí a yàn)
-     Ààbò ìṣọ́ra (alábò PII, ìfisínú prompt, afárá ìran)
+     Ìfọwọ́sí Zod (chatCompletionsSchema nínú shared/validation/schemas.ts)
+     Ìjẹ́rìí (extractApiKey + isValidApiKey TABI requireManagementAuth)
+     Ìfọwọ́sí ọ̀nà (src/server/authz/pipeline.ts)
+     Ìlànà kọ́kọ́rọ́ API (src/shared/utils/apiKeyPolicy.ts; tí a fi àgbára lé lórí ọ̀nà tí a yàn)
+     Àwọn ìdènà ààbò (PII masker, prompt injection, vision bridge)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
-     Àyẹ̀wò cache (ìtumọ̀ + cache kíkà)
-     Ààlà oṣùwọ̀n (rateLimitManager, accountSemaphore)
-     Ìtọ́sọ́nà combo (bí àpẹẹrẹ bá yí padà sí combo)
-       resolveComboTargets (open-sse/services/combo.ts) → ìránṣẹ́ sí afọjúsùn kọ̀ọ̀kan
+     Àyẹ̀wò kásì (semantic + kásì kíkà)
+     Ààlà ìwọ̀n (rateLimitManager, accountSemaphore)
+     Ìpín ọ̀nà combo (bí model bá yanjú sí combo)
+       resolveComboTargets (open-sse/services/combo.ts) → ìfiranṣẹ́ fún ibi-afẹ́dé kọ̀ọ̀kan
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       gba lọ́dọ̀ upstream → gbìyànjú lẹ́ẹ̀kan sí i/backoff nípasẹ̀ accountFallback
+       gbà láti upstream → àtúnṣe/ìpadàsẹ́yìn nípasẹ̀ accountFallback
      translateResponse() (open-sse/translator/response/*)
-     Ṣíṣàn SSE TÀBÍ ìdáhùn JSON
-     Bí ó bá jẹ́ Responses API: TransformStream nípasẹ̀ open-sse/transformer/responsesTransformer.ts
-  → Àyẹ̀wò ìtẹ̀lé òfin (src/lib/compliance/)
-  → Ìdáhùn sí oníbàárà
+     ìṣàn SSE TABI ìdáhùn JSON
+     Bí Responses API bá rí bẹ́ẹ̀: TransformStream nípasẹ̀ open-sse/transformer/responsesTransformer.ts
+  → Àyẹ̀wò ìbáṣepọ̀ ìlànà (src/lib/compliance/)
+  → Ìdáhùn sí ọ̀dà
 ```
 
-### Ìpò ìfaradà ní àkókò ṣíṣe (àwọn ẹ̀rọ mẹ́ta)
+### Ipò àkókò ìṣiṣẹ́ ìfaradà (àwọn ọ̀nà mẹ́ta)
 
-| Ẹ̀rọ                     | Ìwọ̀n                     | Níbo                                                                                                           |
-| ----------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Circuit breaker olùpèsè | Gbogbo olùpèsè           | `src/shared/utils/circuitBreaker.ts`, tí a fipamọ́ nínú `domain_circuit_breakers`                               |
-| Ìtutù ìsopọ̀             | Àkántì/kóòdù kan ṣoṣo    | `markAccountUnavailable()` nínú `src/sse/services/auth.ts`; `accountFallback.checkFallbackError()` ló máa lò ó |
-| Ìdíwọ́ àpẹẹrẹ            | Olùpèsè + ìsopọ̀ + àpẹẹrẹ | `open-sse/services/accountFallback.ts`, tí a fipamọ́ nínú `domain_lockout_state`                                |
+| Ọ̀nà                     | Ìwọ̀n ìkópa              | Ibi                                                                                                        |
+| ----------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Circuit breaker olùpèsè | Gbogbo olùpèsè          | `src/shared/utils/circuitBreaker.ts`, tí a tọ́jú sínú `domain_circuit_breakers`                             |
+| Ìtutù ìsopọ̀             | Àkọsílẹ̀/kọ́kọ́rọ́ kan      | `markAccountUnavailable()` nínú `src/sse/services/auth.ts`; tí `accountFallback.checkFallbackError()` ń lò |
+| Ìdídúró model           | Olùpèsè + ìsopọ̀ + model | `open-sse/services/accountFallback.ts`, tí a tọ́jú sínú `domain_lockout_state`                              |
 
-Wo [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) àti abala tí a ya sọ́tọ̀ fún un nínú
+Wo [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) àti apá ìyàsọ́tọ̀ nínú
 [CLAUDE.md](../../CLAUDE.md).
 
 ---
