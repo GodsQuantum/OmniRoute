@@ -590,8 +590,10 @@ export function chunkMarkdown(markdown, maxChars = 6000) {
   const sections = [];
   let buf = [];
   let size = 0;
+  let fence = null;
   for (const line of lines) {
-    if (line.startsWith("## ") && size > maxChars * 0.5) {
+    fence = fenceAfterLine(fence, line);
+    if (!fence && line.startsWith("## ") && size > maxChars * 0.5) {
       sections.push(buf.join("\n"));
       buf = [line];
       size = line.length;
@@ -608,6 +610,23 @@ export function chunkMarkdown(markdown, maxChars = 6000) {
 
 const FENCE_LINE = /^\s*(```|~~~)/;
 
+// A closing fence must use the opener's character, be at least as long and
+// contain only trailing whitespace. Other delimiter-shaped lines remain code.
+// Keep indentation conservative so fenced examples nested inside lists stay whole.
+function fenceAfterLine(fence, line) {
+  const match = line.replace(/\r$/, "").match(/^\s*(`{3,}|~{3,})(.*)$/);
+  if (fence) {
+    return match &&
+      match[1][0] === fence[0] &&
+      match[1].length >= fence.length &&
+      /^[ \t]*$/.test(match[2])
+      ? null
+      : fence;
+  }
+  // Backtick fences cannot contain a backtick in their info string.
+  return match && (match[1][0] === "~" || !match[2].includes("`")) ? match[1] : null;
+}
+
 // Groups a section into blocks — a whole fenced code block, a heading-led run,
 // or a paragraph ending at a blank line — and packs them greedily. A block that
 // is itself larger than maxChars stays whole: cutting mid-paragraph or inside a
@@ -615,22 +634,21 @@ const FENCE_LINE = /^\s*(```|~~~)/;
 function splitOversizedSection(section, maxChars) {
   const blocks = [];
   let block = [];
-  let inFence = false;
+  let fence = null;
   for (const line of section.split("\n")) {
-    const isFence = FENCE_LINE.test(line);
-    if (inFence) {
+    const previousFence = fence;
+    fence = fenceAfterLine(fence, line);
+    if (previousFence) {
       block.push(line);
-      if (isFence) {
-        inFence = false;
+      if (!fence) {
         blocks.push(block);
         block = [];
       }
       continue;
     }
-    if (isFence) {
+    if (fence) {
       if (block.length) blocks.push(block);
       block = [line];
-      inFence = true;
       continue;
     }
     if (/^##+ /.test(line) && block.length) {
@@ -712,9 +730,11 @@ export function joinTranslatedChunks(parts) {
       out = parts[i];
       continue;
     }
-    const nextFirst = parts[i].trimStart().split("\n")[0] ?? "";
+    // Strip blank lines at the seam, preserving indentation on the first content line.
+    const next = parts[i].replace(/^(?:[ \t]*\r?\n)+/, "");
+    const nextFirst = next.split("\n")[0] ?? "";
     const seam = endsInsideItemRun(out) && ITEM_LINE.test(nextFirst) ? "\n" : "\n\n";
-    out = out.trimEnd() + seam + parts[i].trimStart();
+    out = out.trimEnd() + seam + next;
   }
   return out;
 }
