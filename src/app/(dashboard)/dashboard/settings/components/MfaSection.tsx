@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Card, Button, Input } from "@/shared/components";
+import { Badge, Card, Button, Input } from "@/shared/components";
+import Icon from "@/shared/components/Icon";
 
 interface MfaStatus {
   enabled: boolean;
@@ -147,48 +148,33 @@ export default function MfaSection() {
   const enabled = status?.enabled === true;
 
   return (
-    <Card>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 rounded-lg bg-primary/10 text-primary">
-          <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
-            phonelink_lock
-          </span>
-        </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold">{t("mfaTitle")}</h3>
-          <p className="text-sm text-text-muted">{t("mfaDesc")}</p>
-        </div>
-        {status && (
-          <span
-            className={`text-xs font-medium px-2 py-1 rounded-md ${
-              enabled
-                ? "bg-green-500/10 text-green-600 dark:text-green-400"
-                : "bg-black/[0.04] dark:bg-white/[0.06] text-text-muted"
-            }`}
-          >
+    <Card
+      title={t("mfaTitle")}
+      subtitle={t("mfaDesc")}
+      icon="lock"
+      action={
+        status ? (
+          <Badge variant={enabled ? "success" : "default"} size="sm">
             {enabled ? tc("enabled") : tc("disabled")}
-          </span>
-        )}
-      </div>
-
+          </Badge>
+        ) : null
+      }
+    >
       <div className="flex flex-col gap-4">
         {status?.recoverySwitchSet && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
-            <span className="material-symbols-outlined text-[14px]">warning</span>
+          <p className="text-xs text-warning flex items-center gap-1">
+            <Icon name="warning" size={14} />
             {t("mfaRecoverySwitchActive")}
           </p>
         )}
 
         {mode === "codes" && (
-          <div className="flex flex-col gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="flex flex-col gap-3 rounded-lg border border-border bg-warning-bg p-4">
             <p className="font-medium">{t("mfaBackupCodesTitle")}</p>
             <p className="text-sm text-text-muted">{t("mfaBackupCodesDesc")}</p>
             <div className="grid grid-cols-2 gap-2 font-mono text-sm">
               {backupCodes.map((backupCode) => (
-                <code
-                  key={backupCode}
-                  className="px-2 py-1 rounded bg-black/[0.04] dark:bg-white/[0.06]"
-                >
+                <code key={backupCode} className="px-2 py-1 rounded bg-surface">
                   {backupCode}
                 </code>
               ))}
@@ -331,7 +317,7 @@ export default function MfaSection() {
           </div>
         )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-error">{error}</p>}
       </div>
     </Card>
   );
