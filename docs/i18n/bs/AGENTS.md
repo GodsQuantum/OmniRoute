@@ -215,7 +215,7 @@ Za svaku netrivijalnu izmjenu prvo pročitajte odgovarajući detaljni vodič:
 - API referenca + OpenAPI — `docs/reference/API_REFERENCE.md` + `docs/openapi.yaml` · Katalog pružalaca usluga (automatski generisan) — `docs/reference/PROVIDER_REFERENCE.md`
 - Tuneli — `docs/ops/TUNNELS_GUIDE.md` · Tok izdanja — `docs/ops/RELEASE_CHECKLIST.md` · Protokol radnog stabla — `docs/ops/WORKTREE_ISOLATION.md` · Detalji strogih pravila — `docs/ops/HARD_RULES_DETAIL.md` · Upozorenja pri izgradnji + rješavanje problema s Bunom — `docs/ops/BUILD_WARNINGS.md`
 - Electron desktop aplikacija — `docs/guides/ELECTRON_GUIDE.md` · VS Code Copilot Chat (OmniCopilot ekstenzija) — `docs/guides/VSCODE-COPILOT.md`
-- Ugrađene usluge — `docs/frameworks/EMBEDDED-SERVICES.md` · Kontrole kvaliteta (~90 skripti, pravila liste dozvoljenih stavki) — `docs/architecture/QUALITY_GATES.md`
+- Ugrađene usluge — `docs/frameworks/EMBEDDED-SERVICES.md` · Kontrole kvaliteta (inventar, profili izvršavanja, pravila liste dozvoljenih stavki) — `docs/architecture/QUALITY_GATES.md`
 
 ---
 
@@ -356,7 +356,11 @@ Ova radna kopija je fork repozitorija `diegosouzapw/OmniRoute`. Promjene namijen
 
 ## Kontrolne tačke kvaliteta i mehanizmi postepenog pooštravanja
 
-OmniRoute ima **~90 skripti kontrolnih tačaka kvaliteta** (`scripts/check/` + `scripts/quality/`) raspoređenih kroz **9 poslova za izvršavanje kontrolnih tačaka** u `.github/workflows/ci.yml`, kao i posao brzih kontrolnih tačaka u `quality.yml` (PR→`release/**`) i 5 noćnih tokova rada za kvalitet. Potpuni inventar, pregled po poslovima i operativne procedure: [`docs/architecture/QUALITY_GATES.md`](docs/architecture/QUALITY_GATES.md).
+Za inventar kontrolnih tačaka kvaliteta, profile izvršavanja i operativne procedure pročitajte
+[`docs/architecture/QUALITY_GATES.md`](docs/architecture/QUALITY_GATES.md).
+`config/quality/gate-manifest.json` bilježi npm aliase povezane s validacijom i njihove
+tačne naredbe; datoteke tokova rada definišu poslove i okidače događaja. Aliase, datoteke
+skripti, poslove i instance matrice mjerite kao zasebne jedinice za SHA kandidata.
 
 **Brzi pregled:**
 
