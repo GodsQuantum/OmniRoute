@@ -6,6 +6,7 @@ import {
   TRUNCATED_STREAM_FINISH_REASON,
   TRUNCATED_STREAM_RESPONSES_INCOMPLETE_REASON,
   hasSseDoneMarker,
+  markTruncatedStreamBody,
 } from "./sseParser/truncation.ts";
 
 /**
@@ -281,7 +282,8 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
   // cut, so do not report the partial answer as a clean stop.
   const producedOutput =
     contentParts.length > 0 || refusalParts.length > 0 || reasoningParts.length > 0;
-  if (!sawFinishReason && producedOutput && !hasSseDoneMarker(rawSSE)) {
+  const streamCut = !sawFinishReason && producedOutput && !hasSseDoneMarker(rawSSE);
+  if (streamCut) {
     finishReason = TRUNCATED_STREAM_FINISH_REASON;
   }
 
@@ -326,7 +328,7 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
     result.usage = usage;
   }
 
-  return result;
+  return markTruncatedStreamBody(result, streamCut);
 }
 
 /**
@@ -510,20 +512,24 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   }
 
   // #18432 — content but no message_stop / stop_reason / [DONE]: the stream was cut.
-  if (!sawClaudeTerminal && content.length > 0 && !hasSseDoneMarker(rawSSE)) {
+  const streamCut = !sawClaudeTerminal && content.length > 0 && !hasSseDoneMarker(rawSSE);
+  if (streamCut) {
     stopReason = TRUNCATED_STREAM_CLAUDE_STOP_REASON;
   }
 
-  return {
-    id: messageId || `msg_${Date.now()}`,
-    type: "message",
-    role,
-    model,
-    content,
-    stop_reason: stopReason,
-    ...(stopSequence ? { stop_sequence: stopSequence } : {}),
-    ...(Object.keys(usage).length > 0 ? { usage } : {}),
-  };
+  return markTruncatedStreamBody(
+    {
+      id: messageId || `msg_${Date.now()}`,
+      type: "message",
+      role,
+      model,
+      content,
+      stop_reason: stopReason,
+      ...(stopSequence ? { stop_sequence: stopSequence } : {}),
+      ...(Object.keys(usage).length > 0 ? { usage } : {}),
+    },
+    streamCut
+  );
 }
 
 /**
@@ -951,27 +957,33 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
               ? "completed"
               : "in_progress";
 
-  return {
-    id: picked.id != null ? String(picked.id) : `resp_${Date.now()}`,
-    object: picked.object || "response",
-    model: picked.model || fallbackModel || "unknown",
-    output: chosenOutput.map((item) => {
-      const record = toRecord(item);
-      return {
-        ...record,
-        id: record.id != null ? String(record.id) : record.id,
-        call_id: record.call_id != null ? String(record.call_id) : record.call_id,
-      };
-    }),
-    usage: picked.usage || null,
-    ...resolveResponsesTerminalStatus(
-      picked,
-      picked.status || statusFallback,
-      !!terminalResponse,
-      responsesOutputHasContent(chosenOutput)
-    ),
-    ...(picked.error != null ? { error: picked.error } : {}),
-    created_at: picked.created_at || Math.floor(Date.now() / 1000),
-    metadata: picked.metadata || {},
-  };
+  const terminalStatus = resolveResponsesTerminalStatus(
+    picked,
+    picked.status || statusFallback,
+    !!terminalResponse,
+    responsesOutputHasContent(chosenOutput)
+  );
+  const streamCut = !terminalResponse && terminalStatus.status === "incomplete";
+
+  return markTruncatedStreamBody(
+    {
+      id: picked.id != null ? String(picked.id) : `resp_${Date.now()}`,
+      object: picked.object || "response",
+      model: picked.model || fallbackModel || "unknown",
+      output: chosenOutput.map((item) => {
+        const record = toRecord(item);
+        return {
+          ...record,
+          id: record.id != null ? String(record.id) : record.id,
+          call_id: record.call_id != null ? String(record.call_id) : record.call_id,
+        };
+      }),
+      usage: picked.usage || null,
+      ...terminalStatus,
+      ...(picked.error != null ? { error: picked.error } : {}),
+      created_at: picked.created_at || Math.floor(Date.now() / 1000),
+      metadata: picked.metadata || {},
+    },
+    streamCut
+  );
 }

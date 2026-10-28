@@ -54,6 +54,11 @@ export type AttemptLoopState = {
   /** Normalized provider/model keys already refused request-scoped this dispatch. */
   requestScopedRejectedModelKeys?: Set<string>;
   observeFailure(quotaExhausted: boolean, targetExecutionKey?: string): void;
+  /**
+   * Last partial result of a target whose stream was cut (#18460 follow-up), returned when
+   * no later target succeeds (`truncatedStreamFailover.ts`).
+   */
+  heldTruncatedResponse?: Response | null;
 };
 
 export type AttemptLoopDeps = {
