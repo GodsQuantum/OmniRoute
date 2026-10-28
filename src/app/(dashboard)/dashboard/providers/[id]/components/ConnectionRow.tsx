@@ -403,7 +403,7 @@ export default function ConnectionRow({
             )}
             {connection.prefixShadowed && connection.isActive !== false && (
               <span
-                className="text-xs text-yellow-600 dark:text-yellow-400 truncate max-w-[300px]"
+                className="text-xs text-warning truncate max-w-[300px]"
                 title={connection.prefixShadowed.message}
               >
                 {connection.prefixShadowed.code}: {connection.prefixShadowed.message}

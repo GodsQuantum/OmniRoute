@@ -82,7 +82,7 @@ export function getStatusPresentation(
       statusLabel: t("statusRuntimeIssue"),
       errorType: "prefix_shadowed",
       errorBadge: null,
-      errorTextClass: "text-yellow-600 dark:text-yellow-400",
+      errorTextClass: "text-warning",
     };
   }
 

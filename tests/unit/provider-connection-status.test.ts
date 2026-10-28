@@ -76,6 +76,8 @@ test("the connection row shows a routing warning instead of a healthy badge", as
   const presentation = getStatusPresentation(connection, "active", false, (key) => key);
   assert.equal(presentation.statusVariant, "warning");
   assert.equal(presentation.errorType, "prefix_shadowed");
+  // KEA-7886: the warning uses the UI-kit token, never a raw palette class.
+  assert.equal(presentation.errorTextClass, "text-warning");
   assert.equal(connection.testStatus, "active");
   const restored = getStatusPresentation(
     { ...connection, prefixShadowed: null },
