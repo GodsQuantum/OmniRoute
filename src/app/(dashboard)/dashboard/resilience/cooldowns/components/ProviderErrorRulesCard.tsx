@@ -116,7 +116,7 @@ function RowShell({
     <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
       <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-6">{children}</div>
       <div className="flex items-center justify-between gap-3">
-        <p role="alert" className="text-xs text-red-500">
+        <p role="alert" className="text-xs text-error">
           {errors.join(" ")}
         </p>
         <Button variant="ghost" size="sm" icon="delete" onClick={onRemove}>
@@ -365,7 +365,7 @@ export default function ProviderErrorRulesCard() {
           </section>
           <div className="flex items-center justify-end gap-3">
             {issues.some((issue) => issue.kind === "tooMany") && (
-              <p role="alert" className="text-xs text-red-500">
+              <p role="alert" className="text-xs text-error">
                 {t("errorRules.errors.tooMany")}
               </p>
             )}
