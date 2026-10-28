@@ -32,7 +32,8 @@ const formerlyMisclassifiedIds = [
 describe("#17028 SiliconFlow pay-as-you-go model protection", () => {
   it("retains honest release catalog counts and never counts SiliconFlow as statically uncapped", () => {
     const totals = computeFreeModelTotals();
-    // Measured 2026-10-28 inventory: 484 inherited identities minus five
+    // The 484 inherited identities include 13 onomeo rows added by #16325.
+    // Measured 2026-10-28 inventory subtracts five
     // priced Ollama grants, three retired offers, two AINative grants and ten OpenCode-only offers.
     // Includes the release base NVIDIA Nemotron 3.5 identity rename.
     // Pin identities as well as the total so unrelated replacement is visible.
