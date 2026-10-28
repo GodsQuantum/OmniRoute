@@ -27,7 +27,6 @@
     "kilo-gateway/stepfun/step-3.7-flash:free",
     "kilo-gateway/tencent/hy3:free",
     "ollama-cloud/deepseek-v4-flash",
-    "ollama-cloud/gemma4:31b",
     "ollama-cloud/glm-5.1",
     "ollama-cloud/qwen3.5:397b",
     "requesty/openai/gpt-oss-120b",

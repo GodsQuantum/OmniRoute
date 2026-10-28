@@ -9,9 +9,16 @@ import {
   selectModelsForImport,
 } from "../../src/shared/utils/freeModels.ts";
 
-// The 2026-10-27 public Ollama pricing table names these exact IDs under PAYG.
+// Official Ollama PAYG sources checked 2026-10-27/28 name these exact API IDs.
+// gemma4:31b is bound by https://ollama.com/library/gemma4:31b-cloud.
 // This removes a static grant; it does not infer a legacy account's entitlement.
-const pricedCloudIds = ["deepseek-v4-pro", "kimi-k2.6", "minimax-m2.7", "nemotron-3-super"];
+const pricedCloudIds = [
+  "deepseek-v4-pro",
+  "kimi-k2.6",
+  "minimax-m2.7",
+  "nemotron-3-super",
+  "gemma4:31b",
+];
 
 for (const id of pricedCloudIds) {
   test(`#17028 Ollama ${id} needs live free evidence, not a static grant`, () => {
@@ -20,6 +27,10 @@ for (const id of pricedCloudIds) {
     assert.equal(isFreeModel("ollama-cloud", model), false);
     assert.equal(isModelFreeBadge("ollama-cloud", model), false);
     assert.deepEqual(selectModelsForImport("ollama-cloud", [model], true).models, []);
+    assert.deepEqual(selectModelsForImport("ollama-cloud", [model], false), {
+      models: [model],
+      freeFilterEmpty: false,
+    });
     // Account-specific affirmative evidence remains usable; contradictory prices still veto it.
     assert.equal(isFreeModel("ollama-cloud", { id, isFree: true }), true);
     assert.equal(isFreeModel("ollama-cloud", { id, isFree: true, pricing: { input: 1 } }), false);

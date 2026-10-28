@@ -23,10 +23,11 @@ import {
 import { persistDiscoveredAntigravityProjectId } from "@omniroute/open-sse/services/antigravityProjectPersist.ts";
 import { hasPayloadPaidEvidence } from "@/shared/utils/payloadFreeEvidence";
 import { asRecord, toNonEmptyString } from "./helpers";
+import type { DiscoveryFailure } from "@/shared/discovery/degradedCause";
 
 const antigravityDiscoveryInflight = new Map<
   string,
-  Promise<Array<{ id: string; name: string }>>
+  Promise<{ models: Array<{ id: string; name: string }>; failure?: DiscoveryFailure }>
 >();
 
 type AntigravityDiscoveryModel = {
@@ -158,9 +159,10 @@ export async function fetchAntigravityDiscoveryModelsCached(
   proxy: unknown,
   providerSpecificData?: unknown,
   provider: "antigravity" | "agy" = "antigravity"
-): Promise<
-  Array<{ id: string; name: string; inputTokenLimit?: number; outputTokenLimit?: number }>
-> {
+): Promise<{
+  models: Array<{ id: string; name: string; inputTokenLimit?: number; outputTokenLimit?: number }>;
+  failure?: DiscoveryFailure;
+}> {
   const profile = normalizeAntigravityClientProfile(asRecord(providerSpecificData).clientProfile);
   const cacheKey = `${provider}:${connectionId}:${accessToken.substring(0, 16)}:${profile}`;
   const inflight = antigravityDiscoveryInflight.get(cacheKey);
@@ -178,6 +180,9 @@ export async function fetchAntigravityDiscoveryModelsCached(
         asRecord(providerSpecificData)
       );
     }
+
+    // The first attempt that produced no model explains the fallback.
+    let failure: DiscoveryFailure | undefined;
 
     for (const discoveryUrl of [
       ...getAntigravityFetchAvailableModelsUrls(),
@@ -198,6 +203,7 @@ export async function fetchAntigravityDiscoveryModelsCached(
           console.warn(
             `[models] ${provider} discovery failed at ${discoveryUrl} (${response.status}): ${errorText}`
           );
+          failure = failure ?? { status: response.status };
           continue;
         }
 
@@ -206,15 +212,17 @@ export async function fetchAntigravityDiscoveryModelsCached(
           provider
         ).map((model) => mapAntigravityModelForClient(model, provider));
         if (models.length > 0) {
-          return models;
+          return { models };
         }
+        failure = failure ?? { code: "EMPTY_CATALOG" };
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.warn(`[models] ${provider} discovery threw for ${discoveryUrl}: ${message}`);
+        failure = failure ?? {};
       }
     }
 
-    return [];
+    return { models: [], ...(failure ? { failure } : {}) };
   })().finally(() => {
     antigravityDiscoveryInflight.delete(cacheKey);
   });
