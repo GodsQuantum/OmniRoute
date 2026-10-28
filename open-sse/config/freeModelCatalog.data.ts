@@ -486,8 +486,7 @@ export const FREE_MODEL_BUDGETS: FreeModelBudget[] = [
   { provider: "ainative", modelId: "qwen3-8b", displayName: "Qwen3 8B", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
   { provider: "ainative", modelId: "llama-4-maverick", displayName: "Llama 4 Maverick", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
   { provider: "ainative", modelId: "llama3.1-8b-cerebras", displayName: "Llama 3.1 8B (Cerebras)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
-  { provider: "ainative", modelId: "deepseek-r1", displayName: "DeepSeek R1", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
-  { provider: "ainative", modelId: "nous-coder", displayName: "Nous Coder", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
+  // 2026-10-28: docs.ainative.studio/docs/api/models/ retires nous-coder; R1 requires Enterprise.
   { provider: "ainative", modelId: "gemini-flash", displayName: "Gemini Flash", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ainative-free", tos: "caution" },
   { provider: "aion", modelId: "aion-labs/aion-3.0", displayName: "Aion 3.0", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "aion-free", tos: "ok" },
   { provider: "aion", modelId: "aion-labs/aion-3.0-mini", displayName: "Aion 3.0 Mini", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "aion-free", tos: "ok" },
