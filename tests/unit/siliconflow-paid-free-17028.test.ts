@@ -33,16 +33,16 @@ describe("#17028 SiliconFlow pay-as-you-go model protection", () => {
   it("retains honest release catalog counts and never counts SiliconFlow as statically uncapped", () => {
     const totals = computeFreeModelTotals();
     // Measured 2026-10-28 inventory: 484 inherited identities minus five
-    // Ollama grants and ten OpenCode offers restricted to its own client.
+    // priced Ollama grants, three retired offers and ten OpenCode-only offers.
     // Includes the release base NVIDIA Nemotron 3.5 identity rename.
     // Pin identities as well as the total so unrelated replacement is visible.
     const identities = FREE_MODEL_BUDGETS.map((row) => `${row.provider}/${row.modelId}`).sort();
-    assert.equal(new Set(identities).size, 469);
+    assert.equal(new Set(identities).size, 466);
     assert.equal(
       createHash("sha256").update(identities.join("\n")).digest("hex"),
-      "ae79d3f0babe79bc0635043091db914f64195fdb72c65204507de0039f4e1288"
+      "6d647b0ffcd31a65afba0018a9ab12bf7cb79bfb8e6e5ea36b5210416762f03c"
     );
-    assert.equal(totals.modelCount, 469);
+    assert.equal(totals.modelCount, 466);
     assert.equal(totals.poolCount, 34);
     assert.equal(totals.uncappedProviders.includes("siliconflow"), false);
   });

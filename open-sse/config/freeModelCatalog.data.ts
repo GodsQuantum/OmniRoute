@@ -321,9 +321,8 @@ export const FREE_MODEL_BUDGETS: FreeModelBudget[] = [
   // unconditional grants were removed. Older Free/starter-plan copy is stale;
   // https://ollama.com/library/gemma4:31b-cloud (2026-10-28) also binds gemma4:31b
   // to a paid cloud API request. Its grant was removed; legacy account entitlements
-  // are unverified. The three remaining IDs lack exact-variant evidence (#17028).
-  { provider: "ollama-cloud", modelId: "deepseek-v4-flash", displayName: "DeepSeek V4 Flash", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ollama-cloud", tos: "ambiguous" },
-  { provider: "ollama-cloud", modelId: "glm-5.1", displayName: "GLM 5.1", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ollama-cloud", tos: "ambiguous" },
+  // are unverified. qwen3.5:397b remains unverified (#17028).
+  // ollama.com/library/deepseek-v4-flash (Aug 27) and /library/glm-5.1 (Sep 25): retired 2026.
   { provider: "ollama-cloud", modelId: "qwen3.5:397b", displayName: "Qwen 3.5 397B", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "ollama-cloud", tos: "ambiguous" },
   // evidence: api-public https://onomeo.com/api/info (2026-10-25) — `freeModels` lists the models served free of
   // charge. Metering is 30 calls per 5 h per account inside a site-wide pool shared by all accounts (`rate`:
@@ -435,7 +434,7 @@ export const FREE_MODEL_BUDGETS: FreeModelBudget[] = [
   { provider: "t3-web", modelId: "qwen3-235b", displayName: "Qwen3 235B (via t3.chat)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-daily", poolKey: "t3-web", tos: "avoid" },
   { provider: "t3-web", modelId: "qwen3-32b", displayName: "Qwen3 32B (via t3.chat)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-daily", poolKey: "t3-web", tos: "avoid" },
   { provider: "t3-web", modelId: "kimi-k2", displayName: "Kimi K2 (via t3.chat)", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-daily", poolKey: "t3-web", tos: "avoid" },
-  { provider: "tencent", modelId: "hunyuan-pro", displayName: "Hunyuan Pro", monthlyTokens: 0, creditTokens: 0, freeType: "recurring-uncapped", poolKey: "tencent", tos: "caution" },
+  // Tencent hunyuan-pro retired 2026-06-22: cloud.tencent.com/document/product/1729/131925.
   // 2026-10-16 refresh: upstream /v1/models serves a single live model; the
   // previously catalogued id 404s on /v1/chat/completions (see the matching
   // comment in providers/registry/uncloseai/index.ts).

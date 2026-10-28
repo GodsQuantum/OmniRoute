@@ -64,7 +64,7 @@ test("#17028 seven exact free offers have evidence while regional and account ga
   for (const key of [
     "agnes-cn/agnes-2.5-flash",
     "aion/aion-labs/aion-3.0",
-    "ollama-cloud/glm-5.1",
+    "ollama-cloud/qwen3.5:397b",
   ]) {
     assert.equal(evidence.has(key), false, key);
     assert.ok(policy.debt.includes(key), key);

@@ -26,8 +26,6 @@
     "kilo-gateway/poolside/laguna-m.1:free",
     "kilo-gateway/stepfun/step-3.7-flash:free",
     "kilo-gateway/tencent/hy3:free",
-    "ollama-cloud/deepseek-v4-flash",
-    "ollama-cloud/glm-5.1",
     "ollama-cloud/qwen3.5:397b",
     "requesty/openai/gpt-oss-120b",
     "routeway/laguna-m.1:free",
@@ -42,8 +40,7 @@
     "sealion/aisingapore/Llama-SEA-LION-v3-70B-IT",
     "sealion/aisingapore/Llama-SEA-LION-v3.5-70B-R",
     "sealion/aisingapore/Qwen-SEA-LION-v4-32B-IT",
-    "sealion/aisingapore/Qwen-SEA-LION-v4.5-27B-IT",
-    "tencent/hunyuan-pro"
+    "sealion/aisingapore/Qwen-SEA-LION-v4.5-27B-IT"
   ],
   "evidence": [
     {

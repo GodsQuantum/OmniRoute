@@ -2,3 +2,4 @@
 - **fix(providers):** positive discovery prices and explicit paid flags override free catalog entries and Free badges, and remain available through named-provider discovery, cache, and model sync (Refs #17028).
 - **fix(providers):** retire five unconditionally free Ollama Cloud entries after checking current model prices, document seven free offers with their eligibility limits, and expose Requesty's NVIDIA trial training restriction (Refs #17028).
 - **fix(providers):** stop advertising OpenCode-only free offers as generally available through the proxy, including cached Free badges, while keeping the provider and normal imports available and leaving uncertain pricing unclassified. Existing free-only connections retain their preference and an explicit opt-out control (Refs #17028).
+- **fix(providers):** remove static free grants for retired Ollama DeepSeek V4 Flash, Ollama GLM5.1 and Tencent Hunyuan Pro, while preserving normal model imports (Refs #17028).
