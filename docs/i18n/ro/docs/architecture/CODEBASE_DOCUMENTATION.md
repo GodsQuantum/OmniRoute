@@ -71,58 +71,58 @@ OmniRoute/
 
 ---
 
-## 3. `src/` — Aplicația Next.js
+## 3. `src/` — Aplicație Next.js
 
 ```
 src/
 ├── app/                  Pagini App Router + rute API
-├── lib/                  Biblioteci de bază (DB, autentificare, OAuth, skills, memorie, …)
-├── domain/               Strat de domeniu pur (politici, fallback, cost, blocare, …)
-├── server/               Module exclusiv pentru server (authz, cors, auth)
+├── lib/                  Biblioteci de bază (DB, auth, OAuth, skills, memory, …)
+├── domain/               Strat de domeniu pur (policy, fallback, cost, lockout, …)
+├── server/               Module doar pentru server (authz, cors, auth)
 ├── shared/               Tipuri, constante, validare, contracte, utilitare (sigure între granițe)
-├── mitm/                 Ajutoare proxy man-in-the-middle pentru integrarea CLI
-├── models/               Metadate / aliasuri pentru modele locale
-├── sse/                  Handlere SSE vechi care încă se află sub src/ (nu open-sse/)
-├── store/                Store-uri de stare pe partea de client
-├── middleware/           Utilitare middleware la nivel de rută (nu middleware-ul global Next.js)
-├── scripts/              Scripturi din arbore, importabile de codul aplicației
+├── mitm/                 Helperi de proxy man-in-the-middle pentru integrarea CLI
+├── models/               Metadate / aliasare pentru modele locale
+├── sse/                  Handlere SSE legacy care încă se află sub src/ (nu open-sse/)
+├── store/                Magazine de stare pe partea de client
+├── middleware/           Utilitare middleware la nivel de rută (nu middleware global Next.js)
+├── scripts/              Scripturi din arbore importabile de codul aplicației
 ├── types/                Tipuri TS ambientale și partajate
-├── i18n/                 Pachete de localizare
+├── i18n/                 Pachete de locale
 ├── instrumentation.ts    Hook de instrumentare Next.js
 ├── instrumentation-node.ts
-└── proxy.ts              Ajutor de bootstrap proxy la nivel superior
+└── proxy.ts              Helper de bootstrap pentru proxy la nivel superior
 ```
 
 ### 3.1 `src/app/` — App Router
 
-App Router expune atât interfața dashboard, cât și API-ul HTTP public/de management.
-**Nu există middleware global** — interceptarea se face per rută.
+App Routerul expune atât UI-ul de dashboard, cât și API-ul HTTP public/de management.
+**Nu există middleware global** — interceptarea se face pe fiecare rută.
 
 Segmente de nivel superior sub `src/app/`:
 
-| Cale                                                                          | Scop                                                |
-| ----------------------------------------------------------------------------- | --------------------------------------------------- |
-| `api/`                                                                        | Toate rutele API HTTP (vezi detalierea de mai jos)  |
-| `a2a/`                                                                        | Endpoint A2A JSON-RPC 2.0 (`POST /a2a`)             |
-| `.well-known/agent.json/`                                                     | Document de descoperire A2A Agent Card              |
-| `(dashboard)/`                                                                | Interfața dashboard (grup de rute, fără prefix URL) |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Fluxuri de autentificare                            |
-| `landing/`                                                                    | Pagină de marketing/landing                         |
-| `docs/`                                                                       | Vizualizator încorporat de documentație API         |
-| `status/`, `maintenance/`, `offline/`                                         | Pagini operaționale                                 |
-| `privacy/`, `terms/`                                                          | Pagini legale                                       |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Pagini statice de eroare                            |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Boundary-uri de eroare/încărcare ale framework-ului |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Shell-ul rădăcină                                   |
+| Cale                                                                          | Scop                                               |
+| ----------------------------------------------------------------------------- | -------------------------------------------------- |
+| `api/`                                                                        | Toate rutele HTTP API (vezi detalierea de mai jos) |
+| `a2a/`                                                                        | Endpoint A2A JSON-RPC 2.0 (`POST /a2a`)            |
+| `.well-known/agent.json/`                                                     | Document de descoperire A2A Agent Card             |
+| `(dashboard)/`                                                                | UI de dashboard (grup de rute, fără prefix în URL) |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Fluxuri de autentificare                           |
+| `landing/`                                                                    | Pagină de marketing/landing                        |
+| `docs/`                                                                       | Vizualizator integrat de documentație API          |
+| `status/`, `maintenance/`, `offline/`                                         | Pagini operaționale                                |
+| `privacy/`, `terms/`                                                          | Pagini legale                                      |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Pagini de eroare statice                           |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Limite de eroare/încărcare ale framework-ului      |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Shell rădăcină                                     |
 
-#### 3.1.1 `src/app/(dashboard)/dashboard/` — Pagini UI
+#### 3.1.1 `src/app/(dashboard)/dashboard/` — pagini UI
 
 `agents`, `analytics`, `api-manager`, `audit`, `auto-combo`, `batch`, `cache`,
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`, plus `page.tsx`, `HomePageClient.tsx` și
-`BootstrapBanner.tsx` din rădăcină.
+`translator`, `usage`, `webhooks`, plus `page.tsx` rădăcină, `HomePageClient.tsx`,
+`BootstrapBanner.tsx`.
 
 #### 3.1.2 `src/app/api/` — Grupuri API de nivel superior
 
@@ -177,7 +177,7 @@ src/app/api/
 ├── token-health/
 ├── translator/
 ├── tunnels/
-├── services/   Gestionarea serviciilor încorporate (9router, cliproxy) — LOCAL_ONLY
+├── services/   Managementul serviciilor încorporate (9router, cliproxy) — LOCAL_ONLY
 ├── upstream-proxy/
 ├── usage/
 ├── v1/         API public compatibil OpenAI
@@ -186,11 +186,11 @@ src/app/api/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — Gestionarea serviciilor încorporate
+#### 3.1.2a `src/app/api/services/` — Managementul serviciilor încorporate
 
 Rute pentru instalarea, pornirea, oprirea și monitorizarea 9Router și CLIProxyAPI.
 Toate căile sunt clasificate **LOCAL_ONLY** (doar loopback, regula strictă #17), deoarece
-pot invoca `npm install` și pot lansa procese copil.
+pot invoca `npm install` și pot genera procese copil.
 
 ```
 src/app/api/services/
@@ -200,119 +200,121 @@ src/app/api/services/
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install la o versiune mai nouă
+│   ├── update/route.ts     POST — npm install versiune mai nouă
 │   ├── rotate-key/route.ts POST — generează o cheie API nouă + restart
 │   ├── status/route.ts     GET  — status live + DB + metadate de versiune
-│   └── auto-start/route.ts POST — comută flag-ul auto_start
+│   └── auto-start/route.ts POST — comută flagul auto_start
 ├── cliproxy/
 │   ├── _lib.ts             helper getOrInitSupervisor()
 │   ├── install/route.ts    POST — npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install la o versiune mai nouă
+│   ├── update/route.ts     POST — npm install versiune mai nouă
 │   ├── status/route.ts     GET  — status live + DB + metadate de versiune
-│   └── auto-start/route.ts POST — comută flag-ul auto_start
+│   └── auto-start/route.ts POST — comută flagul auto_start
 └── [name]/
-    └── logs/route.ts       GET  — tail de log-uri SSE (partajat de toate serviciile)
+    └── logs/route.ts       GET  — tail de log prin SSE (partajat de toate serviciile)
 ```
 
 Interfața de dashboard corespunzătoare:
-`src/app/(dashboard)/dashboard/providers/services/` — pagină cu două taburi (CLIProxyAPI + 9Router).
-Reverse proxy pentru interfața încorporată a 9Router:
+`src/app/(dashboard)/dashboard/providers/services/` — pagină cu două file (CLIProxyAPI + 9Router).
+Proxy invers pentru interfața embedded a 9Router:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
-Analiză aprofundată: `docs/frameworks/EMBEDDED-SERVICES.md`
+Analiză detaliată: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-#### 3.1.3 `src/app/api/v1/` — API public compatibil cu OpenAI
+#### 3.1.3 `src/app/api/v1/` — API public compatibil OpenAI
 
 ```
 v1/
 ├── accounts/[id]/                       căutare cont
-├── agents/tasks/[id]/, agents/tasks/    endpoint-uri de taskuri în stil A2A
-├── api/                                 helper-e API interne expuse sub v1/api
+├── agents/tasks/[id]/, agents/tasks/    endpoint-uri de task-uri în stil A2A
+├── api/                                 helperi API interni expuși sub v1/api
 ├── audio/{speech, transcriptions}/      TTS + STT
-├── batches/[id]/{cancel}, batches/      API-ul OpenAI Batches
+├── batches/[id]/{cancel}, batches/      OpenAI Batches API
 ├── chat/completions/                    Chat Completions (endpoint-ul principal)
-├── completions/                         completări de text legacy
-├── embeddings/                          embedding-uri
-├── files/[id]/, files/                  API-ul Files
-├── _helpers/                            helper-e de rute partajate (fără URL public)
-├── images/{edits, generations}/         generare + editare de imagini
-├── issues/                              endpoint-uri ajutătoare pentru triere
+├── completions/                         completări text legacy
+├── embeddings/                          Embeddings
+├── files/[id]/, files/                  Files API
+├── _helpers/                            helperi partajați pentru rute (fără URL public)
+├── images/{edits, generations}/         generare + editare imagini
+├── issues/                              endpoint-uri helper pentru triaj
 ├── management/{proxies}/                rute cu scop de management în interiorul v1
-├── messages/{count_tokens}/             compat messages în stil Anthropic
-├── models/                              listarea modelelor (`route.ts`, `catalog.ts`)
+├── messages/{count_tokens}/             compatibilitate messages în stil Anthropic
+├── models/                              listare modele (`route.ts`, `catalog.ts`)
 ├── moderations/                         moderare
-├── music/                               generare de muzică
+├── music/                               generare muzică
 ├── providers/[provider]/                operațiuni per provider
 ├── quotas/{check}                       sonde de cotă
 ├── registered-keys/                     administrare chei înregistrate
-├── rerank/                              re-rankare
-├── responses/[...path]/                 API-ul OpenAI Responses (catch-all)
+├── rerank/                              reranking
+├── responses/[...path]/                 OpenAI Responses API (catch-all)
 ├── search/                              căutare web
-├── videos/                              generare de video
+├── videos/                              generare video
 ├── ws/                                  punte WebSocket
-└── route.ts                             handler index
+└── route.ts                             handler de index
 ```
 
 Fiecare fișier de rută urmează același tipar:
 
 ```
-Rută → preflight CORS → validarea body-ului cu Zod → autentificare opțională
-     → aplicarea politicii cheii API → delegare către handler (open-sse)
+Rută → preflight CORS → validare body cu Zod → auth opțional
+      → aplicare politică cheie API → delegare către handler (open-sse)
 ```
 
-`v1beta/` este suprafața de compatibilitate în stil Gemini (un wrapper subțire care traduce în același pipeline `open-sse/handlers/`).
+`v1beta/` este suprafața de compatibilitate în stil Gemini (un wrapper subțire care
+traduce în aceeași pipeline `open-sse/handlers/`).
 
 ### 3.2 `src/lib/` — Biblioteci de bază
 
-Importă întotdeauna data, sync, OAuth, skill, memory etc. prin aceste module. Tabelul grupează directoarele efective și fișierele notabile de la nivelul superior.
+Importați întotdeauna datele, sync, OAuth, skill, memory etc. prin aceste module.
+Tabelul grupează directoarele efective și fișierele notabile de la nivel superior.
 
-| Modul             | Scop                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | Server pentru protocolul A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 skill-uri: analiză de costuri, raport de stare, descoperirea furnizorilor, gestionarea cotelor, rutare inteligentă, listarea capabilităților)                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `api/`            | Utilitare interne pentru API: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `auth/`           | `managementPassword.ts` (resetarea parolei / hashing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `batches/`        | Serviciu pentru OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `catalog/`        | Sincronizarea catalogului OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `cloudAgent/`     | Registru de agenți cloud: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `combos/`         | Funcții ajutătoare pentru rezolvarea combo-urilor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `compliance/`     | Audit + auditarea furnizorului: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `config/`         | Cod de legătură pentru configurația la rulare                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `db/`             | Module de domeniu SQLite (vezi §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `display/`        | Funcții ajutătoare pentru UI/afișare, utilizate de răspunsurile API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `embeddings/`     | Registru de servicii de embedding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `env/`            | Încărcarea variabilelor de mediu + introspecție                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `evals/`          | Runtime de evaluare                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `jobs/`           | Joburi în fundal (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `memory/`         | Memorie persistentă: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `oauth/`          | Module de furnizori OAuth/import (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, plus `services/`, `utils/` și `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                               |
-| `plugins/`        | Încărcător de pluginuri (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `providerModels/` | Ciclul de viață al modelelor gestionate: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `providers/`      | Funcții ajutătoare pentru furnizori: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `resilience/`     | `settings.ts` — setări pentru circuit breaker, cooldown și lockout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `runtime/`        | Detectarea funcționalităților disponibile la rulare                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `services/`       | Framework de servicii integrate: `ServiceSupervisor.ts` (supervizor generic de procese copil cu blocare de operațiuni, buffer circular și verificator de stare), `bootstrap.ts` (înregistrare la nivel de proces și pornire automată), `registry.ts` (harta unealtă → supervizor), `apiKey.ts` (depozit de chei AES-256-GCM), `modelSync.ts` (sincronizare periodică a modelelor), `ringBuffer.ts` (buffer circular de jurnale de 5 MB), `healthCheck.ts` (sondă de stare HTTP), `types.ts`, `embedWsProxy.ts` (proxy WebSocket), `installers/{ninerouter,cliproxy}.ts`. Vezi `docs/frameworks/EMBEDDED-SERVICES.md`                                                                           |
-| `agentSkills/`    | Catalog și generator de Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → scrie `skills/{id}/SKILL.md`), `openapiParser.ts` (extrage endpoint-uri REST din specificația OpenAPI), `cliRegistryParser.ts` (extrage subcomenzi CLI din bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Consumat de rutele REST (`/api/agent-skills/*`), uneltele MCP (`omniroute_agent_skills_*`) și skill-ul A2A `list-capabilities`. Vezi [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
-| `skills/`         | Framework de skill-uri: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, plus `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `spend/`          | `batchWriter.ts` (buffer write-behind)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `sync/`           | `bundle.ts`, `tokens.ts` (Sincronizare Cloud)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `system/`         | Funcții ajutătoare la nivel de sistem                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `translator/`     | Liant de nivel superior pentru translator (deleagă către `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `usage/`          | Contabilitatea utilizării: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `versionManager/` | Actualizare automată + manifest de versiune                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `ws/`             | Punte WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `zed-oauth/`      | Fluxul OAuth al editorului Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Modul             | Scop                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `a2a/`            | Server pentru protocolul A2A: `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (6 abilități: analiză de costuri, raport de stare, descoperirea furnizorilor, gestionarea cotelor, rutare inteligentă, listarea capabilităților)                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `api/`            | Utilitare API interne: `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `auth/`           | `managementPassword.ts` (resetare parolă / hashing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `batches/`        | Serviciu OpenAI Batches API (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `catalog/`        | Sincronizare catalog OpenRouter (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `cloudAgent/`     | Registru de agenți cloud: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `combos/`         | Funcții auxiliare pentru rezolvarea combourilor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `compliance/`     | Audit + audit furnizori: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `config/`         | Cod de legătură pentru configurarea la runtime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `db/`             | Module de domeniu SQLite (vezi §3.2.1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `display/`        | Funcții auxiliare UI/afișare utilizate de răspunsurile API                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `embeddings/`     | Registru de servicii de embedding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `env/`            | Încărcare env + introspecție                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `evals/`          | Runtime pentru evaluări                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `jobs/`           | Sarcini în fundal (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `memory/`         | Memorie persistentă: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `oauth/`          | Module de furnizori OAuth/import (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, plus `services/`, `utils/` și `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                           |
+| `plugins/`        | Încărcător de pluginuri (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `providerModels/` | Ciclul de viață al modelelor gestionate: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `providers/`      | Utilitare pentru providere: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `resilience/`     | `settings.ts` — setări pentru întrerupătorul de circuit, perioada de răcire, blocare                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `runtime/`        | Detectarea funcționalităților la runtime                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `services/`       | Framework pentru servicii încorporate: `ServiceSupervisor.ts` (supervizor generic de procese copil cu blocare a operațiunilor, ring buffer, verificator de stare), `bootstrap.ts` (înregistrare și pornire automată la nivel de proces), `registry.ts` (mapare instrument → supervizor), `apiKey.ts` (depozit de chei AES-256-GCM), `modelSync.ts` (sincronizare periodică a modelelor), `ringBuffer.ts` (buffer circular de log de 5 MB), `healthCheck.ts` (probă de stare HTTP), `types.ts`, `embedWsProxy.ts` (proxy WebSocket), `installers/{ninerouter,cliproxy}.ts`. Vezi `docs/frameworks/EMBEDDED-SERVICES.md`                                                                     |
+| `agentSkills/`    | Catalog + generator Agent Skills: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → scrie `skills/{id}/SKILL.md`), `openapiParser.ts` (extrage endpoint-uri REST din specificația OpenAPI), `cliRegistryParser.ts` (extrage subcomenzi CLI din bin/cli-registry), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport). Consumat de rutele REST (`/api/agent-skills/*`), uneltele MCP (`omniroute_agent_skills_*`) și skill-ul A2A `list-capabilities`. Vezi [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md). |
+| `skills/`         | Framework pentru skill-uri: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, plus `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `spend/`          | `batchWriter.ts` (buffer write-behind)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `sync/`           | `bundle.ts`, `tokens.ts` (Cloud Sync)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `system/`         | Helperi la nivel de sistem                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `translator/`     | Codul de legătură de nivel superior pentru traducător (delegă către `open-sse/translator/`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `usage/`          | Contabilizarea utilizării: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `versionManager/` | Actualizare automată + manifest de versiune                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `ws/`             | Punte WebSocket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `zed-oauth/`      | Fluxul OAuth pentru editorul Zed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
-Fișiere de nivel superior în `src/lib/`:
+Fișierele de nivel superior din `src/lib/`:
 
-- Vechiul fișier barrel `localDb.ts` a fost eliminat — consumatorii importă direct modulele specifice `src/lib/db/*`.
+- Barilul vechi `localDb.ts` a fost eliminat — consumatorii importă direct modulele specifice `src/lib/db/*`.
 - `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
 - `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
 - `cloudSync.ts`, `initCloudSync.ts`
@@ -333,7 +335,7 @@ Bază de date SQLite singleton (`getDbInstance()` în `core.ts`, jurnalizare WAL
 
 > Sursă: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-Module de domeniu (fiecare deține unul sau mai multe tabele): `apiKeys.ts`, `backup.ts`,
+Module de domeniu (fiecare deține una sau mai multe tabele): `apiKeys.ts`, `backup.ts`,
 `batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
 `commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
 `compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
@@ -371,14 +373,14 @@ Tabele create în cadrul migrărilor (123 în total):
 ### 3.3 `src/domain/` — Stratul de domeniu
 
 Servicii de domeniu și contracte de evaluare. Unele module sunt apelate de calea
-de cerere activă; altele rămân contracte independente. Nu presupuneți că întregul
-acest director este lipsit de I/O sau că modificarea fiecărui modul afectează rutarea din producție.
+de cerere activă; altele rămân contracte independente. Nu presupuneți că întregul director
+este lipsit de I/O sau că modificarea fiecărui modul afectează rutarea din producție.
 
-Suprafețele de politici active sunt `src/shared/utils/apiKeyPolicy.ts` și
-`src/sse/handlers/chat/resolvedModelPolicy.ts`. Gestionarea activă a combo-urilor și
-rezolvarea țintelor folosesc `open-sse/services/combo.ts`. Contractele testate
-`policyEngine.ts` și `comboResolver.ts`, împreună cu `src/lib/container.ts`, nu reprezintă
-cablajul căii de cerere chat inspectate. Țineți-le separate de acele suprafețe
+Suprafețele de politică active sunt `src/shared/utils/apiKeyPolicy.ts` și
+`src/sse/handlers/chat/resolvedModelPolicy.ts`. Gestionarea combo-urilor active și
+rezolvarea țintelor folosesc `open-sse/services/combo.ts`. Contractele testate `policyEngine.ts` și
+`comboResolver.ts`, împreună cu `src/lib/container.ts`, nu reprezintă
+cablarea căii de cerere de chat inspectate. Păstrați-le separate de aceste suprafețe
 active atunci când planificați o modificare de rutare.
 
 | Fișier                                     | Scop                                                    |
@@ -389,13 +391,13 @@ active atunci când planificați o modificare de rutare.
 | `lockoutPolicy.ts`                         | Decizii de blocare a modelelor                          |
 | `tagRouter.ts`                             | Rutare bazată pe etichete                               |
 | `comboResolver.ts`                         | Contract rezervat de selecție a combo-urilor            |
-| `connectionModelRules.ts`                  | Filtre de modele per conexiune                          |
-| `modelAvailability.ts`                     | Verificarea disponibilității modelelor                  |
+| `connectionModelRules.ts`                  | Filtre de modele pe conexiune                           |
+| `modelAvailability.ts`                     | Verificare a disponibilității modelelor                 |
 | `degradation.ts`                           | Tranziții în modul degradat                             |
 | `providerExpiration.ts`                    | Detectarea conturilor/cheilor expirate                  |
-| `quotaCache.ts`                            | Decizii de cotă memorate în cache                       |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Funcții ajutătoare pentru forma răspunsului             |
-| `configAudit.ts`                           | Audit al modificărilor de configurare                   |
+| `quotaCache.ts`                            | Decizii de cotă cache-uite                              |
+| `responses.ts`, `omnirouteResponseMeta.ts` | Utilitare pentru forma răspunsului                      |
+| `configAudit.ts`                           | Auditul modificărilor de configurare                    |
 | `assessment/`                              | Evaluarea modelelor (conform RFC, parțial implementată) |
 | `types.ts`                                 | Tipuri de domeniu partajate                             |
 
@@ -407,30 +409,30 @@ Nu poate fi importat din componente client.
 server/
 ├── auth/loginGuard.ts
 ├── authz/
-│   ├── classify.ts        Clasifică rutele ca publice vs. de administrare
+│   ├── classify.ts        Clasifică rutele ca publice vs management
 │   ├── assertAuth.ts      Helper de aserțiune
-│   ├── context.ts         Context authz per cerere
+│   ├── context.ts         Context de autorizare per cerere
 │   ├── headers.ts
-│   ├── pipeline.ts        Pipeline authz
+│   ├── pipeline.ts        Pipeline de autorizare
 │   ├── policies/          Politici concrete
 │   └── types.ts
-└── cors/origins.ts        Listă de origini CORS permise
+└── cors/origins.ts        Listă de permisiuni pentru originile CORS
 ```
 
 ### 3.5 `src/shared/` — Sigur de partajat
 
 Împărțit în subdirectoare specializate:
 
-- `constants/` — `providers.ts` (catalog de furnizori validat cu Zod), `models.ts`,
+- `constants/` — `providers.ts` (catalog de providere validat cu Zod), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (listă de excludere), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (listă de interzicere), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
 - `validation/` — `schemas.ts` (~80 de scheme Zod), `compressionConfigSchemas.ts`,
   `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
-- `contracts/` — contracte API publice publicate pe npm.
+- `contracts/` — contracte de API public livrate pe npm.
 - `types/` — tipuri TS partajate.
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
@@ -439,14 +441,14 @@ server/
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`, plus hook-uri și componente de dashboard în `services/`, `network/`,
+  `a11yAudit.ts`, plus hook-uri/componente de dashboard sub `services/`, `network/`,
   `middleware/`, `schemas/`, `hooks/`, `components/`.
-- `components/` — API-ul de componente al dashboardului (barrel `index.tsx`: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …). Primitivele sunt adaptoare peste
-  kitul integrat (`packages/ui-kit`, importat prin subcăi de componente precum
-  `@omniroute/ui-kit/button`), astfel încât ecranele își păstrează importurile, în timp ce markup-ul aparține
-  kitului. Shell-ul este `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
-  (`SidebarProvider`/`SidebarInset` din kit) cu `Sidebar.tsx` și `Header.tsx`; pictogramele trec
+- `components/` — API-ul de componente pentru dashboard (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …). Primitivele sunt adaptoare peste kit-ul
+  vendorizat (`packages/ui-kit`, importat prin subcalea componentei, precum
+  `@omniroute/ui-kit/button`), astfel încât ecranele își păstrează importurile în timp ce markup-ul
+  este al kit-ului. Shell-ul este `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (kit `SidebarProvider`/`SidebarInset`) cu `Sidebar.tsx` și `Header.tsx`; iconițele trec
   prin `Icon.tsx` și `constants/iconMap.ts`. Vezi `docs/architecture/DESIGN_SYSTEM.md`.
 
 ---
@@ -712,41 +714,41 @@ Organizat în 6 subdirectoare în funcție de scop.
 
 ![Pipeline de cereri (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
-> Sursa: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
+> Sursă: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Client request
+Cerere client
   → /v1/chat/completions (route.ts)
-     CORS preflight check
-     Zod validation (chatCompletionsSchema in shared/validation/schemas.ts)
-     Auth (extractApiKey + isValidApiKey OR requireManagementAuth)
-     Route authorization (src/server/authz/pipeline.ts)
-     API-key policy (src/shared/utils/apiKeyPolicy.ts; enforced on the selected path)
-     Guardrails (PII masker, prompt injection, vision bridge)
+     Verificare preflight CORS
+     Validare Zod (chatCompletionsSchema în shared/validation/schemas.ts)
+     Autentificare (extractApiKey + isValidApiKey SAU requireManagementAuth)
+     Autorizare rută (src/server/authz/pipeline.ts)
+     Politică cheie API (src/shared/utils/apiKeyPolicy.ts; aplicată pe calea selectată)
+     Gărzi de protecție (mascare PII, injecție de prompt, punte de viziune)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
-     Cache check (semantic + read cache)
-     Rate limit (rateLimitManager, accountSemaphore)
-     Combo routing (if model resolves to a combo)
-       resolveComboTargets (open-sse/services/combo.ts) → per-target dispatch
+     Verificare cache (semantic + cache de citire)
+     Limită de rată (rateLimitManager, accountSemaphore)
+     Rutare combo (dacă modelul se rezolvă la un combo)
+       resolveComboTargets (open-sse/services/combo.ts) → trimitere per țintă
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       fetch upstream → retry/backoff via accountFallback
+       preluare upstream → reîncercare/backoff prin accountFallback
      translateResponse() (open-sse/translator/response/*)
-     SSE stream OR JSON response
-     If Responses API: TransformStream via open-sse/transformer/responsesTransformer.ts
-  → Compliance audit (src/lib/compliance/)
-  → Response to client
+     Flux SSE SAU răspuns JSON
+     Dacă API Responses: TransformStream prin open-sse/transformer/responsesTransformer.ts
+  → Audit de conformitate (src/lib/compliance/)
+  → Răspuns către client
 ```
 
-### Starea de rulare a rezilienței (trei mecanisme)
+### Starea de runtime pentru reziliență (trei mecanisme)
 
-| Mecanism                             | Domeniu de aplicare          | Unde                                                                                                         |
-| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Circuit breaker la nivel de provider | Întregul provider            | `src/shared/utils/circuitBreaker.ts`, persistat în `domain_circuit_breakers`                                 |
-| Cooldown de conexiune                | Un cont/o cheie              | `markAccountUnavailable()` în `src/sse/services/auth.ts`; consumat de `accountFallback.checkFallbackError()` |
-| Blocare de model                     | Provider + conexiune + model | `open-sse/services/accountFallback.ts`, persistat în `domain_lockout_state`                                  |
+| Mecanism                         | Domeniu de aplicare          | Unde                                                                                                         |
+| -------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Întrerupător de circuit furnizor | Întregul furnizor            | `src/shared/utils/circuitBreaker.ts`, persistat în `domain_circuit_breakers`                                 |
+| Răcire conexiune                 | Un cont/cheie                | `markAccountUnavailable()` în `src/sse/services/auth.ts`; consumat de `accountFallback.checkFallbackError()` |
+| Blocare model                    | Furnizor + conexiune + model | `open-sse/services/accountFallback.ts`, persistat în `domain_lockout_state`                                  |
 
-Consultați [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) și secțiunea dedicată din
+Vezi [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) și secțiunea dedicată din
 [CLAUDE.md](../../CLAUDE.md).
 
 ---

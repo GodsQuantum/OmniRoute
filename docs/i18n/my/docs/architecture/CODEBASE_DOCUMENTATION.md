@@ -75,45 +75,45 @@ OmniRoute/
 
 ```
 src/
-├── app/                  App Router စာမျက်နှာများ + API route များ
-├── lib/                  အဓိက လိုင်ဘရာရီများ (DB, auth, OAuth, skill များ, memory, …)
-├── domain/               သန့်စင်သော domain layer (policy, fallback, cost, lockout, …)
-├── server/               server သီးသန့် မော်ဂျူးများ (authz, cors, auth)
-├── shared/               Type များ၊ constant များ၊ validation၊ contract များ၊ util များ (cross-boundary ဘေးကင်းစွာ အသုံးပြုနိုင်သော)
-├── mitm/                 CLI integration အတွက် man-in-the-middle proxy helper များ
-├── models/               local model metadata / aliasing
-├── sse/                  src/ အောက်တွင် ဆက်လက်တည်ရှိနေဆဲ legacy SSE handler များ (open-sse/ မဟုတ်ပါ)
-├── store/                client-side state store များ
-├── middleware/           route-level middleware utility များ (Next.js global middleware မဟုတ်ပါ)
-├── scripts/              app code မှ import လုပ်နိုင်သော tree အတွင်းရှိ script များ
-├── types/                ambient နှင့် shared TS type များ
-├── i18n/                 locale bundle များ
+├── app/                  App Router စာမျက်နှာများ + API routes
+├── lib/                  အဓိက libraries (DB, auth, OAuth, skills, memory, …)
+├── domain/               သန့်ရှင်းသော domain အလွှာ (policy, fallback, cost, lockout, …)
+├── server/               ဆာဗာသီးသန့် modules (authz, cors, auth)
+├── shared/               Types, constants, validation, contracts, utils (cross-boundary safe)
+├── mitm/                 CLI ပေါင်းစပ်မှုအတွက် Man-in-the-middle proxy helpers
+├── models/               Local model metadata / aliasing
+├── sse/                  src/ အောက်တွင် ရှိနေသေးသော Legacy SSE handlers (open-sse/ မဟုတ်)
+├── store/                Client-side state stores
+├── middleware/           Route-level middleware utilities (Next.js global middleware မဟုတ်)
+├── scripts/              app code မှ import လုပ်နိုင်သော In-tree scripts
+├── types/                Ambient နှင့် shared TS types
+├── i18n/                 Locale bundles
 ├── instrumentation.ts    Next.js instrumentation hook
 ├── instrumentation-node.ts
-└── proxy.ts              အပေါ်ဆုံးအဆင့် proxy bootstrap helper
+└── proxy.ts              Top-level proxy bootstrap helper
 ```
 
 ### 3.1 `src/app/` — App Router
 
-App Router သည် dashboard UI နှင့် public/management HTTP API နှစ်ခုလုံးကို ထုတ်ဖော်ပေးသည်။
-**global middleware မရှိပါ** — interception ကို route တစ်ခုချင်းစီအလိုက် ဆောင်ရွက်သည်။
+App Router သည် dashboard UI နှင့် public/management HTTP API နှစ်ခုစလုံးကို ဖော်ထုတ်ပေးသည်။
+**global middleware မရှိပါ** — ကြားဖြတ်ခြင်းကို route တစ်ခုချင်းစီတွင် ပြုလုပ်သည်။
 
-`src/app/` အောက်ရှိ အပေါ်ဆုံးအဆင့် segment များ:
+`src/app/` အောက်ရှိ အထက်ဆုံးအဆင့် segments များ:
 
-| လမ်းကြောင်းကွာ                                                                | ရည်ရွယ်ချက်                                                       |
-| ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `api/`                                                                        | HTTP API route များအားလုံး (အောက်ပါ ခွဲခြားဖော်ပြချက်ကို ကြည့်ပါ) |
-| `a2a/`                                                                        | A2A JSON-RPC 2.0 endpoint (`POST /a2a`)                           |
-| `.well-known/agent.json/`                                                     | A2A Agent Card discovery document                                 |
-| `(dashboard)/`                                                                | Dashboard UI (route group၊ URL prefix မရှိ)                       |
-| `auth/`, `login/`, `forgot-password/`, `callback/`                            | Auth flow များ                                                    |
-| `landing/`                                                                    | Marketing/landing စာမျက်နှာ                                       |
-| `docs/`                                                                       | ထည့်သွင်းထားသော API docs viewer                                   |
-| `status/`, `maintenance/`, `offline/`                                         | လည်ပတ်မှုဆိုင်ရာ စာမျက်နှာများ                                    |
-| `privacy/`, `terms/`                                                          | ဥပဒေဆိုင်ရာ စာမျက်နှာများ                                         |
-| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | static error စာမျက်နှာများ                                        |
-| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | framework error/loading boundary များ                             |
-| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | root shell                                                        |
+| လမ်းကြောင်း                                                                   | ရည်ရွယ်ချက်                                         |
+| ----------------------------------------------------------------------------- | --------------------------------------------------- |
+| `api/`                                                                        | HTTP API routes အားလုံး (အောက်တွင် အသေးစိတ်ကြည့်ပါ) |
+| `a2a/`                                                                        | A2A JSON-RPC 2.0 endpoint (`POST /a2a`)             |
+| `.well-known/agent.json/`                                                     | A2A Agent Card discovery document                   |
+| `(dashboard)/`                                                                | Dashboard UI (route group၊ URL prefix မရှိ)         |
+| `auth/`, `login/`, `forgot-password/`, `callback/`                            | အတည်ပြုမှု flows                                    |
+| `landing/`                                                                    | Marketing/landing စာမျက်နှာ                         |
+| `docs/`                                                                       | ထည့်သွင်းထားသော API docs viewer                     |
+| `status/`, `maintenance/`, `offline/`                                         | လည်ပတ်မှုဆိုင်ရာ စာမျက်နှာများ                      |
+| `privacy/`, `terms/`                                                          | ဥပဒေရေးရာ စာမျက်နှာများ                             |
+| `400/`, `401/`, `403/`, `408/`, `429/`, `500/`, `502/`, `503/`                | Static error စာမျက်နှာများ                          |
+| `error.tsx`, `global-error.tsx`, `not-found.tsx`, `forbidden/`, `loading.tsx` | Framework error/loading boundaries                  |
+| `layout.tsx`, `page.tsx`, `globals.css`, `manifest.ts`                        | Root shell                                          |
 
 #### 3.1.1 `src/app/(dashboard)/dashboard/` — UI စာမျက်နှာများ
 
@@ -121,10 +121,10 @@ App Router သည် dashboard UI နှင့် public/management HTTP API န
 `changelog`, `cli-tools`, `cloud-agents`, `combos`, `compression`, `context`,
 `costs`, `endpoint`, `health`, `limits`, `logs`, `memory`, `onboarding`,
 `playground`, `providers`, `search-tools`, `settings`, `skills`, `system`,
-`translator`, `usage`, `webhooks`၊ အပြင် root `page.tsx`, `HomePageClient.tsx`,
-`BootstrapBanner.tsx` တို့လည်း ပါဝင်သည်။
+`translator`, `usage`, `webhooks`, အပြင် root `page.tsx`, `HomePageClient.tsx`,
+`BootstrapBanner.tsx` တို့ဖြစ်သည်။
 
-#### 3.1.2 `src/app/api/` — အပေါ်ဆုံးအဆင့် API အုပ်စုများ
+#### 3.1.2 `src/app/api/` — အထက်ဆုံးအဆင့် API groups
 
 ```
 src/app/api/
@@ -177,233 +177,222 @@ src/app/api/
 ├── token-health/
 ├── translator/
 ├── tunnels/
-├── services/   ထည့်သွင်းထားသော service စီမံခန့်ခွဲခြင်း (9router, cliproxy) — LOCAL_ONLY
+├── services/   Embedded service စီမံခန့်ခွဲမှု (9router, cliproxy) — LOCAL_ONLY
 ├── upstream-proxy/
 ├── usage/
-├── v1/         OpenAI နှင့် လိုက်လျောညီထွေဖြစ်သော public API
-├── v1beta/     Gemini ပုံစံ compat
+├── v1/         OpenAI-compatible public API
+├── v1beta/     Gemini-style compat
 ├── version-manager/
 └── webhooks/
 ```
 
-#### 3.1.2a `src/app/api/services/` — ထည့်သွင်းထားသော Service များ စီမံခန့်ခွဲခြင်း
+#### 3.1.2a `src/app/api/services/` — Embedded Services စီမံခန့်ခွဲမှု
 
-9Router နှင့် CLIProxyAPI ကို install လုပ်ခြင်း၊ စတင်ခြင်း၊ ရပ်တန့်ခြင်းနှင့် စောင့်ကြည့်ခြင်းတို့အတွက် route များ။
-၎င်းတို့သည် `npm install` ကို ခေါ်ဆိုနိုင်ပြီး child process များကို spawn လုပ်နိုင်သောကြောင့်
-path များအားလုံးကို **LOCAL_ONLY** (loopback သီးသန့်၊ hard rule #17) အဖြစ် ခွဲခြားသတ်မှတ်ထားသည်။
+9Router နှင့် CLIProxyAPI များကို install လုပ်ခြင်း၊ စတင်ခြင်း၊ ရပ်တန့်ခြင်းနှင့် စောင့်ကြည့်ခြင်းအတွက် routes များ။
+လမ်းကြောင်းအားလုံးကို **LOCAL_ONLY** (loopback သာ၊ တင်းကျပ်သော စည်းမျဉ်း #17) အဖြစ် သတ်မှတ်ထားသည်၊ အကြောင်းမှာ ၎င်းတို့သည် `npm install` ကို ခေါ်ယူနိုင်ပြီး child processes များကို ဖန်တီးနိုင်သောကြောင့် ဖြစ်သည်။
 
 ```
 src/app/api/services/
 ├── 9router/
-│   ├── _lib.ts             getOrInitSupervisor() helper
-│   ├── install/route.ts    POST — npm install via execFile
+│   ├── _lib.ts             getOrInitSupervisor() အကူ function
+│   ├── install/route.ts    POST — execFile မှတစ်ဆင့် npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install newer version
-│   ├── rotate-key/route.ts POST — generate new API key + restart
-│   ├── status/route.ts     GET  — live + DB status + version metadata
-│   └── auto-start/route.ts POST — toggle auto_start flag
+│   ├── update/route.ts     POST — ဗားရှင်းအသစ် npm install
+│   ├── rotate-key/route.ts POST — API key အသစ် ဖန်တီးပြီး restart
+│   ├── status/route.ts     GET  — တိုက်ရိုက် + DB အခြေအနေ + version metadata
+│   └── auto-start/route.ts POST — auto_start flag ကို toggle လုပ်ခြင်း
 ├── cliproxy/
-│   ├── _lib.ts             getOrInitSupervisor() helper
+│   ├── _lib.ts             getOrInitSupervisor() အကူ function
 │   ├── install/route.ts    POST — npm install
 │   ├── start/route.ts      POST — supervisor.start()
 │   ├── stop/route.ts       POST — supervisor.stop()
 │   ├── restart/route.ts    POST — supervisor.restart()
-│   ├── update/route.ts     POST — npm install newer version
-│   ├── status/route.ts     GET  — live + DB status + version metadata
-│   └── auto-start/route.ts POST — toggle auto_start flag
+│   ├── update/route.ts     POST — ဗားရှင်းအသစ် npm install
+│   ├── status/route.ts     GET  — တိုက်ရိုက် + DB အခြေအနေ + version metadata
+│   └── auto-start/route.ts POST — auto_start flag ကို toggle လုပ်ခြင်း
 └── [name]/
-    └── logs/route.ts       GET  — SSE log tail (shared by all services)
+    └── logs/route.ts       GET  — SSE log tail (ဝန်ဆောင်မှုအားလုံး မျှဝေအသုံးပြုသည်)
 ```
 
 သက်ဆိုင်ရာ dashboard UI:
-`src/app/(dashboard)/dashboard/providers/services/` — tab နှစ်ခုပါရှိသော စာမျက်နှာ (CLIProxyAPI + 9Router)။
-
+`src/app/(dashboard)/dashboard/providers/services/` — tab နှစ်ခုပါသော စာမျက်နှာ (CLIProxyAPI + 9Router)။
 9Router embedded UI အတွက် reverse proxy:
 `src/app/(dashboard)/dashboard/providers/services/[name]/embed/[[...path]]/route.ts`
 
-အသေးစိပ်လေ့လာရန်- `docs/frameworks/EMBEDDED-SERVICES.md`
+အသေးစိတ်လေ့လာရန်: `docs/frameworks/EMBEDDED-SERVICES.md`
 
-#### 3.1.3 `src/app/api/v1/` — OpenAI-နှင့် သဟဇာတဖြစ်သော public API
+#### 3.1.3 `src/app/api/v1/` — OpenAI နှင့် ကိုက်ညီသော public API
 
 ```
 v1/
-├── accounts/[id]/                       account lookup
-├── agents/tasks/[id]/, agents/tasks/    A2A-flavored task endpoints
-├── api/                                 internal API helpers exposed under v1/api
+├── accounts/[id]/                       account ရှာဖွေခြင်း
+├── agents/tasks/[id]/, agents/tasks/    A2A ပုံစံ task endpoint များ
+├── api/                                 v1/api အောက်တွင် ဖော်ထုတ်ထားသော internal API အကူ function များ
 ├── audio/{speech, transcriptions}/      TTS + STT
 ├── batches/[id]/{cancel}, batches/      OpenAI Batches API
-├── chat/completions/                    Chat Completions (the main endpoint)
-├── completions/                         Legacy text completions
+├── chat/completions/                    Chat Completions (အဓိက endpoint)
+├── completions/                         အဟောင်း text completions
 ├── embeddings/                          Embeddings
 ├── files/[id]/, files/                  Files API
-├── _helpers/                            Shared route helpers (no public URL)
-├── images/{edits, generations}/         Image gen + edit
-├── issues/                              Triage helper endpoints
-├── management/{proxies}/                Management-scoped routes inside v1
-├── messages/{count_tokens}/             Anthropic-style messages compat
-├── models/                              Model listing (`route.ts`, `catalog.ts`)
+├── _helpers/                            မျှဝေထားသော route အကူ function များ (public URL မရှိ)
+├── images/{edits, generations}/         Image ဖန်တီးခြင်း + တည်းဖြတ်ခြင်း
+├── issues/                              Triage အကူ endpoint များ
+├── management/{proxies}/                v1 အတွင်းရှိ Management နယ်ပယ် route များ
+├── messages/{count_tokens}/             Anthropic ပုံစံ messages compat
+├── models/                              Model စာရင်းပြခြင်း (`route.ts`, `catalog.ts`)
 ├── moderations/                         Moderation
-├── music/                               Music gen
-├── providers/[provider]/                Per-provider operations
-├── quotas/{check}                       Quota probes
-├── registered-keys/                     Registered key admin
+├── music/                               Music ဖန်တီးခြင်း
+├── providers/[provider]/                provider တစ်ခုချင်းစီအတွက် လုပ်ဆောင်ချက်များ
+├── quotas/{check}                       Quota စစ်ဆေးမှုများ
+├── registered-keys/                     Registered key စီမံခန့်ခွဲမှု
 ├── rerank/                              Reranking
 ├── responses/[...path]/                 OpenAI Responses API (catch-all)
-├── search/                              Web search
-├── videos/                              Video gen
+├── search/                              Web ရှာဖွေခြင်း
+├── videos/                              Video ဖန်တီးခြင်း
 ├── ws/                                  WebSocket bridge
 └── route.ts                             Index handler
 ```
 
-Route file တိုင်းသည် ပုံစံတစ်ခုတည်းကို လိုက်နာသည်-
+route ဖိုင်တိုင်းသည် တူညီသော pattern ကို လိုက်နာသည်:
 
 ```
 Route → CORS preflight → Zod body validation → optional auth
       → API key policy enforcement → handler delegation (open-sse)
 ```
 
-`v1beta/` သည် Gemini-စတိုင် compat surface ဖြစ်သည် (တူညီသော `open-sse/handlers/` pipeline သို့ ပြောင်းလဲပေးသော wrapper ပေါ့ပါးတစ်ခု)။
+`v1beta/` သည် Gemini ပုံစံ compat surface ဖြစ်ပြီး (`open-sse/handlers/` pipeline တစ်ခုတည်းသို့ ဘာသာပြန်ပေးသော ပါးလွှာသည့် wrapper)။
 
-### 3.2 `src/lib/` — အဓိက library များ
+### 3.2 `src/lib/` — Core library များ
 
-data, sync, OAuth, skill, memory စသည်တို့ကို ဤ module များမှတစ်ဆင့်သာ အမြဲတမ်း import ပြုလုပ်ပါ။ အောက်ပါဇယားကွက်က လက်တွေ့ရှိသော directory များနှင့် ထူးခြားသော top-level file များကို အုပ်စုဖွဲ့ပြထားသည်။
+data, sync, OAuth, skill, memory စသည်တို့ကို ဤ module များမှတစ်ဆင့် အမြဲ import လုပ်ပါ။ ဇယားသည် အမှန်တကယ် directory များနှင့် ထင်ရှားသော top-level ဖိုင်များကို အုပ်စုဖွဲ့ထားသည်။
 
-| မော်ဂျူး          | ရည်ရွယ်ချက်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a2a/`            | A2A ပရိုတိုကော ဆာဗာ− `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (ကျွမ်းကျင်မှု ၆ ခု− cost analysis, health report, provider discovery, quota management, smart routing, list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `acp/`            | Agent-Control-Protocol− `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `api/`            | အတွင်းပိုင်း API အကူအညီများ− `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `auth/`           | `managementPassword.ts` (စကားဝှက် ပြန်လည်သတ်မှတ်ခြင်း / hash ပြုလုပ်ခြင်း)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `batches/`        | OpenAI Batches API ဝန်ဆောင်မှု (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `catalog/`        | OpenRouter ကတ်တလောက် ထပ်တူပြုခြင်း (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `cloudAgent/`     | Cloud agent များ၏ registry: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `combos/`         | Combo resolution helper များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `compliance/`     | စာရင်းစစ်ဆေးခြင်း + provider စာရင်းစစ်ဆေးခြင်း: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `config/`         | Runtime config ချိတ်ဆက်ပေးသော glue ကုဒ်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `db/`             | SQLite domain module များ (§3.2.1 ကို ကြည့်ပါ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `display/`        | API response များတွင် အသုံးပြုသော UI/display helper များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `embeddings/`     | Embedding service များ၏ registry                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `env/`            | Env load လုပ်ခြင်း + introspection                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `evals/`          | Eval လည်ပတ်ချိန်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `jobs/`           | နောက်ခံ အလုပ်များ (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `memory/`         | အမြဲတမ်း မှတ်ဉာဏ်: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `oauth/`          | OAuth/import ပရော်ဗိုက်ဒါ မော်ဂျူးများ (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, အပြင် `services/`, `utils/` နှင့် `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                          |
-| `plugins/`        | ပလပ်အင် တင်စက် (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `providerModels/` | စီမံခန့်ခွဲထားသော model lifecycle: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `providers/`      | Provider helper များ: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `resilience/`     | `settings.ts` — circuit breaker, cooldown, lockout တို့အတွက် ဆက်တင်များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `runtime/`        | Runtime feature များ ရှာဖွေတွေ့ရှိခြင်း                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `services/`       | ထည့်သွင်းထားသော services framework: `ServiceSupervisor.ts` (operation lock, ring buffer, health checker ပါရှိသော အထွေထွေ child-process supervisor), `bootstrap.ts` (process အဆင့် မှတ်ပုံတင်ခြင်းနှင့် auto-start), `registry.ts` (tool → supervisor map), `apiKey.ts` (AES-256-GCM key သိုလှောင်ရာ), `modelSync.ts` (ပုံမှန် model sync), `ringBuffer.ts` (5 MB circular log buffer), `healthCheck.ts` (HTTP health probe), `types.ts`, `embedWsProxy.ts` (WebSocket proxy), `installers/{ninerouter,cliproxy}.ts`။ `docs/frameworks/EMBEDDED-SERVICES.md` ကို ကြည့်ပါ                                                                                                                                             |
-| `agentSkills/`    | Agent Skills catalog + generator: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage), `generator.ts` (generateAgentSkills → `skills/{id}/SKILL.md` ကို ရေးသားသည်), `openapiParser.ts` (OpenAPI spec မှ REST endpoint များကို ထုတ်ယူသည်), `cliRegistryParser.ts` (bin/cli-registry မှ CLI subcommand များကို ထုတ်ယူသည်), `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema), `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport)။ REST routes (`/api/agent-skills/*`), MCP tools (`omniroute_agent_skills_*`) နှင့် A2A skill `list-capabilities` တို့မှ အသုံးပြုသည်။ [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md) ကို ကြည့်ပါ။ |
-| `skills/`         | Skill framework: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts`, နှင့် `builtin/browser.ts` အပါအဝင်                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `spend/`          | `batchWriter.ts` (write-behind buffer)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `sync/`           | `bundle.ts`, `tokens.ts` (Cloud Sync)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `system/`         | System အဆင့် helper များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `translator/`     | အပေါ်ဆုံးအဆင့် translator ဆက်စပ်ပိုင်း (`open-sse/translator/` သို့ လွှဲပြောင်းဆောင်ရွက်သည်)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `usage/`          | အသုံးပြုမှု တွက်ချက်မှု: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `versionManager/` | အလိုအလျောက် update + version manifest                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `ws/`             | WebSocket bridge                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `zed-oauth/`      | Zed editor OAuth လုပ်ငန်းစဉ်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| မော်ဂျူး          | ရည်ရွယ်ချက်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a2a/`            | A2A ပရိုတိုကော ဆာဗာ။ `taskManager.ts`, `streaming.ts`, `taskExecution.ts`, `routingLogger.ts`, `skills/` (ကျွမ်းကျင်မှု ၆ ခု: ကုန်ကျစရိတ် ခွဲခြမ်းစိတ်ဖြာမှု၊ ကျန်းမာရေး အစီရင်ခံစာ၊ ပံ့ပိုးသူ ရှာဖွေဖော်ထုတ်ခြင်း၊ ခွဲတမ်း စီမံခန့်ခွဲမှု၊ စမတ် လမ်းကြောင်းသတ်မှတ်ခြင်း၊ list-capabilities)                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `acp/`            | Agent-Control-Protocol: `index.ts`, `manager.ts`, `registry.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `api/`            | အတွင်းပိုင်း API အထောက်အကူများ။ `requireManagementAuth.ts`, `requireCliToolsAuth.ts`, `errorResponse.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `auth/`           | `managementPassword.ts` (စကားဝှက် ပြန်လည်သတ်မှတ်ခြင်း / hash ပြုလုပ်ခြင်း)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `batches/`        | OpenAI Batches API ဝန်ဆောင်မှု (`service.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `catalog/`        | OpenRouter ကတ်တလောက် စင့်ခ်လုပ်ခြင်း (`openrouterCatalog.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `cloudAgent/`     | Cloud agent မှတ်ပုံတင်စာရင်း: `api.ts`, `baseAgent.ts`, `db.ts`, `index.ts`, `registry.ts`, `types.ts`, `agents/{codex, devin, jules}.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `combos/`         | Combo ဖြေရှင်းရန် helper များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `compliance/`     | စစ်ဆေးမှု + provider စစ်ဆေးမှု: `index.ts`, `providerAudit.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `config/`         | Runtime config ချိတ်ဆက်ကုဒ်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `db/`             | SQLite domain module များ (§3.2.1 ကိုကြည့်ပါ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `display/`        | API တုံ့ပြန်ချက်များတွင် အသုံးပြုသည့် UI/display helper များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `embeddings/`     | Embedding service မှတ်ပုံတင်စာရင်း                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `env/`            | Env ဖွင့်တင်ခြင်း + အတွင်းပိုင်းစစ်ဆေးခြင်း                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `evals/`          | Eval လည်ပတ်မှု                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `guardrails/`     | `piiMasker.ts`, `promptInjection.ts`, `visionBridge.ts`, `visionBridgeHelpers.ts`, `registry.ts`, `base.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `jobs/`           | နောက်ခံအလုပ်များ (`autoUpdate.ts`, …)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `memory/`         | ရေရှည်တည်တံ့သော မှတ်ဉာဏ်: `store.ts`, `cache.ts`, `retrieval.ts`, `summarization.ts`, `extraction.ts`, `injection.ts`, `qdrant.ts`, `settings.ts`, `verify.ts`, `schemas.ts`, `types.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `monitoring/`     | `observability.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `oauth/`          | OAuth/import ပံ့ပိုးသူ မော်ဂျူးများ (22): `agy`, `antigravity`, `claude`, `cline`, `codebuddy-cn`, `codex`, `cursor`, `devin-desktop`, `ghe-copilot`, `github`, `gitlab-duo`, `grok-cli-oauth`, `grok-cli`, `kilocode`, `kimi-coding`, `kiro`, `openference`, `qoder`, `trae`, `xai-oauth`, `zed-hosted`, `zed`, အပြင် `services/`, `utils/`, နှင့် `constants/oauth.ts`                                                                                                                                                                                                                                                                                                                                                         |
+| `plugins/`        | ပလပ်ဂင် loader (`index.ts`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `promptCache/`    | `prefixAnalyzer.ts`, `index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `providerModels/` | စီမံခန့်ခွဲထားသော မော်ဒယ် ဘဝသံသရာ: `modelDiscovery.ts`, `managedModelImport.ts`, `managedAvailableModels.ts`, `cursorAgent.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `providers/`      | ပံ့ပိုးသူ အကူအညီပေးသည့် ဖိုင်များ: `catalog.ts`, `validation.ts`, `imageValidation.ts`, `claudeExtraUsage.ts`, `codexConnectionDefaults.ts`, `codexFastTier.ts`, `webCookieAuth.ts`, `managedAvailableModels.ts`, `requestDefaults.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `resilience/`     | `settings.ts` — circuit breaker၊ cooldown၊ lockout အတွက် ဆက်တင်များ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `runtime/`        | Runtime လုပ်ဆောင်ချက် ရှာဖွေဖော်ထုတ်မှု                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `search/`         | `executeWebSearch.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `services/`       | မြှုပ်နှံထားသော ဝန်ဆောင်မှု မူဘောင်: `ServiceSupervisor.ts` (လုပ်ဆောင်ချက် lock၊ ring buffer၊ health checker ပါဝင်သော အထွေထွေ child-process ကြီးကြပ်သူ)၊ `bootstrap.ts` (process အဆင့် မှတ်ပုံတင်ခြင်းနှင့် အလိုအလျောက် စတင်ခြင်း)၊ `registry.ts` (tool → supervisor မြေပုံ)၊ `apiKey.ts` (AES-256-GCM သော့သိမ်းဆည်းမှု)၊ `modelSync.ts` (ပုံမှန် မော်ဒယ် စင့်ခ်လုပ်ခြင်း)၊ `ringBuffer.ts` (5 MB စက်ဝိုင်းပုံ လော့ဂ်ဘူဖာ)၊ `healthCheck.ts` (HTTP ကျန်းမာရေး စစ်ဆေးမှု)၊ `types.ts`၊ `embedWsProxy.ts` (WebSocket ပရောက်စီ)၊ `installers/{ninerouter,cliproxy}.ts`။ `docs/frameworks/EMBEDDED-SERVICES.md` ကို ကြည့်ပါ                                                                                                          |
+| `agentSkills/`    | Agent Skills ကတ်တလောက် + ဂျင်နရေတာ: `catalog.ts` (getCatalog/getSkillById/filterCatalog/computeCoverage)၊ `generator.ts` (generateAgentSkills → `skills/{id}/SKILL.md` ကို ရေးသားသည်)၊ `openapiParser.ts` (OpenAPI spec မှ REST endpoints များကို ထုတ်ယူသည်)၊ `cliRegistryParser.ts` (bin/cli-registry မှ CLI ခွဲ command များကို ထုတ်ယူသည်)၊ `schemas.ts` (Zod: AgentSkillSchema, SkillCoverageSchema, ListQuerySchema, GenerateBodySchema)၊ `types.ts` (AgentSkill, SkillCoverage, SkillMarkdown, GeneratorReport)။ REST လမ်းကြောင်းများ (`/api/agent-skills/*`)၊ MCP tools (`omniroute_agent_skills_*`) နှင့် A2A skill `list-capabilities` တို့မှ အသုံးပြုသည်။ [AGENT-SKILLS.md](../frameworks/AGENT-SKILLS.md) ကို ကြည့်ပါ။ |
+| `skills/`         | Skill မူဘောင်: `registry.ts`, `executor.ts`, `interception.ts`, `injection.ts`, `sandbox.ts`, `custom.ts`, `hybrid.ts`, `builtins.ts`, `a2a.ts`, `providerSettings.ts`, `schemas.ts`, `skillssh.ts`, `types.ts` အပြင် `builtin/browser.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `spend/`          | `batchWriter.ts` (နောက်မှရေးသွင်း buffer)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `sync/`           | `bundle.ts`, `tokens.ts` (Cloud Sync)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `system/`         | စနစ်အဆင့် အထောက်အကူများ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `translator/`     | အပေါ်ဆုံးအဆင့် translator glue (`open-sse/translator/` သို့ လွှဲအပ်သည်)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `usage/`          | အသုံးပြုမှု စာရင်းအင်း: `costCalculator.ts`, `tokenAccounting.ts`, `usageHistory.ts`, `aggregateHistory.ts`, `usageStats.ts`, `callLogs.ts`, `callLogArtifacts.ts`, `fetcher.ts`, `providerLimits.ts`, `migrations.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `versionManager/` | အလိုအလျောက် အပ်ဒိတ် + ဗားရှင်း manifest                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `ws/`             | WebSocket တံတား                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `zed-oauth/`      | Zed editor OAuth လုပ်ငန်းစဉ်                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-`src/lib/` ရှိ အပေါ်ဆုံးအဆင့် ဖိုင်များ:
+`src/lib/` အတွင်းရှိ အပေါ်ဆုံးအဆင့် ဖိုင်များ:
 
-- ယခင်က `localDb.ts` barrel ကို ဖယ်ရှားလိုက်ပါပြီ — အသုံးပြုသူများသည် သီးခြား `src/lib/db/*` module များကို တိုက်ရိုက် import လုပ်ကြသည်။
-- `proxyHealth.ts`, `proxyLogger.ts`, `tokenHealthCheck.ts`, `localHealthCheck.ts`
-- `apiBridgeServer.ts`, `cacheLayer.ts`, `semanticCache.ts`, `settingsCache.ts`
-- `cloudSync.ts`, `initCloudSync.ts`
-- `cloudflaredTunnel.ts`, `ngrokTunnel.ts`, `tailscaleTunnel.ts`
-- `consoleInterceptor.ts`, `container.ts`, `gracefulShutdown.ts`, `idempotencyLayer.ts`
-- `ipUtils.ts`, `logEnv.ts`, `logPayloads.ts`, `logRotation.ts`
-- `modelAliasSeed.ts`, `modelCapabilities.ts`, `modelMetadataRegistry.ts`, `modelsDevSync.ts`
-- `piiSanitizer.ts`, `pricingSync.ts`
-- `apiKeyExposure.ts`, `cacheControlSettings.ts`, `dataPaths.ts`, `toolPolicy.ts`
-- `translatorEvents.ts`, `usageDb.ts`, `usageAnalytics.ts`, `webhookDispatcher.ts`
+- ရှေးဟောင်း `localDb.ts` barrel ကို ဖယ်ရှားလိုက်ပြီ — သုံးစွဲသူများသည် သီးခြား `src/lib/db/*` module များကို တိုက်ရိုက် import လုပ်ကြသည်။
+- `proxyHealth.ts`၊ `proxyLogger.ts`၊ `tokenHealthCheck.ts`၊ `localHealthCheck.ts`
+- `apiBridgeServer.ts`၊ `cacheLayer.ts`၊ `semanticCache.ts`၊ `settingsCache.ts`
+- `cloudSync.ts`၊ `initCloudSync.ts`
+- `cloudflaredTunnel.ts`၊ `ngrokTunnel.ts`၊ `tailscaleTunnel.ts`
+- `consoleInterceptor.ts`၊ `container.ts`၊ `gracefulShutdown.ts`၊ `idempotencyLayer.ts`
+- `ipUtils.ts`၊ `logEnv.ts`၊ `logPayloads.ts`၊ `logRotation.ts`
+- `modelAliasSeed.ts`၊ `modelCapabilities.ts`၊ `modelMetadataRegistry.ts`၊ `modelsDevSync.ts`
+- `piiSanitizer.ts`၊ `pricingSync.ts`
+- `apiKeyExposure.ts`၊ `cacheControlSettings.ts`၊ `dataPaths.ts`၊ `toolPolicy.ts`
+- `translatorEvents.ts`၊ `usageDb.ts`၊ `usageAnalytics.ts`၊ `webhookDispatcher.ts`
 
 #### 3.2.1 `src/lib/db/`
 
-Singleton SQLite ဒေတာဘေ့စ် (`core.ts` ထဲရှိ `getDbInstance()`၊ WAL journaling)။
-**routes သို့မဟုတ် handlers များတွင် raw SQL ကို ဘယ်တော့မျှ မရေးပါနှင့်** — ဤ module များမှတစ်ဆင့်သာ ဆောင်ရွက်ပါ။
+Singleton SQLite database (`core.ts` ထဲရှိ `getDbInstance()`၊ WAL journaling)။
+**Route များ သို့မဟုတ် handler များတွင် raw SQL လုံးဝ မရေးပါနှင့်** — ဤ module များမှတစ်ဆင့် သွားပါ။
 
-![ဒေတာဘေ့စ် schema ခြုံငုံသုံးသပ်ချက် (ရွေးချယ်ထားသော အဓိက ဇယားများ)](../diagrams/exported/db-schema-overview.svg)
+![Database schema အကြောင်းခြင်းရာ ခြုံငုံသုံးသပ်ချက် (ရွေးချယ်ထားသော core ဇယားများ)](../diagrams/exported/db-schema-overview.svg)
 
 > ရင်းမြစ်: [diagrams/db-schema-overview.mmd](../diagrams/db-schema-overview.mmd)
 
-ဒိုမိန်း module များ (တစ်ခုစီက ဇယား တစ်ခု သို့မဟုတ် တစ်ခုထက်ပို၍ ပိုင်ဆိုင်သည်): `apiKeys.ts`, `backup.ts`,
-`batches.ts`, `cleanup.ts`, `cliToolState.ts`, `combos.ts`,
-`commandCodeAuth.ts`, `compression.ts`, `compressionAnalytics.ts`,
-`compressionCacheStats.ts`, `compressionCombos.ts`, `compressionScheduler.ts`,
-`contextHandoffs.ts`, `core.ts`, `creditBalance.ts`, `databaseSettings.ts`,
-`detailedLogs.ts`, `domainState.ts`, `encryption.ts`, `evals.ts`, `files.ts`,
-`healthCheck.ts`, `jsonMigration.ts`, `migrationRunner.ts`,
-`modelComboMappings.ts`, `models.ts`, `oneproxy.ts`, `prompts.ts`,
-`providers.ts`, `providerLimits.ts`, `proxies.ts`, `quotaSnapshots.ts`,
-`readCache.ts`, `reasoningCache.ts`, `registeredKeys.ts`, `secrets.ts`,
-`sessionAccountAffinity.ts`, `settings.ts`, `stateReset.ts`, `stats.ts`,
-`syncTokens.ts`, `tierConfig.ts`, `upstreamProxy.ts`, `versionManager.ts`,
+Domain module များ (တစ်ခုချင်းစီသည် ဇယားတစ်ခု သို့မဟုတ် ထို့ထက်ပို၍ ပိုင်ဆိုင်သည်): `apiKeys.ts`၊ `backup.ts`၊
+`batches.ts`၊ `cleanup.ts`၊ `cliToolState.ts`၊ `combos.ts`၊
+`commandCodeAuth.ts`၊ `compression.ts`၊ `compressionAnalytics.ts`၊
+`compressionCacheStats.ts`၊ `compressionCombos.ts`၊ `compressionScheduler.ts`၊
+`contextHandoffs.ts`၊ `core.ts`၊ `creditBalance.ts`၊ `databaseSettings.ts`၊
+`detailedLogs.ts`၊ `domainState.ts`၊ `encryption.ts`၊ `evals.ts`၊ `files.ts`၊
+`healthCheck.ts`၊ `jsonMigration.ts`၊ `migrationRunner.ts`၊
+`modelComboMappings.ts`၊ `models.ts`၊ `oneproxy.ts`၊ `prompts.ts`၊
+`providers.ts`၊ `providerLimits.ts`၊ `proxies.ts`၊ `quotaSnapshots.ts`၊
+`readCache.ts`၊ `reasoningCache.ts`၊ `registeredKeys.ts`၊ `secrets.ts`၊
+`sessionAccountAffinity.ts`၊ `settings.ts`၊ `stateReset.ts`၊ `stats.ts`၊
+`syncTokens.ts`၊ `tierConfig.ts`၊ `upstreamProxy.ts`၊ `versionManager.ts`၊
 `webhooks.ts`။
 
-`migrations/` တွင် version သတ်မှတ်ထားသော `.sql` ဖိုင် ၁၆၈ ဖိုင် (idempotent, transactional) ပါဝင်ပြီး
-boot လုပ်စဉ်တွင် `migrationRunner.ts` က လုပ်ဆောင်သည်။
+`migrations/` တွင် version သတ်မှတ်ထားသော `.sql` ဖိုင် 168 ခု ပါဝင်သည် (idempotent၊ transactional) ပြီး boot ချိန်တွင် `migrationRunner.ts` မှ အကောင်အထည်ဖော်သည်။
 
-migration横跨 ဖန်တီးထားသော ဇယားများ (စုစုပေါင်း ၁၂၃ ခု):
+Migration များအတွင်း ဖန်တီးထားသော ဇယားများ (စုစုပေါင်း 123 ခု):
 
-`a`, `account_key_limits`, `api_keys`, `batches`, `call_logs`,
-`combo_adaptation_state`, `combos`, `command_code_auth_sessions`,
-`compression_analytics`, `compression_cache_stats`,
-`compression_combo_assignments`, `compression_combos`, `context_handoffs`,
-`daily_usage_summary`, `db_meta`, `domain_budgets`, `domain_circuit_breakers`,
-`domain_cost_history`, `domain_fallback_chains`, `domain_lockout_state`,
-`eval_cases`, `eval_runs`, `eval_suites`, `files`, `hourly_usage_summary`,
-`key_value`, `mcp_tool_audit`, `memories`, `model_combo_mappings`,
-`provider_connections`, `provider_key_limits`, `provider_nodes`,
-`proxy_assignments`, `proxy_logs`, `proxy_registry`, `quota_snapshots`,
-`reasoning_cache`, `registered_keys`, `request_detail_logs`,
-`routing_decisions`, `semantic_cache`, `session_account_affinity`,
-`skill_executions`, `skills`, `sync_tokens`, `tier_assignments`,
-`tier_config`, `upstream_proxy_config`, `usage_history`, `version_manager`,
-`webhooks` (memory ရှာဖွေမှုအတွက် FTS5 virtual ဇယားများ အပါအဝင်)။
+`a`၊ `account_key_limits`၊ `api_keys`၊ `batches`၊ `call_logs`၊
+`combo_adaptation_state`၊ `combos`၊ `command_code_auth_sessions`၊
+`compression_analytics`၊ `compression_cache_stats`၊
+`compression_combo_assignments`၊ `compression_combos`၊ `context_handoffs`၊
+`daily_usage_summary`၊ `db_meta`၊ `domain_budgets`၊ `domain_circuit_breakers`၊
+`domain_cost_history`၊ `domain_fallback_chains`၊ `domain_lockout_state`၊
+`eval_cases`၊ `eval_runs`၊ `eval_suites`၊ `files`၊ `hourly_usage_summary`၊
+`key_value`၊ `mcp_tool_audit`၊ `memories`၊ `model_combo_mappings`၊
+`provider_connections`၊ `provider_key_limits`၊ `provider_nodes`၊
+`proxy_assignments`၊ `proxy_logs`၊ `proxy_registry`၊ `quota_snapshots`၊
+`reasoning_cache`၊ `registered_keys`၊ `request_detail_logs`၊
+`routing_decisions`၊ `semantic_cache`၊ `session_account_affinity`၊
+`skill_executions`၊ `skills`၊ `sync_tokens`၊ `tier_assignments`၊
+`tier_config`၊ `upstream_proxy_config`၊ `usage_history`၊ `version_manager`၊
+`webhooks` (အပိုအဖြစ် memory ရှာဖွေမှုအတွက် FTS5 virtual table များ)။
 
-### 3.3 `src/domain/` — ဒိုမိန်းအလွှာ
+### 3.3 `src/domain/` — Domain အလွှာ
 
-ဒိုမိန်း service များနှင့် အကဲဖြတ်မှု contract များ။ module အချို့ကို live
-request path က ခေါ်ယူအသုံးပြုသည်; အခြားအချို့ကမူ standalone contract များအဖြစ်
-ဆက်လက်တည်ရှိနေသည်။ ဤ directory တစ်ခုလုံးသည် I/O ကင်းလွတ်သည်ဟု သို့မဟုတ်
-module တိုင်းကို ပြောင်းလဲခြင်းက production routing ကို သက်ရောက်စေသည်ဟု ယူဆမပါနှင့်။
+Domain service များနှင့် evaluation စာချုပ်များ။ module အချို့ကို live request path မှ ခေါ်ယူသည်။ အခြားအရာများမှာ standalone စာချုပ်များအဖြစ် ကျန်ရှိနေသည်။ ဤ directory တစ်ခုလုံးသည် I/O ကင်းရှင်းသည်ဟု သော်လည်းကောင်း၊ module တိုင်းကို ပြောင်းလဲခြင်းက production routing ကို သက်ရောက်သည်ဟု သော်လည်းကောင်း မယူဆပါနှင့်။
 
-လက်ရှိအသုံးပြုနေသော policy surface များမှာ `src/shared/utils/apiKeyPolicy.ts` နှင့်
-`src/sse/handlers/chat/resolvedModelPolicy.ts` တို့ဖြစ်သည်။ Live combo ကိုင်တွယ်မှုနှင့် target
-resolution တို့သည် `open-sse/services/combo.ts` ကို အသုံးပြုသည်။ စမ်းသပ်ထားသော `policyEngine.ts` နှင့်
-`comboResolver.ts` contract များသည် `src/lib/container.ts` နှင့် အတူစစ်ဆေးပြီးသော
-chat request path ၏ wiring မဟုတ်ပေ။ routing ပြောင်းလဲမှု စီစဉ်သောအခါ
-၎င်းတို့ကို ထို active surface များနှင့် သပ်သပ်စီ ခွဲထားပါ။
+လက်ရှိ အသုံးပြုနေသော policy မျက်နှာပြင်များမှာ `src/shared/utils/apiKeyPolicy.ts` နှင့် `src/sse/handlers/chat/resolvedModelPolicy.ts` ဖြစ်သည်။ လက်ရှိ combo ကိုင်တွယ်မှုနှင့် target ဖြေရှင်းမှုတို့သည် `open-sse/services/combo.ts` ကို အသုံးပြုသည်။ စမ်းသပ်ပြီးသော `policyEngine.ts` နှင့် `comboResolver.ts` စာချုပ်များသည် `src/lib/container.ts` နှင့်အတူ၊ စစ်ဆေးထားသော chat request path ၏ ချိတ်ဆက်မှု (wiring) မဟုတ်ပါ။ Routing ပြောင်းလဲမှု တစ်ခုကို စီစဉ်သောအခါ ၎င်းတို့ကို ထို တက်ကြွနေသော မျက်နှာပြင်များနှင့် ခွဲခြားထားပါ။
 
-| ဖိုင်                                      | ရည်ရွယ်ချက်                                                       |
-| ------------------------------------------ | ----------------------------------------------------------------- |
-| `policyEngine.ts`                          | စုထားထားသော policy-အကဲဖြတ်မှု contract                            |
-| `fallbackPolicy.ts`                        | Fallback ဆုံးဖြတ်ချက်သစ်ပင်                                       |
-| `costRules.ts`                             | ကုန်ကျစရိတ် တွက်ချက်မှု စည်းမျဉ်းများ                             |
-| `lockoutPolicy.ts`                         | မော်ဒယ် lockout ဆုံးဖြတ်ချက်များ                                  |
-| `tagRouter.ts`                             | Tag-အခြေပြု routing                                               |
-| `comboResolver.ts`                         | စုထားထားသော combo-ရွေးချယ်မှု contract                            |
-| `connectionModelRules.ts`                  | connection တစ်ခုချင်းစီအတွက် မော်ဒယ် filter များ                  |
-| `modelAvailability.ts`                     | မော်ဒယ် ရရှိနိုင်မှု စစ်ဆေးချက်                                   |
-| `degradation.ts`                           | Degraded-mode ပြောင်းလဲမှုများ                                    |
-| `providerExpiration.ts`                    | သက်တမ်းကုန်ဆုံးသော account/key ရှာဖွေတွေ့ရှိမှု                   |
-| `quotaCache.ts`                            | Cache လုပ်ထားသော quota ဆုံးဖြတ်ချက်များ                           |
-| `responses.ts`, `omnirouteResponseMeta.ts` | Response ပုံစံ helper များ                                        |
-| `configAudit.ts`                           | Config ပြောင်းလဲမှု audit                                         |
-| `assessment/`                              | မော်ဒယ် အကဲဖြတ်ချက် (RFC အရ၊ တစ်စိတ်တစ်ပိုင်း အကောင်အထည်ဖော်ပြီး) |
-| `types.ts`                                 | မျှဝေသုံးထားသော ဒိုမိန်း type များ                                |
+| ဖိုင်                                      | ရည်ရွယ်ချက်                                                          |
+| ------------------------------------------ | -------------------------------------------------------------------- |
+| `policyEngine.ts`                          | သီးသန့်ထားရှိသော policy-evaluation စာချုပ်                           |
+| `fallbackPolicy.ts`                        | Fallback ဆုံးဖြတ်ချက်သစ်ပင်                                          |
+| `costRules.ts`                             | ကုန်ကျစရိတ် တွက်ချက်မှု စည်းမျဉ်းများ                                |
+| `lockoutPolicy.ts`                         | မော်ဒယ် lockout ဆုံးဖြတ်ချက်များ                                     |
+| `tagRouter.ts`                             | Tag အခြေပြု routing                                                  |
+| `comboResolver.ts`                         | သီးသန့်ထားရှိသော combo ရွေးချယ်မှု စာချုပ်                           |
+| `connectionModelRules.ts`                  | ချိတ်ဆက်မှုတစ်ခုချင်းအလိုက် မော်ဒယ် filter များ                      |
+| `modelAvailability.ts`                     | မော်ဒယ် ရရှိနိုင်မှု စစ်ဆေးခြင်း                                     |
+| `degradation.ts`                           | ကျဆင်းသော mode အကူးအပြောင်းများ                                      |
+| `providerExpiration.ts`                    | သက်တမ်းကုန်ဆုံးသော account/key ရှာဖွေတွေ့ရှိမှု                      |
+| `quotaCache.ts`                            | Cache လုပ်ထားသော quota ဆုံးဖြတ်ချက်များ                              |
+| `responses.ts`၊ `omnirouteResponseMeta.ts` | Response ပုံသဏ္ဌာန် အကူအညီများ                                       |
+| `configAudit.ts`                           | Config ပြောင်းလဲမှု audit                                            |
+| `assessment/`                              | မော်ဒယ် အကဲဖြတ်ခြင်း (RFC အရ၊ တစ်စိတ်တစ်ပိုင်း အကောင်အထည်ဖော်ထားသည်) |
+| `types.ts`                                 | မျှဝေထားသော domain အမျိုးအစားများ                                    |
 
-### 3.4 `src/server/` — ဆာဗီးသန့်
+### 3.4 `src/server/` — Server သီးသန့်
 
-client component များမှ import လုပ်၍ မရပါ။
+Client component များမှ import လုပ်၍ မရပါ။
 
 ```
 server/
@@ -419,21 +408,21 @@ server/
 └── cors/origins.ts        CORS origin allowlist
 ```
 
-### 3.5 `src/shared/` — ဘေးကင်းစွာ မျှဝေအသုံးပြုနိုင်ခြင်း
+### 3.5 `src/shared/` — မျှဝေရန် ဘေးကင်းသည်
 
-ရည်ရွယ်ချက်အလိုက် ခွဲခြားထားသော subdirectory များအဖြစ် ဖွဲ့စည်းထားသည်—
+အာရုံစိုက်ထားသော ခွဲဖိုင်တွဲများအဖြစ် ပိုင်းခြားထားသည်-
 
-- `constants/` — `providers.ts` (Zod ဖြင့် စစ်ဆေးထားသော provider catalog), `models.ts`,
+- `constants/` — `providers.ts` (Zod ဖြင့် အတည်ပြုထားသော ပံ့ပိုးသူ ကတ်တလောက်), `models.ts`,
   `modelSpecs.ts`, `modelCompat.ts`, `pricing.ts`, `cliTools.ts`,
   `cliCompatProviders.ts`, `routingStrategies.ts`, `comboConfigMode.ts`,
-  `headers.ts`, `upstreamHeaders.ts` (တားဆီးစာရင်း), `mcpScopes.ts`,
+  `headers.ts`, `upstreamHeaders.ts` (ငြင်းပယ်စာရင်း), `mcpScopes.ts`,
   `errorCodes.ts`, `publicApiRoutes.ts`, `batch.ts`, `batchEndpoints.ts`,
   `bodySize.ts`, `colors.ts`, `appConfig.ts`, `config.ts`,
   `sidebarVisibility.ts`, `visionBridgeDefaults.ts`.
-- `validation/` — `schemas.ts` (Zod schema ~80 ခု), `compressionConfigSchemas.ts`,
+- `validation/` — `schemas.ts` (Zod schema ၈၀ ခန့်), `compressionConfigSchemas.ts`,
   `providerSchema.ts`, `settingsSchemas.ts`, `helpers.ts`.
-- `contracts/` — npm သို့ ထုတ်ဝေသော public API contract များ။
-- `types/` — မျှဝေအသုံးပြု TS type များ။
+- `contracts/` — npm သို့ ပို့ဆောင်သည့် အများသုံး API စာချုပ်များ။
+- `types/` — မျှဝေထားသော TS အမျိုးအစားများ။
 - `utils/` — `circuitBreaker.ts`, `apiAuth.ts`, `apiKey.ts`, `apiKeyPolicy.ts`,
   `api.ts`, `classify429.ts`, `cliCompat.ts`, `clipboard.ts`, `cloud.ts`, `cn.ts`,
   `cors.ts`, `featureFlags.ts`,
@@ -441,17 +430,16 @@ server/
   `machine.ts`, `machineId.ts`, `maskEmail.ts`, `modelCatalogSearch.ts`,
   `nodeRuntimeSupport.ts`, `parseApiKeys.ts`, `providerHints.ts`,
   `providerModelAliases.ts`, `rateLimiter.ts`, `releaseNotes.ts`,
-  `a11yAudit.ts`၊ အပြင် `services/`, `network/`,
-  `middleware/`, `schemas/`, `hooks/`, `components/` အောက်ရှိ dashboard hook/component များ။
-- `components/` — dashboard component API (`index.tsx` barrel: `Button`, `Input`,
-  `Select`, `Modal`, `Card`, `DataTable`, …)။ primitive များသည် vendored kit
-  (`packages/ui-kit` — `@omniroute/ui-kit/button` ကဲ့သို့သော component subpath ဖြင့်
-  import လုပ်သည်) ပေါ်တွင် adapter များအဖြစ် တည်ဆောက်ထားသောကြောင့် screen များသည်
-  ၎င်းတို့၏ import များကို မပြောင်းလဲဘဲ ဆက်လက်အသုံးပြုနိုင်ပြီး markup မှာ kit ၏
-  markup ဖြစ်သည်။ shell မှာ `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
-  (kit `SidebarProvider`/`SidebarInset`) ဖြစ်ပြီး `Sidebar.tsx` နှင့် `Header.tsx`
-  တို့ပါဝင်သည်။ icon များကို `Icon.tsx` နှင့် `constants/iconMap.ts` မှတဆင့်
-  အသုံးပြုသည်။ `docs/architecture/DESIGN_SYSTEM.md` ကို ကြည့်ရှုပါ။
+  `a11yAudit.ts`၊ အပြင် `services/`၊ `network/`၊
+  `middleware/`၊ `schemas/`၊ `hooks/`၊ `components/` အောက်ရှိ ဒက်ရှ်ဘုတ် hooks/components များ။
+- `components/` — ဒက်ရှ်ဘုတ် component API (`index.tsx` barrel: `Button`, `Input`,
+  `Select`, `Modal`, `Card`, `DataTable`, …)။ အခြေခံ component များသည်
+  vendored kit (`packages/ui-kit`၊ `@omniroute/ui-kit/button` ကဲ့သို့သော
+  component subpath ဖြင့် import လုပ်သည်) အပေါ်ရှိ adapter များဖြစ်သည်၊ ထို့ကြောင့်
+  screen များသည် ၎င်းတို့၏ import များကို ဆက်လက်ထားရှိပြီး markup မှာ
+  kit ၏ markup ဖြစ်သည်။ shell မှာ `layouts/DashboardLayout.tsx` → `layouts/DashboardShell.tsx`
+  (kit `SidebarProvider`/`SidebarInset`) ဖြစ်ပြီး `Sidebar.tsx` နှင့် `Header.tsx` ပါဝင်သည်၊ icon များသည်
+  `Icon.tsx` နှင့် `constants/iconMap.ts` မှတစ်ဆင့် သွားသည်။ `docs/architecture/DESIGN_SYSTEM.md` ကို ကြည့်ပါ။
 
 ---
 
@@ -711,46 +699,46 @@ bin/
 
 ---
 
-## 9. တောင်းဆိုမှု Pipeline (အကျဉ်းချုပ်)
+## 9. တောင်းဆိုမှု ပိုက်လိုင်း (အကျဉ်းချုပ်)
 
-![တောင်းဆိုမှု pipeline (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
+![တောင်းဆိုမှု ပိုက်လိုင်း (/v1/chat/completions)](../diagrams/exported/request-pipeline.svg)
 
-> ရင်းမြစ်: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
+> အရင်းအမြစ်: [diagrams/request-pipeline.mmd](../diagrams/request-pipeline.mmd)
 
 ```
-Client တောင်းဆိုမှု
+ကလိုင်းယင့် တောင်းဆိုမှု
   → /v1/chat/completions (route.ts)
-     CORS preflight စစ်ဆေးခြင်း
-     Zod validation (shared/validation/schemas.ts ရှိ chatCompletionsSchema)
-     Auth (extractApiKey + isValidApiKey သို့မဟုတ် requireManagementAuth)
-     Route ခွင့်ပြုချက် (src/server/authz/pipeline.ts)
-     API-key မူဝါဒ (src/shared/utils/apiKeyPolicy.ts; ရွေးချယ်ထားသော path ပေါ်တွင် enforced)
-     Guardrails (PII masker, prompt injection, vision bridge)
+     CORS preflight စစ်ဆေးမှု
+     Zod ဖြင့် အတည်ပြုစစ်ဆေးခြင်း (shared/validation/schemas.ts ရှိ chatCompletionsSchema)
+     အထောက်အထားစစ်ဆေးခြင်း (extractApiKey + isValidApiKey OR requireManagementAuth)
+     လမ်းကြောင်း ခွင့်ပြုချက် (src/server/authz/pipeline.ts)
+     API-key မူဝါဒ (src/shared/utils/apiKeyPolicy.ts; ရွေးချယ်ထားသော လမ်းကြောင်းတွင် ကျင့်သုံးသည်)
+     အကာအကွယ်လမ်းညွှန်များ (PII ဖုံးကွယ်စနစ်၊ prompt injection၊ vision bridge)
   → handleChatCore() (open-sse/handlers/chatCore.ts)
-     Cache စစ်ဆေးခြင်း (semantic + read cache)
-     Rate limit (rateLimitManager, accountSemaphore)
-     Combo routing (model သည် combo သို့ resolve ဖြစ်ပါက)
-       resolveComboTargets (open-sse/services/combo.ts) → target တစ်ခုချင်းစီ dispatch
+     Cache စစ်ဆေးမှု (semantic + read cache)
+     နှုန်းကန့်သတ်ချက် (rateLimitManager, accountSemaphore)
+     Combo လမ်းကြောင်းသတ်မှတ်ခြင်း (မော်ဒယ်က combo တစ်ခုအဖြစ် ဖြေရှင်းပါက)
+       resolveComboTargets (open-sse/services/combo.ts) → ပစ်မှတ်တစ်ခုချင်း ပို့ဆောင်ခြင်း
      translateRequest()  (open-sse/translator/request/*)
      getExecutor(providerId).execute()  (open-sse/executors/*)
-       upstream ကို fetch → accountFallback မှတဆင့် retry/backoff
+       upstream ကို fetch လုပ်ခြင်း → accountFallback မှတစ်ဆင့် ထပ်ကြိုးစားခြင်း/backoff
      translateResponse() (open-sse/translator/response/*)
-     SSE stream သို့မဟုတ် JSON response
-     Responses API ဖြစ်ပါက: open-sse/transformer/responsesTransformer.ts မှတဆင့် TransformStream
-  → Compliance audit (src/lib/compliance/)
-  → Client သို့ response
+     SSE stream သို့မဟုတ် JSON တုံ့ပြန်မှု
+     Responses API ဖြစ်ပါက: TransformStream ကို open-sse/transformer/responsesTransformer.ts မှတစ်ဆင့်
+  → လိုက်နာမှု စစ်ဆေးခြင်း (src/lib/compliance/)
+  → ကလိုင်းယင့်ထံ တုံ့ပြန်မှု
 ```
 
-### Resilience runtime အခြေအနေ (ယန္တရား သုံးခု)
+### Resilience လည်ပတ်မှု အခြေအနေ (ယန္တရား သုံးခု)
 
-| ယန္တရား                  | အပိုင်းအခြား                  | တည်နေရာ                                                                                                      |
-| ------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Provider circuit breaker | Provider တစ်ခုလုံး            | `src/shared/utils/circuitBreaker.ts`, `domain_circuit_breakers` တွင် persisted                               |
-| Connection cooldown      | account/key တစ်ခု             | `src/sse/services/auth.ts` ရှိ `markAccountUnavailable()`; `accountFallback.checkFallbackError()` မှ သုံးစွဲ |
-| Model lockout            | Provider + connection + model | `open-sse/services/accountFallback.ts`, `domain_lockout_state` တွင် persisted                                |
+| ယန္တရား                   | နယ်ပယ်                            | တည်ရှိရာ                                                                                                        |
+| ------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| ပံ့ပိုးသူ circuit breaker | ပံ့ပိုးသူ တစ်ခုလုံး               | `src/shared/utils/circuitBreaker.ts`၊ `domain_circuit_breakers` တွင် သိမ်းဆည်းထားသည်                            |
+| ချိတ်ဆက်မှု cooldown      | အကောင့်/key တစ်ခု                 | `src/sse/services/auth.ts` ရှိ `markAccountUnavailable()`; `accountFallback.checkFallbackError()` မှ သုံးစွဲသည် |
+| မော်ဒယ် lockout           | ပံ့ပိုးသူ + ချိတ်ဆက်မှု + မော်ဒယ် | `open-sse/services/accountFallback.ts`၊ `domain_lockout_state` တွင် သိမ်းဆည်းထားသည်                             |
 
-[RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) နှင့်
-[CLAUDE.md](../../CLAUDE.md) ရှိ သီးသန့်အပိုင်းကို ကြည့်ပါ။
+ကြည့်ပါ [RESILIENCE_GUIDE.md](./RESILIENCE_GUIDE.md) နှင့်
+[CLAUDE.md](../../CLAUDE.md) ရှိ သီးသန့်အပိုင်း။
 
 ---
 
