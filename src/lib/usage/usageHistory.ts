@@ -18,7 +18,7 @@ import {
   asRecord,
   buildLatencyStatsEntry,
   createLatencyBucket,
-  normalizeServiceTier,
+  mapUsageHistoryRow,
   resolvePositiveOption,
   toNumber,
   toStringOrNull,
@@ -35,6 +35,7 @@ import {
 } from "./completedRequestDetails";
 import { shouldPersistToDisk } from "./migrations";
 import { attemptWrite, isWriteLockError, scheduleWriteRetry } from "./usageWriteRetry";
+import { getCallLogApiKeyContext } from "./callLogApiKeyContext";
 
 export type PendingRequestMetadata = {
   clientEndpoint?: string | null;
@@ -359,8 +360,23 @@ export function sweepStalePendingRequests(
   for (const detail of pendingById.values()) {
     if (detail.stale) continue;
     if (now - detail.startedAt > maxAgeMs) {
-      detail.stale = true;
+      // Prune heavyweight payloads while preserving lightweight metadata
+      // needed for dashboard visibility: model, provider, correlationId, tokens,
+      // and the counters. The full request/response bodies are discarded so they
+      // no longer accumulate in RSS.
+      const before = pendingDetailBytes(detail);
+      detail.clientRequest = undefined;
+      detail.providerRequest = undefined;
+      detail.providerResponse = undefined;
+      detail.clientResponse = undefined;
+      detail.streamChunks = undefined;
+      detail.stage = undefined;
+      detail.stageUpdatedAt = undefined;
+      detail.error = undefined;
+      detail.errorCode = undefined;
+      totalPendingDetailBytes += pendingDetailBytes(detail) - before;
       detail.sweptAt = now;
+      detail.stale = true;
     }
   }
 
@@ -548,6 +564,7 @@ export function updatePendingRequest(
   const before = pendingDetailBytes(details[lastIdx]);
   Object.assign(details[lastIdx], normalizePendingMetadata(metadata));
   totalPendingDetailBytes += pendingDetailBytes(details[lastIdx]) - before;
+  enforcePendingByteCeiling();
 }
 
 export function updatePendingRequestById(id: string | null, metadata: PendingRequestMetadata) {
@@ -556,6 +573,7 @@ export function updatePendingRequestById(id: string | null, metadata: PendingReq
   const before = pendingDetailBytes(detail);
   Object.assign(detail, normalizePendingMetadata(metadata));
   totalPendingDetailBytes += pendingDetailBytes(detail) - before;
+  enforcePendingByteCeiling();
   return true;
 }
 
@@ -689,6 +707,24 @@ export function finalizeMostRecentPendingRequest(
 
 export { getCompletedDetails } from "./completedRequestDetails";
 
+/** Store an owned snapshot so caller array mutations cannot bypass byte accounting. */
+export function updatePendingRequestStreamChunksById(
+  id: string,
+  streamChunks: PendingRequestDetail["streamChunks"]
+): boolean {
+  const entry = pendingById.get(id);
+  if (!entry) return false;
+  const before = pendingDetailBytes(entry);
+  entry.streamChunks = streamChunks
+    ? Object.fromEntries(
+        Object.entries(streamChunks).map(([key, chunks]) => [key, chunks?.slice()])
+      )
+    : streamChunks;
+  totalPendingDetailBytes += pendingDetailBytes(entry) - before;
+  enforcePendingByteCeiling();
+  return true;
+}
+
 export function updatePendingRequestStreamChunks(
   model: string,
   provider: string,
@@ -704,7 +740,7 @@ export function updatePendingRequestStreamChunks(
   if (!isSafeKey(modelKey)) return;
   const details = pendingRequests.details[connectionId]?.[modelKey];
   if (!details?.length) return;
-  details[0].streamChunks = streamChunks;
+  updatePendingRequestStreamChunksById(details[0].id, streamChunks);
 }
 
 /**
@@ -778,32 +814,7 @@ export async function getUsageDb(sinceIso?: string | null, limit?: number, curso
     rows = db.prepare(`SELECT * FROM usage_history ORDER BY timestamp ASC LIMIT ?`).all(maxRows);
   }
 
-  const history = rows.map((row) => {
-    const r = asRecord(row);
-    return {
-      provider: toStringOrNull(r.provider),
-      model: toStringOrNull(r.model),
-      connectionId: toStringOrNull(r.connection_id),
-      apiKeyId: toStringOrNull(r.api_key_id),
-      apiKeyName: toStringOrNull(r.api_key_name),
-      serviceTier: normalizeServiceTier(r.service_tier),
-      tokens: {
-        input: toNumber(r.tokens_input),
-        output: toNumber(r.tokens_output),
-        cacheRead: toNumber(r.tokens_cache_read),
-        cacheCreation: toNumber(r.tokens_cache_creation),
-        reasoning: toNumber(r.tokens_reasoning),
-      },
-      status: toStringOrNull(r.status),
-      success: toNumber(r.success) === 1,
-      latencyMs: toNumber(r.latency_ms),
-      timeToFirstTokenMs: toNumber(r.ttft_ms),
-      errorCode: toStringOrNull(r.error_code),
-      timestamp: toStringOrNull(r.timestamp),
-      cpaAuthIndex: toStringOrNull(r.cpa_auth_index),
-      cpaAccountLabel: null as string | null,
-    };
-  });
+  const history = rows.map(mapUsageHistoryRow);
   await attachCpaAccountLabels(history);
 
   // Provide next cursor if we hit the limit (more rows exist)
@@ -858,23 +869,48 @@ export interface UsageEntry {
 }
 
 /**
+ * Controls the legacy natural-key guard for one usage write.
+ *
+ * Normal callers keep the default so repeated callbacks for one request remain
+ * one row. A writer that already owns a distinct physical-attempt boundary may
+ * explicitly disable that guard without changing the row, cache, event, or
+ * account-attribution paths below.
+ */
+export interface SaveRequestUsageOptions {
+  deduplicate?: boolean;
+}
+
+/**
  * Save request usage entry to SQLite.
  */
-export async function saveRequestUsage(entry: UsageEntry) {
+export async function saveRequestUsage(entry: UsageEntry, options: SaveRequestUsageOptions = {}) {
   if (!shouldPersistToDisk) return;
 
   // Freeze the timestamp on the first attempt so the deferred retry replays
   // the same value and the dedup guard keys both attempts identically.
-  const frozenEntry = { ...entry, timestamp: entry.timestamp || new Date().toISOString() };
+  // Fall back to the request-scoped api-key context, exactly as saveCallLogOperation
+  // does. The context exists so callers need not thread identity through every
+  // handler, but this writer only ever read `entry.apiKeyId` — so media paths, which
+  // set the context once in the route, stored an unattributed usage row while their
+  // call-log row came out attributed. Attribution matters here more than in call_logs:
+  // this table is what the per-key usage aggregation reads. Resolved before the write
+  // so a deferred retry (outside the request's async context) keeps the attribution.
+  const apiKeyContext = getCallLogApiKeyContext();
+  const frozenEntry = {
+    ...entry,
+    timestamp: entry.timestamp || new Date().toISOString(),
+    apiKeyId: entry.apiKeyId || apiKeyContext?.apiKeyId || null,
+    apiKeyName: entry.apiKeyName || apiKeyContext?.apiKeyName || null,
+  };
 
   try {
-    attemptWrite(frozenEntry);
+    attemptWrite(frozenEntry, options);
   } catch (error) {
     if (!isWriteLockError(error)) {
       console.error("Failed to save usage stats:", error);
       return;
     }
-    scheduleWriteRetry(frozenEntry);
+    scheduleWriteRetry(frozenEntry, options);
   }
 }
 
@@ -919,32 +955,7 @@ export async function getUsageHistory(filter: UsageHistoryFilter = {}) {
   sql += " ORDER BY timestamp ASC";
 
   const rows = db.prepare(sql).all(params);
-  const history = rows.map((row) => {
-    const r = asRecord(row);
-    return {
-      provider: toStringOrNull(r.provider),
-      model: toStringOrNull(r.model),
-      connectionId: toStringOrNull(r.connection_id),
-      apiKeyId: toStringOrNull(r.api_key_id),
-      apiKeyName: toStringOrNull(r.api_key_name),
-      serviceTier: normalizeServiceTier(r.service_tier),
-      tokens: {
-        input: toNumber(r.tokens_input),
-        output: toNumber(r.tokens_output),
-        cacheRead: toNumber(r.tokens_cache_read),
-        cacheCreation: toNumber(r.tokens_cache_creation),
-        reasoning: toNumber(r.tokens_reasoning),
-      },
-      status: toStringOrNull(r.status),
-      success: toNumber(r.success) === 1,
-      latencyMs: toNumber(r.latency_ms),
-      timeToFirstTokenMs: toNumber(r.ttft_ms),
-      errorCode: toStringOrNull(r.error_code),
-      timestamp: toStringOrNull(r.timestamp),
-      cpaAuthIndex: toStringOrNull(r.cpa_auth_index),
-      cpaAccountLabel: null as string | null,
-    };
-  });
+  const history = rows.map(mapUsageHistoryRow);
   await attachCpaAccountLabels(history);
   return history;
 }
