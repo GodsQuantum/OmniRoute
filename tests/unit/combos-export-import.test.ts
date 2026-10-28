@@ -14,10 +14,12 @@ const TEST_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "omniroute-combos-ex
 const ORIGINAL_DATA_DIR = process.env.DATA_DIR;
 const ORIGINAL_INITIAL_PASSWORD = process.env.INITIAL_PASSWORD;
 process.env.DATA_DIR = TEST_DATA_DIR;
+process.env.API_KEY_SECRET = process.env.API_KEY_SECRET || "combos-export-import-test-secret";
 
 const core = await import("../../src/lib/db/core.ts");
 const combosDb = await import("../../src/lib/db/combos.ts");
 const settingsDb = await import("../../src/lib/db/settings.ts");
+const apiKeysDb = await import("../../src/lib/db/apiKeys.ts");
 const exportRoute = await import("../../src/app/api/combos/export/route.ts");
 const importRoute = await import("../../src/app/api/combos/import/route.ts");
 
@@ -212,6 +214,30 @@ test("import replace swaps visible combos for the file and keeps hidden system c
   assert.equal(body.removed, 1);
   assert.deepEqual(body.created, ["new-1", "new-2"]);
   assert.deepEqual(await comboNames(), ["hidden-quota", "new-1", "new-2"]);
+});
+
+test("import replace revokes key grants of dropped combos and keeps grants of re-imported names", async () => {
+  for (const name of ["stays", "dropped"]) {
+    await combosDb.createCombo({
+      name,
+      strategy: "priority",
+      models: [{ providerId: "claude", model: "claude/claude-sonnet-4-6" }],
+    });
+  }
+  const key = (await apiKeysDb.createApiKey("grants", "machine-test", [], {
+    allowedCombos: ["stays", "combo/dropped", "other"],
+  })) as { id: string };
+
+  const response = await importRoute.POST(
+    importRequest({
+      ...fileWith([{ name: "stays", models: [{ providerId: "openai", model: "openai/gpt-4o" }] }]),
+      mode: "replace",
+    })
+  );
+  assert.equal(response.status, 200);
+  assert.deepEqual(await comboNames(), ["stays"]);
+  const after = (await apiKeysDb.getApiKeyById(key.id)) as { allowedCombos?: string[] } | null;
+  assert.deepEqual(after?.allowedCombos, ["stays", "other"]);
 });
 
 test("import replace rolls back everything when an entry fails mid-way", async () => {

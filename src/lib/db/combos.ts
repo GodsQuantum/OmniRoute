@@ -10,7 +10,7 @@ import type { ComboRecord } from "@/domain/persistence/comboRepositories";
 import { backupDbFile } from "./backup";
 import { clearSessionModelHistoryForCombo } from "./contextHandoffs";
 import { getDbInstance } from "./core";
-import { invalidateCachedLKGP, invalidateDbCache } from "./readCache";
+import { invalidateCachedLKGP, invalidateDbCache, invalidateModelCatalogCache } from "./readCache";
 import { invalidateReasoningRoutingRuleCache } from "./reasoningRoutingRules";
 import { routingConfigRepositories } from "./repositories/routingConfigRepositories";
 
@@ -98,6 +98,12 @@ export async function importCombos(
   const result = routingConfigRepositories.legacySync.importComboBatch(entries, options);
   for (const key of result.lkgpKeys) invalidateCachedLKGP(key);
   if (result.removed > 0) invalidateReasoningRoutingRuleCache();
+  if (result.revokedKeys > 0) {
+    // Dynamic import: apiKeys pulls the combo policy back in (same as deleteCombo).
+    const { clearApiKeyCaches } = await import("./apiKeys");
+    clearApiKeyCaches();
+    invalidateModelCatalogCache();
+  }
   invalidateDbCache("combos");
   return { created: result.created, removed: result.removed };
 }

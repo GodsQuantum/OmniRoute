@@ -417,6 +417,7 @@ export interface ComboImportBatchResult {
   created: JsonRecord[];
   removed: number;
   lkgpKeys: string[];
+  revokedKeys: number;
 }
 
 /**
@@ -432,6 +433,7 @@ export function importComboBatch(
   const db = getDbInstance();
   const run = db.transaction(() => {
     const lkgpKeys: string[] = [];
+    const removedNames: string[] = [];
     let removed = 0;
     let purged = 0;
     if (options.replaceVisible) {
@@ -444,15 +446,20 @@ export function importComboBatch(
         removed += 1;
         purged += outcome.purged;
         lkgpKeys.push(...outcome.lkgpKeys);
+        if (outcome.name) removedNames.push(outcome.name);
       }
     }
     const created = entries.map((entry) => insertComboRow(entry));
-    return { created, removed, lkgpKeys, purged };
+    // Revoke key grants only for names the file did not bring back: the helper
+    // skips names that exist again, so a replaced combo keeps its grants.
+    let revokedKeys = 0;
+    for (const name of removedNames) revokedKeys += revokeComboGrantsByName(db, name).length;
+    return { created, removed, lkgpKeys, purged, revokedKeys };
   });
 
-  const { created, removed, lkgpKeys, purged } = run();
+  const { created, removed, lkgpKeys, purged, revokedKeys } = run();
   if (purged > 0) bumpProxyRegistryGeneration();
-  return { created, removed, lkgpKeys };
+  return { created, removed, lkgpKeys, revokedKeys };
 }
 
 export const sqliteComboRepository: ComboRepository = {
