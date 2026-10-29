@@ -21,6 +21,7 @@ const core = await import("../../src/lib/db/core.ts");
 const settingsDb = await import("../../src/lib/db/settings.ts");
 const providersDb = await import("../../src/lib/db/providers.ts");
 const combosDb = await import("../../src/lib/db/combos.ts");
+const modelsDb = await import("../../src/lib/db/models.ts");
 const catalogCache = await import("../../src/app/api/v1/models/catalogCache.ts");
 const modelsRoute = await import("../../src/app/api/v1/models/route.ts");
 const modelByIdRoute = await import("../../src/app/api/v1/models/[...model]/route.ts");
@@ -163,4 +164,37 @@ test("the auto/* candidate pool never reads exposeCombosOnly (catalog-only filte
       fs.readFileSync(path.join(autoComboDir, file), "utf8").includes("exposeCombosOnly")
     );
   assert.deepEqual(offenders, []);
+});
+
+test("flag on: ?includeHidden=1 still lists provider rows and the hidden model (#16749)", async () => {
+  await settingsDb.updateSettings({ exposeCombosOnly: false, hideAutoCombos: false });
+  const target = (await publicCatalog()).find(
+    (m) => m.owned_by === "openai" && m.id.startsWith("openai/") && m.id !== "openai/gpt-4o"
+  );
+  assert.ok(target, "fixture must expose a second openai model with the flag off");
+  const modelId = target.id.slice("openai/".length);
+
+  modelsDb.mergeModelCompatOverride("openai", modelId, { isHidden: true, modality: "chat" });
+  try {
+    await settingsDb.updateSettings({ exposeCombosOnly: true, hideAutoCombos: false });
+    const res = await managementCatalogRoute.GET(
+      new Request("http://localhost/api/models/catalog?includeHidden=1")
+    );
+    assert.equal(res.status, 200, await res.clone().text());
+    const body = (await res.json()) as {
+      catalog: Record<string, { models: Array<Row & { hidden?: boolean }> }>;
+    };
+    const providerRows = Object.entries(body.catalog)
+      .filter(([key]) => key !== "combo")
+      .flatMap(([, bucket]) => bucket.models);
+    assert.ok(
+      providerRows.length > 0,
+      "the hide/show view must keep provider rows while /v1/models lists combos only"
+    );
+    const hiddenRow = providerRows.find((m) => m.id === target.id);
+    assert.ok(hiddenRow, `hidden model ${target.id} must be listed with includeHidden=1`);
+    assert.equal(hiddenRow.hidden, true);
+  } finally {
+    modelsDb.mergeModelCompatOverride("openai", modelId, { isHidden: false, modality: "chat" });
+  }
 });

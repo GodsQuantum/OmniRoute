@@ -19,7 +19,13 @@ async function loadHiddenInclusiveRows(
   request: Request,
   visibleRows: CatalogRow[]
 ): Promise<{ rows: CatalogRow[]; annotate: VisibilityAnnotator } | null> {
-  const revealed = await getUnifiedModelsResponse(request, {}, { revealHidden: true });
+  // Same opt-out as the regular management build: the hide/show view needs provider
+  // rows even when /v1/models lists combos only.
+  const revealed = await getUnifiedModelsResponse(
+    request,
+    {},
+    { revealHidden: true, ignoreExposeCombosOnly: true }
+  );
   if (!revealed.ok) return null;
   const revealedBody = await revealed.json();
   let nodes: Awaited<ReturnType<typeof getCachedProviderNodes>> = [];

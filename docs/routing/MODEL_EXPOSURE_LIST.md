@@ -1,7 +1,7 @@
 ---
 title: "Model Exposure Allow/Deny List"
-version: 3.8.52
-lastUpdated: 2026-10-16
+version: 3.8.53
+lastUpdated: 2026-10-29
 ---
 
 # Model Exposure Allow/Deny List
