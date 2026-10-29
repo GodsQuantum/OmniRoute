@@ -6,15 +6,15 @@
 
 最終更新日: 2026-08-23
 
-OmniRoute は、3 つの専用ダッシュボードページに分かれた 3 種類の CLI ツールと連携します。
+OmniRoute 、3 つの専用ダッシュボード ページにまたがる 3 つのカテゴリのCLIツールと統合します。
 
-| ページ         | ルート                  | 概念                                                                                                | 数               |
-| -------------- | ----------------------- | --------------------------------------------------------------------------------------------------- | ---------------- |
-| **CLI Code's** | `/dashboard/cli-code`   | OmniRoute を接続先として使用するコーディングツール（クライアント → CLI → OmniRoute → プロバイダー） | 26               |
-| **CLI Agents** | `/dashboard/cli-agents` | OmniRoute を接続先として使用する自律型エージェント（同じフロー、より広いスコープ）                  | 10               |
-| **ACP Agents** | `/dashboard/acp-agents` | OmniRoute が stdio/ACP 経由でバックエンドとして起動する CLI（逆方向のフロー）                       | レジストリを参照 |
+| ページ              | ルート                  | コンセプト                                                                            | カウント         |
+| ------------------- | ----------------------- | ------------------------------------------------------------------------------------- | ---------------- |
+| **CLIコード**       | `/dashboard/cli-code`   | OmniRoute (クライアント→ CLI → OmniRoute →プロバイダー) で指定するコーディング ツール | 26               |
+| **CLIエージェント** | `/dashboard/cli-agents` | OmniRouteを指す自律エージェント (同じフロー、より広い範囲)                            | 11               |
+| **ACPエージェント** | `/dashboard/acp-agents` | stdio/ACP経由でOmniRouteバックエンドとして生成されるCLIs (逆フロー)                   | レジストリを参照 |
 
-旧ルートは 308 でリダイレクトされます: `/dashboard/cli-tools` → `/dashboard/cli-code`、`/dashboard/agents` → `/dashboard/acp-agents`。
+レガシー ルートは 308 経由でリダイレクトします: `/dashboard/cli-tools` → `/dashboard/cli-code`、 `/dashboard/agents` → `/dashboard/acp-agents`。
 
 ---
 
@@ -43,63 +43,28 @@ ACP Agents（逆方向の起動フロー）:
 
 ---
 
-## `setup-*` による自動設定
+## `setup-*`による自動構成
 
-各ツールの設定を手動で記述する必要はありません。OmniRoute には、サポート対象の CLI ごとに `setup-*`
-コマンドが用意されています。このコマンドは、実行中の OmniRoute（ローカルまたはリモート）から
-**ライブ**モデルカタログを読み取り、使用しているマシン上の各ツール固有の設定を書き込みます。
+各ツールの構成を手動で記述する必要はありません。 OmniRouteはCLI `setup-*`に、**ライブ**実行中のOmniRoute (ローカルまたはリモート) からモデル カタログを取得し、ツール独自の構成をマシンに書き込みます。
 
 ```bash
 omniroute setup-codex        omniroute setup-claude       omniroute setup-opencode
 omniroute setup-cline        omniroute setup-kilo         omniroute setup-continue
 omniroute setup-cursor       omniroute setup-roo          omniroute setup-crush
 omniroute setup-goose        omniroute setup-qwen         omniroute setup-aider
-omniroute setup-5dive
+omniroute setup-5dive        omniroute setup-zed
+omniroute setup-whycodes
 ```
 
-各コマンドでは `--remote <url> --api-key <key>`（ローカルツールをリモートの
-OmniRoute に接続するよう設定）、`--dry-run`（書き込まずにプレビュー）、および `--port` を使用できます。モデルの
-自動検出に対応していないツール（Cline、Kilo、Roo、Goose、Aider、Qwen、5dive）では、
-`--model <id>`（非対話実行の場合は `--yes` も）を指定します。`setup-5dive` は、
-`$HOME` 配下に書き込まない唯一のレシピです。フリートホスト上に root 所有の認証プロファイルを書き込むことで
-5dive エージェントフリートを設定するため、`sudo` を介して自身を再実行し、
-独自のリモートモードはありません。適切な環境変数を注入し、設定を一切書き込まずに CLI を
-起動するには、汎用の `omniroute run <target>` ランチャー（claude、codex、aider、goose、opencode、qwen、
-gemini — ターゲットとエイリアスは `bin/cli/cli-manifest.mjs` から取得）を使用します。従来の
-ツール別ランチャーである `omniroute launch`（Claude Code）と `omniroute launch-codex`
-（Codex）も引き続き利用できます。Gemini CLI は起動専用です。`omniroute run`
-のターゲットではありますが、`setup-*`/`configure` レシピはありません。
+それぞれが`--remote <url> --api-key <key>` (リモートOmniRouteに対してローカル ツールを構成)、 `--dry-run` (書き込みなしでプレビュー)、および`--port`を受け入れます。モデル自動検出のないツール (Cline、 Kilo、Roo、 Goose、Aider、 Qwen、 5dive、 WhyCodes) は`--model <id>` (および非対話型実行の場合は`--yes` ) を使用します。 `setup-5dive`は、 `$HOME`の下に書き込まない 1 つのレシピです。これは、ルート所有の認証プロファイルをフリート ホストに書き込むことによって 5dive エージェント フリートを構成するため、 `sudo`を通じて再実行され、独自のリモート モードはありません。適切な環境が挿入され、構成がまったく書き込まれていない状態でCLI起動するには、汎用の`omniroute run <target>`ランチャー (claude、codex、aider、goose、opencode、qwen、gemini、whycodes — ターゲットとエイリアスは`bin/cli/cli-manifest.mjs`から取得されます) を使用します。従来のツールごとのランチャー`omniroute launch` (Claudeコード) および`omniroute launch-codex` (Codex) は引き続き使用できます。 Gemini CLIは起動専用です。zqv ターゲットですが、 `omniroute run` /`configure`レシピ`setup-*`ありません。
 
-> **完全なリファレンス:** 各コマンドが書き込む内容、すべてのフラグ、
-> ローカルとリモートの違い、および `/v1` サフィックスを必要とするツールをまとめたマスターテーブルは、
-> **[CLI 連携](../guides/CLI-INTEGRATIONS.md)**にあります。
+> **完全な参照:**マスター テーブル — 各コマンドが書き込む内容、すべてのフラグ、ローカルとリモート、および`/v1`サフィックスが必要なツール — が存在します。** [CLI統合](../guides/CLI-INTEGRATIONS.md)**。
 
-### コンテナ内での実行
+### これらをコンテナ内で実行する
 
-OmniRoute コンテナ内で `setup-*` コマンドを実行すると、コンテナ自身の
-ホームディレクトリに書き込まれます。この設定はホスト側の CLI から読み取られず、
-コンテナが消えると失われます。OmniRoute はこの状況を検出し、書き込む代わりに
-手順を表示して終了コード `2` で終了します。サポートされる対処方法は 2 つあります。ホストに CLI をインストールして
-コンテナに対して `omniroute connect` を実行するか、設定ディレクトリをバインドマウントして
-`CLI_CONFIG_HOME`（compose の `host` プロファイル）を設定します。すべての `setup-*` コマンドに加えて、
-`omniroute configure` と `omniroute config set` でも、実際にコンテナ自身の CLI を
-設定する意図がある場合は `--allow-container-write` を指定できます。サーバーでは
-`OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true` で同じ動作になります。詳細は
-[Docker ガイド → ホスト CLI ツールの設定](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker)を参照してください。
+OmniRouteコンテナ内で実行される`setup-*`コマンドは、コンテナ自体のホームに書き込みます。ホストCLIはホームを読み取らず、コンテナとともに消去されます。 OmniRouteそれを検出し、書き込みではなく命令で`2`終了します。サポートされている 2 つの方法 - ホストにCLIをインストールし、コンテナーに`omniroute connect`をインストールするか、構成ディレクトリをバインドマウントして`CLI_CONFIG_HOME` ( `host`構成プロファイル) を設定します。すべての`setup-*`コマンド、さらに`omniroute configure`および`omniroute config set`、コンテナー独自のCLIsを構成するときに`--allow-container-write`を受け入れます。これが実際の意味です。 `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true`サーバーに対して同じことを行います。 [Dockerガイド→ホストCLIツールの構成」を](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker)参照してください。
 
-ダッシュボードの **適用エンドポイント**（`POST /api/cli-tools/apply`）にも
-同じガードが適用されます。コンテナ内では、書き込み先がホストからバインドマウントされていない場合、
-安全なエラーテキストとともに **`422`** および `containerEphemeralTarget: true` が返されます。
-さらに、ホスト用レシピがあるツール（claude、codex、opencode、cline、
-kilo、continue）については、代わりにホスト上で実行する `hostSetupCommand`
-（例: `omniroute setup-opencode`）も返されます。ファイルには何も書き込まれません。コンテナ
-モードでも `dryRun: true` は引き続き機能し、ディスクに触れることなく、編集済みのプレビューと
-書き込み先パスを返します。プレビュー内容は、コピーまたはインポートできる認証情報入りの設定ではありません。
-元のツール、ベース URL、API キー、モデルの入力値を使用してホスト上で適用するか、指定された
-ホスト側のセットアップコマンドを使用してください。プレビューヘッダーとリクエスト仕様については、
-[CLI 設定のセキュリティ](../security/CLI-CONFIGURATION.md)を参照してください。この動作は
-意図されたものであり、`tests/unit/api/cli-tools/apply-container-guard.test.ts`
-によるリグレッション防止の対象です。ガードを削除して 422 を「修正」してはいけません。
+ダッシュボードの**エンドポイントの適用**(`POST /api/cli-tools/apply`) は同じガードを適用します。コンテナ内では、ターゲットがホストからバインドマウントされていない書き込みが応答されます。**`422`** `containerEphemeralTarget: true`、安全なエラー テキスト、およびホスト レシピ (claude、codex、opencode、cline、kilo、Continue) を持つツールの場合 - 代わりにホスト上で実行する`hostSetupCommand` (例`omniroute setup-opencode`)。何も書かれていない。 `dryRun: true`コンテナ モードで動作し続け、ディスクに触れることなく編集されたプレビュー+ターゲット パスを返します。プレビュー コンテンツは、コピーまたはインポートできる資格情報を含む構成ではありません。ホスト上の元のtool/base URL/API key/model入力を使用して適用するか、示されたホスト側のセットアップ コマンドを使用します。プレビュー ヘッダーとリクエスト コントラクトについては、 [CLI構成セキュリティ」](../security/CLI-CONFIGURATION.md)を参照してください。この動作は意図的であり、 `tests/unit/api/cli-tools/apply-container-guard.test.ts`によって回帰保護されています。ガードを削除して 422 を「修正」しないでください。
 
 ---
 
@@ -135,16 +100,16 @@ kilo、continue）については、代わりにホスト上で実行する `hos
 
 ---
 
-## 1. CLI Code のカタログ（26ツール）
+## 1. CLI Code のカタログ（27 ツール）
 
-`/dashboard/cli-code` に表示されるすべてのツール。`baseUrlSupport: none` のツールは、カスタムベースURLではなく、MITMまたは手動ガイドを介して接続されます。
+`/dashboard/cli-code` に表示されるすべてのツール。`baseUrlSupport: none` のツールは、カスタムベース URL の代わりに MITM または手動ガイドを介して接続されます。
 
-| id           | name                    | vendor              | baseUrlSupport | configType     | acpSpawnable |
+| id           | 名前                    | ベンダー            | baseUrlSupport | configType     | acpSpawnable |
 | ------------ | ----------------------- | ------------------- | -------------- | -------------- | ------------ |
 | claude       | Claude Code             | Anthropic           | full           | env            | true         |
 | codex        | OpenAI Codex CLI        | OpenAI              | full           | custom         | true         |
 | zcode        | ZCode (GLM Coding Plan) | Z.ai                | none           | custom         | false        |
-| cline        | Cline                   | OSS (ex-Claude Dev) | full           | custom         | true         |
+| cline        | Cline                   | OSS (旧 Claude Dev) | full           | custom         | true         |
 | kilo         | Kilo Code               | Kilo-Org            | full           | custom         | false        |
 | roo          | Roo Code                | Roo (OSS)           | full           | guide          | false        |
 | continue     | Continue                | continue.dev        | full           | guide          | false        |
@@ -153,7 +118,7 @@ kilo、continue）については、代わりにホスト上で実行する `hos
 | jcode        | jcode                   | 1jehuang (OSS)      | full           | custom         | false        |
 | deepseek-tui | DeepSeek TUI            | Hunter Bown (OSS)   | full           | custom         | false        |
 | codewhale    | CodeWhale               | Hmbown (OSS)        | full           | custom         | false        |
-| opencode     | OpenCode                | Anomaly (ex-SST)    | full           | guide          | true         |
+| opencode     | OpenCode                | Anomaly (旧 SST)    | full           | guide          | true         |
 | droid        | Factory Droid           | Factory AI          | partial        | guide          | false        |
 | copilot      | GitHub Copilot CLI      | GitHub/MS           | full           | custom         | false        |
 | cursor-cli   | Cursor CLI              | Anysphere           | partial        | guide          | true         |
@@ -162,31 +127,33 @@ kilo、continue）については、代わりにホスト上で実行する `hos
 | grok-build   | Grok Build              | xAI                 | full           | custom         | false        |
 | crush        | Crush                   | OSS (Charm)         | full           | custom         | false        |
 | qwen         | Qwen Code               | Alibaba             | full           | guide          | true         |
+| zed          | Zed                     | Zed Industries      | full           | guide          | false        |
 | cursor       | Cursor                  | Anysphere           | none           | guide          | false        |
 | antigravity  | Antigravity             | Google              | none           | mitm           | false        |
 | hermes       | Hermes                  | Nous Research       | none           | guide          | false        |
 | kiro         | Kiro AI                 | Amazon              | none           | mitm           | false        |
-| custom       | Custom CLI              | —                   | full           | custom-builder | false        |
+| custom       | カスタム CLI            | —                   | full           | custom-builder | false        |
 
-`baseUrlSupport: "partial"` のツールでは、ダッシュボードカードに「⚠ ベースURLの部分的サポート」バッジが表示されます。
+`baseUrlSupport: "partial"` のツールでは、ダッシュボードカードに「⚠ 部分的なベース URL」というバッジが表示されます。
 ---
 
-## 2. CLI エージェントカタログ（10 ツール）
+## 2. CLIエージェント カタログ (11 ツール)
 
-`/dashboard/cli-agents` に表示される自律型エージェント：
+`/dashboard/cli-agents`に表示される自律エージェント:
 
-| id           | name             | vendor                   | baseUrlSupport | acpSpawnable |
-| ------------ | ---------------- | ------------------------ | -------------- | ------------ |
-| hermes-agent | Hermes Agent     | Nous Research            | full           | false        |
-| openclaw     | OpenClaw         | OSS (P. Steinberger)     | full           | true         |
-| goose        | Goose            | Block / Linux Foundation | full           | true         |
-| interpreter  | Open Interpreter | OSS                      | full           | true         |
-| warp         | Warp AI          | Warp Inc.                | partial        | true         |
-| agent-deck   | Agent Deck       | asheshgoplani (OSS)      | full           | false        |
-| omp          | Oh My Pi         | OSS                      | full           | true         |
-| letta        | Letta CLI        | Letta                    | full           | false        |
-| prime-agent  | Prime Agent      | Prime Intellect (OSS)    | full           | false        |
-| 5dive        | 5dive            | OSS (5dive-ai)           | full           | false        |
+| ID                   | 名前                     | ベンダー                     | ベースURLサポート | acpスポーン可能 |
+| -------------------- | ------------------------ | ---------------------------- | ----------------- | --------------- |
+| エルメスエージェント | ヘルメスエージェント     | ヌース研究                   | 満杯              | 間違い          |
+| オープンクロー       | OpenClaw                 | OSS (P. スタインバーガー)    | 満杯              | 真実            |
+| ガチョウ             | ガチョウ                 | ブロック / Linux財団         | 満杯              | 真実            |
+| 通訳者               | オープンインタープリター | OSS                          | 満杯              | 真実            |
+| ワープ               | Warp AI                  | 株式会社Warp                 | 部分的            | 真実            |
+| エージェントデッキ   | エージェントデッキ       | アシュシュゴプラニ (OSS)     | 満杯              | 間違い          |
+| ああ                 | オーマイパイ             | OSS                          | 満杯              | 真実            |
+| レッタ               | レッタ・CLI              | レッタ                       | 満杯              | 間違い          |
+| プライムエージェント | プライムエージェント     | プライム・インテレクト (OSS) | 満杯              | 間違い          |
+| 5ダイブ              | 5ダイブ                  | OSS (5dive-ai)               | 満杯              | 間違い          |
+| なぜコード           | WhyCodes                 | なぜ株式会社なのか           | 満杯              | 間違い          |
 
 ---
 

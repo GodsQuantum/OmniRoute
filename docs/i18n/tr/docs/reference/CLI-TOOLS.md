@@ -6,15 +6,15 @@
 
 Son güncelleme: 2026-08-23
 
-OmniRoute, üç özel pano sayfasına dağıtılmış üç CLI aracı kategorisiyle entegre olur:
+OmniRoute üç özel kontrol paneli sayfasına yayılmış üç CLI aracı kategorisiyle entegre olur:
 
-| Sayfa             | Rota                    | Kavram                                                                                | Sayı                  |
-| ----------------- | ----------------------- | ------------------------------------------------------------------------------------- | --------------------- |
-| **CLI Kodları**   | `/dashboard/cli-code`   | OmniRoute'a yönlendirdiğiniz kodlama araçları (İstemci → CLI → OmniRoute → Sağlayıcı) | 26                    |
-| **CLI Aracıları** | `/dashboard/cli-agents` | OmniRoute'a yönlendirdiğiniz otonom aracılar (aynı akış, daha geniş kapsam)           | 10                    |
-| **ACP Aracıları** | `/dashboard/acp-agents` | OmniRoute'un stdio/ACP aracılığıyla arka uç olarak başlattığı CLI'lar (ters akış)     | kayıt defterine bakın |
+| Sayfa                | Rota                    | Konsept                                                                               | Saymak                |
+| -------------------- | ----------------------- | ------------------------------------------------------------------------------------- | --------------------- |
+| **CLI Kodu**         | `/dashboard/cli-code`   | OmniRoute işaret ettiğiniz kodlama araçları (İstemci → CLI → OmniRoute → Sağlayıcısı) | 26                    |
+| **CLI Temsilcileri** | `/dashboard/cli-agents` | OmniRoute işaret ettiğiniz otonom aracılar (aynı akış, daha geniş kapsam)             | 11                    |
+| **ACP Temsilcileri** | `/dashboard/acp-agents` | OmniRoute stdio/ACP aracılığıyla arka uç olarak ortaya çıktığı CLIs (ters akış)       | kayıt defterine bakın |
 
-Eski rotalar 308 aracılığıyla yönlendirilir: `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`.
+Eski rotalar 308 aracılığıyla yeniden yönlendirilir: `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`.
 
 ---
 
@@ -45,68 +45,26 @@ ACP Aracıları (ters başlatma akışı):
 
 ## `setup-*` ile otomatik yapılandırma
 
-Her aracın yapılandırmasını elle yazmanız gerekmez. OmniRoute, desteklenen her CLI
-için çalışan bir OmniRoute'tan (yerel veya uzak) **canlı** model kataloğunu okuyan
-ve aracın kendi yapılandırmasını makinenize yazan bir `setup-*` komutu sunar:
+Her aracın yapılandırmasını elle yazmanıza gerek yoktur. OmniRoute desteklenen CLI başına şunu okuyan bir `setup-*` komutu gönderir:** canlı** çalışan bir OmniRoute (yerel veya uzak) model kataloğunu alır ve aracın kendi yapılandırmasını makinenize yazar:
 
 ```bash
 omniroute setup-codex        omniroute setup-claude       omniroute setup-opencode
 omniroute setup-cline        omniroute setup-kilo         omniroute setup-continue
 omniroute setup-cursor       omniroute setup-roo          omniroute setup-crush
 omniroute setup-goose        omniroute setup-qwen         omniroute setup-aider
-omniroute setup-5dive
+omniroute setup-5dive        omniroute setup-zed
+omniroute setup-whycodes
 ```
 
-Her biri `--remote <url> --api-key <key>` (yerel bir aracı uzak bir OmniRoute'a
-göre yapılandırma), `--dry-run` (yazmadan önizleme) ve `--port` seçeneklerini kabul
-eder. Otomatik model keşfi olmayan araçlar (Cline, Kilo, Roo, Goose, Aider, Qwen,
-5dive) `--model <id>` seçeneğini (ve etkileşimsiz çalıştırmalar için `--yes`
-seçeneğini) alır. `setup-5dive`, `$HOME` altına yazmayan tek tariftir: filo
-ana makinesine root sahipliğinde bir kimlik doğrulama profili yazarak bir 5dive
-aracı filosunu yapılandırır; bu nedenle `sudo` aracılığıyla kendisini yeniden
-çalıştırır ve kendine ait bir uzak modu yoktur. Doğru ortam değişkenleri eklenmiş
-ve hiçbir yapılandırma yazılmamış şekilde bir CLI başlatmak için genel
-`omniroute run <target>` başlatıcısını kullanın (claude, codex, aider, goose,
-opencode, qwen, gemini — hedefler ve takma adlar `bin/cli/cli-manifest.mjs`
-dosyasından gelir); eski araç başına başlatıcılar olan `omniroute launch`
-(Claude Code) ve `omniroute launch-codex` (Codex) kullanılabilir olmaya devam
-eder. Gemini CLI yalnızca başlatma içindir: bir `omniroute run` hedefidir ancak
-`setup-*`/`configure` tarifi yoktur.
+Her biri `--remote <url> --api-key <key>` (uzak bir OmniRoute karşı yerel bir araç yapılandırma), `--dry-run` (yazmadan önizleme) ve `--port` kabul eder. Otomatik model bulma özelliğine sahip olmayan araçlar (Cline, Kilo, Roo, Goose, Aider, Qwen, 5dive, WhyCodes) `--model <id>` (ve etkileşimli olmayan çalışmalar için `--yes` ) alır. `setup-5dive` `$HOME` altına yazılmayan tek tariftir: filo ana bilgisayarına root'a ait bir kimlik doğrulama profili yazarak 5dive aracı filosunu yapılandırır, böylece `sudo` aracılığıyla yeniden çalıştırılır ve kendine ait bir uzaktan modu yoktur. Doğru env enjekte edilmiş ve hiçbir yapılandırma yazılmamış bir CLI başlatmak için genel `omniroute run <target>` başlatıcısını kullanın (claude, codex, aider, goose, opencode, qwen, gemini, Whycodes — hedefler ve takma adlar `bin/cli/cli-manifest.mjs` gelir); eski araç başına başlatıcılar `omniroute launch` (Claude Code) ve `omniroute launch-codex` (Codex) kullanılabilir durumda kalır. Gemini CLI yalnızca başlatma amaçlıdır: bir `omniroute run` hedefidir ancak `setup-*`/`configure` tarifi yoktur.
 
-> **Tam başvuru:** her komutun ne yazdığı, tüm seçenekler, yerel ve uzak kullanım
-> arasındaki farklar ve hangi araçların `/v1` son ekini istediği hakkındaki ana
-> tablo **[CLI Entegrasyonları](../guides/CLI-INTEGRATIONS.md)** bölümünde yer alır.
+> **Tam referans:** ana tablo - her komutun ne yazdığı, her bayrak, yerel ve uzak ve hangi araçların `/v1` sonekini istediği - içinde yaşar** [CLI Entegrasyonları](../guides/CLI-INTEGRATIONS.md)** .
 
-### Bunları bir konteyner içinde çalıştırma
+### Bunları bir konteynerin içinde çalıştırmak
 
-OmniRoute konteyneri içinde çalıştırılan bir `setup-*` komutu, konteynerin kendi
-ana dizinine yazar; bu dizin hiçbir ana makine CLI'ı tarafından okunmaz ve
-konteynerle birlikte kaybolur. OmniRoute bunu algılar ve yazmak yerine
-talimatlarla birlikte `2` koduyla çıkar. Desteklenen iki ilerleme yöntemi vardır:
-CLI'ı ana makineye kurup konteynere `omniroute connect` ile bağlanmak veya
-yapılandırma dizinlerini bağlama noktası olarak ekleyip `CLI_CONFIG_HOME`
-değerini ayarlamak (compose `host` profili). Her `setup-*` komutu ile
-`omniroute configure` ve `omniroute config set`, gerçekten konteynerin kendi
-CLI'larını yapılandırmak istediğinizde `--allow-container-write` seçeneğini kabul
-eder; `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true` sunucu için aynı işlemi
-gerçekleştirir. Bkz.
-[Docker Kılavuzu → OmniRoute Docker'da çalışırken ana makine CLI araçlarını yapılandırma](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker).
+OmniRoute konteynerinin içinde yürütülen bir `setup-*` komutu, konteynerin kendi evine yazar; hiçbir CLI ana bilgisayarı bunu okumaz ve konteynerle birlikte kaybolur. OmniRoute bunu algılar ve `2` yazmak yerine talimatlarla çıkar. Desteklenen iki yol vardır: CLI ana bilgisayara ve `omniroute connect` konteynere yükleyin veya yapılandırma dizinlerini bağlayın ve `CLI_CONFIG_HOME` ( `host` profili oluşturma) ayarlayın. `omniroute configure` ve `omniroute config set` ek olarak her `setup-*` komutu, kabın kendi CLIs yapılandırırken `--allow-container-write` kabul eder; gerçekte kast ettiğiniz budur; `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true` aynısını sunucu için yapar. Bkz. [Docker Kılavuzu → Ana makine CLI araçlarını yapılandırma](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker).
 
-Panonun **uygulama uç noktası** (`POST /api/cli-tools/apply`) aynı korumayı
-uygular: bir konteynerde, hedefi ana makineden bağlanmamış bir yazma işlemi,
-hiçbir şey yazmadan güvenli hata metniyle, `containerEphemeralTarget: true`
-değeriyle ve ana makine tarifi bulunan araçlar (claude, codex, opencode, cline,
-kilo, continue) için bunun yerine ana makinede çalıştırılacak bir
-`hostSetupCommand` (ör. `omniroute setup-opencode`) ile **`422`** yanıtını verir.
-`dryRun: true`, konteyner modunda çalışmaya devam eder ve diske dokunmadan
-sansürlenmiş bir önizleme ile hedef yolu döndürür. Önizleme içeriği, kopyalanacak
-veya içe aktarılacak kimlik bilgileri içeren bir yapılandırma değildir. Özgün
-araç/temel URL/API anahtarı/model girdileriyle ana makinede uygulayın veya
-belirtilen ana makine tarafındaki kurulum komutunu kullanın. Önizleme üstbilgisi
-ve istek sözleşmesi için [CLI yapılandırma güvenliği](../security/CLI-CONFIGURATION.md)
-bölümüne bakın. Bu davranış kasıtlıdır ve
-`tests/unit/api/cli-tools/apply-container-guard.test.ts` tarafından regresyona
-karşı korunur — korumayı kaldırarak bir 422 hatasını asla "düzeltmeyin".
+Kontrol paneli** uç noktayı uygula** (`POST /api/cli-tools/apply`) aynı korumayı uygular: bir kapsayıcıda, hedefi ana bilgisayardan bağlamaya bağlanmamış bir yazma yanıtları**`422`** `containerEphemeralTarget: true` ile güvenli hata metni ve — ana bilgisayar tarifine sahip araçlar için (claude, codex, opencode, cline, kilo, devam) — bunun yerine ana bilgisayarda çalıştırılacak bir `hostSetupCommand` (örneğin `omniroute setup-opencode`); hiçbir şey yazılmıyor. `dryRun: true` kapsayıcı modunda çalışmaya devam eder ve diske dokunmadan, düzenlenmiş bir önizleme + hedef yolu döndürür. Önizleme içeriği, kopyalanacak veya içe aktarılacak kimlik bilgisi taşıyan bir yapılandırma değildir. Ana bilgisayardaki orijinal tool/base URL/API key/model girişleriyle uygulayın veya belirtilen ana bilgisayar tarafı kurulum komutunu kullanın. Önizleme başlığı ve istek sözleşmesi için [CLI yapılandırma güvenliğine](../security/CLI-CONFIGURATION.md) bakın. Bu davranış kasıtlıdır ve `tests/unit/api/cli-tools/apply-container-guard.test.ts` tarafından regresyon korumalıdır - asla korumayı kaldırarak 422'yi "düzeltmeyin".
 
 ---
 
@@ -149,9 +107,9 @@ yüzeye eklenip diğerlerine eklenmeyen bir hedef, sessizce sapmaya yol açmak y
 
 ---
 
-## 1. CLI Code Kataloğu (26 araç)
+## 1. CLI Code Kataloğu (27 araç)
 
-`/dashboard/cli-code` içinde görünen tüm araçlar. `baseUrlSupport: none` olanlar, özel bir temel URL yerine MITM veya manuel bir kılavuz aracılığıyla bağlanır:
+`/dashboard/cli-code` içinde görünen tüm araçlar. `baseUrlSupport: none` olanlar, özel bir temel URL yerine MITM veya manuel bir rehber aracılığıyla yapılandırılır:
 
 | id           | name                    | vendor                | baseUrlSupport | configType     | acpSpawnable |
 | ------------ | ----------------------- | --------------------- | -------------- | -------------- | ------------ |
@@ -176,31 +134,33 @@ yüzeye eklenip diğerlerine eklenmeyen bir hedef, sessizce sapmaya yol açmak y
 | grok-build   | Grok Build              | xAI                   | full           | custom         | false        |
 | crush        | Crush                   | OSS (Charm)           | full           | custom         | false        |
 | qwen         | Qwen Code               | Alibaba               | full           | guide          | true         |
+| zed          | Zed                     | Zed Industries        | full           | guide          | false        |
 | cursor       | Cursor                  | Anysphere             | none           | guide          | false        |
 | antigravity  | Antigravity             | Google                | none           | mitm           | false        |
 | hermes       | Hermes                  | Nous Research         | none           | guide          | false        |
 | kiro         | Kiro AI                 | Amazon                | none           | mitm           | false        |
 | custom       | Özel CLI                | —                     | full           | custom-builder | false        |
 
-`baseUrlSupport: "partial"` olan araçların pano kartında "⚠ Kısmi temel URL" rozeti gösterilir.
+`baseUrlSupport: "partial"` olan araçların kontrol paneli kartında "⚠ Kısmi Temel URL" rozeti gösterilir.
 ---
 
-## 2. CLI Aracıları Kataloğu (10 araç)
+## 2. CLI Acenteler Kataloğu (11 araç)
 
-`/dashboard/cli-agents` sayfasında görünen otonom aracılar:
+`/dashboard/cli-agents` görünen otonom aracılar:
 
-| id           | ad               | sağlayıcı                | baseUrl desteği | ACP ile başlatılabilir |
-| ------------ | ---------------- | ------------------------ | --------------- | ---------------------- |
-| hermes-agent | Hermes Agent     | Nous Research            | tam             | false                  |
-| openclaw     | OpenClaw         | OSS (P. Steinberger)     | tam             | true                   |
-| goose        | Goose            | Block / Linux Foundation | tam             | true                   |
-| interpreter  | Open Interpreter | OSS                      | tam             | true                   |
-| warp         | Warp AI          | Warp Inc.                | kısmi           | true                   |
-| agent-deck   | Agent Deck       | asheshgoplani (OSS)      | tam             | false                  |
-| omp          | Oh My Pi         | OSS                      | tam             | true                   |
-| letta        | Letta CLI        | Letta                    | tam             | false                  |
-| prime-agent  | Prime Agent      | Prime Intellect (OSS)    | tam             | false                  |
-| 5dive        | 5dive            | OSS (5dive-ai)           | tam             | false                  |
+| İD             | isim                | satıcı                | baseUrlDestek | acpSpawnable |
+| -------------- | ------------------- | --------------------- | ------------- | ------------ |
+| Hermes ajanı   | Hermes Temsilcisi   | Nous Araştırması      | tam dolu      | YANLIŞ       |
+| açık pençe     | OpenClaw            | OSS (P. Steinberger)  | tam dolu      | doğru        |
+| Kaz            | Kaz                 | Blok / Linux Vakfı    | tam dolu      | doğru        |
+| tercüman       | Tercümanı Aç        | OSS                   | tam dolu      | doğru        |
+| çözgü          | Warp AI             | Warp Inc.             | kısmi         | doğru        |
+| ajan güvertesi | Ajan Destesi        | asheshgoplani (OSS)   | tam dolu      | YANLIŞ       |
+| aman tanrım    | Ah Pi'm             | OSS                   | tam dolu      | doğru        |
+| Letta          | Letta CLI           | Letta                 | tam dolu      | YANLIŞ       |
+| baş ajan       | Başbakan Temsilcisi | Prime Intellect (OSS) | tam dolu      | YANLIŞ       |
+| 5dalış         | 5dalış              | OSS (5dalış-ai)       | tam dolu      | YANLIŞ       |
+| neden kodları  | WhyCodes            | Neden Şirket          | tam dolu      | YANLIŞ       |
 
 ---
 

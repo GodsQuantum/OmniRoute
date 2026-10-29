@@ -53,7 +53,6 @@ export const USAGE_FETCHER_PROVIDERS = [
   "deepseek",
   "moonshot",
   "kimi",
-  "opencode",
   "opencode-zen",
   "xiaomi-mimo",
   "xiaomi-mimo-token-plan",
@@ -107,6 +106,9 @@ export const USAGE_FETCHER_PROVIDERS = [
   // AgentRouter (New-API) console balance (GET /api/user/self)
   "agentrouter",
   "kilocode",
+  // StepFun account balance (GET /v1/accounts; base URL override selects
+  // China vs international platform, mirroring the chat path)
+  "stepfun",
   // Devin CLI agentic quota (Codeium seat-management GetUserStatus, protobuf)
   "devin-cli",
   // ChatPlayground subscription and daily credits (GET /api/user)
