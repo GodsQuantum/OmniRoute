@@ -102,6 +102,8 @@ export type CatalogCacheOptions = {
   hideNoThinkVariants?: boolean;
   /** Public listing advertises only combos (`settings.exposeCombosOnly`). */
   exposeCombosOnly?: boolean;
+  /** Management-only build that keeps operator-hidden models (`/api/models/catalog`). */
+  revealHidden?: boolean;
   /**
    * Overrides `CATALOG_STALE_WHILE_REVALIDATE_MS` for this call only.
    *
@@ -284,9 +286,11 @@ function buildCatalogCacheKey(request: Request, catalogSettings?: CatalogCacheOp
   const hideAuto = catalogSettings?.hideAutoCombos ? "1" : "0";
   const hideNoThink = catalogSettings?.hideNoThinkVariants ? "1" : "0";
   const page = catalogPageCacheKey(parseCatalogPage(request));
-  // Appended only when set, so every key built with the flag off stays byte-identical.
+  // Each suffix is appended only when set, so every key built with both flags off
+  // (the public /v1/models default) stays byte-identical.
+  const reveal = catalogSettings?.revealHidden ? "|reveal" : "";
   const combosOnly = catalogSettings?.exposeCombosOnly ? "|combosOnly" : "";
-  return `${prefix}|${isCodex}|${fingerprintCatalogAuthKey(apiKey)}|${configuredOnly}|${hideAuto}|${hideNoThink}|${page}${combosOnly}`;
+  return `${prefix}|${isCodex}|${fingerprintCatalogAuthKey(apiKey)}|${configuredOnly}|${hideAuto}|${hideNoThink}|${page}${reveal}${combosOnly}`;
 }
 
 // Tracks the model-catalog cache version (src/lib/db/readCache.ts) as of the last
