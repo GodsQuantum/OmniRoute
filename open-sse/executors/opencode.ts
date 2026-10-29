@@ -66,6 +66,8 @@ import {
   noteFreeTierOutcome,
   prepareFreeTierRequest,
   rebuildJsonFromForcedStream,
+  resolveFreeTierCredential,
+  resolveGatedCredential,
   surfaceFromBaseUrl,
 } from "./opencodeFreeTierContract.ts";
 import {
@@ -110,8 +112,11 @@ import {
   isOpencodeRateLimited429EarlyStopEnabled,
   isOpencodeParkAndResumeEnabled,
   isOpencodePoolReselectEnabled,
+  isOpencodePublishedCatalogRoutingEnabled,
+  isOpencodeV2ClientFingerprintEnabled,
 } from "@/shared/utils/featureFlags";
-import { isEgressBucketedLockScope } from "../config/providerErrorRules.ts";
+import { setPublishedCatalogRoutingGate } from "../utils/opencodePublishedCatalog.ts";
+import { rotatesEgressOnQuotaRefusal } from "../config/providerErrorRules.ts";
 import {
   BURST_PARK_THRESHOLD,
   parkWaitMs,
@@ -189,10 +194,16 @@ export function parseEffortLevel(model: string): { baseModel: string; effort: st
   return null;
 }
 
+// #16798: the published-catalog surface lookup in providerModels.ts is client-reachable and
+// cannot import the server flag resolver; this executor (always loaded with the chat
+// pipeline) hands it the OPENCODE_PUBLISHED_CATALOG_ROUTING_ENABLED reader. Unregistered
+// (client bundle) reads as off.
+setPublishedCatalogRoutingGate(isOpencodePublishedCatalogRoutingEnabled);
+
 /**
  * Resolves the registry `targetFormat` for a model, aliasing `provider` first.
  *
- * `PROVIDER_MODELS` is keyed by the provider's public ALIAS (e.g. `"oc"`), not its
+ * `PROVIDER_MODELS` is keyed by the provider's public ALIAS (e.g. `"opencode-zen"`), not its
  * raw registry id (e.g. `"opencode"`) — mirrors `resolveChatCoreTargetFormat()`
  * (`handlers/chatCore/targetFormat.ts`), which already aliases before calling
  * `getModelTargetFormat()`. Calling it with the raw id here made every entry miss
@@ -274,6 +285,7 @@ export class OpencodeExecutor extends BaseExecutor {
       clientSession: this._clientSession,
       borrowed: attempt?.borrowed,
       clientToolNames: attempt?.clientToolNames ?? [],
+      v2Fingerprint: isOpencodeV2ClientFingerprintEnabled(),
     };
   }
 
@@ -284,12 +296,50 @@ export class OpencodeExecutor extends BaseExecutor {
   // Member health shared across requests on this alias, keyed by member id.
   // Each request still walks its own list (see `opencodeAccountScope.ts`).
   accountHealth = new Map<string, ScopedAccountHealth>();
+  // Explicit invalidation for view setters and request writeback.
+  #accountsVersion = 0;
+  // Cached live view of accounts getter. Invalidate when version changes.
+  #accountsCache: ScopedAccount[] | null = null;
+  // Cached version when #accountsCache was built.
+  #accountsCacheVersion = 0;
+  #accountsCacheStore: Map<string, ScopedAccountHealth> | null = null;
+  #accountsCacheSize = 0;
+  // Invalidate the accounts cache (call after any accountHealth mutation).
+  #invalidateAccountsCache(): void {
+    this.#accountsVersion++;
+    this.#accountsCache = null;
+    this.#accountsCacheVersion = 0;
+  }
   get accounts(): ScopedAccount[] {
     const store = this.accountHealth;
+    if (
+      this.#accountsCache &&
+      this.#accountsCacheVersion === this.#accountsVersion &&
+      this.#accountsCacheStore === store &&
+      this.#accountsCacheSize === store.size
+    ) {
+      // The public Map can be changed through retained references or replaced.
+      // Compare ordered membership in O(n), without rebuilding the live objects.
+      let index = 0;
+      let sameMembers = true;
+      for (const fingerprint of store.keys()) {
+        if (this.#accountsCache[index++]?.fingerprint !== fingerprint) {
+          sameMembers = false;
+          break;
+        }
+      }
+      if (sameMembers) return this.#accountsCache;
+    }
+    this.#accountsCacheStore = store;
+    this.#accountsCacheSize = store.size;
     // Cold parity with the historical default direct member (read-only).
     if (store.size === 0) {
-      return [{ fingerprint: "", cooldownUntil: 0, consecutiveFails: 0, proxy: null }];
+      const empty = [{ fingerprint: "", cooldownUntil: 0, consecutiveFails: 0, proxy: null }];
+      this.#accountsCache = empty;
+      this.#accountsCacheVersion = this.#accountsVersion;
+      return empty;
     }
+    const invalidate = () => this.#invalidateAccountsCache();
     const live = [...store.entries()].map(([fingerprint]) => ({
       fingerprint,
       get cooldownUntil() {
@@ -298,6 +348,7 @@ export class OpencodeExecutor extends BaseExecutor {
       set cooldownUntil(value: number) {
         const current = store.get(fingerprint) ?? { cooldownUntil: 0, consecutiveFails: 0 };
         store.set(fingerprint, { ...current, cooldownUntil: value });
+        invalidate();
       },
       get consecutiveFails() {
         return store.get(fingerprint)?.consecutiveFails ?? 0;
@@ -305,9 +356,12 @@ export class OpencodeExecutor extends BaseExecutor {
       set consecutiveFails(value: number) {
         const current = store.get(fingerprint) ?? { cooldownUntil: 0, consecutiveFails: 0 };
         store.set(fingerprint, { ...current, consecutiveFails: value });
+        invalidate();
       },
       proxy: null as ScopedAccount["proxy"],
     }));
+    this.#accountsCache = live;
+    this.#accountsCacheVersion = this.#accountsVersion;
     return live;
   }
   // Sleep used by the opt-in transient failover pause (#13615). Not `private`:
@@ -533,7 +587,7 @@ export class OpencodeExecutor extends BaseExecutor {
         return withRequestShapeRetry(input, (i) => this.executeOnce(i));
       });
     } finally {
-      releaseRequestList(input.body, this.accountHealth);
+      releaseRequestList(input.body, this.accountHealth, () => this.#invalidateAccountsCache());
     }
   }
 
@@ -596,8 +650,10 @@ export class OpencodeExecutor extends BaseExecutor {
       const poolReselectOn = isOpencodePoolReselectEnabled();
       // Resolver published by the chat layer when the ambient egress came from
       // a live connection pool (undefined otherwise). Read once per request.
+      // The provider test is the quota-refusal scope, so an operator widening it
+      // (OMNIROUTE_EGRESS_QUOTA_ROTATION_PROVIDERS=all) reaches the free zen ids too.
       const poolReselect =
-        poolReselectOn && isEgressBucketedLockScope(this.provider) && hasAmbientProxyContext()
+        poolReselectOn && rotatesEgressOnQuotaRefusal(this.provider) && hasAmbientProxyContext()
           ? (currentRequestContext()?.reselectPoolMember ?? null)
           : null;
       // Key of the ambient pool member this request egressed through (null when
@@ -1325,11 +1381,18 @@ export class OpencodeExecutor extends BaseExecutor {
     body?: unknown
   ) {
     const headers: Record<string, string> = { "Content-Type": "application/json" };
+
+    // A gated request rides buildUrl() to the anonymous /inference lane, which since
+    // 2026-10-21 answers 403 "Model access is disabled" to a real API key while serving
+    // `Bearer public` — the credential flips with the lane; see opencodeFreeTierContract.ts.
+    const gatedScope =
+      Boolean(model) && isGatedFreeTierRequest(this._surface(), this.provider, model);
+    const freeTier = gatedScope ? resolveFreeTierCredential() : null;
     // #8467: honor Extra API Keys rotation via BaseExecutor.resolveEffectiveKey.
     // Fall back to accessToken only when no apiKey/extras resolve to a key.
-    const key = credentials
-      ? this.resolveEffectiveKey(credentials) || credentials.accessToken
-      : undefined;
+    const key = resolveGatedCredential(freeTier, () =>
+      credentials ? this.resolveEffectiveKey(credentials) || credentials.accessToken : undefined
+    );
 
     if (key) {
       if (this._requestFormat === "claude" || this.usesZenApiKeyAuth()) {
@@ -1342,14 +1405,11 @@ export class OpencodeExecutor extends BaseExecutor {
     if (this._requestFormat === "claude") {
       headers["anthropic-version"] = "2023-06-01";
     }
-
     // The free tier only answers streamed requests (measured 2026-09-17: a non-streamed
     // body answers 403 FreeTierError), so a JSON client is served by streaming upstream and
     // rebuilding the JSON body from the event stream — the path chatCore already takes for
     // any buffered event-stream response. Announcing the stream here keeps that buffering an
     // expected outcome rather than a warning.
-    const gatedScope =
-      Boolean(model) && isGatedFreeTierRequest(this._surface(), this.provider, model);
     if (stream || gatedScope) {
       headers["Accept"] = "text/event-stream";
     }
@@ -1359,9 +1419,12 @@ export class OpencodeExecutor extends BaseExecutor {
     // OPENCODE_SYNTHESIZE_CLI_HEADERS=false. Client-supplied headers always win;
     // User-Agent is replaced with the CLI UA unless the client already sends one that
     // looks like the OpenCode CLI. Default values match 9router's proven defaults.
+    // #16571: the OpenCode v2 client fingerprint is opt-in (default off: identity unchanged).
+    const v2Fingerprint = isOpencodeV2ClientFingerprintEnabled();
     const cliDefaults = resolveOpencodeCliDefaults(
       this.config?.id || this.provider || "opencode",
-      gatedScope
+      gatedScope,
+      v2Fingerprint
     );
 
     this._clientSession = clientSuppliedOpencodeSession(clientHeaders, body);
@@ -1372,6 +1435,7 @@ export class OpencodeExecutor extends BaseExecutor {
         keepAgentUserAgent: this._surface() === "go" && !gatedScope, // #15311
         sessionBody: projectOpencodeSessionBody(body),
         reencodeSession: gatedScope,
+        v2Fingerprint,
       });
     }
 
@@ -1391,7 +1455,7 @@ export class OpencodeExecutor extends BaseExecutor {
    */
   private applyDeepSeekJsonSchemaFallback<T>(model: string, body: T): T {
     if (
-      model !== "deepseek-v4-flash-free" ||
+      (model !== "deepseek-v4-flash-free" && model !== "deepseek-v4.1-flash-free") ||
       (this.provider !== "opencode" && this.provider !== "opencode-zen")
     ) {
       return body;
@@ -1433,10 +1497,10 @@ export class OpencodeExecutor extends BaseExecutor {
       if (typeof systemMessage.content === "string") {
         systemMessage.content = `${systemMessage.content}\\n\\n${prompt}`;
       } else if (Array.isArray(systemMessage.content)) {
-        systemMessage.content.push({
-          type: "text",
-          text: `\\n\\n${prompt}`,
-        });
+        systemMessage.content = [
+          ...systemMessage.content,
+          { type: "text", text: `\\n\\n${prompt}` },
+        ];
       }
     } else {
       messages.unshift({
@@ -1472,7 +1536,8 @@ export class OpencodeExecutor extends BaseExecutor {
       this.provider,
       model,
       this._clientSession,
-      body
+      body,
+      isOpencodeV2ClientFingerprintEnabled()
     );
     modifiedBody = prepared.body;
     // OpenCode's upstream 400s a request when a single enum property carries

@@ -252,6 +252,29 @@
       "stream": "https://api.ainative.studio/api/v1/chat/completions"
     }
   },
+  "ainetcafe": {
+    "format": "openai",
+    "headers": {
+      "apiKey": {
+        "Accept": "text/event-stream",
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      },
+      "nonStream": {
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      },
+      "oauth": {
+        "Accept": "text/event-stream",
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      }
+    },
+    "url": {
+      "nonStream": "https://microquickjs.com/v1/chat/completions",
+      "stream": "https://microquickjs.com/v1/chat/completions"
+    }
+  },
   "aion": {
     "format": "openai",
     "headers": {
@@ -1241,12 +1264,26 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
+        "User-Agent": "Cline/<APP>",
+        "X-CLIENT-TYPE": "omniroute",
+        "X-CLIENT-VERSION": "<APP>",
+        "X-CORE-VERSION": "<APP>",
+        "X-IS-MULTIROOT": "false",
+        "X-PLATFORM": "<PLATFORM>",
+        "X-PLATFORM-VERSION": "<NODE>",
         "X-Title": "Cline"
       },
       "nonStream": {
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
+        "User-Agent": "Cline/<APP>",
+        "X-CLIENT-TYPE": "omniroute",
+        "X-CLIENT-VERSION": "<APP>",
+        "X-CORE-VERSION": "<APP>",
+        "X-IS-MULTIROOT": "false",
+        "X-PLATFORM": "<PLATFORM>",
+        "X-PLATFORM-VERSION": "<NODE>",
         "X-Title": "Cline"
       },
       "oauth": {
@@ -1254,6 +1291,13 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
+        "User-Agent": "Cline/<APP>",
+        "X-CLIENT-TYPE": "omniroute",
+        "X-CLIENT-VERSION": "<APP>",
+        "X-CORE-VERSION": "<APP>",
+        "X-IS-MULTIROOT": "false",
+        "X-PLATFORM": "<PLATFORM>",
+        "X-PLATFORM-VERSION": "<NODE>",
         "X-Title": "Cline"
       }
     },
@@ -1467,23 +1511,23 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "Openai-Beta": "responses_websockets=2026-02-06",
-        "User-Agent": "codex-cli/0.159.2 (<OS>; <ARCH>)",
-        "Version": "0.159.2"
+        "User-Agent": "codex-cli/0.165.0 (<OS>; <ARCH>)",
+        "Version": "0.165.0"
       },
       "nonStream": {
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "Openai-Beta": "responses_websockets=2026-02-06",
-        "User-Agent": "codex-cli/0.159.2 (<OS>; <ARCH>)",
-        "Version": "0.159.2"
+        "User-Agent": "codex-cli/0.165.0 (<OS>; <ARCH>)",
+        "Version": "0.165.0"
       },
       "oauth": {
         "Accept": "text/event-stream",
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "Openai-Beta": "responses_websockets=2026-02-06",
-        "User-Agent": "codex-cli/0.159.2 (<OS>; <ARCH>)",
-        "Version": "0.159.2"
+        "User-Agent": "codex-cli/0.165.0 (<OS>; <ARCH>)",
+        "Version": "0.165.0"
       }
     },
     "url": {
@@ -1898,6 +1942,29 @@
     "url": {
       "nonStream": "https://chat.deepseek.com/api/v0/chat/completion",
       "stream": "https://chat.deepseek.com/api/v0/chat/completion"
+    }
+  },
+  "demonroute": {
+    "format": "openai",
+    "headers": {
+      "apiKey": {
+        "Accept": "text/event-stream",
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      },
+      "nonStream": {
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      },
+      "oauth": {
+        "Accept": "text/event-stream",
+        "Authorization": "Bearer <TOK>",
+        "Content-Type": "application/json"
+      }
+    },
+    "url": {
+      "nonStream": "https://api.demonroute.com/v1/chat/completions",
+      "stream": "https://api.demonroute.com/v1/chat/completions"
     }
   },
   "devin-cli": {
@@ -4762,29 +4829,6 @@
       "stream": "https://api.openai.com/v1/chat/completions"
     }
   },
-  "opencode": {
-    "format": "openai",
-    "headers": {
-      "apiKey": {
-        "Accept": "text/event-stream",
-        "Authorization": "Bearer <TOK>",
-        "Content-Type": "application/json"
-      },
-      "nonStream": {
-        "Authorization": "Bearer <TOK>",
-        "Content-Type": "application/json"
-      },
-      "oauth": {
-        "Accept": "text/event-stream",
-        "Authorization": "Bearer <TOK>",
-        "Content-Type": "application/json"
-      }
-    },
-    "url": {
-      "nonStream": "https://opencode.ai/zen/v1",
-      "stream": "https://opencode.ai/zen/v1"
-    }
-  },
   "opencode-go": {
     "format": "openai",
     "headers": {
@@ -6570,18 +6614,45 @@
         "Accept": "text/event-stream",
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-Product": "SaaS"
+        "User-Agent": "WorkBuddy/5.5.6",
+        "X-Agent-Intent": "craft",
+        "X-Agent-Purpose": "conversation",
+        "X-Agent-Type": "main",
+        "X-Domain": "www.workbuddy.ai",
+        "X-IDE-Name": "WorkBuddy",
+        "X-IDE-Type": "WorkBuddy",
+        "X-IDE-Version": "5.5.6",
+        "X-Product": "SaaS",
+        "X-Requested-With": "XMLHttpRequest"
       },
       "nonStream": {
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-Product": "SaaS"
+        "User-Agent": "WorkBuddy/5.5.6",
+        "X-Agent-Intent": "craft",
+        "X-Agent-Purpose": "conversation",
+        "X-Agent-Type": "main",
+        "X-Domain": "www.workbuddy.ai",
+        "X-IDE-Name": "WorkBuddy",
+        "X-IDE-Type": "WorkBuddy",
+        "X-IDE-Version": "5.5.6",
+        "X-Product": "SaaS",
+        "X-Requested-With": "XMLHttpRequest"
       },
       "oauth": {
         "Accept": "text/event-stream",
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-Product": "SaaS"
+        "User-Agent": "WorkBuddy/5.5.6",
+        "X-Agent-Intent": "craft",
+        "X-Agent-Purpose": "conversation",
+        "X-Agent-Type": "main",
+        "X-Domain": "www.workbuddy.ai",
+        "X-IDE-Name": "WorkBuddy",
+        "X-IDE-Type": "WorkBuddy",
+        "X-IDE-Version": "5.5.6",
+        "X-Product": "SaaS",
+        "X-Requested-With": "XMLHttpRequest"
       }
     },
     "url": {
