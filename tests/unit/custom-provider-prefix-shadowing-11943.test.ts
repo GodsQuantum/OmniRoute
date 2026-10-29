@@ -108,6 +108,47 @@ test("the credential-failure diagnostic still names a node shadowed by an active
   assert.match(message, /Rename that node's prefix/);
 });
 
+test("handleChat names the shadowed custom node when the active builtin has no eligible connection (#11943)", async () => {
+  // End-to-end wiring of src/sse/handlers/chat.ts: findShadowedCompatibleNode()
+  // must still feed the 401. After #17278 the builtin only owns the prefix while
+  // it has an ACTIVE connection, so the reachable scenario is an active
+  // openference connection that cannot serve this model (a per-account
+  // excluded-model rule) — getProviderCredentials() returns null with no
+  // cooldown/expiry flag and no connection was tried.
+  await seedShadowedNode();
+  await seedConnection("openference", {
+    apiKey: "synthetic-openference-active-test-key",
+    providerSpecificData: { excludedModels: ["GLM-5.2"] },
+  });
+  assert.equal((await getModelInfo("of/GLM-5.2")).provider, "openference");
+
+  const response = await handleChat(
+    buildRequest({
+      body: {
+        model: "of/GLM-5.2",
+        stream: false,
+        messages: [{ role: "user", content: "Hello" }],
+      },
+    })
+  );
+  const json = (await response.json()) as ErrorBody;
+  const message = json.error?.message ?? "";
+
+  assert.equal(response.status, 401);
+  assert.match(message, /No active credentials for provider: openference/);
+  assert.match(
+    message,
+    /prefix "of" is reserved by the built-in provider "openference"/,
+    `runtime error must explain that the prefix resolved to the built-in, got: ${message}`
+  );
+  const expectedNodeMention = `"${SHADOWED_NODE_NAME}" (${SHADOWED_NODE_ID})`;
+  assert.ok(
+    message.includes(expectedNodeMention),
+    `runtime error must name the shadowed node and its id (${expectedNodeMention}), got: ${message}`
+  );
+  assert.match(message, /Rename that node's prefix/);
+});
+
 test("a non-colliding prefix still routes to the custom node and never gets the shadow hint", async () => {
   await nodesDb.createProviderNode({
     id: SAFE_NODE_ID,
