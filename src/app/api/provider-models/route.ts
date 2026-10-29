@@ -139,6 +139,23 @@ export async function GET(request) {
 }
 
 /**
+ * Stores the manual context-window override sent at ADD time and echoes it on the
+ * added model. Without an override the response body is unchanged.
+ */
+function withAddTimeContextOverride<T extends object>(
+  provider: string,
+  modelId: string,
+  model: T,
+  contextWindowOverride: number | null | undefined
+) {
+  if (contextWindowOverride == null) return { model };
+  setModelContextOverride(provider, modelId, contextWindowOverride, "manual");
+  return {
+    model: { ...model, contextWindowOverride, contextWindowOverrideSource: "manual" as const },
+  };
+}
+
+/**
  * POST /api/provider-models
  * Body: { provider, modelId, modelName?, contextWindowOverride? }
  */
@@ -210,17 +227,9 @@ export async function POST(request) {
       }
     );
 
-    if (contextWindowOverride != null) {
-      setModelContextOverride(provider, modelId, contextWindowOverride, "manual");
-      return Response.json({
-        model: {
-          ...model,
-          contextWindowOverride,
-          contextWindowOverrideSource: "manual",
-        },
-      });
-    }
-    return Response.json({ model });
+    return Response.json(
+      withAddTimeContextOverride(provider, modelId, model, contextWindowOverride)
+    );
   } catch (error) {
     console.error("Error adding provider model:", error);
     return Response.json(
