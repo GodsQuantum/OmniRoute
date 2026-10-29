@@ -154,7 +154,7 @@
           ]
         },
         "package-artifact": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "required",
           "domains": [
             "build",
@@ -172,7 +172,7 @@
           ]
         },
         "electron-package-smoke": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "required",
           "domains": [
             "build",
@@ -208,7 +208,7 @@
           ]
         },
         "test-bun-sqlite": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "required",
           "domains": ["build", "db", "tests"]
         },
@@ -249,7 +249,7 @@
           ]
         },
         "test-e2e": {
-          "when": "code-e2e",
+          "when": "full-code-e2e",
           "disposition": "required",
           "domains": [
             "build",
@@ -267,7 +267,7 @@
           ]
         },
         "test-integration": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "required",
           "domains": [
             "build",
@@ -302,7 +302,7 @@
           ]
         },
         "test-ecosystem": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "required",
           "domains": [
             "build",
@@ -319,7 +319,7 @@
           ]
         },
         "test-protocols-e2e": {
-          "when": "code",
+          "when": "full-code",
           "disposition": "advisory",
           "reason": "Existing protocol E2E advisory policy, issue #10049; not counted as required PASS.",
           "domains": [
@@ -415,42 +415,6 @@
           ]
         },
         "fast-gates": {
-          "when": "code",
-          "disposition": "required",
-          "domains": [
-            "build",
-            "catalog",
-            "cli",
-            "core",
-            "db",
-            "docs",
-            "i18n",
-            "provider",
-            "routing",
-            "tests",
-            "ui",
-            "workflow"
-          ]
-        },
-        "fast-vitest": {
-          "when": "code",
-          "disposition": "required",
-          "domains": [
-            "build",
-            "catalog",
-            "cli",
-            "core",
-            "db",
-            "docs",
-            "i18n",
-            "provider",
-            "routing",
-            "tests",
-            "ui",
-            "workflow"
-          ]
-        },
-        "fast-unit": {
           "when": "code",
           "disposition": "required",
           "domains": [
