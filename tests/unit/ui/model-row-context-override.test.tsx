@@ -3,7 +3,7 @@
  * Catalog (native-provider) ModelRow gets the same opt-in context-window override
  * editor as PassthroughModelRow:
  *  1) no callback -> no affordance (row unchanged).
- *  2) an existing override shows as a 🪟 badge with the number.
+ *  2) an existing override shows as the context-window badge with the number.
  *  3) edit + Enter saves the number.
  *  4) blank saves null (clear).
  *  5) invalid saves NaN and keeps the editor open.
@@ -17,9 +17,11 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-vi.mock("@/shared/components", () => ({
+vi.mock("@/shared/components", async () => ({
+  // KEA-7886: form adapters (Button/Input/Checkbox/Select/FilterPills) as DOM-faithful stubs
+  ...(await import("../../helpers/sharedComponentStubs")).formStubs,
   Badge: ({ children, title }: any) => <span title={title}>{children}</span>,
-  Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+  CapabilityBadge: ({ children, title }: any) => <span title={title}>{children}</span>,
 }));
 
 vi.mock(
@@ -65,6 +67,9 @@ function mount(props: Record<string, unknown> = {}) {
   return el;
 }
 
+const overrideBadge = (el: HTMLElement) =>
+  el.querySelector<HTMLElement>('span[title="contextWindowOverrideHint"]');
+
 const overrideButton = (el: HTMLElement) =>
   [...el.querySelectorAll("button")].find(
     (b) => b.getAttribute("title") === "contextWindowOverrideLabel"
@@ -89,7 +94,7 @@ describe("catalog ModelRow context-window override", () => {
     expect(overrideButton(el)).toBeUndefined();
     expect(el.querySelector("input")).toBeNull();
     // Without a callback the row is exactly as before: not even a badge.
-    expect(el.textContent).not.toContain("🪟");
+    expect(overrideBadge(el)).toBeNull();
   });
 
   it("shows an existing override as a badge with the number", () => {
@@ -97,7 +102,7 @@ describe("catalog ModelRow context-window override", () => {
       contextWindowOverride: 200000,
       onSaveContextWindowOverride: async () => {},
     });
-    expect(el.textContent).toContain("🪟 200,000");
+    expect(overrideBadge(el)?.textContent).toBe("200,000");
   });
 
   it("opens seeded with the current value and saves a number on Enter", async () => {

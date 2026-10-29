@@ -10,6 +10,8 @@
  * Opt-in: a row without an `onSave` callback renders nothing from this module.
  */
 import React, { useEffect, useRef, useState } from "react";
+import { Input as KitInput, type InputProps as KitInputProps } from "@omniroute/ui-kit/input";
+import { Button, CapabilityBadge } from "@/shared/components";
 import { parseContextWindowOverrideInput, providerText } from "../providerPageHelpers";
 
 type Translator = (key: string, values?: Record<string, unknown>) => string;
@@ -61,17 +63,17 @@ export function useContextWindowOverrideEditor({
 
 export type ContextWindowOverrideEditorState = ReturnType<typeof useContextWindowOverrideEditor>;
 
-/** Text input that grabs focus (and selects its seed value) when it mounts. */
-function FocusedInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+/** Kit text input that grabs focus (and selects its seed value) when it mounts. */
+function FocusedInput(props: KitInputProps) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
     ref.current?.focus();
     ref.current?.select();
   }, []);
-  return <input ref={ref} {...props} />;
+  return <KitInput ref={ref} {...props} />;
 }
 
-/** The 🪟 badge (when an override exists) or the inline input + save/cancel. */
+/** The context-window badge (when an override exists) or the inline input + save/cancel. */
 export function ContextWindowOverrideField({
   editor,
   override,
@@ -88,6 +90,7 @@ export function ContextWindowOverrideField({
       <span className="flex items-center gap-1">
         <FocusedInput
           type="text"
+          size="sm"
           inputMode="numeric"
           value={editor.value}
           onChange={(e) => editor.setValue(e.target.value)}
@@ -96,35 +99,40 @@ export function ContextWindowOverrideField({
           placeholder={t("contextWindowOverridePlaceholder")}
           title={t("contextWindowOverrideHint")}
           aria-label={t("contextWindowOverrideLabel")}
-          className="w-28 rounded border border-border bg-background px-1.5 py-0.5 text-[11px]"
+          className="h-6 min-h-0 w-28 px-1.5 text-[11px]"
         />
-        <button
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          icon="check"
           onClick={() => void editor.submit()}
           disabled={saving}
-          className="rounded p-0.5 text-text-muted hover:bg-sidebar hover:text-primary disabled:opacity-40"
+          className="size-6 min-h-6 rounded text-text-muted disabled:opacity-40"
           title={providerText(t, "save", "Save")}
-        >
-          <span className="material-symbols-outlined text-sm">check</span>
-        </button>
-        <button
+          aria-label={providerText(t, "save", "Save")}
+        />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          icon="close"
           onClick={editor.cancel}
           disabled={saving}
-          className="rounded p-0.5 text-text-muted hover:bg-sidebar hover:text-primary disabled:opacity-40"
+          className="size-6 min-h-6 rounded text-text-muted disabled:opacity-40"
           title={providerText(t, "cancel", "Cancel")}
-        >
-          <span className="material-symbols-outlined text-sm">close</span>
-        </button>
+          aria-label={providerText(t, "cancel", "Cancel")}
+        />
       </span>
     );
   }
   if (typeof override !== "number") return null;
   return (
-    <span
-      className="shrink-0 rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-medium text-orange-400"
+    <CapabilityBadge
+      icon="width_normal"
+      className="shrink-0 bg-warning/15 text-warning"
       title={t("contextWindowOverrideHint")}
     >
-      {`🪟 ${override.toLocaleString()}`}
-    </span>
+      {override.toLocaleString()}
+    </CapabilityBadge>
   );
 }
 
@@ -138,13 +146,14 @@ export function ContextWindowOverrideEditButton({
 }) {
   if (editor.editing) return null;
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      icon="edit"
       onClick={editor.start}
-      className="rounded p-0.5 text-text-muted hover:bg-sidebar hover:text-primary"
+      className="size-6 min-h-6 rounded text-text-muted"
       title={t("contextWindowOverrideLabel")}
       aria-label={t("contextWindowOverrideLabel")}
-    >
-      <span className="material-symbols-outlined text-sm">edit</span>
-    </button>
+    />
   );
 }

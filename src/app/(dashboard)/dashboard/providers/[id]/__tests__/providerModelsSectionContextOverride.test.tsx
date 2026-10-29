@@ -155,7 +155,10 @@ describe("ProviderModelsSection catalog context-window override", () => {
     const el = await render(buildProps());
     const get = calls.find((c) => !c.init?.method || c.init.method === "GET");
     expect(get?.url).toBe(`/api/provider-models?provider=${PROVIDER_ID}`);
-    expect(el.textContent).toContain("🪟 750,000");
+    // KEA-7886: the override badge is the kit CapabilityBadge titled with the hint.
+    expect(el.querySelector('[title="contextWindowOverrideHint"]')?.textContent).toContain(
+      "750,000"
+    );
   });
 
   it("saves via PUT with {provider, modelId, contextWindowOverride} under the provider id", async () => {
@@ -181,7 +184,9 @@ describe("ProviderModelsSection catalog context-window override", () => {
       contextWindowOverride: 1000000,
     });
     // Refreshed from the server after the save.
-    expect(el.textContent).toContain("🪟 1,000,000");
+    expect(el.querySelector('[title="contextWindowOverrideHint"]')?.textContent).toContain(
+      "1,000,000"
+    );
     expect(notifySuccess).toHaveBeenCalled();
   });
 
