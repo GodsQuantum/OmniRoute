@@ -6,15 +6,15 @@
 
 Վերջին թարմացումը՝ 2026-08-23
 
-OmniRoute-ը ինտեգրվում է CLI գործիքների երեք կատեգորիաների հետ, որոնք բաշխված են կառավարման վահանակի երեք առանձին էջերում․
+OmniRoute ինտեգրվում է CLI գործիքների երեք կատեգորիաների հետ, որոնք տարածված են երեք հատուկ վահանակի էջերում.
 
-| Էջ             | Ուղի                    | Հայեցակարգ                                                                                        | Քանակ       |
-| -------------- | ----------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
-| **CLI Code's** | `/dashboard/cli-code`   | Կոդավորման գործիքներ, որոնք ուղղորդում եք դեպի OmniRoute (Հաճախորդ → CLI → OmniRoute → Մատակարար) | 26          |
-| **CLI Agents** | `/dashboard/cli-agents` | Ինքնավար գործակալներ, որոնք ուղղորդում եք դեպի OmniRoute (նույն հոսքը, ավելի լայն շրջանակ)        | 10          |
-| **ACP Agents** | `/dashboard/acp-agents` | CLI-ներ, որոնք OmniRoute-ը գործարկում է որպես հետնամաս՝ stdio/ACP-ի միջոցով (հակադարձ հոսք)       | տես ռեեստրը |
+| Էջ                  | Երթուղի                 | Հայեցակարգ                                                                                     | հաշվել            |
+| ------------------- | ----------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
+| **CLI ծածկագիր**    | `/dashboard/cli-code`   | Կոդավորման գործիքներ, որոնք մատնանշում եք OmniRoute (Հաճախորդ → CLI → OmniRoute → մատակարար)   | 26                |
+| **CLI Գործակալներ** | `/dashboard/cli-agents` | Ինքնավար գործակալները, որոնք դուք մատնանշում եք OmniRoute ին (նույն հոսքը, ավելի լայն շրջանակ) | 11                |
+| **ACP Գործակալներ** | `/dashboard/acp-agents` | CLIs որը OmniRoute առաջանում է որպես հետնամաս stdio/ACP միջոցով (հակադարձ հոսք)                | տես գրանցամատյանը |
 
-Հին ուղիները վերահղվում են 308-ի միջոցով՝ `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`։
+Ժառանգական երթուղիները վերահղվում են 308-ի միջոցով՝ `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`:
 
 ---
 
@@ -43,68 +43,28 @@ ACP Agents (հակադարձ գործարկման հոսք)․
 
 ---
 
-## Ինքնակազմաձևում `setup-*`-ի միջոցով
+## Ավտոմատ կարգավորել `setup-*` հետ
 
-Կարիք չկա յուրաքանչյուր գործիքի կազմաձևը ձեռքով գրել։ OmniRoute-ը տրամադրում է `setup-*`
-հրաման յուրաքանչյուր աջակցվող CLI-ի համար, որը գործող OmniRoute-ից (տեղային կամ հեռակա)
-կարդում է մոդելների **ակտիվ** կատալոգը և ձեր համակարգչում գրում տվյալ գործիքի սեփական
-կազմաձևը․
+Պետք չէ յուրաքանչյուր գործիքի կոնֆիգուրացիա գրել ձեռքով: OmniRoute ուղարկում է `setup-*` հրամանը աջակցվող CLI համար, որը կարդում է** ապրել** մոդելի կատալոգը գործող OmniRoute ից (տեղական կամ հեռավոր) և ձեր մեքենայի վրա գրում է գործիքի սեփական կազմաձևը.
 
 ```bash
 omniroute setup-codex        omniroute setup-claude       omniroute setup-opencode
 omniroute setup-cline        omniroute setup-kilo         omniroute setup-continue
 omniroute setup-cursor       omniroute setup-roo          omniroute setup-crush
 omniroute setup-goose        omniroute setup-qwen         omniroute setup-aider
-omniroute setup-5dive
+omniroute setup-5dive        omniroute setup-zed
+omniroute setup-whycodes
 ```
 
-Յուրաքանչյուրն ընդունում է `--remote <url> --api-key <key>` (տեղային գործիքը հեռակա
-OmniRoute-ի համար կազմաձևելու նպատակով), `--dry-run` (նախադիտում՝ առանց գրելու) և `--port`։
-Մոդելների ինքնահայտնաբերում չունեցող գործիքներն (Cline, Kilo, Roo, Goose, Aider, Qwen, 5dive)
-ընդունում են `--model <id>` (իսկ ոչ ինտերակտիվ գործարկումների համար՝ նաև `--yes`)։
-`setup-5dive`-ը միակ բաղադրատոմսն է, որը `$HOME`-ի ներքո չի գրում․ այն կազմաձևում է 5dive
-գործակալների խումբը՝ խմբի հոսթում գրելով root-ին պատկանող նույնականացման պրոֆիլ, ուստի
-վերագործարկվում է `sudo`-ի միջոցով և չունի իր սեփական հեռակա ռեժիմը։ CLI-ն անհրաժեշտ
-միջավայրի ներմուծմամբ և ընդհանրապես առանց որևէ կազմաձև գրելու գործարկելու համար օգտագործեք
-ընդհանուր `omniroute run <target>` գործարկիչը (claude, codex, aider, goose, opencode, qwen,
-gemini — թիրախներն ու այլանունները վերցվում են `bin/cli/cli-manifest.mjs`-ից)։ Հին՝
-առանձին գործիքների համար նախատեսված `omniroute launch` (Claude Code) և
-`omniroute launch-codex` (Codex) գործարկիչները շարունակում են հասանելի մնալ։ Gemini CLI-ն
-միայն գործարկման համար է․ այն `omniroute run`-ի թիրախ է, սակայն չունի
-`setup-*`/`configure` բաղադրատոմս։
+Յուրաքանչյուրն ընդունում է `--remote <url> --api-key <key>` (կարգավորել տեղական գործիքը հեռավոր OmniRoute դեմ), `--dry-run` (նախադիտում առանց գրելու) և `--port`: Գործիքները առանց մոդելի ավտոմատ հայտնաբերման (Cline, Kilo, Roo, Goose, Aider, Qwen, 5dive, WhyCodes) վերցնում են `--model <id>` (և `--yes` ոչ ինտերակտիվ վազքերի համար): `setup-5dive` այն միակ բաղադրատոմսն է, որը չի գրում `$HOME` տակ. այն կարգավորում է 5 dive գործակալների նավատորմը՝ գրելով արմատային հեղինակային վավերացման պրոֆիլը նավատորմի հոսթի վրա, այնպես որ այն վերագործարկվում է `sudo` միջոցով և չունի սեփական հեռավոր ռեժիմ: CLI գործարկելու համար ճիշտ env ներարկված և ընդհանրապես գրված կոնֆիգուրացիա չկա, օգտագործեք ընդհանուր `omniroute run <target>` գործարկիչը (claude, codex, aider, goose, opencode, qwen, gemini, Whycodes – թիրախները և անունները գալիս են `bin/cli/cli-manifest.mjs` ից); ժառանգված մեկ գործիքի գործարկիչները `omniroute launch` (Claude Code) և `omniroute launch-codex` (Codex) մնում են հասանելի: Gemini CLI միայն մեկնարկի համար է. այն `omniroute run` թիրախ է, բայց չունի `setup-*`/`configure` բաղադրատոմս:
 
-> **Ամբողջական տեղեկատու․** հիմնական աղյուսակը՝ ինչ է գրում յուրաքանչյուր հրաման, բոլոր
-> դրոշակները, տեղային և հեռակա ռեժիմները, ինչպես նաև թե որ գործիքներն են պահանջում `/v1`
-> վերջածանց, գտնվում է **[CLI ինտեգրումներ](../guides/CLI-INTEGRATIONS.md)** էջում։
+> **Ամբողջական հղում.** գլխավոր աղյուսակը – ինչ է գրում յուրաքանչյուր հրաման, յուրաքանչյուր դրոշ, տեղային ընդդեմ հեռակառավարման, և որ գործիքներն են ուզում `/v1` վերջածանց – ապրում է** [CLI Ինտեգրումներ](../guides/CLI-INTEGRATIONS.md)** .
 
-### Սրանք կոնտեյների ներսում գործարկելը
+### Օգտագործելով դրանք կոնտեյների մեջ
 
-OmniRoute կոնտեյների ներսում կատարված `setup-*` հրամանը գրում է հենց կոնտեյների տնային
-պանակում, որը հոսթի ոչ մի CLI չի կարդում, և որը վերանում է կոնտեյների հետ միասին։
-OmniRoute-ը հայտնաբերում է դա և գրելու փոխարեն հրահանգներով ավարտում է աշխատանքը `2`
-կոդով։ Շարունակելու երկու աջակցվող եղանակ կա՝ CLI-ն տեղադրել հոսթում և կատարել
-`omniroute connect` դեպի կոնտեյները, կամ bind-mount անել կազմաձևման պանակներն ու սահմանել
-`CLI_CONFIG_HOME` (`host` compose պրոֆիլը)։ Յուրաքանչյուր `setup-*` հրաման, ինչպես նաև
-`omniroute configure` և `omniroute config set` հրամաններն ընդունում են
-`--allow-container-write`, երբ իրականում ցանկանում եք կազմաձևել հենց կոնտեյների CLI-ները։
-Սերվերի համար նույնը կատարում է `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true`-ը։ Տե՛ս
-[Docker ուղեցույց → Հոսթի CLI գործիքների կազմաձևում](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker)։
+`setup-*` հրամանը, որը կատարվում է OmniRoute կոնտեյների ներսում, գրում է կոնտեյների սեփական տանը, որը ոչ մի CLI հյուրընկալող չի կարդում և որը անհետանում է կոնտեյների հետ: OmniRoute հայտնաբերում է դա և դուրս է գալիս `2` հրահանգներով, քան գրելով: Երկու աջակցվող ուղի առաջ. տեղադրեք CLI հոսթի վրա, իսկ `omniroute connect` կոնտեյների մեջ, կամ կապեք-տեղադրեք կազմաձևման դիրեկտորները և սահմանեք `CLI_CONFIG_HOME` (կազմել `host` պրոֆիլը): Յուրաքանչյուր `setup-*` հրաման, գումարած `omniroute configure` և `omniroute config set`, ընդունում է `--allow-container-write` երբ կոնտեյների սեփական CLIs կազմաձևում եք այն, ինչ իրականում նկատի ունեիք. `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true` նույնն է անում սերվերի համար: Տես [Docker ուղեցույց → Հյուրընկալող CLI գործիքների կազմաձևում](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker) :
 
-Կառավարման վահանակի **կիրառման վերջնակետը** (`POST /api/cli-tools/apply`) կիրառում է նույն
-պաշտպանիչ կանոնը․ կոնտեյներում գրելու հարցումը, որի թիրախը bind-mount արված չէ հոսթից,
-պատասխանում է **`422`** կոդով՝ `containerEphemeralTarget: true`-ով, անվտանգ սխալի
-տեքստով և այն գործիքների համար, որոնք ունեն հոսթային բաղադրատոմս (claude, codex,
-opencode, cline, kilo, continue), նաև `hostSetupCommand`-ով (օրինակ՝
-`omniroute setup-opencode`), որը պետք է փոխարենը գործարկել հոսթում։ Ոչինչ չի գրվում։
-`dryRun: true`-ը շարունակում է աշխատել կոնտեյներային ռեժիմում և առանց սկավառակին դիպչելու
-վերադարձնում է գաղտնազերծված նախադիտում և թիրախային ուղի։ Նախադիտման բովանդակությունը
-հավաստագրային տվյալներ պարունակող կազմաձև չէ, որը կարելի է պատճենել կամ ներմուծել։
-Կիրառեք այն հոսթում՝ գործիքի/հիմնական URL-ի/API բանալու/մոդելի սկզբնական մուտքային
-արժեքներով, կամ օգտագործեք նշված հոսթային տեղադրման հրամանը։ Նախադիտման վերնագրի և
-հարցման պայմանագրի համար տե՛ս [CLI կազմաձևման անվտանգություն](../security/CLI-CONFIGURATION.md)։
-Այս վարքագիծը կանխամտածված է և հետընթացային սխալներից պաշտպանված է
-`tests/unit/api/cli-tools/apply-container-guard.test.ts` թեստով․ երբեք մի «շտկեք» 422-ը՝
-հեռացնելով պաշտպանիչ կանոնը։
+Վահանակի վահանակը** կիրառել վերջնակետը** (`POST /api/cli-tools/apply`) պարտադրում է նույն պահակը. կոնտեյներով պատասխանում է գրությունը, որի թիրախը ամրացված չէ հյուրընկալողից**`422`** `containerEphemeralTarget: true` ով, անվտանգ սխալի տեքստով և — հոսթինգի բաղադրատոմսով գործիքների համար (claude, codex, opencode, cline, kilo, շարունակել) — `hostSetupCommand` (օր. `omniroute setup-opencode`) հոսթի վրա գործարկելու փոխարեն. ոչինչ գրված չէ. `dryRun: true` շարունակում է աշխատել կոնտեյների ռեժիմում և վերադարձնում է նախադիտման խմբագրված + թիրախային ուղին՝ առանց սկավառակի դիպչելու: Նախադիտման բովանդակությունը պատճենելու կամ ներմուծելու համար հավատարմագրային կոնֆիգուրացիա չէ: Կիրառեք սկզբնական tool/base URL/API key/model մուտքագրումներով հոսթի վրա կամ օգտագործեք նշված հյուրընկալող կողմի տեղադրման հրամանը: Տես [CLI կազմաձևման անվտանգությունը](../security/CLI-CONFIGURATION.md) նախադիտման վերնագրի և հարցման պայմանագրի համար: Այս վարքագիծը միտումնավոր է և հետընթացով պաշտպանված է `tests/unit/api/cli-tools/apply-container-guard.test.ts` ով. երբեք մի «շտկեք» 422-ը՝ հեռացնելով պաշտպանիչը:
 
 ---
 
@@ -140,58 +100,60 @@ opencode, cline, kilo, continue), նաև `hostSetupCommand`-ով (օրինակ՝
 
 ---
 
-## 1. CLI Code-ի կատալոգը (26 գործիք)
+## 1. CLI Code-ի կատալոգ (27 գործիք)
 
-Բոլոր գործիքները, որոնք ցուցադրվում են `/dashboard/cli-code`-ում։ `baseUrlSupport: none` ունեցող գործիքները հատուկ բազային URL-ի փոխարեն միացված են MITM-ի միջոցով կամ ձեռնարկի օգնությամբ․
+Բոլոր գործիքները, որոնք հայտնվում են `/dashboard/cli-code` ում: Նրանք, ովքեր ունեն `baseUrlSupport: none` միացված են MITM կամ ձեռնարկի ուղեցույցի միջոցով՝ սովորական URL բազայի փոխարեն:
 
-| id           | անուն                   | մատակարար               | baseUrlSupport | configType     | acpSpawnable |
-| ------------ | ----------------------- | ----------------------- | -------------- | -------------- | ------------ |
-| claude       | Claude Code             | Anthropic               | full           | env            | true         |
-| codex        | OpenAI Codex CLI        | OpenAI                  | full           | custom         | true         |
-| zcode        | ZCode (GLM Coding Plan) | Z.ai                    | none           | custom         | false        |
-| cline        | Cline                   | OSS (նախկին Claude Dev) | full           | custom         | true         |
-| kilo         | Kilo Code               | Kilo-Org                | full           | custom         | false        |
-| roo          | Roo Code                | Roo (OSS)               | full           | guide          | false        |
-| continue     | Continue                | continue.dev            | full           | guide          | false        |
-| aider        | Aider                   | OSS (P. Gauthier)       | full           | guide          | true         |
-| forge        | ForgeCode               | Antinomy HQ             | full           | custom         | true         |
-| jcode        | jcode                   | 1jehuang (OSS)          | full           | custom         | false        |
-| deepseek-tui | DeepSeek TUI            | Hunter Bown (OSS)       | full           | custom         | false        |
-| codewhale    | CodeWhale               | Hmbown (OSS)            | full           | custom         | false        |
-| opencode     | OpenCode                | Anomaly (նախկին SST)    | full           | guide          | true         |
-| droid        | Factory Droid           | Factory AI              | partial        | guide          | false        |
-| copilot      | GitHub Copilot CLI      | GitHub/MS               | full           | custom         | false        |
-| cursor-cli   | Cursor CLI              | Anysphere               | partial        | guide          | true         |
-| smelt        | Smelt                   | leonardcser (OSS)       | full           | custom         | false        |
-| pi           | Pi (pi-coding-agent)    | M. Zechner (OSS)        | full           | custom         | false        |
-| grok-build   | Grok Build              | xAI                     | full           | custom         | false        |
-| crush        | Crush                   | OSS (Charm)             | full           | custom         | false        |
-| qwen         | Qwen Code               | Alibaba                 | full           | guide          | true         |
-| cursor       | Cursor                  | Anysphere               | none           | guide          | false        |
-| antigravity  | Antigravity             | Google                  | none           | mitm           | false        |
-| hermes       | Hermes                  | Nous Research           | none           | guide          | false        |
-| kiro         | Kiro AI                 | Amazon                  | none           | mitm           | false        |
-| custom       | Հատուկ CLI              | —                       | full           | custom-builder | false        |
+| id               | անունը                      | վաճառող               | baseUrlSupport | configType       | acpSpawnable |
+| ---------------- | --------------------------- | --------------------- | -------------- | ---------------- | ------------ |
+| Կլոդ             | Claude ծածկագիր             | Anthropic             | լիքը           | նախանձ           | ճշմարիտ      |
+| կոդեքս           | OpenAI Codex CLI            | OpenAI                | լիքը           | սովորություն     | ճշմարիտ      |
+| zcode            | ZCode (GLM կոդավորման պլան) | Զ.աի                  | ոչ մեկը        | սովորություն     | կեղծ         |
+| cline            | Cline                       | OSS (նախկին Կլոդ Դև)  | լիքը           | սովորություն     | ճշմարիտ      |
+| կիլոգրամ         | Կիլոյի կոդը                 | կիլո-օրգ              | լիքը           | սովորություն     | կեղծ         |
+| roo              | Roo Code                    | Ռո (OSS)              | լիքը           | ուղեցույց        | կեղծ         |
+| շարունակել       | Շարունակեք                  | շարունակել.dev        | լիքը           | ուղեցույց        | կեղծ         |
+| օգնական          | Աիդեր                       | OSS (P. Gauthier)     | լիքը           | ուղեցույց        | ճշմարիտ      |
+| կեղծել           | ForgeCode                   | Անտինոմիա HQ          | լիքը           | սովորություն     | ճշմարիտ      |
+| jcode            | jcode                       | 1jehuang (OSS)        | լիքը           | սովորություն     | կեղծ         |
+| խորը փնտրել-տուի | DeepSeek TUI                | Հանթեր Բոուն (OSS)    | լիքը           | սովորություն     | կեղծ         |
+| կոդեկոր          | CodeWhale                   | Հմբաուն (OSS)         | լիքը           | սովորություն     | կեղծ         |
+| բաց կոդ          | OpenCode                    | Անոմալիա (նախկին SST) | լիքը           | ուղեցույց        | ճշմարիտ      |
+| դրոիդ            | Գործարանային Droid          | Գործարանային AI       | մասնակի        | ուղեցույց        | կեղծ         |
+| օդաչու           | GitHub Copilot CLI          | GitHub/MS             | լիքը           | սովորություն     | կեղծ         |
+| կուրսոր-cli      | Cursor CLI                  | Անիսֆերա              | մասնակի        | ուղեցույց        | ճշմարիտ      |
+| հոտոտել          | Smelt                       | leonardcser (OSS)     | լիքը           | սովորություն     | կեղծ         |
+| պի               | Pi (pi-կոդավորման գործակալ) | M. Zechner (OSS)      | լիքը           | սովորություն     | կեղծ         |
+| գրոկ-կառուց      | Grok Կառուցել               | xAI                   | լիքը           | սովորություն     | կեղծ         |
+| ջախջախել         | Ջախջախել                    | OSS (հմայքը)          | լիքը           | սովորություն     | կեղծ         |
+| qwen             | Qwen ծածկագիր               | Alibaba               | լիքը           | ուղեցույց        | ճշմարիտ      |
+| զեդ              | Zed                         | Zed Industries        | լիքը           | ուղեցույց        | կեղծ         |
+| կուրսորը         | Cursor                      | Անիսֆերա              | ոչ մեկը        | ուղեցույց        | կեղծ         |
+| հակագրավիտացիա   | Antigravity                 | Google                | ոչ մեկը        | միտմ             | կեղծ         |
+| հերմես           | Հերմես                      | Nous Research         | ոչ մեկը        | ուղեցույց        | կեղծ         |
+| կիրո             | Kiro AI                     | Amazon                | ոչ մեկը        | միտմ             | կեղծ         |
+| սովորություն     | Պատվերով CLI                | —                     | լիքը           | պատվերով շինարար | կեղծ         |
 
-`baseUrlSupport: "partial"` ունեցող գործիքների համար կառավարման վահանակի քարտում ցուցադրվում է «⚠ Մասնակի բազային URL» նշանը։
+`baseUrlSupport: "partial"` ով գործիքները վահանակի քարտում ցույց են տալիս «⚠ Base URL parcial» նշանը:
 ---
 
-## 2. CLI գործակալների կատալոգ (10 գործիք)
+## 2. CLI գործակալների կատալոգ (11 գործիքներ)
 
-Ինքնավար գործակալներ, որոնք ցուցադրվում են `/dashboard/cli-agents`-ում.
+Ինքնավար գործակալներ, որոնք հայտնվում են `/dashboard/cli-agents` ում.
 
-| id           | name             | vendor                   | baseUrlSupport | acpSpawnable |
-| ------------ | ---------------- | ------------------------ | -------------- | ------------ |
-| hermes-agent | Hermes Agent     | Nous Research            | full           | false        |
-| openclaw     | OpenClaw         | OSS (P. Steinberger)     | full           | true         |
-| goose        | Goose            | Block / Linux Foundation | full           | true         |
-| interpreter  | Open Interpreter | OSS                      | full           | true         |
-| warp         | Warp AI          | Warp Inc.                | partial        | true         |
-| agent-deck   | Agent Deck       | asheshgoplani (OSS)      | full           | false        |
-| omp          | Oh My Pi         | OSS                      | full           | true         |
-| letta        | Letta CLI        | Letta                    | full           | false        |
-| prime-agent  | Prime Agent      | Prime Intellect (OSS)    | full           | false        |
-| 5dive        | 5dive            | OSS (5dive-ai)           | full           | false        |
+| id                  | անունը              | վաճառող                 | baseUrlSupport | acpSpawnable |
+| ------------------- | ------------------- | ----------------------- | -------------- | ------------ |
+| հերմես-գործակալ     | Hermes գործակալ     | Nous Research           | լիքը           | կեղծ         |
+| բաց ճանկ            | OpenClaw            | OSS (Պ. Շտայնբերգեր)    | լիքը           | ճշմարիտ      |
+| սագ                 | Սագ                 | Block / Linux հիմնադրամ | լիքը           | ճշմարիտ      |
+| թարգմանիչ           | Բացեք թարգմանիչը    | OSS                     | լիքը           | ճշմարիտ      |
+| աղավաղել            | Warp AI             | Warp Inc.               | մասնակի        | ճշմարիտ      |
+| գործակալ-տախտակամած | Գործակալ տախտակամած | աշեշգոպլանի (OSS)       | լիքը           | կեղծ         |
+| omp                 | Oh My Pi            | OSS                     | լիքը           | ճշմարիտ      |
+| լետտա               | Letta CLI           | Լետտա                   | լիքը           | կեղծ         |
+| գլխավոր գործակալ    | Վարչապետ գործակալ   | Պրայմ Ինտելեկտ (OSS)    | լիքը           | կեղծ         |
+| 5 սուզվել           | 5 սուզվել           | OSS (5 dive-ai)         | լիքը           | կեղծ         |
+| ինչու կոդերը        | WhyCodes            | Ինչու կորպորացիա        | լիքը           | կեղծ         |
 
 ---
 

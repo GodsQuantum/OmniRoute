@@ -4,17 +4,17 @@
 
 ---
 
-கடைசியாகப் புதுப்பிக்கப்பட்டது: 2026-08-23
+கடைசியாக புதுப்பிக்கப்பட்டது: 2026-08-23
 
-OmniRoute, மூன்று பிரத்யேக டாஷ்போர்டு பக்கங்களில் பரவியுள்ள மூன்று வகை CLI கருவிகளுடன் ஒருங்கிணைகிறது:
+OmniRoute மூன்று வகை CLI கருவிகளுடன் ஒருங்கிணைக்கிறது, மூன்று பிரத்யேக டாஷ்போர்டு பக்கங்களில் பரவியுள்ளது:
 
-| பக்கம்         | வழித்தடம்               | கருத்து                                                                                        | எண்ணிக்கை               |
-| -------------- | ----------------------- | ---------------------------------------------------------------------------------------------- | ----------------------- |
-| **CLI Code's** | `/dashboard/cli-code`   | OmniRoute-ஐ நோக்கி நீங்கள் அமைக்கும் குறியீட்டு கருவிகள் (Client → CLI → OmniRoute → Provider) | 26                      |
-| **CLI Agents** | `/dashboard/cli-agents` | OmniRoute-ஐ நோக்கி நீங்கள் அமைக்கும் தன்னாட்சி முகவர்கள் (அதே ஓட்டம், பரந்த நோக்கம்)           | 10                      |
-| **ACP Agents** | `/dashboard/acp-agents` | stdio/ACP வழியாகப் பின்தளமாக OmniRoute தொடங்கும் CLI-கள் (தலைகீழ் ஓட்டம்)                      | பதிவேட்டைப் பார்க்கவும் |
+| பக்கம்              | பாதை                    | கருத்து                                                                                              | எண்ணு                 |
+| ------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------- | --------------------- |
+| **CLI குறியீடுகள்** | `/dashboard/cli-code`   | OmniRoute இல் நீங்கள் சுட்டிக்காட்டும் குறியீட்டு கருவிகள் (கிளையண்ட் → CLI → OmniRoute → வழங்குநர்) | 26                    |
+| **CLI முகவர்கள்**   | `/dashboard/cli-agents` | நீங்கள் OmniRoute இல் சுட்டிக்காட்டும் தன்னாட்சி முகவர்கள் (அதே ஓட்டம், பரந்த நோக்கம்)               | 11                    |
+| **ACP முகவர்கள்**   | `/dashboard/acp-agents` | CLIs, OmniRoute ஆனது stdio/ACP வழியாக பின்தளத்தில் உருவாகிறது (தலைகீழ் ஓட்டம்)                       | பதிவேட்டை பார்க்கவும் |
 
-பழைய வழித்தடங்கள் 308 வழியாகத் திருப்பிவிடப்படுகின்றன: `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`.
+மரபு வழிகள் 308 வழியாக திருப்பிவிடப்படுகின்றன: `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`.
 
 ---
 
@@ -43,67 +43,28 @@ ACP Agents (தலைகீழ் தொடக்க ஓட்டம்):
 
 ---
 
-## `setup-*` மூலம் தானியங்கிக் கட்டமைத்தல்
+## `setup-*` உடன் தானாக கட்டமைக்கவும்
 
-ஒவ்வொரு கருவியின் கட்டமைப்பையும் நீங்கள் கைமுறையாக எழுத வேண்டியதில்லை. ஆதரிக்கப்படும் ஒவ்வொரு CLI-க்கும் OmniRoute ஒரு `setup-*`
-கட்டளையை வழங்குகிறது; இது இயங்கிக்கொண்டிருக்கும் OmniRoute-இலிருந்து (உள்ளூர் அல்லது தொலைநிலை) **நேரடி** மாடல் பட்டியலைப்
-படித்து, உங்கள் கணினியில் அந்தக் கருவிக்குரிய சொந்தக் கட்டமைப்பை எழுதுகிறது:
+ஒவ்வொரு கருவியின் கட்டமைப்பையும் நீங்கள் கையால் எழுத வேண்டியதில்லை. OmniRoute ஒரு `setup-*` கட்டளையை ஆதரிக்கும் CLI க்கு அனுப்புகிறது** வாழ்க** இயங்கும் OmniRoute இலிருந்து மாதிரி பட்டியல் (உள்ளூர் அல்லது தொலை) மற்றும் உங்கள் கணினியில் கருவியின் சொந்த கட்டமைப்பை எழுதுகிறது:
 
 ```bash
 omniroute setup-codex        omniroute setup-claude       omniroute setup-opencode
 omniroute setup-cline        omniroute setup-kilo         omniroute setup-continue
 omniroute setup-cursor       omniroute setup-roo          omniroute setup-crush
 omniroute setup-goose        omniroute setup-qwen         omniroute setup-aider
-omniroute setup-5dive
+omniroute setup-5dive        omniroute setup-zed
+omniroute setup-whycodes
 ```
 
-ஒவ்வொன்றும் `--remote <url> --api-key <key>` (தொலைநிலை OmniRoute-க்கு எதிராக ஓர் உள்ளூர் கருவியைக்
-கட்டமைக்க), `--dry-run` (எழுதாமல் முன்னோட்டமிட), மற்றும் `--port` ஆகியவற்றை ஏற்கிறது. மாடலைத்
-தானாகக் கண்டறியும் வசதி இல்லாத கருவிகள் (Cline, Kilo, Roo, Goose, Aider, Qwen, 5dive)
-`--model <id>`-ஐ (மேலும் ஊடாடாத இயக்கங்களுக்கு `--yes`-ஐ) ஏற்கின்றன. `$HOME`-இன் கீழ்
-எழுதாத ஒரே செய்முறை `setup-5dive` ஆகும்: அது ஃப்ளீட் ஹோஸ்டில் root-க்குச் சொந்தமான அங்கீகாரச் சுயவிவரத்தை
-எழுதுவதன் மூலம் 5dive முகவர் ஃப்ளீட்டைக் கட்டமைக்கிறது; எனவே அது `sudo` வழியாக மீண்டும் இயக்கப்பட்டு,
-அதற்கெனத் தொலைநிலைப் பயன்முறை எதுவும் இல்லை. சரியான சூழல் மாறிகள் உட்செலுத்தப்பட்ட நிலையில்,
-எந்தக் கட்டமைப்பையும் எழுதாமல் ஒரு CLI-ஐத் தொடங்க, பொதுவான
-`omniroute run <target>` தொடக்கியைப் பயன்படுத்தவும் (claude, codex, aider, goose, opencode, qwen,
-gemini — இலக்குகளும் மாற்றுப் பெயர்களும் `bin/cli/cli-manifest.mjs`-இலிருந்து வருகின்றன); பழைய
-ஒவ்வொரு கருவிக்குமான தொடக்கிகளான `omniroute launch` (Claude Code) மற்றும் `omniroute launch-codex`
-(Codex) தொடர்ந்து கிடைக்கின்றன. Gemini CLI தொடக்கத்திற்கு மட்டுமே உரியது: அது ஓர் `omniroute run`
-இலக்கு, ஆனால் அதற்கு `setup-*`/`configure` செய்முறை இல்லை.
+ஒவ்வொன்றும் `--remote <url> --api-key <key>` (தொலைநிலை OmniRoute க்கு எதிராக உள்ளூர் கருவியை உள்ளமைக்கவும்), `--dry-run` (எழுதாமல் முன்னோட்டம்) மற்றும் `--port`. மாதிரி தானியங்கு-கண்டுபிடிப்பு இல்லாத கருவிகள் (Cline, கிலோ, ரூ, கூஸ், எய்டர், Qwen, 5dive, WhyCodes) `--model <id>` (மற்றும் ஊடாடாத ரன்களுக்கு `--yes` ) எடுக்கும். `setup-5dive` என்பது `$HOME` இன் கீழ் எழுதாத ஒரு செய்முறையாகும்: இது ஃப்ளீட் ஹோஸ்டில் ரூட்-சொந்தமான அங்கீகார சுயவிவரத்தை எழுதுவதன் மூலம் 5dive முகவர் கடற்படையை உள்ளமைக்கிறது, எனவே இது `sudo` மூலம் மீண்டும் செயல்படுத்துகிறது மற்றும் அதன் சொந்த தொலைநிலை பயன்முறை இல்லை. சரியான env உட்செலுத்தப்பட்ட மற்றும் கட்டமைப்பு எதுவும் எழுதப்படாத ஒரு CLI தொடங்க, பொதுவான `omniroute run <target>` லாஞ்சரைப் பயன்படுத்தவும் (claude, codex, aider, goose, opencode, qwen, gemini, Whycodes — targets and alises from `bin/cli/cli-manifest.mjs`); லெகசி பர்-டூல் லாஞ்சர்கள் `omniroute launch` (Claude குறியீடு) மற்றும் `omniroute launch-codex` (Codex) ஆகியவை கிடைக்கின்றன. Gemini CLI என்பது துவக்கத்திற்கு மட்டுமே: இது ஒரு `omniroute run` இலக்கு ஆனால் `setup-*`/`configure` செய்முறை இல்லை.
 
-> **முழுமையான குறிப்பு:** ஒவ்வொரு கட்டளையும் எதை எழுதுகிறது, ஒவ்வொரு கொடியும்,
-> உள்ளூர் மற்றும் தொலைநிலை வேறுபாடுகளும், எந்தக் கருவிகளுக்கு `/v1` பின்னொட்டு தேவை என்பதும் அடங்கிய முதன்மை அட்டவணை
-> **[CLI ஒருங்கிணைப்புகள்](../guides/CLI-INTEGRATIONS.md)** ஆவணத்தில் உள்ளது.
+> **முழு குறிப்பு:** முதன்மை அட்டவணை - ஒவ்வொரு கட்டளையும் என்ன எழுதுகிறது, ஒவ்வொரு கொடியும், உள்ளூர் vs ரிமோட், மற்றும் எந்த கருவிகள் `/v1` பின்னொட்டை விரும்புகின்றன - இதில் வாழ்கிறது** [CLI ஒருங்கிணைப்புகள்](../guides/CLI-INTEGRATIONS.md)** .
 
-### இவற்றைக் கண்டெய்னருக்குள் இயக்குதல்
+### ஒரு கொள்கலனுக்குள் இவற்றை இயக்குதல்
 
-OmniRoute கண்டெய்னருக்குள் இயக்கப்படும் `setup-*` கட்டளை, கண்டெய்னரின்
-சொந்த முகப்புக் கோப்பகத்தில் எழுதும்; அதை ஹோஸ்டிலுள்ள எந்த CLI-யும் படிக்காது, மேலும் அது
-கண்டெய்னருடன் சேர்ந்து மறைந்துவிடும். OmniRoute இதைக் கண்டறிந்து, எழுதுவதற்குப் பதிலாக
-வழிமுறைகளுடன் `2` குறியீட்டில் வெளியேறும். தொடர்வதற்கு ஆதரிக்கப்படும் இரண்டு வழிகள் உள்ளன — ஹோஸ்டில் CLI-ஐ நிறுவி,
-கண்டெய்னருடன் `omniroute connect` செய்யவும், அல்லது கட்டமைப்புக் கோப்பகங்களை bind-mount செய்து
-`CLI_CONFIG_HOME`-ஐ அமைக்கவும் (compose `host` சுயவிவரம்). ஒவ்வொரு `setup-*` கட்டளையும்,
-`omniroute configure` மற்றும் `omniroute config set` உட்பட,
-கண்டெய்னரின் சொந்த CLI-களைக் கட்டமைப்பதே உங்கள் உண்மையான நோக்கமாக இருக்கும்போது
-`--allow-container-write`-ஐ ஏற்கிறது; சேவையகத்திற்கு `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true`
-அதே செயலைச் செய்கிறது. பார்க்கவும்:
-[Docker வழிகாட்டி → ஹோஸ்ட் CLI கருவிகளைக் கட்டமைத்தல்](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker).
+OmniRoute கொள்கலனுக்குள் செயல்படுத்தப்படும் ஒரு `setup-*` கட்டளை, கொள்கலனின் சொந்த வீட்டிற்குள் எழுதுகிறது, இது எந்த ஹோஸ்ட் CLI படிக்காது மற்றும் கொள்கலனுடன் மறைந்துவிடும். OmniRoute அதைக் கண்டறிந்து எழுதுவதை விட அறிவுறுத்தல்களுடன் `2` இலிருந்து வெளியேறுகிறது. முன்னோக்கி இரண்டு ஆதரவு வழிகள் - ஹோஸ்டில் CLI ஐ நிறுவவும் மற்றும் கொள்கலனில் `omniroute connect` நிறுவவும் அல்லது config dirs ஐ பைண்ட்-மவுண்ட் செய்து `CLI_CONFIG_HOME` அமைக்கவும் ( `host` சுயவிவரத்தை உருவாக்கவும்). ஒவ்வொரு `setup-*` கட்டளையும், மேலும் `omniroute configure` மற்றும் `omniroute config set`, கொள்கலனின் சொந்த CLIs உள்ளமைக்கும் போது `--allow-container-write` ஏற்கிறது; `OMNIROUTE_ALLOW_CONTAINER_CONFIG_WRITE=true` சேவையகத்திற்கும் அதையே செய்கிறது. [Docker வழிகாட்டியைப் பார்க்கவும் → ஹோஸ்ட் CLI கருவிகளை உள்ளமைத்தல்](../guides/DOCKER_GUIDE.md#configuring-host-cli-tools-when-omniroute-runs-in-docker).
 
-டாஷ்போர்டின் **பயன்படுத்தும் இறுதிப்புள்ளி** (`POST /api/cli-tools/apply`) அதே
-பாதுகாப்பை அமல்படுத்துகிறது: கண்டெய்னரில், ஹோஸ்டிலிருந்து bind-mount செய்யப்படாத இலக்குக்கு எழுத முயன்றால்,
-பாதுகாப்பான பிழை உரையுடனும் `containerEphemeralTarget: true` உடனும் **`422`** பதிலளிக்கிறது;
-மேலும் ஹோஸ்ட் செய்முறை கொண்ட கருவிகளுக்கு (claude, codex, opencode, cline,
-kilo, continue), அதற்குப் பதிலாக ஹோஸ்டில் இயக்க வேண்டிய `hostSetupCommand`-ஐ
-(எ.கா. `omniroute setup-opencode`) வழங்குகிறது; எதுவும் எழுதப்படாது. கண்டெய்னர் பயன்முறையில்
-`dryRun: true` தொடர்ந்து செயல்பட்டு, வட்டில் எதையும் தொடாமல் மறைக்கப்பட்ட முன்னோட்டம் + இலக்குப் பாதையைத்
-திருப்பித் தருகிறது. முன்னோட்ட உள்ளடக்கம் நகலெடுக்கவோ இறக்குமதி செய்யவோ வேண்டிய,
-நற்சான்றுகளைக் கொண்ட கட்டமைப்பு அல்ல. அசல் கருவி/அடிப்படை URL/API விசை/மாடல் உள்ளீடுகளுடன்
-ஹோஸ்டில் பயன்படுத்தவும் அல்லது சுட்டிக்காட்டப்பட்ட ஹோஸ்ட்-பக்க அமைப்புக் கட்டளையைப் பயன்படுத்தவும். முன்னோட்டத்
-தலைப்பு மற்றும் கோரிக்கை ஒப்பந்தத்திற்காக [CLI கட்டமைப்புப் பாதுகாப்பு](../security/CLI-CONFIGURATION.md)
-ஆவணத்தைப் பார்க்கவும். இந்த நடத்தை
-திட்டமிட்டே அமைக்கப்பட்டதுடன், பின்னடைவு ஏற்படாதவாறு
-`tests/unit/api/cli-tools/apply-container-guard.test.ts` மூலம் பாதுகாக்கப்படுகிறது — பாதுகாப்பை அகற்றி
-ஒருபோதும் 422 பிழையை "சரிசெய்ய" வேண்டாம்.
+டாஷ்போர்டின்** இறுதிப்புள்ளியைப் பயன்படுத்துங்கள்** (`POST /api/cli-tools/apply`) அதே காவலரைச் செயல்படுத்துகிறது: ஒரு கொள்கலனில், ஹோஸ்ட் பதில்களில் இருந்து பிணைக்கப்படாத இலக்கை எழுதுதல்**`422`** `containerEphemeralTarget: true` உடன், பாதுகாப்பான பிழை உரை மற்றும் - ஹோஸ்ட் செய்முறையுடன் கூடிய கருவிகளுக்கு (கிளாட், கோடெக்ஸ், ஓப்பன்கோட், க்லைன், கிலோ, தொடரும்) - ஹோஸ்டில் இயங்குவதற்குப் பதிலாக ஒரு `hostSetupCommand` (எ.கா. `omniroute setup-opencode`). எதுவும் எழுதப்படவில்லை. `dryRun: true` கன்டெய்னர் பயன்முறையில் தொடர்ந்து வேலை செய்கிறது மற்றும் வட்டில் தொடாமலேயே திருத்தி அமைக்கப்பட்ட முன்னோட்டம் + இலக்கு பாதையை வழங்குகிறது. முன்னோட்ட உள்ளடக்கம் நகலெடுக்க அல்லது இறக்குமதி செய்வதற்கான நற்சான்றிதழ்-தாங்கி உள்ளமைவு அல்ல. ஹோஸ்டில் அசல் tool/base URL/API key/model உள்ளீடுகளுடன் விண்ணப்பிக்கவும் அல்லது குறிப்பிடப்பட்ட புரவலன் பக்க அமைவு கட்டளையைப் பயன்படுத்தவும். முன்னோட்ட தலைப்பு மற்றும் கோரிக்கை ஒப்பந்தத்திற்கான [CLI உள்ளமைவு பாதுகாப்பைப்](../security/CLI-CONFIGURATION.md) பார்க்கவும். இந்த நடத்தை வேண்டுமென்றே மற்றும் `tests/unit/api/cli-tools/apply-container-guard.test.ts` ஆல் பின்னடைவு-பாதுகாப்பு - காவலரை அகற்றுவதன் மூலம் 422 ஐ ஒருபோதும் "சரிசெய்ய" வேண்டாம்.
 
 ---
 
@@ -139,58 +100,60 @@ kilo, continue), அதற்குப் பதிலாக ஹோஸ்டி�
 
 ---
 
-## 1. CLI Code-இன் பட்டியல் (26 கருவிகள்)
+## 1. CLI குறியீட்டின் பட்டியல் (27 கருவிகள்)
 
-`/dashboard/cli-code`-இல் தோன்றும் அனைத்து கருவிகளும். `baseUrlSupport: none` கொண்டவை தனிப்பயன் அடிப்படை URL-க்குப் பதிலாக MITM அல்லது கைமுறை வழிகாட்டி மூலம் இணைக்கப்பட்டுள்ளன:
+`/dashboard/cli-code` இல் தோன்றும் அனைத்து கருவிகளும். `baseUrlSupport: none` உள்ளவர்கள் தனிப்பயன் அடிப்படை URL க்குப் பதிலாக MITM அல்லது கையேடு வழிகாட்டி மூலம் வயர் செய்யப்பட்டுள்ளனர்:
 
-| id           | name                    | vendor              | baseUrlSupport | configType     | acpSpawnable |
-| ------------ | ----------------------- | ------------------- | -------------- | -------------- | ------------ |
-| claude       | Claude Code             | Anthropic           | full           | env            | true         |
-| codex        | OpenAI Codex CLI        | OpenAI              | full           | custom         | true         |
-| zcode        | ZCode (GLM Coding Plan) | Z.ai                | none           | custom         | false        |
-| cline        | Cline                   | OSS (ex-Claude Dev) | full           | custom         | true         |
-| kilo         | Kilo Code               | Kilo-Org            | full           | custom         | false        |
-| roo          | Roo Code                | Roo (OSS)           | full           | guide          | false        |
-| continue     | Continue                | continue.dev        | full           | guide          | false        |
-| aider        | Aider                   | OSS (P. Gauthier)   | full           | guide          | true         |
-| forge        | ForgeCode               | Antinomy HQ         | full           | custom         | true         |
-| jcode        | jcode                   | 1jehuang (OSS)      | full           | custom         | false        |
-| deepseek-tui | DeepSeek TUI            | Hunter Bown (OSS)   | full           | custom         | false        |
-| codewhale    | CodeWhale               | Hmbown (OSS)        | full           | custom         | false        |
-| opencode     | OpenCode                | Anomaly (ex-SST)    | full           | guide          | true         |
-| droid        | Factory Droid           | Factory AI          | partial        | guide          | false        |
-| copilot      | GitHub Copilot CLI      | GitHub/MS           | full           | custom         | false        |
-| cursor-cli   | Cursor CLI              | Anysphere           | partial        | guide          | true         |
-| smelt        | Smelt                   | leonardcser (OSS)   | full           | custom         | false        |
-| pi           | Pi (pi-coding-agent)    | M. Zechner (OSS)    | full           | custom         | false        |
-| grok-build   | Grok Build              | xAI                 | full           | custom         | false        |
-| crush        | Crush                   | OSS (Charm)         | full           | custom         | false        |
-| qwen         | Qwen Code               | Alibaba             | full           | guide          | true         |
-| cursor       | Cursor                  | Anysphere           | none           | guide          | false        |
-| antigravity  | Antigravity             | Google              | none           | mitm           | false        |
-| hermes       | Hermes                  | Nous Research       | none           | guide          | false        |
-| kiro         | Kiro AI                 | Amazon              | none           | mitm           | false        |
-| custom       | Custom CLI              | —                   | full           | custom-builder | false        |
+| ஐடி               | பெயர்                          | விற்பனையாளர்               | அடிப்படைUrl ஆதரவு | configType          | acpSpawnable |
+| ----------------- | ------------------------------ | -------------------------- | ----------------- | ------------------- | ------------ |
+| கிளாட்            | Claude குறியீடு                | Anthropic                  | முழு              | env                 | உண்மை        |
+| கோடெக்ஸ்          | OpenAI Codex CLI               | OpenAI                     | முழு              | வழக்கம்             | உண்மை        |
+| zcode             | ZCode (GLM குறியீட்டு திட்டம்) | Z.ai                       | எதுவும் இல்லை     | வழக்கம்             | பொய்         |
+| கிளைன்            | Cline                          | OSS (முன்னாள் கிளாட் தேவ்) | முழு              | வழக்கம்             | உண்மை        |
+| கிலோ              | கிலோ குறியீடு                  | கிலோ-ஒர்க்                 | முழு              | வழக்கம்             | பொய்         |
+| ரூ                | ரூ குறியீடு                    | ரூ (OSS)                   | முழு              | வழிகாட்டி           | பொய்         |
+| தொடரவும்          | தொடரவும்                       | continue.dev               | முழு              | வழிகாட்டி           | பொய்         |
+| உதவியாளர்         | உதவியாளர்                      | OSS (P. Gauthier)          | முழு              | வழிகாட்டி           | உண்மை        |
+| போலி              | ForgeCode                      | எதிர்ச்சொல் HQ             | முழு              | வழக்கம்             | உண்மை        |
+| jcode             | jcode                          | 1ஜெஹுவாங் (OSS)            | முழு              | வழக்கம்             | பொய்         |
+| deepseek-tui      | DeepSeek TUI                   | ஹண்டர் பவுன் (OSS)         | முழு              | வழக்கம்             | பொய்         |
+| கோட்வேல்          | CodeWhale                      | Hmbown (OSS)               | முழு              | வழக்கம்             | பொய்         |
+| திறந்த குறியீடு   | OpenCode                       | ஒழுங்கின்மை (முன்னாள் SST) | முழு              | வழிகாட்டி           | உண்மை        |
+| டிராய்டு          | தொழிற்சாலை டிரயோடு             | தொழிற்சாலை AI              | பகுதி             | வழிகாட்டி           | பொய்         |
+| துணை விமானி       | GitHub Copilot CLI             | GitHub/MS                  | முழு              | வழக்கம்             | பொய்         |
+| கர்சர்-கிளை       | Cursor CLI                     | எந்தக்கோளம்                | பகுதி             | வழிகாட்டி           | உண்மை        |
+| மணம்              | செம்மை                         | லியோனார்ட்சர் (OSS)        | முழு              | வழக்கம்             | பொய்         |
+| பை                | பை (பை-கோடிங்-ஏஜென்ட்)         | எம். செக்னர் (OSS)         | முழு              | வழக்கம்             | பொய்         |
+| grok-கட்டுமானம்   | Grok பில்ட்                    | xAI                        | முழு              | வழக்கம்             | பொய்         |
+| நொறுக்கு          | நொறுக்கு                       | OSS (வசீகரம்)              | முழு              | வழக்கம்             | பொய்         |
+| குவென்            | Qwen குறியீடு                  | Alibaba                    | முழு              | வழிகாட்டி           | உண்மை        |
+| zed               | Zed                            | Zed இண்டஸ்ட்ரீஸ்           | முழு              | வழிகாட்டி           | பொய்         |
+| கர்சர்            | Cursor                         | எந்தக்கோளம்                | எதுவும் இல்லை     | வழிகாட்டி           | பொய்         |
+| ஈர்ப்பு எதிர்ப்பு | Antigravity                    | Google                     | எதுவும் இல்லை     | mitm                | பொய்         |
+| ஹெர்ம்ஸ்          | ஹெர்ம்ஸ்                       | நோஸ் ஆராய்ச்சி             | எதுவும் இல்லை     | வழிகாட்டி           | பொய்         |
+| கீரோ              | Kiro AI                        | Amazon                     | எதுவும் இல்லை     | mitm                | பொய்         |
+| வழக்கம்           | தனிப்பயன் CLI                  | —                          | முழு              | தனிப்பயன் கட்டுபவர் | பொய்         |
 
-`baseUrlSupport: "partial"` கொண்ட கருவிகளின் டாஷ்போர்டு அட்டையில் "⚠ பகுதியளவு அடிப்படை URL" என்ற பேட்ஜ் காட்டப்படும்.
+`baseUrlSupport: "partial"` கொண்ட கருவிகள் டாஷ்போர்டு கார்டில் "⚠ Base URL parcial" என்ற பேட்ஜைக் காட்டுகின்றன.
 ---
 
-## 2. CLI முகவர்கள் பட்டியல் (10 கருவிகள்)
+## 2. CLI முகவர்கள் பட்டியல் (11 கருவிகள்)
 
-`/dashboard/cli-agents`-இல் தோன்றும் தன்னியக்க முகவர்கள்:
+`/dashboard/cli-agents` இல் தோன்றும் தன்னாட்சி முகவர்கள்:
 
-| id           | name             | vendor                   | baseUrlSupport | acpSpawnable |
-| ------------ | ---------------- | ------------------------ | -------------- | ------------ |
-| hermes-agent | Hermes Agent     | Nous Research            | full           | false        |
-| openclaw     | OpenClaw         | OSS (P. Steinberger)     | full           | true         |
-| goose        | Goose            | Block / Linux Foundation | full           | true         |
-| interpreter  | Open Interpreter | OSS                      | full           | true         |
-| warp         | Warp AI          | Warp Inc.                | partial        | true         |
-| agent-deck   | Agent Deck       | asheshgoplani (OSS)      | full           | false        |
-| omp          | Oh My Pi         | OSS                      | full           | true         |
-| letta        | Letta CLI        | Letta                    | full           | false        |
-| prime-agent  | Prime Agent      | Prime Intellect (OSS)    | full           | false        |
-| 5dive        | 5dive            | OSS (5dive-ai)           | full           | false        |
+| ஐடி              | பெயர்                         | விற்பனையாளர்              | அடிப்படைUrl ஆதரவு | acpSpawnable |
+| ---------------- | ----------------------------- | ------------------------- | ----------------- | ------------ |
+| ஹெர்ம்ஸ்-ஏஜெண்ட் | ஹெர்ம்ஸ் முகவர்               | நோஸ் ஆராய்ச்சி            | முழு              | பொய்         |
+| திறந்த நகம்      | OpenClaw                      | OSS (பி. ஸ்டீன்பெர்கர்)   | முழு              | உண்மை        |
+| வாத்து           | வாத்து                        | பிளாக் / Linux அறக்கட்டளை | முழு              | உண்மை        |
+| மொழிபெயர்ப்பாளர் | மொழிபெயர்ப்பாளரைத் திறக்கவும் | OSS                       | முழு              | உண்மை        |
+| வார்ப்பு         | Warp AI                       | Warp Inc.                 | பகுதி             | உண்மை        |
+| முகவர்-தளம்      | ஏஜென்ட் டெக்                  | அஷேஷ்கோப்லானி (OSS)       | முழு              | பொய்         |
+| ஓம்ப்            | ஓ மை பை                       | OSS                       | முழு              | உண்மை        |
+| லெட்டா           | லெட்டா CLI                    | லெட்டா                    | முழு              | பொய்         |
+| முதன்மை முகவர்   | பிரதம முகவர்                  | முதன்மை அறிவு (OSS)       | முழு              | பொய்         |
+| 5 டைவ்           | 5 டைவ்                        | OSS (5dive-ai)            | முழு              | பொய்         |
+| ஏன் குறியீடுகள்  | WhyCodes                      | ஏன் கார்ப்பரேஷன்          | முழு              | பொய்         |
 
 ---
 
