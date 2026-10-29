@@ -106,9 +106,14 @@ it("renders two labeled rates and a keyboard-accessible explanation of buffered 
 });
 it("keeps ascending/descending header sorting on post-first-token rate, not E2E", async () => {
   await render();
-  const button = container.querySelector<HTMLButtonElement>(
-    'button[aria-label="Sort by post-first-token rate"]'
+  // The TPS header is the UI kit's SortableTableHead (button inside a <th> that
+  // owns aria-sort), so locate it by the column label instead of a custom aria-label.
+  const tpsHead = [...container.querySelectorAll<HTMLElement>("thead th")].find(
+    (th) => th.textContent?.trim() === "TPS"
   );
+  expect(tpsHead).toBeDefined();
+  expect(tpsHead!.getAttribute("aria-sort")).toBe("none");
+  const button = tpsHead!.querySelector<HTMLButtonElement>("button");
   expect(button).not.toBeNull();
   await act(async () => button!.click());
   const visibleModels = () =>
