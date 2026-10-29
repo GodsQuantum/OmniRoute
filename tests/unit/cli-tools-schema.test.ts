@@ -53,6 +53,7 @@ test("CLI_TOOLS registry contains all expected tools including rebuilt Qwen Code
     "prime-agent",
     "5dive",
     "zed",
+    "whycodes",
     "openclaude",
   ];
   for (const id of expected) {
