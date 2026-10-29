@@ -23,6 +23,9 @@ import type { QuotaRefreshState } from "../hooks/providerQuotaRefresh";
 import type { ProviderQuotaCacheEntry } from "../hooks/useProviderQuota";
 import { filterConnectionsByQuery } from "../connectionsSearchFilter";
 
+/** Rows with no explicit Codex refresh outcome yet (stable reference across renders). */
+const NO_QUOTA_REFRESH_STATES: Readonly<Record<string, QuotaRefreshState>> = {};
+
 type ConnectionsListPanelProps = {
   connections: ConnectionRowConnection[];
   providerId: string;
@@ -175,7 +178,7 @@ export default function ConnectionsListPanel({
   cpaProviderEnabled,
   quotaByConnectionId,
   quotaRefreshingIds,
-  quotaRefreshStates,
+  quotaRefreshStates = NO_QUOTA_REFRESH_STATES,
   handleRefreshQuota,
   canAutoSync,
   onOpenEditModal,
@@ -485,7 +488,7 @@ export default function ConnectionsListPanel({
                 }
                 quotaCache={quotaByConnectionId[conn.id]}
                 quotaRefreshing={quotaRefreshingIds.has(conn.id)}
-                quotaRefreshState={quotaRefreshStates?.[conn.id]}
+                quotaRefreshState={quotaRefreshStates[conn.id]}
                 onRefreshQuota={() => handleRefreshQuota(conn.id)}
               />
             ))
@@ -687,7 +690,7 @@ export default function ConnectionsListPanel({
                     }
                     quotaCache={quotaByConnectionId[conn.id]}
                     quotaRefreshing={quotaRefreshingIds.has(conn.id)}
-                    quotaRefreshState={quotaRefreshStates?.[conn.id]}
+                    quotaRefreshState={quotaRefreshStates[conn.id]}
                     onRefreshQuota={() => handleRefreshQuota(conn.id)}
                   />
                 ))}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Icon from "@/shared/components/Icon";
+import { Button } from "@/shared/components";
 import type { QuotaRefreshState } from "../hooks/providerQuotaRefresh";
 
 interface Props {
@@ -22,22 +24,18 @@ export default function ConnectionQuotaRefreshButton({ refreshing, state, onRefr
   const t = useTranslations("providers");
   return (
     <span className="inline-flex flex-wrap items-center gap-1 text-xs">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={onRefresh}
         disabled={refreshing}
         aria-busy={!!refreshing}
         title={t("quotaRefreshCurrentHint")}
-        className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-text-muted hover:text-primary disabled:cursor-wait disabled:opacity-60"
+        className="h-auto min-h-0 gap-1 rounded px-1.5 py-0.5 text-xs text-text-muted hover:text-primary disabled:cursor-wait disabled:opacity-60"
       >
-        <span
-          aria-hidden="true"
-          className={`material-symbols-outlined text-[13px] ${refreshing ? "animate-spin" : ""}`}
-        >
-          refresh
-        </span>
+        <Icon name="refresh" size={13} className={refreshing ? "animate-spin" : undefined} />
         {t(refreshing ? "quotaRefreshing" : "quotaRefreshCurrent")}
-      </button>
+      </Button>
       {state && (
         <span role="status" aria-live="polite" className="text-text-muted">
           {t(statusKeys[state.status])}
